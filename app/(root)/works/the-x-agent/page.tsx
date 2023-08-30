@@ -102,7 +102,6 @@ const DashBoardForAdmin = () => {
             </div>
             <div>
                 <Heading as="h3" fontSize={18} variant="section-title" className=" py-4">Screenshots</Heading>
-                <Gallery images={images} />
             </div>
 
        </Section>
