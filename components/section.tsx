@@ -19,7 +19,8 @@ const Section = ({
     <StyledDiv
      initial={{ y: 10, opacity: 0 }}
      animate={{ y: 0, opacity: 1 }}
-     transition={{ duration: 0.8, delay}}
+     transitionDuration={"1s"}
+     transitionDelay={"0s"}
      mb={6}
     >
         {children}
