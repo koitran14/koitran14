@@ -3,7 +3,7 @@
 import { Button, Flex, Heading, useColorModeValue } from "@chakra-ui/react";
 import Logo from "./ui/logo";
 import { IoLogoGithub } from "react-icons/io5";
-import { color, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 
 import { usePathname, useRouter } from "next/navigation";
