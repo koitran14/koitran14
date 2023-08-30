@@ -78,7 +78,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                     alt="new"
                                     className=" brightness-[50%] object-cover object-center h-full w-full"
                                 />
-                                <div className="absolute z-10 top-0 left-14 text-white h-full w-full">
+                                <div className="absolute sm:block hidden z-10 top-0 left-14 text-white h-full w-full">
                                     <div className=" flex items-center h-full w-full">
                                         <div>
                                             {project.field !== 'gallery' && (
@@ -94,7 +94,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                                 {project.title}
                                             </Heading>
 
-                                            <p className="w-[60%] pb-6 h-[20%] overflow-hidden font-semibold text-base text-justify">
+                                            <p className="w-[60%] pb-6 overflow-hidden font-semibold text-[20px] text-justify">
                                                 {project.description}
                                             </p>
                                             

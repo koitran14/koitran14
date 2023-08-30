@@ -13,7 +13,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface SliderIntroProps {
-    images: ImageType[]
+    images: ImageType[],
 }
 
 interface ProgressCircleRef {
@@ -68,7 +68,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                 <Image
                                     src={image.href}
                                     alt={image.alt}
-                                    className=" brightness-[45%] object-cover object-center h-full w-full"
+                                    className=" brightness-[45%] object-cover w-full "
                                 />
                             </SwiperSlide>
                         </div>

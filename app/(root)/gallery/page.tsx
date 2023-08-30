@@ -21,10 +21,10 @@ const GalleriesPage = () => {
     return (
         <Section>
             <div className="relative">
-                <SliderIntro images={galleryImgs} />
-                <div className="absolute top-[20%] sm:left-12 left-8 z-10 max-w-screen">
+                <SliderIntro images={galleryImgs}/>
+                <div className="absolute sm:top-[20%] top-[8%] sm:left-16 left-4 z-10 max-w-screen">
                     <div className="flex flex-col">
-                        <Heading as="h3" fontSize={22} className="text-slate-200">
+                        <Heading fontSize={22} className="text-slate-200 font-semibold flex sm:justify-start justify-center">
                             Activities
                         </Heading>
                         <div className="py-6">
