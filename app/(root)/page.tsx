@@ -48,7 +48,7 @@ export default function Home() {
           <Section delay={0.2}>
             <Heading as="h3" variant="section-title">About me</Heading>
             <Paragraph>
-              As the junior at International University,
+              As a junior at International University,
               I have a huge passion on web application development, combining technical expertise with an artistic touch. 
               Explore my diverse portfolio and join me in shaping a meaningful impact in the world of web development and 
               beyond. Currently, my newest personal project called{' '}
@@ -82,7 +82,7 @@ export default function Home() {
               </BioSection>
               <BioSection>
                 <BioYear>2018 to 2021</BioYear>
-                <BioDesc>Student of Tien Giang High School for Gifted.</BioDesc>
+                <BioDesc>Student of Tien Giang High School for The Gifted.</BioDesc>
               </BioSection>
               <BioSection>
                 <BioYear>2021 to present</BioYear>
