@@ -15,14 +15,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
 
+  return (
     <html lang="en">
       <body>
         <ChakraProvider theme={theme}>
           <Fonts />
           <NavBar /> 
-          <Container maxW="container.sm" pt={20} px={12}>
+          <Container maxW="container.sm" pt={20} px={9}>
               {children}
           </Container>
           <Footer />

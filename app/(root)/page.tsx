@@ -18,7 +18,7 @@ export default function Home() {
     <Section delay={0}>
       <div className="py-4">
           <div className="flex md:flex-row gap-6 items-center pb-8 flex-col-reverse md:text-left text-center ">
-              <div className="flex flex-col md:w-[full] w-[85%] ">
+              <div className="flex flex-col w-full">
                 <Heading as="h2" variant="page-title" className="md:py-5 py-3 flex items-center justify-center md:justify-start gap-1" >
                   Hi, I'm Koi! 
                   <div className="animate-bounce">🥳</div>
@@ -116,7 +116,7 @@ export default function Home() {
                 <div className="col-start-1 flex items-center">
                   <Meta>INSTAGRAM</Meta>
                 </div>
-                <Link className="col-span-5" href="https://www.instagram.com/khoitran1403/">
+                <Link className="sm:col-span-5 sm:col-start-2 col-start-3" href="https://www.instagram.com/khoitran1403/">
                   <p className="flex gap-x-2 items-center w-fit px-2 rounded-md"><InstagramIcon className="h-[1.2rem] w-[1.2rem]"/> @khoitran1403</p>
                 </Link>
               </MetaPlace>
@@ -125,7 +125,7 @@ export default function Home() {
                 <div className="col-start-1 flex items-center">
                   <Meta>GITHUB</Meta>
                 </div>
-                <Link className="col-span-5" href="https://github.com/koitran14">
+                <Link className="sm:col-span-5 sm:col-start-2 col-start-3" href="https://github.com/koitran14">
                   <p className="flex gap-x-2 items-center w-fit px-2 rounded-md"><IoLogoGithub className="h-[1.2rem] w-[1.2rem]"/> @koitran14 </p>
                 </Link>
               </MetaPlace>
@@ -134,7 +134,7 @@ export default function Home() {
                 <div className="col-start-1 flex items-center">
                   <Meta>GMAIL</Meta>
                 </div>
-                <Link className="col-span-5" href="#">
+                <Link className="sm:col-span-5 sm:col-start-2 col-start-3" href="#">
                   <p className="flex gap-x-2 items-center w-fit px-2 rounded-md"><Mail className="h-[1.2rem] w-[1.2rem]"/> tndkhoi.work@gmail.com</p>
                 </Link>
               </MetaPlace>

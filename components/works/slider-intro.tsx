@@ -1,11 +1,10 @@
 "use client"
 
 import { Project } from "@/type";
-import { Button, Heading, Image } from "@chakra-ui/react";
-import { ChevronRightIcon } from "lucide-react";
+import {  Heading, Image } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import Section from "../section";
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
@@ -31,6 +30,24 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
 }) => {
 
     const router = useRouter();
+    const [windowWidth, setWindowWidth] = useState<number | null >(null);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      // Set initial width after component mounts
+      setWindowWidth(window.innerWidth);
+  
+      // Add resize event listener
+      window.addEventListener("resize", handleResize);
+  
+      // Clean up event listener
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
 
     const handlerClick = ( id:any ) => {
         router.push(`/works/${id}`);
@@ -51,7 +68,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
 
     return ( 
         <Section>
-            <div className="h-full max-h-[340px] overflow-hidden rounded-xl">
+            <div className="w-full h-full sm:max-h-[340px] max-h-[240px] overflow-hidden rounded-xl">
             <Swiper
                 loop={true}
                 spaceBetween={30}
@@ -73,41 +90,37 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                     {(project.newest || project.field === 'gallery') && (
                         <SwiperSlide>
                             <div className="relative">
-                                <Image
-                                    src={project.href}
-                                    alt="new"
-                                    className=" brightness-[50%] object-cover object-center h-full w-full"
-                                />
-                                <div className="absolute sm:block hidden z-10 top-0 left-14 text-white h-full w-full">
+                                <div>
+                                    <Image
+                                        src={project.href}
+                                        alt="new"
+                                        objectFit={"fill"}
+                                        className=" brightness-[50%] w-full h-full object-center"
+                                    />
+                                </div>
+                                <div className="absolute z-10 top-0 sm:left-14 left-8 text-white h-full w-full cursor-pointer"
+                                    onClick={() => handlerClick(project.id)}
+                                >
                                     <div className=" flex items-center h-full w-full">
                                         <div>
                                             {project.field !== 'gallery' && (
-                                                <Heading as="h2" fontSize={17} 
+                                                <Heading as="h2" 
+                                                fontSize={windowWidth && windowWidth >= 640 ? "22px" : "12px"} 
                                                     className="bg-white text-black w-fit px-2 shadow-xl rounded-sm"
                                                 >
                                                     New
                                                 </Heading>
                                             )}
-                                            <Heading as="h3" fontSize={28} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
-                                                className="py-3"
+                                            <Heading as="h3" fontSize={windowWidth && windowWidth >= 640 ? "28px" : "20px"} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
+                                                className="sm:py-3 py-1"
                                             >
                                                 {project.title}
                                             </Heading>
 
-                                            <p className="w-[60%] pb-6 overflow-hidden font-semibold text-[20px] text-justify">
+                                            <p className="sm:w-[60%] w-[65%] sm:pb-6 pb-3 overflow-hidden font-semibold sm:text-[20px] text-[11px] text-justify">
                                                 {project.description}
                                             </p>
-                                            
-                                            {project.field !== 'gallery' && (
-                                                <Button variant="solid" rightIcon={<ChevronRightIcon />}
-                                                    _hover={{transform: "scale(1.05)",  color: "#000000", backgroundColor: "#ffffff"}}
-                                                    onClick={() => handlerClick(project.id)}
-                                                    borderRadius={20}
-                                                    shadow={"xl"}
-                                                >
-                                                    More 
-                                                </Button>
-                                            )}
+                                
                                         </div>
                                     </div>
                                 </div>

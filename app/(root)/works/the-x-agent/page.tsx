@@ -7,9 +7,10 @@ import { Heading } from "@chakra-ui/react";
 import { MdStars } from "react-icons/md";
 import Gallery from "@/components/ui/gallery";
 import Address from "@/components/ui/address";
+import { useEffect, useState } from "react";
 
 
-const title = "The X Agent | Homepage";
+const title = "The X Agent Homepage";
 const author = "Trần Ngọc Đăng Khôi";
 const description = "This is my personal project, using three languages JavaScript, HTML, and CSS to create an information page of the Information Technology Faculty Association for an eSport competition IT Gaming Tour: THE X AGENT.";
 const headingImg="/images/works/the-x-agent/image.png"
@@ -31,6 +32,25 @@ const images = [{
 const DashBoardForAdmin = () => {
     const themeColor = useColorModeValue( '#f97316', '#22D3EE');
 
+    const [windowWidth, setWindowWidth] = useState<number | null >(null);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      // Set initial width after component mounts
+      setWindowWidth(window.innerWidth);
+  
+      // Add resize event listener
+      window.addEventListener("resize", handleResize);
+  
+      // Clean up event listener
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
+      
     return (
         <Section>
             <Address 
@@ -49,10 +69,10 @@ const DashBoardForAdmin = () => {
                 <div>
 
                     {/* Heading and description */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-x-3">
-                            <Heading as="h3" fontSize={25} color={themeColor}>{title}</Heading>
-                            <Badge className="text-lg">2023 - </Badge>
+                    <div className="flex sm:items-center items-start justify-between ">
+                        <div className="flex gap-x-3 flex-col-reverse sm:flex-row gap-y-1 justify-start sm:items-center">
+                            <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "25" : "20"} color={themeColor}>{title}</Heading>
+                            <Badge className="text-lg w-fit">2023 - </Badge>
                         </div>
                         <div className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"
                             style={{ backgroundColor: themeColor }}
@@ -72,7 +92,7 @@ const DashBoardForAdmin = () => {
                         <div className="col-start-1 ">
                             <Meta>WEBSITE</Meta>
                         </div>
-                        <Link href={""} target="_blank" className="col-span-5">{linkdemo}</Link>
+                        <Link href={""} target="_blank" className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{linkdemo}</Link>
                     </MetaPlace>
 
                     {/* PLATFORM */}
@@ -80,7 +100,7 @@ const DashBoardForAdmin = () => {
                         <div className="col-start-1 ">
                             <Meta>PLATFORM</Meta>
                         </div>
-                        <p className="col-span-5">Windows/macOS/Linux/iOS/Android</p>
+                        <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">Windows/macOS/Linux/iOS/Android</p>
                     </MetaPlace>
 
                     {/* STACK */}
@@ -88,7 +108,7 @@ const DashBoardForAdmin = () => {
                         <div className="col-start-1 ">
                             <Meta>STACK</Meta>
                         </div>
-                        <p className="col-span-5">{stack}</p>
+                        <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{stack}</p>
                     </MetaPlace>
 
                     {/* GITHUB SOURCES */}
@@ -96,7 +116,7 @@ const DashBoardForAdmin = () => {
                         <div className="col-start-1 ">
                             <Meta>SOURCE</Meta>
                         </div>
-                        <Link href={linkSource} className="col-span-5">{SourceTitle}</Link>
+                        <Link href={linkSource} className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{SourceTitle}</Link>
                     </MetaPlace>
                 </div>
             </div>

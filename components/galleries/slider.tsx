@@ -44,7 +44,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
 
     return ( 
         <Section>
-            <div className="h-full max-h-[340px] overflow-hidden rounded-xl">
+            <div className="h-full sm:max-h-[340px] max-h-[250px] overflow-hidden rounded-xl">
                 <Swiper
                     loop={true}
                     spaceBetween={30}

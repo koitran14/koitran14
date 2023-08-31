@@ -22,9 +22,9 @@ const GalleriesPage = () => {
         <Section>
             <div className="relative">
                 <SliderIntro images={galleryImgs}/>
-                <div className="absolute sm:top-[20%] top-[8%] sm:left-16 left-4 z-10 max-w-screen">
+                <div className="absolute sm:top-[20%] top-[14%] sm:left-16 left-14 z-10 max-w-screen">
                     <div className="flex flex-col">
-                        <Heading fontSize={22} className="text-slate-200 font-semibold flex sm:justify-start justify-center">
+                        <Heading fontSize={20} className="text-slate-200 font-semibold flex sm:justify-start justify-center">
                             Activities
                         </Heading>
                         <div className="py-6">
@@ -44,7 +44,7 @@ const GalleriesPage = () => {
                                 as="button" 
                                 variant="solid" 
                                 rightIcon={<ChevronRightCircleIcon />}
-                                size="sm"
+                                size={"sm"}
                                 _hover={{ backgroundColor: activeColor, color: '#ffffff'}}
                                 _active={{ opacity: 0.9 }}
                             >

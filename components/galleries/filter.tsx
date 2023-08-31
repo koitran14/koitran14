@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 import { Field, ImageType } from "@/type";
@@ -48,6 +48,26 @@ const Filter: React.FC<FilterProps> = ({
         router.push(url);
     }
 
+    const [windowWidth, setWindowWidth] = useState<number | null >(null);
+
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      // Set initial width after component mounts
+      setWindowWidth(window.innerWidth);
+  
+      // Add resize event listener
+      window.addEventListener("resize", handleResize);
+  
+      // Clean up event listener
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
+      
+
     return (
         <div className="grid grid-cols-2 gap-3 items-center justify-center overflow-hidden">
             {data.map((filter) => (
@@ -55,7 +75,7 @@ const Filter: React.FC<FilterProps> = ({
                     key={filter.id}
                     variant={"outline"}
                     borderWidth={2}
-                    size={"lg"}
+                    size={windowWidth && windowWidth >= 640 ? "lg" : "md"}
                     bg={selectedValue === filter.id ? "white" : "transparent"}
                     color={selectedValue === filter.id ? "black" : "white"}
                     onClick={() => onClick(filter.id)}

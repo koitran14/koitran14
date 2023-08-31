@@ -16,7 +16,7 @@ export const MetaPlace = ({
 } : {
   children: React.ReactNode
 }) => (
-    <div className="grid grid-cols-6 gap-x-4">
+    <div className="grid grid-cols-6 sm:gap-x-4 gap-x-2 py-1">
       {children}
     </div>
 );
