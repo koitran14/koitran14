@@ -22,7 +22,7 @@ export default function RootLayout({
         <ChakraProvider theme={theme}>
           <Fonts />
           <NavBar /> 
-          <Container maxW="container.sm" pt={20} px={9}>
+          <Container maxW="container.sm" pt={20} px={10}>
               {children}
           </Container>
           <Footer />

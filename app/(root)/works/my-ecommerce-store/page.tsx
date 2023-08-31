@@ -43,19 +43,25 @@ const images = [{
 const DashBoardForAdmin = () => {
     const themeColor = useColorModeValue( '#f97316', '#22D3EE');
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [windowWidth, setWindowWidth] = useState<number | null >(null);
 
     useEffect(() => {
-        const handleResize = () => {
-          setWindowWidth(window.innerWidth);
-        };
-    
-        window.addEventListener("resize", handleResize);
-    
-        return () => {
-          window.removeEventListener("resize", handleResize);
-        };
-      }, []);
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      // Set initial width after component mounts
+      setWindowWidth(window.innerWidth);
+  
+      // Add resize event listener
+      window.addEventListener("resize", handleResize);
+  
+      // Clean up event listener
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
+
       
     return (
         <Section>
@@ -77,7 +83,7 @@ const DashBoardForAdmin = () => {
                     {/* Heading and description */}
                     <div className="flex sm:items-center items-start justify-between ">
                         <div className="flex gap-x-3 flex-col-reverse sm:flex-row gap-y-1 justify-start sm:items-center">
-                            <Heading as="h3" fontSize={windowWidth >=640 ? "25" : "20"} color={themeColor}>{title}</Heading>
+                            <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "25" : "20"} color={themeColor}>{title}</Heading>
                             <Badge className="text-lg w-fit">2023 - </Badge>
                         </div>
                         <div className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"

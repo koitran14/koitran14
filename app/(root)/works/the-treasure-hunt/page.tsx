@@ -38,10 +38,11 @@ const images = [
 },
 ]
 
+
 const DashBoardForAdmin = () => {
     const themeColor = useColorModeValue( '#f97316', '#22D3EE');
     const [windowWidth, setWindowWidth] = useState<number | null >(null);
-
+    
     useEffect(() => {
       const handleResize = () => {
         setWindowWidth(window.innerWidth);

@@ -38,11 +38,11 @@ const Address: React.FC<AddressProps> = ({
                 className="flex items-center font-bold"
                 href={prevLink}
             >
-                <Heading as="h3" fontSize={windowWidth && windowWidth>=640 ? "22 ": "md"} >{prevTitle}</Heading>
+                <Heading as="h3" fontSize={windowWidth && windowWidth>=640 ? "18 ": "md"} >{prevTitle}</Heading>
             </Link >
             <div className="flex items-center text-slate-400">
                 <ChevronRight className="h-5 w-5" />
-                <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "22 ": "md"} >{currentTitle}</Heading>
+                <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "18 ": "md"} >{currentTitle}</Heading>
             </div>
     </div>
     );

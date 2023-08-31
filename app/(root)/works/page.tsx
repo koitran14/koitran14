@@ -63,7 +63,7 @@ const Works = () => {
                 <SliderIntro projects={works}/>
                 <div className="flex items-center justify-between pb-10 pt-5">
                     <div>
-                        <Heading as="h3" fontSize={24} >Works</Heading>
+                        <Heading as="h3" fontSize={22} >Works</Heading>
                     </div>
                     <a href="https://github.com/koitran14?tab=repositories">
                             <Button 
@@ -102,7 +102,7 @@ const Works = () => {
             <div>
                 <div>
                     <div className="flex items-center pt-5 pb-10 border-t-[1px] border-t-white">
-                        <Heading as="h3" fontSize={24}>Collaborations</Heading>
+                        <Heading as="h3" fontSize={22}>Collaborations</Heading>
                     </div>
                     <div className="grid md:grid-cols-2 gap-4 items-start justify-center">
                         <div className="col-span-2">

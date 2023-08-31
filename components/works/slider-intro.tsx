@@ -95,7 +95,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                         src={project.href}
                                         alt="new"
                                         objectFit={"fill"}
-                                        className=" brightness-[50%] w-full h-full object-center"
+                                        className=" brightness-[40%] w-full h-full object-center"
                                     />
                                 </div>
                                 <div className="absolute z-10 top-0 sm:left-14 left-8 text-white h-full w-full cursor-pointer"
@@ -117,7 +117,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                                 {project.title}
                                             </Heading>
 
-                                            <p className="sm:w-[60%] w-[65%] sm:pb-6 pb-3 overflow-hidden font-semibold sm:text-[20px] text-[11px] text-justify">
+                                            <p className="sm:w-[60%] w-[65%] sm:pb-6 pb-3 overflow-hidden font-semibold sm:text-[20px] text-[13px] text-justify">
                                                 {project.description}
                                             </p>
                                 
