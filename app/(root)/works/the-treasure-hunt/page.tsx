@@ -80,7 +80,7 @@ const DashBoardForAdmin = () => {
                     {/* Heading and description */}
                     <div className="flex sm:items-center items-start justify-between ">
                         <div className="flex gap-x-3 flex-col-reverse sm:flex-row gap-y-1 justify-start sm:items-center">
-                            <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "25" : "20"} color={themeColor}>{title}</Heading>
+                            <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "25" : "22"} color={themeColor}>{title}</Heading>
                             <Badge className="text-lg w-fit">2023 - </Badge>
                         </div>
                         <div className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"

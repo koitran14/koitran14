@@ -68,10 +68,10 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
 
     return ( 
         <Section>
-            <div className="w-full h-full sm:max-h-[340px] max-h-[240px] overflow-hidden rounded-xl">
+            <div className="w-full h-full sm:max-h-[360px] max-h-[240px] overflow-hidden rounded-xl">
             <Swiper
                 loop={true}
-                spaceBetween={30}
+                spaceBetween={0}
                 centeredSlides={true}
                 autoplay={{
                     delay: 2500,
