@@ -15,7 +15,7 @@ const author = "Trần Ngọc Đăng Khôi";
 const description = "This is my personal project, using three languages JavaScript, HTML, and CSS to create an information page of the Information Technology Faculty Association for an eSport competition IT Gaming Tour: THE X AGENT.";
 const headingImg="/images/works/the-x-agent/image.png"
 
-const linkdemo = "Updating...";
+const linkdemo = "https://the-x-agent-info-page.vercel.app/";
 const linkSource = "https://github.com/koitran14/The-X-Agent-Info-Page";
 const SourceTitle = "The X Agent Info Page | Github";
 
@@ -92,7 +92,7 @@ const DashBoardForAdmin = () => {
                         <div className="col-start-1 ">
                             <Meta>WEBSITE</Meta>
                         </div>
-                        <Link href={""} target="_blank" className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{linkdemo}</Link>
+                        <Link href={linkdemo} target="_blank" className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{linkdemo}</Link>
                     </MetaPlace>
 
                     {/* PLATFORM */}
