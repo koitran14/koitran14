@@ -10,6 +10,7 @@ import theme from '@/components/theme'
 import Fonts from '@/components/ui/fonts'
 import Footer from '@/components/footer'
 
+
 export default function RootLayout({
   children,
 }: {
