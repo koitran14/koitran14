@@ -23,7 +23,8 @@ export default function Home() {
                   Hi, I'm Koi! 
                   <div className="animate-bounce">🥳</div>
                 </Heading>
-                <p className={`${color} font-medium md:text-justify text-center`}> Being a Computer Science junior at International University and a Saigonese full-stack Web Application developer, welcome to my portfolio. 💖</p>
+                
+                <p className={`${color} font-medium md:text-justify sm:w-[80%] md:w-full text-center self-center`}> Being a Computer Science junior at International University and a Saigonese full-stack Web Application developer, welcome to my portfolio. 💖</p>
               </div>
               <div className="px-2 py-4 items-center justify-center flex relative group">
                   <Image 

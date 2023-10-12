@@ -68,68 +68,68 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
 
     return ( 
         <Section>
-            <div className="w-full h-full sm:max-h-[360px] max-h-[240px] overflow-hidden rounded-xl">
-            <Swiper
-                loop={true}
-                spaceBetween={0}
-                centeredSlides={true}
-                autoplay={{
-                    delay: 2500,
-                    disableOnInteraction: false,
-                }}
-                pagination={{
-                    clickable: true,
-                }}
-                modules={[Autoplay, Pagination]}
-                onAutoplayTimeLeft={onAutoplayTimeLeft}
-                className="mySwiper"
-                speed={600}
-            >
-            {projects.map((project) => (
-                <div key={project.id}>
-                    {(project.newest || project.field === 'gallery') && (
-                        <SwiperSlide>
-                            <div className="relative">
-                                <div>
-                                    <Image
-                                        src={project.href}
-                                        alt="new"
-                                        objectFit={"fill"}
-                                        className=" brightness-[40%] w-full h-full object-center"
-                                    />
-                                </div>
-                                <div className="absolute z-10 top-0 sm:left-14 left-8 text-white h-full w-full cursor-pointer"
-                                    onClick={() => handlerClick(project.id)}
-                                >
-                                    <div className=" flex items-center h-full w-full">
-                                        <div>
-                                            {project.field !== 'gallery' && (
-                                                <Heading as="h2" 
-                                                fontSize={windowWidth && windowWidth >= 640 ? "22px" : "12px"} 
-                                                    className="bg-white text-black w-fit px-2 shadow-xl rounded-sm"
+            <div className="overflow-hidden rounded-xl">
+                <Swiper
+                    loop={true}
+                    spaceBetween={0}
+                    centeredSlides={true}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: false,
+                    }}
+                    pagination={{
+                        clickable: true,
+                        dynamicBullets: true,
+                        dynamicMainBullets: 1,
+                    }}
+                    modules={[Autoplay, Pagination]}
+                    onAutoplayTimeLeft={onAutoplayTimeLeft}
+                    className="mySwiper"
+                    speed={600}
+                >
+                {projects.map((project) => (
+                    <div key={project.id}>
+                        {(project.newest || project.field === 'gallery') && (
+                            <SwiperSlide>
+                                <div className="relative w-full sm:h-[360px] h-[210px] object-cover">
+                                        <Image
+                                            src={project.href}
+                                            alt="new"
+                                            className=" brightness-[40%] w-full h-full object-cover"
+                                        />
+                                  
+                                    <div className="absolute z-10 top-0 sm:left-14 left-8 text-white h-full w-full cursor-pointer"
+                                        onClick={() => handlerClick(project.id)}
+                                    >
+                                        <div className=" flex items-center h-full w-full">
+                                            <div>
+                                                {project.field !== 'gallery' && (
+                                                    <Heading as="h2" 
+                                                    fontSize={windowWidth && windowWidth >= 640 ? "22px" : "12px"} 
+                                                        className="bg-white text-black w-fit px-2 shadow-xl rounded-sm"
+                                                    >
+                                                        New
+                                                    </Heading>
+                                                )}
+                                                <Heading as="h3" fontSize={windowWidth && windowWidth >= 640 ? "28px" : "20px"} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
+                                                    className="sm:py-3 py-1"
                                                 >
-                                                    New
+                                                    {project.title}
                                                 </Heading>
-                                            )}
-                                            <Heading as="h3" fontSize={windowWidth && windowWidth >= 640 ? "28px" : "20px"} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
-                                                className="sm:py-3 py-1"
-                                            >
-                                                {project.title}
-                                            </Heading>
 
-                                            <p className="sm:w-[60%] w-[65%] sm:pb-6 pb-3 overflow-hidden font-semibold sm:text-[20px] text-[13px] text-justify">
-                                                {project.description}
-                                            </p>
-                                
+                                                <p className="sm:w-[60%] w-[65%] sm:pb-6 pb-3 overflow-hidden font-semibold sm:text-[20px] text-[13px] text-justify">
+                                                    {project.description}
+                                                </p>
+                                    
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>  
-                        </SwiperSlide>
-                    )}
-                </div>
-            ))}
-            </Swiper>
+                                </div>  
+                            </SwiperSlide>
+                        )}
+                    </div>
+                ))}
+                </Swiper>
             </div>
         </Section>
     );

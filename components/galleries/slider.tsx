@@ -44,7 +44,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
 
     return ( 
         <Section>
-            <div className="h-full sm:max-h-[340px] max-h-[250px] overflow-hidden rounded-xl">
+            <div className=" overflow-hidden rounded-xl">
                 <Swiper
                     loop={true}
                     spaceBetween={30}
@@ -54,8 +54,10 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                         disableOnInteraction: false,
                     }}
                     pagination={{
-                        clickable: true,
+                        enabled: false,
+                        clickable: false,  
                     }}
+                    
                     modules={[Autoplay, Pagination]}
                     onAutoplayTimeLeft={onAutoplayTimeLeft}
                     className="mySwiper"
@@ -65,11 +67,15 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                         <div key={image.alt}>
                     
                             <SwiperSlide>
-                                <Image
-                                    src={image.href}
-                                    alt={image.alt}
-                                    className=" brightness-[45%] object-cover w-full "
-                                />
+                                <div className="sm:h-[340px] h-[230px] w-full">
+                                    <Image
+                                        src={image.href}
+                                        alt={image.alt}
+                                        w={"full"}
+                                        h={"full"}
+                                        className=" brightness-[45%] object-cover w-full h-full"
+                                    />
+                                </div>
                             </SwiperSlide>
                         </div>
                     ))}
