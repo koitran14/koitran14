@@ -82,7 +82,7 @@ const AlgoVisualizerPage = () => {
                     <div className="flex items-start justify-between ">
                         <div className="flex gap-x-3 flex-col gap-y-1 justify-start">
                             <Heading className="w-[80%]" as="h3" fontSize={windowWidth && windowWidth >=640 ? "25" : "22"} color={themeColor}>{title}</Heading>
-                            <Badge className="text-lg w-fit">2023 - </Badge>
+                            <Badge className="text-lg w-fit">2024 - </Badge>
                         </div>
                         <div className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"
                             style={{ backgroundColor: themeColor }}
