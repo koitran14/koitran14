@@ -111,12 +111,12 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                                         New
                                                     </Heading>
                                                 )}
-                                                <Heading as="h3" fontSize={windowWidth && windowWidth >= 640 ? "28px" : "20px"} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
+                                                <Heading as="h3" fontSize={windowWidth && windowWidth >= 640 ? "28px" : "16px"} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
                                                     className="sm:py-3 py-1 w-[75%]"
                                                 >
                                                     {project.title}
                                                 </Heading>
-                                                <p className="w-[72%] line-clamp-3 font-medium">
+                                                <p className="w-[72%] line-clamp-3 font-medium md:text-xl text-sm">
                                                     {project.description}
                                                 </p>
                                             </div>
