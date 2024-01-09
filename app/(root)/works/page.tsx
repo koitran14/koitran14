@@ -13,16 +13,26 @@ const thumbXAgent = "/images/works/the-x-agent/image.png";
 const thumbTreasureHunt = "/images/works/the-treasure-hunt/image.gif";
 const thumbStoreDashboard = "/images/works/dashboard-for-admin/image.png";
 const thumbEcommerceStore = "/images/works/my-ecommerce-store/image.png";
+const thumbAlgoVisualizer = "/images/works/algoVisualizer/image.png";
 
 
 const works: Project[] = [
+    {
+        id: "algovisualizer",
+        title: "AlgoVisualizer.io: Algorithms Visualizer Website",
+        href: thumbAlgoVisualizer,
+        author: "Tran Ngoc Dang Khoi",
+        newest: true,
+        description: "This website offers visualizations and explanations for Algorithms and Data Structures. Dive into sorting, graph traversal, and dynamic programming, gaining insights into their efficiency and real-world applications. Understand complex concepts effortlessly through interactive representations, strengthening your problem-solving skills in algorithmic scenarios.",
+        field: "works"
+    },
     {
         id: "my-ecommerce-store",
         title: "Pisces: The E-shop",
         href: thumbEcommerceStore,
         author: "Tran Ngoc Dang Khoi",
         newest: true,
-        description: "This is my own store (pisces.io) served for my practice in learning full-stack web development...",
+        description: "This is my own store (pisces.io) served for my practice in learning full-stack web development and connected to my Dashboard manager.",
         field: "works"
     },
     {

@@ -51,7 +51,7 @@ const GridItems: React.FC<GridItemsProps> = ({
                                     </p>
                                 </div>
                             </div>
-                            <p className="text-sm items-center flex justify-center text-center md:px-3 px-5 ">
+                            <p className="text-sm text-center md:px-3 px-5 line-clamp-3">
                                 {children}
                             </p>
                         </div>

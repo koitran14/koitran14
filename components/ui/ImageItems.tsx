@@ -17,7 +17,7 @@ const ImageItems: React.FC<GalleryProp> = ({
 
     return (
         <Section>
-            <div>
+            <div className="h-full w-full">
                 <Image
                     key={image.href}
                     src={image.href}
@@ -37,7 +37,7 @@ const ImageItems: React.FC<GalleryProp> = ({
                                         src={image.href}
                                         alt={image.alt}
                                         onClick={onOpen}
-                                        className="max-h-[560px]"
+                                        className="max-h-[90%]"
                                     />
                                     {image.alt !== undefined && (
                                         <div className="absolute top-3 left-4">

@@ -95,7 +95,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                         <Image
                                             src={project.href}
                                             alt="new"
-                                            className=" brightness-[40%] w-full h-full object-cover"
+                                            className=" brightness-[35%] w-full h-full object-cover"
                                         />
                                   
                                     <div className="absolute z-10 top-0 sm:left-14 left-8 text-white h-full w-full cursor-pointer"
@@ -112,15 +112,13 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                                                     </Heading>
                                                 )}
                                                 <Heading as="h3" fontSize={windowWidth && windowWidth >= 640 ? "28px" : "20px"} fontWeight={"bold"} color={"yellow.200"} shadow={"xl"}
-                                                    className="sm:py-3 py-1"
+                                                    className="sm:py-3 py-1 w-[75%]"
                                                 >
                                                     {project.title}
                                                 </Heading>
-
-                                                <p className="sm:w-[60%] w-[65%] sm:pb-6 pb-3 overflow-hidden font-semibold sm:text-[20px] text-[13px] text-justify">
+                                                <p className="w-[72%] line-clamp-3 font-medium">
                                                     {project.description}
                                                 </p>
-                                    
                                             </div>
                                         </div>
                                     </div>
