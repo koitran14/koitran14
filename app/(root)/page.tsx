@@ -23,7 +23,6 @@ export default function Home() {
                   Hi, I'm Koi! 
                   <div className="animate-bounce">🥳</div>
                 </Heading>
-                
                 <p className={`${color} font-medium md:text-justify sm:w-[80%] md:w-full text-center self-center`}> Being a Computer Science junior at International University and a Saigonese full-stack Web Application developer, welcome to my portfolio. 💖</p>
               </div>
               <div className="px-2 py-4 items-center justify-center flex relative group">
@@ -52,13 +51,13 @@ export default function Home() {
               As a junior at International University,
               I have a huge passion on web application development, combining technical expertise with an artistic touch. 
               Explore my diverse portfolio and join me in shaping a meaningful impact in the world of web development and 
-              beyond. Currently, my newest personal project called{' '}
+              beyond. Visit my {' '}
               <Link
-                href="/works/store-dashboard"
+                href="/works/"
               >
-                Dashboard for Store
+                works
               </Link>
-              .
+              {' '} now.
             </Paragraph>
             
             <div className="flex pt-9 pb-3 items-center justify-center">

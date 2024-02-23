@@ -31,7 +31,6 @@ const works: Project[] = [
         title: "Pisces: The E-shop",
         href: thumbEcommerceStore,
         author: "Tran Ngoc Dang Khoi",
-        newest: true,
         description: "This is my own store (pisces.io) served for my practice in learning full-stack web development and connected to my Dashboard manager.",
         field: "works"
     },
@@ -40,7 +39,6 @@ const works: Project[] = [
         title: "Dashboard for Admin",
         href: thumbStoreDashboard,
         author: "Tran Ngoc Dang Khoi",
-        newest: true,
         description: "This is a web that supports for admin in business management...",
         field: "works"
     },
