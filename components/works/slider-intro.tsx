@@ -1,6 +1,6 @@
 "use client"
 
-import { Project, Work } from "@/schema/type";
+import { Work } from "@/schema/type";
 import {  Heading, Image } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import Section from "../section";
