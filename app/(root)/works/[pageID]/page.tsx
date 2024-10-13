@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Section from "@/components/section";
 import { Meta, MetaPlace } from "@/components/ui/meta";
@@ -12,119 +12,166 @@ import { works } from "@/data/works";
 import { useParams } from "next/navigation";
 
 const AlgoVisualizerPage = () => {
-    const params = useParams();
-    const themeColor = useColorModeValue( '#f97316', '#22D3EE');
+  const params = useParams();
+  const themeColor = useColorModeValue("#f97316", "#22D3EE");
 
-    const [windowWidth, setWindowWidth] = useState<number | null >(null);
+  const [windowWidth, setWindowWidth] = useState<number | null>(null);
 
-    useEffect(() => {
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
-  
-      // Set initial width after component mounts
+  useEffect(() => {
+    const handleResize = () => {
       setWindowWidth(window.innerWidth);
-  
-      // Add resize event listener
-      window.addEventListener("resize", handleResize);
-  
-      // Clean up event listener
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }, []);
+    };
 
-    const page = works.find(work => work.id === params.pageID);
+    // Set initial width after component mounts
+    setWindowWidth(window.innerWidth);
 
-    return (
-        <Section>
-            {page ? (
-                <>
-                    <Address 
-                    prevLink="/works"
-                    prevTitle="Works"
-                    currentTitle={page.title}
-                    />
-                    <div>
-                        <div className="pb-5 pt-2">
-                            <Image 
-                                src={page.headingImg}
-                                alt={page.title}
-                                className="rounded-lg"
-                            />
-                        </div>
-                    <div>
+    // Add resize event listener
+    window.addEventListener("resize", handleResize);
 
-                        {/* Heading and description */}
-                        <div className="flex items-start justify-between ">
-                            <div className="flex gap-x-3 flex-col gap-y-1 justify-start w-full">
-                                <Badge className="text-lg w-fit">{page.publishYear}</Badge>
-                                <Heading className="max-w-[98%]" as="h3" fontSize={windowWidth && windowWidth >=640 ? "25" : "22"} color={themeColor}>{page.title}</Heading>
-                            </div>
-                            {page.newest && (
-                                 <div className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"
-                                 style={{ backgroundColor: themeColor }}
-                             >
-                                 <p>New</p>
-                                 <MdStars className="h-[1.2rem] w-[1.2rem]"/>
-                             </div>
-                            )}
-                           
-                        </div>
-                        <p className="font-semibold text-slate-500 text-bold w-[70%]">{page.author}</p>
-                        <div className="py-5">
-                            <p className="text-justify">{page.description}</p>
-                        </div>
-                    
-                    {/* Place to put all sources and tags */}
-                    {/* WEBSITE */}
-                        {page.linkAttached.linkdemo && (
-                            
-                            <MetaPlace>
-                            <div className="col-start-1 ">
-                                <Meta>WEBSITE</Meta>
-                            </div>
-                            <Link href={page.linkAttached.linkdemo} target="_blank" className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{page.linkAttached.linkdemo}</Link>
-                            </MetaPlace>
-                        )}
+    // Clean up event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-                        {/* PLATFORM */}
-                        <MetaPlace>
-                            <div className="col-start-1 ">
-                                <Meta>PLATFORM</Meta>
-                            </div>
-                            <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{page.platform}</p>
-                        </MetaPlace>
+  const page = works.find((work) => work.id === params.pageID);
 
-                        {/* STACK */}
-                        <MetaPlace>
-                            <div className="col-start-1 ">
-                                <Meta>STACK</Meta>
-                            </div>
-                            <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{page.stack}</p>
-                        </MetaPlace>
-
-                        {/* GITHUB SOURCES */}
-                        <MetaPlace>
-                            <div className="col-start-1 ">
-                                <Meta>SOURCE</Meta>
-                            </div>
-                            <Link href={page.linkAttached.linkSource} className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">{page.linkAttached.SourceTitle}</Link>
-                        </MetaPlace>
-                    </div>
+  return (
+    <Section>
+      {page ? (
+        <>
+          <Address
+            prevLink="/works"
+            prevTitle="Works"
+            currentTitle={page.title}
+          />
+          <div>
+            <div className="pb-5 pt-2">
+              <Image
+                src={page.headingImg}
+                alt={page.title}
+                className="rounded-lg"
+              />
+            </div>
+            <div>
+              {/* Heading and description */}
+              <div className="flex items-start justify-between ">
+                <div className="flex gap-x-3 flex-col gap-y-1 justify-start w-full">
+                  <Badge className="text-lg w-fit">{page.publishYear}</Badge>
+                  <Heading
+                    className="max-w-[98%]"
+                    as="h3"
+                    fontSize={windowWidth && windowWidth >= 640 ? "25" : "22"}
+                    color={themeColor}
+                  >
+                    {page.title}
+                  </Heading>
                 </div>
-                <div>
-                    <Heading as="h3" fontSize={18} variant="section-title" className=" py-4">Screenshots</Heading>
-                    <Gallery images={page.images} />
+                {page.newest && (
+                  <div
+                    className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"
+                    style={{ backgroundColor: themeColor }}
+                  >
+                    <p>New</p>
+                    <MdStars className="h-[1.2rem] w-[1.2rem]" />
+                  </div>
+                )}
+              </div>
+              <p className="font-semibold text-slate-500 text-bold w-[70%]">
+                {page.author}
+              </p>
+              <div className="py-5">
+                <p className="text-justify">{page.description}</p>
+              </div>
+
+              {/* Place to put all sources and tags */}
+              {/* WEBSITE */}
+              {page.linkAttached.linkdemo && (
+                <MetaPlace>
+                  <div className="col-start-1 ">
+                    <Meta>WEBSITE</Meta>
+                  </div>
+                  <Link
+                    href={page.linkAttached.linkdemo}
+                    target="_blank"
+                    className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3"
+                  >
+                    {page.linkAttached.linkdemo}
+                  </Link>
+                </MetaPlace>
+              )}
+
+              {/* PLATFORM */}
+              <MetaPlace>
+                <div className="col-start-1 ">
+                  <Meta>PLATFORM</Meta>
                 </div>
-                </>
-            ): (
-                <div className="h-full w-full flex items-center justify-center">
-                    404: NOT FOUND
+                <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">
+                  {page.platform}
+                </p>
+              </MetaPlace>
+
+              {/* STACK */}
+              <MetaPlace>
+                <div className="col-start-1 ">
+                  <Meta>STACK</Meta>
                 </div>
-            )}
-       </Section>
-    );
-}
- 
+                <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">
+                  {page.stack}
+                </p>
+              </MetaPlace>
+
+              {/* GITHUB SOURCES */}
+              <MetaPlace>
+                <div className="col-start-1 ">
+                  <Meta>SOURCE</Meta>
+                </div>
+                <Link
+                  href={page.linkAttached.linkSource}
+                  className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3"
+                >
+                  {page.linkAttached.SourceTitle}
+                </Link>
+              </MetaPlace>
+            </div>
+          </div>
+
+          {page.demoVideo && (
+            <div className="w-full flex flex-col">
+              <Heading
+                variant="section-title"
+                fontSize={18}
+                as="h3"
+                className="py-4"
+              >
+                Demo Video
+              </Heading>
+              <video controls className="w-full h-auto">
+                <source src={page.demoVideo} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
+
+          <div>
+            <Heading
+              as="h3"
+              fontSize={18}
+              variant="section-title"
+              className=" py-4"
+            >
+              Screenshots
+            </Heading>
+            <Gallery images={page.images} />
+          </div>
+        </>
+      ) : (
+        <div className="h-full w-full flex items-center justify-center">
+          404: NOT FOUND
+        </div>
+      )}
+    </Section>
+  );
+};
+
 export default AlgoVisualizerPage;

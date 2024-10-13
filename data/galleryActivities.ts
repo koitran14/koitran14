@@ -1,4 +1,4 @@
-import { Field } from "@/type";
+import { Field } from "@/schema/type";
 
 const galleryActivity: Field[] = [
     {

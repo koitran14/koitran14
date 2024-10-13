@@ -2,7 +2,7 @@
 
 import ImageItems from "./ImageItems";
 
-import { ImageType } from "@/type";
+import { ImageType } from "@/schema/type";
 
 interface GalleryProps {
     images: ImageType[];

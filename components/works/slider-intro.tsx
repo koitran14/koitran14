@@ -1,6 +1,6 @@
 "use client"
 
-import { Project } from "@/type";
+import { Project, Work } from "@/schema/type";
 import {  Heading, Image } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import Section from "../section";
@@ -13,7 +13,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 interface SliderIntroProps {
-    projects: Project[]
+    projects: Work[]
 }
 
 interface ProgressCircleRef {
@@ -74,7 +74,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                     spaceBetween={0}
                     centeredSlides={true}
                     autoplay={{
-                        delay: 2500,
+                        delay: 1000,
                         disableOnInteraction: false,
                     }}
                     pagination={{
@@ -93,7 +93,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({
                             <SwiperSlide>
                                 <div className="relative w-full sm:h-[360px] h-[210px] object-cover">
                                         <Image
-                                            src={project.href}
+                                            src={project.headingImg}
                                             alt="new"
                                             className=" brightness-[35%] w-full h-full object-cover"
                                         />

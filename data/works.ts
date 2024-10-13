@@ -1,5 +1,50 @@
+import { Work } from "@/schema/type";
 
-export const works = [ 
+enum Field {
+    PERSONAL = "works",
+    COLLABORATE = "collabs"
+}
+
+export const works: Work[] = [ 
+    {
+        id: "iu-blackboard",
+        title: "IU Blackboard: Course Management System",
+        author: "Trần Ngọc Đăng Khôi, Đỗ Duy Anh",
+        description: "The `Blackboard IU` project is meticulously crafted to serve as an advanced education management system, streamlining academic administration with its array of essential functionalities. Users, whether they be students or instructors, are empowered with seamless access to a range of features designed to enhance their educational experience.",
+        headingImg: "/images/works/iu-blackboard/image.png",
+        stack: "React, NextJS, TailwindCSS, NodeJS, SQL Server",
+        linkAttached: {
+            linkSource: "https://github.com/koitran14/Course-Management-Project/tree/master",
+            SourceTitle: "Course Management System | Github"
+        },
+        platform: "Windows/macOS/Linux",
+        field: Field.COLLABORATE,
+        newest: true,
+        publishYear: 2024,
+        demoVideo: "/images/works/iu-blackboard/demo.mp4",
+        images: [
+            {
+                alt: "1",
+                href: "/images/works/iu-blackboard/1.png",
+            },
+            {
+                alt: "2",
+                href: "/images/works/iu-blackboard/2.png",
+            },
+            {
+                alt: "3",
+                href: "/images/works/iu-blackboard/3.png",
+            },
+            {
+                alt: "4",
+                href: "/images/works/iu-blackboard/4.png",
+            },
+            {
+                alt: "5",
+                href: "/images/works/iu-blackboard/5.png",
+            }
+        ]
+    },
     {
         id: "algovisualizer",
         title: "AlgoVisualizer.io: Algorithms Visualizer Website",
@@ -13,7 +58,7 @@ export const works = [
             SourceTitle: "Algorithms Visualizer | Github"
         },
         platform: "Windows/macOS/Linux",
-        field: "works",
+        field: Field.PERSONAL,
         newest: true,
         publishYear: 2024,
         images: [
@@ -46,7 +91,7 @@ export const works = [
         description: "This is my own store (pisces.io) served for my practice in learning full-stack web development and connected to my Dashboard manager, which called Dashboard for Store.",
         headingImg: "/images/works/my-ecommerce-store/image.png",
         stack: "NextJS, Tailwind, MongoDB, Prisma, Stripe.",
-        field: "works",
+        field: Field.PERSONAL,
         linkAttached: {
             linkdemo: "https://my-ecommerce-store.vercel.app/",
             linkSource: "https://github.com/koitran14/My-Ecommerce-Store",
@@ -88,7 +133,7 @@ export const works = [
         description: "This is a web that supports for admin in business management. It is also a creation of my practice in learning of NextJS, TailwindCSS worked with Database MySQL, Prisma and MongoDB.",
         headingImg: "/images/works/dashboard-for-admin/image.png",
         stack: "NextJS, Tailwind, MongoDB, Prisma, Stripe.",
-        field: "works",
+        field: Field.PERSONAL,
         linkAttached: {
             linkdemo: "https://store-dash-board-for-admin.vercel.app/",
             linkSource: "https://github.com/koitran14/Store-DashBoard-For-Admin",
@@ -126,8 +171,7 @@ export const works = [
         description: "The pirate game as a teamwork project based on Object-Oriented Programming's deep learning and 'the pirate' as the concept.",
         headingImg: "/images/works/the-treasure-hunt/image.gif",
         stack: "Java.",
-        field: "collabs",
-        newest: true,
+        field: Field.COLLABORATE,
         linkAttached: {
             linkSource: "https://github.com/koitran14/The-Treasure-Hunt-Project",
             SourceTitle: "The Treasure Hunt Project | Github"
@@ -164,7 +208,7 @@ export const works = [
         description: "This is my personal project, using three languages JavaScript, HTML, and CSS to create an information page of the Information Technology Faculty Association for an eSport competition IT Gaming Tour: THE X AGENT.",
         headingImg: "/images/works/the-x-agent/image.png",
         stack: "HTML, CSS, JavaScript.",
-        field: "works",
+        field: Field.PERSONAL,
         linkAttached: {
             linkdemo: "https://the-x-agent-info-page.vercel.app/",
             linkSource: "https://github.com/koitran14/The-X-Agent-Info-Page",

@@ -1,4 +1,4 @@
-import { ImageType } from "@/type";
+import { ImageType } from "@/schema/type";
 
 const galleryImgs: ImageType[] = [
 

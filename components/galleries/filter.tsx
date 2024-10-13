@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
-import { Field, ImageType } from "@/type";
+import { Field, ImageType } from "@/schema/type";
 import { Button } from "@chakra-ui/react";
 
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { Image, useDisclosure } from "@chakra-ui/react";
-import { ImageType } from "@/type";
+import { ImageType } from "@/schema/type";
 import Modal from "@/components/ui/modal";
 import Section from "../section";
 

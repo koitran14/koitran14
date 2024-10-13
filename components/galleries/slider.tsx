@@ -1,6 +1,6 @@
 "use client"
 
-import { ImageType } from "@/type";
+import { ImageType } from "@/schema/type";
 import { Image } from "@chakra-ui/react";
 
 import Section from "../section";

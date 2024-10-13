@@ -7,60 +7,7 @@ import GridItems from "./components/grid-items";
 import { ChevronRightCircleIcon } from "lucide-react";
 import { useColorModeValue } from "@chakra-ui/react";
 import SliderIntro from "@/components/works/slider-intro";
-import { Project } from "@/type";
-
-const thumbXAgent = "/images/works/the-x-agent/image.png";
-const thumbTreasureHunt = "/images/works/the-treasure-hunt/image.gif";
-const thumbStoreDashboard = "/images/works/dashboard-for-admin/image.png";
-const thumbEcommerceStore = "/images/works/my-ecommerce-store/image.png";
-const thumbAlgoVisualizer = "/images/works/algoVisualizer/image.png";
-
-
-const works: Project[] = [
-    {
-        id: "algovisualizer",
-        title: "AlgoVisualizer.io: Algorithms Visualizer Website",
-        href: thumbAlgoVisualizer,
-        author: "Tran Ngoc Dang Khoi",
-        newest: true,
-        description: "This website offers visualizations and explanations for Algorithms and Data Structures. Dive into sorting, graph traversal, and dynamic programming, gaining insights into their efficiency and real-world applications. Understand complex concepts effortlessly through interactive representations, strengthening your problem-solving skills in algorithmic scenarios.",
-        field: "works"
-    },
-    {
-        id: "my-ecommerce-store",
-        title: "Pisces: The E-shop",
-        href: thumbEcommerceStore,
-        author: "Tran Ngoc Dang Khoi",
-        description: "This is my own store (pisces.io) served for my practice in learning full-stack web development and connected to my Dashboard manager.",
-        field: "works"
-    },
-    {
-        id: "store-dashboard",
-        title: "Dashboard for Admin",
-        href: thumbStoreDashboard,
-        author: "Tran Ngoc Dang Khoi",
-        description: "This is a web that supports for admin in business management...",
-        field: "works"
-    },
-    {
-        id: "the-x-agent",
-        title: "The X Agent Homepage",
-        href: thumbXAgent,
-        author: "Tran Ngoc Dang Khoi",
-        description: "The homepage of the Information Technology Faculty Association for an eSport competition IT Gaming Tour: THE X AGENT.",
-        field: "works"
-
-    },
-    {
-        id: "the-treasure-hunt",
-        title: "The Treasure Hunt",
-        href: thumbTreasureHunt,
-        author: "Tran Ngoc Dang Khoi, Nguyen Tran Hoang Ha, Ha Van Uyen Nhi, Nguyen Hoang Quan",
-        newest: true,
-        description: "The pirate game as a teamwork project based on Object-Oriented Programming's deep learning and 'the pirate' as the concept.",
-        field: "collabs"
-    },
-]
+import { works } from "@/data/works";
 
 const Works = () => {
     const activeColor = useColorModeValue( '#f97316', '#ec4899');
@@ -95,7 +42,7 @@ const Works = () => {
                                     key={work.id}
                                     id={work.id}
                                     title={work.title} 
-                                    thumbnail={work.href}
+                                    thumbnail={work.headingImg}
                                     author={work.author}
                                     newest={work.newest}
                                     >            
@@ -120,7 +67,7 @@ const Works = () => {
                                     key={work.id}
                                     id={work.id}
                                     title={work.title} 
-                                    thumbnail={work.href}
+                                    thumbnail={work.headingImg}
                                     author={work.author}
                                     newest={work.newest}
                                     >            
@@ -137,3 +84,4 @@ const Works = () => {
 }
  
 export default Works;
+
