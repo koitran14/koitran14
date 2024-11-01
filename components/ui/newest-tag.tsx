@@ -8,7 +8,7 @@ const NewestTag = () => {
         >
             <div className="flex items-center gap-x-1 text-sm font-semibold text-white p-1 ">
                 <p>New</p>
-                <MdStars className="h-[1.2rem] w-[1.2rem]"/>
+                <MdStars className="h-[1.2rem] w-[1.2rem] animate-spin"/>
             </div>
         </div>
     );
