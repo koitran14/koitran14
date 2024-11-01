@@ -59,8 +59,8 @@ const Works = () => {
                     <div className="flex items-center pt-5 pb-10 border-t-[1px] border-t-white">
                         <Heading as="h3" fontSize={22}>Collaborations</Heading>
                     </div>
-                    <div className="grid md:grid-cols-2 gap-4 items-start justify-center">
-                        <div className="col-span-2">
+                    <div className="grid md:grid-cols-2  items-start justify-center">
+                        <div className="col-span-2 space-y-12">
                             {works.map((work) => {
                                 return work.field === 'collabs' && (
                                     <GridItems 
