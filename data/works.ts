@@ -64,7 +64,7 @@ export const works: Work[] = [
         field: Field.COLLABORATE,
         newest: true,
         publishYear: 2024,
-        demoVideo: "https://se5xth6pscyepstu.public.blob.vercel-storage.com/demo-9jbz9RTNht0SiDVfVdO9sfX8PSw5aO.mp4",
+        demoVideo: "https://www.youtube.com/watch?v=LgzlADwTnGk",
         images: [
             {
                 alt: "1",

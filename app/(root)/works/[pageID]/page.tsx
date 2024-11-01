@@ -136,23 +136,32 @@ const AlgoVisualizerPage = () => {
             </div>
           </div>
 
-          {page.demoVideo && (
-            <div className="w-full flex flex-col">
-              <Heading
-                variant="section-title"
-                fontSize={18}
-                as="h3"
-                className="py-4"
-              >
-                Demo Video
-              </Heading>
-              <video controls className="w-full h-auto">
-                <source src={page.demoVideo} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
+          {page.demoVideo &&
+            <Heading
+            as="h3"
+            fontSize={18}
+            variant="section-title"
+            className=" py-4"
+          >
+            Demo Video
+          </Heading>
+          }
+          {page.demoVideo && page.demoVideo.includes("youtube") ? (
+            <iframe
+              width="100%"
+              height="280px"
+              src={page.demoVideo.replace("watch?v=", "embed/")}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="mt-4"
+            ></iframe>
+          ) : (
+            <video controls className="w-full h-auto">
+              <source src={page.demoVideo} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           )}
-
           <div>
             <Heading
               as="h3"
