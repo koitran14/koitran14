@@ -136,17 +136,17 @@ const AlgoVisualizerPage = () => {
             </div>
           </div>
 
-          {page.demoVideo &&
+          {page.demoVideo && (
             <Heading
-            as="h3"
-            fontSize={18}
-            variant="section-title"
-            className=" py-4"
-          >
-            Demo Video
-          </Heading>
-          }
-          {page.demoVideo && page.demoVideo.includes("youtube") ? (
+              as="h3"
+              fontSize={18}
+              variant="section-title"
+              className=" py-4"
+            >
+              Demo Video
+            </Heading>
+          )}
+          {page.demoVideo && page.demoVideo.includes("youtube") && (
             <iframe
               width="100%"
               height="280px"
@@ -156,7 +156,8 @@ const AlgoVisualizerPage = () => {
               allowFullScreen
               className="mt-4"
             ></iframe>
-          ) : (
+          )}
+          {page.demoVideo && !page.demoVideo.includes("youtube") && (
             <video controls className="w-full h-auto">
               <source src={page.demoVideo} type="video/mp4" />
               Your browser does not support the video tag.
