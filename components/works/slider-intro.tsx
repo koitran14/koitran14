@@ -69,7 +69,7 @@ const SliderIntro: React.FC<SliderIntroProps> = ({ projects }) => {
 
   return (
     <Section>
-      <div className="overflow-hidden rounded-xl border-4 border-white shadow-xl hover:shadow-slate-500">
+      <div className="overflow-hidden rounded-xl border-4 border-zinc-200 shadow-xl hover:shadow-slate-500">
         <Swiper
           loop={true}
           spaceBetween={0}
