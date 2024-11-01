@@ -7,6 +7,49 @@ enum Field {
 
 export const works: Work[] = [ 
     {
+        id: "whiteboard-project",
+        title: "Sketcha: The Whiteboard Platform",
+        author: "Trần Ngọc Đăng Khôi, Trần Phương Quang Huy",
+        description: "The Sketcha: Whiteboard Platform aims to provide an interactive whiteboard for collaborative work and educational purposes. Users can draw, annotate, and share their boards in real-time, making it an ideal tool for remote learning, brainstorming sessions, and team collaborations.",
+        headingImg: "/images/works/whiteboard-project/thumbnail.png",
+        stack: "React, NextJS, TailwindCSS, NodeJS, MongoDB, Liveblocks.",
+        linkAttached: {
+            linkSource: "https://github.com/koitran14/WhiteBoard-Platform",
+            SourceTitle: "Sketcha: Whiteboard Platform | Github",
+            linkdemo: "https://white-board-platform.vercel.app/",
+        },
+        platform: "Windows/macOS/Linux",
+        field: Field.COLLABORATE,
+        newest: true,
+        publishYear: 2024,
+        images: [
+            {
+                alt: "1",
+                href: "/images/works/whiteboard-project/1.png",
+            },
+            {
+                alt: "2",
+                href: "/images/works/whiteboard-project/2.png",
+            },
+            {
+                alt: "3",
+                href: "/images/works/whiteboard-project/3.png",
+            },
+            {
+                alt: "4",
+                href: "/images/works/whiteboard-project/4.png",
+            },
+            {
+                alt: "5",
+                href: "/images/works/whiteboard-project/5.png",
+            },
+            {
+                alt: "6",
+                href: "/images/works/whiteboard-project/6.png",
+            }
+        ]
+    },
+    {
         id: "iu-blackboard",
         title: "IU Blackboard: Course Management System",
         author: "Trần Ngọc Đăng Khôi, Đỗ Duy Anh",
