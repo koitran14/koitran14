@@ -21,7 +21,7 @@ export const works: Work[] = [
         field: Field.COLLABORATE,
         newest: true,
         publishYear: 2024,
-        demoVideo: "/images/works/iu-blackboard/demo.mp4",
+        demoVideo: "https://se5xth6pscyepstu.public.blob.vercel-storage.com/demo-9jbz9RTNht0SiDVfVdO9sfX8PSw5aO.mp4",
         images: [
             {
                 alt: "1",
