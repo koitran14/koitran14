@@ -23,7 +23,7 @@ export default function Home() {
                   Hi, I'm Koi! 
                   <div className="animate-bounce">🥳</div>
                 </Heading>
-                <p className={`${color} font-medium md:text-justify sm:w-[80%] md:w-full text-center self-center`}> Being a Computer Science junior at International University and a Saigonese full-stack Web Application developer, welcome to my portfolio. 💖</p>
+                <p className={`${color} font-medium md:text-justify sm:w-[80%] md:w-full text-center self-center`}> Being a Computer Science senior at International University and a Saigonese full-stack Web Application developer, welcome to my portfolio. 💖</p>
               </div>
               <div className="px-2 py-4 items-center justify-center flex relative group">
                   <Image 
@@ -48,7 +48,7 @@ export default function Home() {
           <Section delay={0.2}>
             <Heading as="h3" variant="section-title">About me</Heading>
             <Paragraph>
-              As a junior at International University,
+              As a senior student at International University,
               I have a huge passion on web application development, combining technical expertise with an artistic touch. 
               Explore my diverse portfolio and join me in shaping a meaningful impact in the world of web development and 
               beyond. Visit my {' '}
