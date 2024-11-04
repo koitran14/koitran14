@@ -77,22 +77,6 @@ export async function sendContactUsSubmissionTemplate({
       from: process.env.EMAIL_USER, // Use your company's email as the sender
       to: parsed.email,
       subject: "Thank You for Reaching Out!",
-      attachments: [
-        {
-          filename: "linkedin.png",
-          path: "./public/icons/linkedin.png",
-          contentDisposition: "inline",
-          cid: "linkedin.png",
-          contentType: "image/png",
-        },
-        {
-          filename: "github.png",
-          path: "./public/icons/github.png",
-          contentDisposition: "inline",
-          cid: "github.png",
-          contentType: "image/png",
-        },
-      ],
       html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: #f9fafb;">
         <div style="background-color: #ffffff; padding: 20px; border-radius: 10px; color: #333;">
@@ -120,15 +104,6 @@ export async function sendContactUsSubmissionTemplate({
             Best regards,<br>
             <strong style="color: #0077cc;">Tran Ngoc Dang Khoi</strong>
           </p>
-          <div style="margin-top: 20px; text-align: center;">
-           
-            <a href="https://www.linkedin.com/in/koitran1403/" style="margin: 0 10px;">
-              <img src="cid:linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px;" />
-            </a>
-            <a href="https://github.com/koitran14" style="margin: 0 10px;">
-              <img src="cid:github.png" alt="GitHub" style="width: 24px; height: 24px;" />
-            </a>
-          </div>
         </div>
         
         <footer style="font-size: 12px; color: #888; margin-top: 20px; padding-top: 10px; text-align: center;">

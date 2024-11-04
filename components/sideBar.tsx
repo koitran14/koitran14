@@ -26,7 +26,7 @@ export const SideBar = () => {
   const { onOpen } = useContactHook();
 
   return (
-    <div className="fixed bottom-2 lg:right-[28%] right-2 p-2 z-50 flex flex-col items-center transition-all duration-300 ease-in-out space-y-4">
+    <div className="fixed bottom-2 lg:right-[25%] right-2 p-2 z-50 flex flex-col items-center transition-all duration-300 ease-in-out space-y-4">
       {/* Expanded Sidebar Actions with Animation */}
       <AnimatePresence>
         {isExpanded && (
