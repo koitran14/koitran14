@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useColorModeValue } from "@chakra-ui/react";
-import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
+import { AlignJustify, Facebook, Instagram, Linkedin, Mail, X } from "lucide-react";
+import useContactHook from "@/hooks/useContactHook";
 
 export const SideBar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -15,16 +16,17 @@ export const SideBar = () => {
     visible: { opacity: 1, y: 0 },
   };
 
-  // Array of platform data including icons and URLs
   const platforms = [
     { name: "facebook", Icon: Facebook, url: "https://facebook.com/your-profile", bgColor: "bg-blue-600" },
-    { name: "linkedin", Icon: Linkedin, url: "https://linkedin.com/your-profile", bgColor: "bg-blue-700" },
+    { name: "linkedin", Icon: Linkedin, url: "https://www.linkedin.com/in/koitran1403/", bgColor: "bg-blue-700" },
     { name: "instagram", Icon: Instagram, url: "https://instagram.com/your-profile", bgColor: "bg-pink-500" },
     { name: "contact", Icon: Mail, url: undefined, bgColor: "bg-gray-600" },
   ];
 
+  const { onOpen } = useContactHook();
+
   return (
-    <div className="fixed bottom-2 right-[28%] p-2 z-50 flex flex-col items-center transition-all duration-300 ease-in-out space-y-4">
+    <div className="fixed bottom-2 lg:right-[28%] right-2 p-2 z-50 flex flex-col items-center transition-all duration-300 ease-in-out space-y-4">
       {/* Expanded Sidebar Actions with Animation */}
       <AnimatePresence>
         {isExpanded && (
@@ -45,10 +47,10 @@ export const SideBar = () => {
                 href={name === "contact" ? undefined : url}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => name === "contact" && alert("Contact Us Clicked!")}
+                onClick={() => name === "contact" && onOpen()}
                 className={`flex items-center justify-center w-10 h-10 rounded-full text-white ${bgColor}`}
               >
-                <Icon size={20} strokeWidth={1}/>
+                <Icon size={24} strokeWidth={2}/>
               </motion.a>
             ))}
           </motion.div>
@@ -68,7 +70,7 @@ export const SideBar = () => {
         whileTap={{ scale: 0.9 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        {isExpanded ? "✕" : "☰"}
+        {isExpanded ? <X className="w-5 h-5"/> : <AlignJustify className="w-5 h-5"/>}
       </motion.button>
     </div>
   );
