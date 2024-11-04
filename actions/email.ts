@@ -27,35 +27,29 @@ export async function sendContactUsSubmissionTemplate({
     await emailSender.sendMail({
       from: parsed.email,
       to: process.env.EMAIL_USER,
-      subject: `[Delta Cognition] New Contact from ${parsed.fullname}`,
+      subject: `[Contact Form] New Inquiry from ${parsed.fullname}`,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; padding: 25px; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
           <div style="text-align: center;">
-            <h2 style="color: #0033CC; text-align: center; font-size: 22px; margin-bottom: 20px; margin-top:-10px;">New Contact Received</h2>
+            <h2 style="color: #0033CC; font-size: 22px; margin-bottom: 20px;">New Inquiry Received!</h2>
           </div>
           
-          <p style="font-size: 16px; line-height: 1.5; color: #555; margin-bottom: 15px;">Hello Delta Cognition Team,</p>
-          <p style="font-size: 16px; line-height: 1.5; color: #555;">You&apos;ve received a new inquiry through the contact form. Here are the details:</p>
+          <p style="font-size: 16px; line-height: 1.5; color: #555; margin-bottom: 15px;">Hello!</p>
+          <p style="font-size: 16px; line-height: 1.5; color: #555;">You've received a new message through your contact form. Here are the details:</p>
           
           <div style="background-color: #f8f9ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
               <tr>
                 <td style="padding: 10px; font-weight: bold; color: #333; width: 30%; border-bottom: 1px solid #e0e0e0;">Full Name:</td>
-                <td style="padding: 10px; color: #555; border-bottom: 1px solid #e0e0e0;">${
-                  parsed.fullname
-                }</td>
+                <td style="padding: 10px; color: #555; border-bottom: 1px solid #e0e0e0;">${parsed.fullname}</td>
               </tr>
               <tr>
                 <td style="padding: 10px; font-weight: bold; color: #333; border-bottom: 1px solid #e0e0e0;">Email:</td>
-                <td style="padding: 10px; color: #555; border-bottom: 1px solid #e0e0e0;">${
-                  parsed.email
-                }</td>
+                <td style="padding: 10px; color: #555; border-bottom: 1px solid #e0e0e0;">${parsed.email}</td>
               </tr>
               <tr>
                 <td style="padding: 10px; font-weight: bold; color: #333; border-bottom: 1px solid #e0e0e0;">Phone Number:</td>
-                <td style="padding: 10px; color: #555; border-bottom: 1px solid #e0e0e0;">${
-                  parsed.phone
-                }</td>
+                <td style="padding: 10px; color: #555; border-bottom: 1px solid #e0e0e0;">${parsed.phone}</td>
               </tr>
               <tr>
                 <td style="padding: 10px; font-weight: bold; color: #333;">Message:</td>
@@ -64,27 +58,20 @@ export async function sendContactUsSubmissionTemplate({
             </table>
           </div>
         
-          <p style="font-size: 16px; color: #555; margin-top: 20px;">For follow-up, please use the contact information below:</p>
+          <p style="font-size: 16px; color: #555; margin-top: 20px;">If you'd like to follow up, feel free to reach out using the information below:</p>
           <div style="padding: 15px; background-color: #eef2ff; border-radius: 8px; font-size: 16px; border: 1px solid #d3d9f2; margin-bottom: 20px;">
-            <p style="margin: 0; font-size: 18px; font-weight: bold; color: #0033CC;">${
-              parsed.fullname
-            }</p>
-            <p style="margin: 5px 0; color: #555;"><strong>Email:</strong> <a href="mailto:${
-              parsed.email
-            }" style="color: #0033CC; text-decoration: none;">${
-        parsed.email
-      }</a></p>
-            <p style="margin: 5px 0; color: #555;"><strong>Phone:</strong> ${
-              parsed.phone
-            }</p>
+            <p style="margin: 0; font-size: 18px; font-weight: bold; color: #0033CC;">${parsed.fullname}</p>
+            <p style="margin: 5px 0; color: #555;"><strong>Email:</strong> <a href="mailto:${parsed.email}" style="color: #0033CC; text-decoration: none;">${parsed.email}</a></p>
+            <p style="margin: 5px 0; color: #555;"><strong>Phone:</strong> ${parsed.phone}</p>
           </div>
         
           <footer style="font-size: 12px; color: #888; text-align: center; margin-top: 30px; padding-top: 10px; border-top: 1px solid #e0e0e0;">
-            &copy; ${new Date().getFullYear()} Delta Cognition. All rights reserved.
+            &copy; ${new Date().getFullYear()} Tran Ngoc Dang Khoi. All rights reserved.
           </footer>
         </div>
       `,
     });
+    
 
     await emailSender.sendMail({
       from: process.env.EMAIL_USER, // Use your company's email as the sender
