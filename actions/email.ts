@@ -79,13 +79,6 @@ export async function sendContactUsSubmissionTemplate({
       subject: "Thank You for Reaching Out!",
       attachments: [
         {
-          filename: "twitter.png",
-          path: "./public/icons/twitter.png",
-          contentDisposition: "inline",
-          cid: "twitter.png",
-          contentType: "image/png",
-        },
-        {
           filename: "linkedin.png",
           path: "./public/icons/linkedin.png",
           contentDisposition: "inline",
@@ -93,24 +86,10 @@ export async function sendContactUsSubmissionTemplate({
           contentType: "image/png",
         },
         {
-          filename: "facebook.png",
-          path: "./public/icons/facebook.png",
-          contentDisposition: "inline",
-          cid: "facebook.png",
-          contentType: "image/png",
-        },
-        {
           filename: "github.png",
           path: "./public/icons/github.png",
           contentDisposition: "inline",
           cid: "github.png",
-          contentType: "image/png",
-        },
-        {
-          filename: "discord.png",
-          path: "./public/icons/discord.png",
-          contentDisposition: "inline",
-          cid: "discord.png",
           contentType: "image/png",
         },
       ],
@@ -142,20 +121,12 @@ export async function sendContactUsSubmissionTemplate({
             <strong style="color: #0077cc;">Tran Ngoc Dang Khoi</strong>
           </p>
           <div style="margin-top: 20px; text-align: center;">
-            <a href="https://twitter.com" style="margin: 0 10px;">
-              <img src="cid:twitter.png" alt="Twitter" style="width: 24px; height: 24px;" />
-            </a>
-            <a href="https://linkedin.com" style="margin: 0 10px;">
+           
+            <a href="https://www.linkedin.com/in/koitran1403/" style="margin: 0 10px;">
               <img src="cid:linkedin.png" alt="LinkedIn" style="width: 24px; height: 24px;" />
             </a>
-            <a href="https://facebook.com" style="margin: 0 10px;">
-              <img src="cid:facebook.png" alt="Facebook" style="width: 24px; height: 24px;" />
-            </a>
-            <a href="https://github.com" style="margin: 0 10px;">
+            <a href="https://github.com/koitran14" style="margin: 0 10px;">
               <img src="cid:github.png" alt="GitHub" style="width: 24px; height: 24px;" />
-            </a>
-            <a href="https://discord.gg" style="margin: 0 10px;">
-              <img src="cid:discord.png" alt="Discord" style="width: 24px; height: 24px;" />
             </a>
           </div>
         </div>

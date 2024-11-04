@@ -17,9 +17,9 @@ export const SideBar = () => {
   };
 
   const platforms = [
-    { name: "facebook", Icon: Facebook, url: "https://facebook.com/your-profile", bgColor: "bg-blue-600" },
+    // { name: "facebook", Icon: Facebook, url: "https://facebook.com/your-profile", bgColor: "bg-blue-600" },
     { name: "linkedin", Icon: Linkedin, url: "https://www.linkedin.com/in/koitran1403/", bgColor: "bg-blue-700" },
-    { name: "instagram", Icon: Instagram, url: "https://instagram.com/your-profile", bgColor: "bg-pink-500" },
+    { name: "instagram", Icon: Instagram, url: "https://www.instagram.com/khoitran1403/", bgColor: "bg-pink-500" },
     { name: "contact", Icon: Mail, url: undefined, bgColor: "bg-gray-600" },
   ];
 
