@@ -12,6 +12,7 @@ import ModalProvider from "@/components/modalProvider";
 import { Toolbar } from "@/components/toolbar";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function RootLayout({
   children,
@@ -34,17 +35,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ChakraProvider theme={theme}>
-          <Fonts />
-          <NavBar />
-          <ModalProvider />
-          <Toaster />
-          <Container maxW="container.sm" pt={20} px={10} className="relative">
-            <Toolbar />
-            {children}
-          </Container>
-          <Footer />
-        </ChakraProvider>
+        <TooltipProvider>
+          <ChakraProvider theme={theme}>
+            <Fonts />
+            <NavBar />
+            <ModalProvider />
+            <Toaster />
+            <Container maxW="container.sm" pt={20} px={10} className="relative">
+              <Toolbar />
+              {children}
+            </Container>
+            <Footer />
+          </ChakraProvider>
+        </TooltipProvider>
       </body>
     </html>
   );

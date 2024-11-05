@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { CommandMenu } from "./custom/commandSearch";
 import useCommandHook from "@/hooks/useCommandHook";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const Toolbar = () => {
   const bgColor = useColorModeValue("white", "black");
@@ -47,7 +48,6 @@ export const Toolbar = () => {
       return () => clearTimeout(timeoutId);
     }
   };
-  
 
   return (
     <div
@@ -68,14 +68,22 @@ export const Toolbar = () => {
           onMouseLeave={handleMouseLeave}
           className="mt-3 flex h-12 w-fit items-center flex-row gap-x-1 p-2 rounded-full backdrop-blur border dark:bg-zinc-500/20 shadow-lg transition-all duration-300 ease-in-out"
         >
-          <Button
-            size="icon"
-            variant="ghost"
-            className="rounded-full p-1"
-            onClick={onOpen}
-          >
-            <Mail className="w-5 h-5" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                variant="ghost"
+                className="rounded-full p-1"
+                onClick={onOpen}
+              >
+                <Mail className="w-5 h-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="mb-2 py-3">
+              <p>Mail</p>
+            </TooltipContent>
+          </Tooltip>
+
           <Separator orientation="vertical" />
           <div
             className={cn(
@@ -83,28 +91,48 @@ export const Toolbar = () => {
               !isExpanded && "scale-0 w-0"
             )}
           >
-            <Link
-              target="_blank"
-              href="https://www.linkedin.com/in/koitran1403/"
-            >
-              <Button
-                size="icon"
-                variant="ghost"
-                className="rounded-full p-1 hover:bg-blue-50"
-              >
-                <Linkedin fill="blue" strokeWidth={0} className="w-5 h-5" />
-              </Button>
-            </Link>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  target="_blank"
+                  href="https://www.linkedin.com/in/koitran1403/"
+                >
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="rounded-full p-1 hover:bg-blue-50"
+                  >
+                    <Linkedin fill="blue" strokeWidth={0} className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="mb-2 py-3">
+                <p>Linkedin</p>
+              </TooltipContent>
+            </Tooltip>
+
             {/* <Link target="_blank" href="https://www.facebook.com/dangkhoimt/">
               <Button size="icon" variant="ghost" className="rounded-full p-1">
                 <Facebook fill="blue" strokeWidth={0} className="w-5 h-5" />
               </Button>
             </Link> */}
-            <Link target="_blank" href="https://github.com/koitran14">
-              <Button size="icon" variant="ghost" className="rounded-full p-1">
-                <Github fill="gray" strokeWidth={0} className="w-5 h-5" />
-              </Button>
-            </Link>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link target="_blank" href="https://github.com/koitran14">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="rounded-full p-1"
+                  >
+                    <Github fill="gray" strokeWidth={0} className="w-5 h-5" />
+                  </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="mb-2 py-3">
+                <p>Github</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
           <div
             className={cn(
@@ -117,9 +145,21 @@ export const Toolbar = () => {
             </Button>
           </div>
           <Separator orientation="vertical" />
-          <Button onClick={commandHook.onOpen} size="icon" variant="ghost" className="rounded-full p-1">
-              <ListPlus className="w-5 h-5" />
-            </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={commandHook.onOpen}
+                size="icon"
+                variant="ghost"
+                className="rounded-full p-1"
+              >
+                <ListPlus className="w-5 h-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="mb-2 py-3">
+              <p>Menu <span className="rounded bg-slate-500 p-1 ml-1">Ctrl</span>+<span className="rounded bg-slate-500 p-1">S</span></p>
+            </TooltipContent>
+          </Tooltip>
         </motion.div>
       </AnimatePresence>
     </div>
