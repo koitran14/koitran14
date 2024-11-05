@@ -61,7 +61,7 @@ export const SideBar = () => {
       <motion.button
         data-active={isExpanded}
         onClick={() => setIsExpanded(!isExpanded)}
-        className={"w-12 h-12 flex items-center justify-center rounded-full bg-black/50 text-white shadow-lg"}
+        className={"w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white shadow-lg"}
         animate={{ 
             rotate: isExpanded ? 90 : 0,
             backgroundColor: isExpanded ? activeColor :  unactiveColor

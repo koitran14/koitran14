@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 
 
 import { usePathname, useRouter } from "next/navigation";
+import { Separator } from "./ui/separator";
 
 const MainNav = ({
     className,
@@ -33,15 +34,15 @@ const MainNav = ({
     const activeColor = useColorModeValue( 'text-white', 'text-black');
 
     return (
-        <div className="flex items-center gap-x-2 px-2">
+        <div className="flex items-center gap-x-2 flex-row">
            <Flex align="center">
                 <Heading as="h1" size="lg" letterSpacing={'tighter'} className="antialiased" >
                     <Logo />
                 </Heading>
             </Flex>
 
-            <div className="hidden md:flex gap-x-4 text-slate-500 items-center "> 
-                <div className="text-xl items-center">|</div>
+            <div className="hidden md:flex gap-x-4 text-slate-500 items-center flex-row"> 
+                <Separator orientation="vertical" className="h-8"/>
                 <div className="flex space-x-2 items-center">
                     {routes.map((route) => (
                         <button

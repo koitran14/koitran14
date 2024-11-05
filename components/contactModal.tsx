@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, SendHorizonal, Loader } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { toast } from "@/hooks/use-toast";
 
 const icon = {
   hidden: {
@@ -28,7 +29,6 @@ const ContactModal = () => {
     fullname: "",
     email: "",
     phone: "",
-    subject: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,12 +55,15 @@ const ContactModal = () => {
       const response = await sendContactUsSubmissionTemplate(formData);
 
       if (response.isSuccess) {
-        alert("Thank you for reaching out! We'll get back to you soon.");
+        toast({
+          variant: "default",
+          title: "Thank you for reaching out!",
+          description: "We'll get back to you soon.",
+        })
         setFormData({
           fullname: "",
           email: "",
           phone: "",
-          subject: "",
           message: "",
         });
         onClose();
