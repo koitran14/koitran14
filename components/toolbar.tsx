@@ -28,13 +28,6 @@ export const Toolbar = () => {
   const { onOpen } = useContactHook();
   const commandHook = useCommandHook();
 
-
-  useEffect(() => {
-    if (isMobile) {
-      setIsExpanded(true);
-    }
-  }, [isMobile]);
-
   const handleMouseEnter = () => {
     setIsExpanded(true);
   };
@@ -88,7 +81,7 @@ export const Toolbar = () => {
           <div
             className={cn(
               "flex flex-row gap-x-1 scale-100 transition-all duration-500 ease-in-out w-fit",
-              !isExpanded && "scale-0 w-0"
+              !isExpanded && "md:scale-0 md:w-0"
             )}
           >
             <Tooltip>
@@ -136,8 +129,8 @@ export const Toolbar = () => {
           </div>
           <div
             className={cn(
-              "flex flex-row -ml-1 gap-x-1 scale-100 transition-all duration-500 ease-in-out w-fit",
-              isExpanded && "scale-0 w-0"
+              "md:flex md:flex-row -ml-1 gap-x-1 md:scale-100 hidden transition-all duration-500 ease-in-out w-fit",
+              isExpanded && "md:scale-0 md:w-0"
             )}
           >
             <Button size="icon" variant="ghost" className="rounded-full p-1">
