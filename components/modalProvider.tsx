@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import ContactModal from "./contactModal";
+import { CommandMenu } from "./custom/commandSearch";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -16,6 +17,7 @@ const ModalProvider = () => {
   return (
     <>
         <ContactModal />
+        <CommandMenu/>
     </>
   );
 };

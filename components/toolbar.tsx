@@ -17,11 +17,14 @@ import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { CommandMenu } from "./custom/commandSearch";
+import useCommandHook from "@/hooks/useCommandHook";
 
 export const Toolbar = () => {
   const bgColor = useColorModeValue("white", "black");
   const [isExpanded, setIsExpanded] = useState(false);
   const { onOpen } = useContactHook();
+  const commandHook = useCommandHook();
 
   const isMobile = typeof window !== "undefined" && window.innerWidth <= 768; // Adjust threshold for mobile
 
@@ -44,6 +47,7 @@ export const Toolbar = () => {
       return () => clearTimeout(timeoutId);
     }
   };
+  
 
   return (
     <div
@@ -79,13 +83,16 @@ export const Toolbar = () => {
               !isExpanded && "scale-0 w-0"
             )}
           >
-            <Link target="_blank" href="https://www.linkedin.com/in/koitran1403/">
+            <Link
+              target="_blank"
+              href="https://www.linkedin.com/in/koitran1403/"
+            >
               <Button
                 size="icon"
                 variant="ghost"
-                className="rounded-full p-1 hover:bg-blue-500"
+                className="rounded-full p-1 hover:bg-blue-50"
               >
-                <Linkedin fill="white" strokeWidth={0} className="w-5 h-5" />
+                <Linkedin fill="blue" strokeWidth={0} className="w-5 h-5" />
               </Button>
             </Link>
             {/* <Link target="_blank" href="https://www.facebook.com/dangkhoimt/">
@@ -110,9 +117,9 @@ export const Toolbar = () => {
             </Button>
           </div>
           <Separator orientation="vertical" />
-          <Button size="icon" variant="ghost" className="rounded-full p-1">
-            <ListPlus className="w-5 h-5" />
-          </Button>
+          <Button onClick={commandHook.onOpen} size="icon" variant="ghost" className="rounded-full p-1">
+              <ListPlus className="w-5 h-5" />
+            </Button>
         </motion.div>
       </AnimatePresence>
     </div>
