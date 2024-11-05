@@ -22,12 +22,12 @@ import useCommandHook from "@/hooks/useCommandHook";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export const Toolbar = () => {
+  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768; // Adjust threshold for mobile
   const bgColor = useColorModeValue("white", "black");
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(isMobile);
   const { onOpen } = useContactHook();
   const commandHook = useCommandHook();
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth <= 768; // Adjust threshold for mobile
 
   useEffect(() => {
     if (isMobile) {
