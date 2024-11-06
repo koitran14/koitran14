@@ -150,7 +150,7 @@ export const Toolbar = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent side="top" className="mb-2 py-3">
-              <p>Menu <span className="rounded bg-slate-500 p-1 ml-1">Ctrl</span>+<span className="rounded bg-slate-500 p-1">S</span></p>
+              <p>Menu <span className="rounded bg-slate-500 p-1 ml-1">Ctrl</span>+<span className="rounded bg-slate-500 p-1">F</span></p>
             </TooltipContent>
           </Tooltip>
         </motion.div>
