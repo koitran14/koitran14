@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <Section delay={0}>
-      <div className="py-4 ">
+      <div className="py-4">
           <div className="flex md:flex-row gap-6 items-center pb-8 flex-col-reverse md:text-left text-center ">
               <div className="flex flex-col w-full">
                 <Heading as="h2" variant="page-title" className="md:py-5 py-3 flex items-center justify-center md:justify-start gap-1" >

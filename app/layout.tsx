@@ -41,7 +41,7 @@ export default function RootLayout({
             <NavBar />
             <ModalProvider />
             <Toaster />
-            <Container maxW="container.sm" pt={20} px={10} className="relative">
+            <Container maxW="container.sm" pt={20} px={10} className="scrollbar-custom relative">
               <Toolbar />
               {children}
             </Container>
