@@ -19,6 +19,7 @@ export const works: Work[] = [
             linkdemo: "https://white-board-platform.vercel.app/",
         },
         platform: "Windows/macOS/Linux",
+        demoVideo: "https://www.youtube.com/watch?v=lUOXCpwxx_0",
         field: Field.COLLABORATE,
         newest: true,
         publishYear: 2024,
