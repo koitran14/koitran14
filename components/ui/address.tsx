@@ -42,7 +42,7 @@ const Address: React.FC<AddressProps> = ({
             </Link >
             <div className="flex items-center text-slate-400">
                 <ChevronRight className="h-5 w-5" />
-                <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "18 ": "md"} >{currentTitle}</Heading>
+                <Heading as="h3" fontSize={windowWidth && windowWidth >=640 ? "18 ": "md"} className=" line-clamp-1">{currentTitle}</Heading>
             </div>
     </div>
     );
