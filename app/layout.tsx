@@ -7,7 +7,7 @@ import { ChakraProvider, Container } from "@chakra-ui/react";
 import theme from "@/components/theme";
 import Fonts from "@/components/ui/fonts";
 import Footer from "@/components/footer";
-import { SideBar } from "@/components/sideBar";
+import { Analytics } from '@vercel/analytics/next';
 import ModalProvider from "@/components/modalProvider";
 import { Toolbar } from "@/components/toolbar";
 import { Toaster } from "@/components/ui/toaster";
@@ -44,6 +44,7 @@ export default function RootLayout({
             <Container maxW="container.sm" pt={20} px={10} className="scrollbar-custom relative">
               <Toolbar />
               {children}
+              <Analytics />
             </Container>
             <Footer />
           </ChakraProvider>
