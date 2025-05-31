@@ -1,6 +1,6 @@
 # Hi, I'm Khoi 👋
 
-AI Software Engineer, at @ Delta Cognition.
+**Software Engineer @ Delta Cognition** *(July 2024 - Present)*  
 
 ## 📫 Contact
 
