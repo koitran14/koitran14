@@ -1,8 +1,8 @@
 
 **Hi, I'm Khoi 👋**
+
 Full Stack Developer building scalable, AI-powered web applications.
 
----
 
 **🛠️ Tech Stack**
 
