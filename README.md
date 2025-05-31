@@ -1,31 +1,18 @@
-
-<h1>Hi, I'm Khoi 👋<h1>
+# Hi, I'm Khoi 👋
 
 Full Stack Developer building scalable, AI-powered web applications.
 
-
-## 🛠️ Tech Stack# 
+## 🛠️ Tech Stack
 
 **Frontend:** React • Next.js • TypeScript • TailwindCSS  
 **Backend:** Node.js • Express • Prisma • PostgreSQL • MongoDB  
 **Tools:** Git • Docker • Azure • CI/CD
 
-## 💼 Experience**
+## 💼 Current Role
 
-**Software Engineer @ Delta Cognition** *(July 2024 - May 01)*  
-Developing AI-driven applications with ML integration and real-time features.
+**Software Engineer @ Delta Cognition** *(July 2024 - May 2025)*  
+Developing AI-driven applications with ML integration and real-time features. 
 
-## 🔧 Stack
+## 📫 Contact
 
-```
-Frontend    React • Next.js • TypeScript • TailwindCSS
-Backend     Node.js • Express • Prisma • PostgreSQL
-Cloud       Azure • Google Cloud • Docker • CI/CD
-```
-
-## 📬 Let's Connect
-
-**Email:** tndkhoi.work@gmail.com  
-**Links:** [Portfolio](https://koitran14.vercel.app) • [LinkedIn](https://linkedin.com/in/koitran14)
-
-
+📧 [tndkhoi.work@gmail.com](mailto:tndkhoi.work@gmail.com) • 💼 [LinkedIn](https://linkedin.com/in/koitran14) • 🌐 [Portfolio](https://koitran14.vercel.app)
