@@ -4,13 +4,13 @@
 Full Stack Developer building scalable, AI-powered web applications.
 
 
-**🛠️ Tech Stack**
+## 🛠️ Tech Stack# 
 
 **Frontend:** React • Next.js • TypeScript • TailwindCSS  
 **Backend:** Node.js • Express • Prisma • PostgreSQL • MongoDB  
 **Tools:** Git • Docker • Azure • CI/CD
 
-**💼 Experience**
+## 💼 Experience**
 
 **Software Engineer @ Delta Cognition** *(July 2024 - May 01)*  
 Developing AI-driven applications with ML integration and real-time features.
