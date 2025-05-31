@@ -1,4 +1,3 @@
-<div align="center">
 
 # 🚀 Khoi Tran
 
@@ -7,8 +6,6 @@
 *Building the future, one line of code at a time*
 
 ---
-
-</div>
 
 ## ⚡ Quick Intro
 
