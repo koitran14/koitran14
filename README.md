@@ -1,16 +1,20 @@
 
-# 🚀 Khoi Tran
+# Hi, I'm Khoi 👋
 
-### Full Stack Developer • AI Enthusiast
-
-*Building the future, one line of code at a time*
+Full Stack Developer building scalable, AI-powered web applications.
 
 ---
 
-## ⚡ Quick Intro
+## 🛠️ Tech Stack
 
-Currently crafting AI-powered applications at **Delta Cognition**  
-Computer Science student passionate about scalable web solutions
+**Frontend:** React • Next.js • TypeScript • TailwindCSS  
+**Backend:** Node.js • Express • Prisma • PostgreSQL • MongoDB  
+**Tools:** Git • Docker • Azure • CI/CD
+
+## 💼 Experience
+
+**Software Engineer @ Delta Cognition** *(July 2024 - Present)*  
+Developing AI-driven applications with ML integration and real-time features.
 
 ## 🔧 Stack
 
@@ -25,10 +29,4 @@ Cloud       Azure • Google Cloud • Docker • CI/CD
 **Email:** tndkhoi.work@gmail.com  
 **Links:** [Portfolio](https://koitran14.vercel.app) • [LinkedIn](https://linkedin.com/in/koitran14)
 
----
-
-<div align="center">
-<i>Always learning, always building</i>
-</div>
-```
 
