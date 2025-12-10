@@ -1,7 +1,7 @@
 # Hi, I'm Khoi 👋
 
 **✷ Software Engineer ✷ 
-at @ Delta Cognition** *(July 2024 - July 2025)*  
+\nat @ Delta Cognition** *(July 2024 - July 2025)*  
 **at @ PMAX** *(July 2024 - July 2025)*  
 ## 📫 Contact
 
