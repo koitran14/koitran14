@@ -17,11 +17,11 @@ export function PersonalCard() {
 }
 
 function Band() {
-  const band = useRef(), fixed = useRef(), j1 = useRef(), j2 = useRef(), j3 = useRef(), card = useRef() // prettier-ignore
+  const band = useRef<any>(null), fixed = useRef<any>(null), j1 = useRef<any>(null), j2 = useRef<any>(null), j3 = useRef<any>(null), card = useRef<any>(null) // prettier-ignore
   const vec = new THREE.Vector3(), ang = new THREE.Vector3(), rot = new THREE.Vector3(), dir = new THREE.Vector3() // prettier-ignore
   const { width, height } = useThree((state) => state.size)
   const [curve] = useState(() => new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()]))
-  const [dragged, drag] = useState(false)
+  const [dragged, drag] = useState<any>(false)
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]) // prettier-ignore
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]) // prettier-ignore
@@ -66,15 +66,17 @@ function Band() {
         <RigidBody position={[2, 0, 0]} ref={card} angularDamping={2} linearDamping={2} type={dragged ? 'kinematicPosition' : 'dynamic'} >
           <CuboidCollider args={[0.8, 1.125, 0.01]} />
           <mesh
-            onPointerUp={(e) => (e.target.releasePointerCapture(e.pointerId), drag(false))}
-            onPointerDown={(e) => (e.target.setPointerCapture(e.pointerId), drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))))}>
+            onPointerUp={(e) => ((e.target as any)?.releasePointerCapture(e.pointerId), drag(false))}
+            onPointerDown={(e) => ((e.target as any)?.setPointerCapture(e.pointerId), drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation()))))}>
             <planeGeometry args={[0.8 * 2, 1.125 * 2]} />
             <meshBasicMaterial transparent opacity={0.25} color="white" side={THREE.DoubleSide} />
           </mesh>
         </RigidBody >
       </group >
       <mesh ref={band}>
+        {/* @ts-ignore */}
         <meshLineGeometry />
+        {/* @ts-ignore */}
         <meshLineMaterial transparent opacity={0.25} color="white" depthTest={false} resolution={[width, height]} lineWidth={1} />
       </mesh>
     </>
