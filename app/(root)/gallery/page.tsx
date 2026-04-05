@@ -2,62 +2,83 @@
 
 import Section from "@/components/section";
 import Gallery from "@/components/ui/gallery";
-import SliderIntro from "@/components/galleries/slider";
-import { Button, Heading, useColorModeValue } from "@chakra-ui/react";
-import { ChevronRightCircleIcon, GalleryHorizontalEndIcon } from "lucide-react";
+import { useColorModeValue } from "@chakra-ui/react";
+import { Link as LinkIcon } from "lucide-react";
 import { useState } from "react";
-import Filter from "@/components/galleries/filter";
 
 import galleryImgs from "@/data/galleryData";
 import galleryActivity from "@/data/galleryActivities";
 
-
 const GalleriesPage = () => {
-    
     const [filteredImages, setFilteredImages] = useState(galleryImgs);
+    const [activeTag, setActiveTag] = useState("all");
 
-    const activeColor = useColorModeValue( '#f97316', '#ec4899');
+    const textColor = useColorModeValue("black", "white");
+    const subTextColor = useColorModeValue("gray.500", "gray.400");
+    const borderColor = useColorModeValue("border-gray-200", "border-white/10");
+
+    // Fix Tailwind dark-mode overrides falling back to light color in Chakra wrapper
+    const tagBorderColor = useColorModeValue("border-zinc-300", "border-white/30");
+    const tagTextColor = useColorModeValue("text-zinc-700", "text-white/80");
+    const tagHoverBg = useColorModeValue("hover:bg-zinc-100", "hover:bg-white/10");
+
+    const handleFilter = (tag: string) => {
+        setActiveTag(tag);
+        if (tag === "all") {
+            setFilteredImages(galleryImgs);
+        } else {
+            setFilteredImages(galleryImgs.filter(img => img.alt && img.alt.includes(tag)));
+        }
+    }
+
+    const highlightTags = ["all", ...galleryActivity.map(a => a.id)];
 
     return (
-        <Section>
-            <div className="relative">
-                <SliderIntro images={galleryImgs}/>
-                <div className="absolute sm:top-[20%] top-[14%] sm:left-16 left-14 z-10 max-w-screen">
-                    <div className="flex flex-col">
-                        <Heading fontSize={20} className="text-slate-200 font-semibold flex sm:justify-start justify-center">
-                            Activities
-                        </Heading>
-                        <div className="py-6">
-                            <Filter data={galleryActivity} valueKey="id" images={galleryImgs} setFilteredImages={setFilteredImages} />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div className="flex items-center justify-between px-3">
-                    <Heading as="h2" variant="section-title" className="flex gap-x-2 items-center">
-                        <GalleryHorizontalEndIcon/> 
-                        My Gallery
-                    </Heading>
-                    <a href="https://www.instagram.com/khoitran1403/">
-                            <Button 
-                                as="button" 
-                                variant="solid" 
-                                rightIcon={<ChevronRightCircleIcon />}
-                                size={"sm"}
-                                _hover={{ backgroundColor: activeColor, color: '#ffffff'}}
-                                _active={{ opacity: 0.9 }}
-                            >
-                                More
-                            </Button>
+        <Section delay={0}>
+            <div className="max-w-5xl mx-auto pt-8 md:pt-16">
+                
+                {/* Minimalist Editorial Header */}
+                <div className="max-w-2xl mb-8 md:mb-12">
+                    <h1 
+                        className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-transparent bg-clip-text animate-gradient pb-1"
+                        style={{ backgroundImage: 'linear-gradient(to right, #38bdf8, #818cf8, #c084fc, #e879f9, #f472b6, #fb7185, #facc15)' }}
+                    >
+                        Visual Diary.
+                    </h1>
+                    <p className={`text-sm md:text-base ${subTextColor} leading-relaxed`}>
+                        A curated collection of moments, aesthetics, and visual experiments. 
+                        Exploring the intersection of nature, daily life, and creative persona.
+                    </p>
+                    <a href="https://github.com/koitran14" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 font-medium text-sm text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white transition-colors mt-4 md:mt-6 w-fit">
+                        <LinkIcon size={16} /> @koitran14
                     </a>
                 </div>
-                <div className="pt-4">
+
+                {/* Pure Typography Filters */}
+                <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-8 md:mb-10">
+                    {highlightTags.map(tag => (
+                        <button 
+                            key={tag} 
+                            onClick={() => handleFilter(tag)} 
+                            className={`px-4 py-2 md:px-6 md:py-2 rounded-full text-xs md:text-sm capitalize tracking-wide transition-all duration-300 border 
+                            ${activeTag === tag 
+                                ? 'text-white font-bold border-transparent shadow-lg animate-gradient drop-shadow-md scale-105' 
+                                : `bg-transparent font-medium ${tagBorderColor} ${tagTextColor} ${tagHoverBg}`}`}
+                            style={activeTag === tag ? { backgroundImage: 'linear-gradient(to right, #38bdf8, #818cf8, #c084fc, #e879f9, #f472b6, #fb7185, #facc15)' } : {}}
+                        >
+                            {tag}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Grid (Waterfall) */}
+                <div className="pt-2">
                     <Gallery images={filteredImages} />
                 </div>
+
             </div>
         </Section>
     );
-}
+};
 
 export default GalleriesPage;

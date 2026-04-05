@@ -43,6 +43,7 @@ const ExperienceCard = ({
   title,
   company,
   companyLink,
+  location,
   period,
   startDate,
   endDate,
@@ -101,7 +102,7 @@ const ExperienceCard = ({
                   justify="flex-start"
                 >
                   <Text fontSize="sm" color={textColor} fontWeight="500">
-                    @<span className="font-bold">{company}</span>
+                    @<span className="font-bold">{company}</span>{location && ` · ${location}`}
                   </Text>
                   {companyLink && (
                     <Link
@@ -253,12 +254,28 @@ export default function Home() {
   const experiences = [
     {
       title: "Software Engineer",
-      company: "Delta Cognition",
-      companyLink: "https://www.linkedin.com/company/delta-cognition/",
-      period: "2024-Present",
-      startDate: "Jun",
+      company: "PMAX - Total Marketing Partner · Full-time",
+      companyLink: "https://pmax.com.vn/",
+      location: "Quận 1, Ho Chi Minh City, Vietnam · Hybrid",
+      period: "2025-Present",
+      startDate: "Aug 2025",
       endDate: "Present",
       isCurrent: true,
+      description: [
+        "Developing scalable performant Web applications with React, Next.js, and TypeScript",
+        "Focusing on overall software architecture, team collaboration and user experience optimization",
+      ],
+      skills: ["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
+    },
+    {
+      title: "AI Software Engineer",
+      company: "Delta Cognition · Contract",
+      companyLink: "https://www.linkedin.com/company/delta-cognition/",
+      location: "Quận 10, Ho Chi Minh City, Vietnam · Hybrid",
+      period: "2024-2025",
+      startDate: "Jun 2024",
+      endDate: "Jul 2025",
+      isCurrent: false,
       description: [
         "Developed and maintained scalable web applications using React, Next.js, and TypeScript",
         "Collaborated with cross-functional teams to deliver high-quality software solutions",
@@ -346,28 +363,6 @@ export default function Home() {
             <Heading
               as="h3"
               variant="section-title"
-              className={cn("flex items-center gap-2 mb-6", titleTheme)}
-            >
-              <Briefcase className="h-5 w-5 " />
-              Experience
-            </Heading>
-
-            <Accordion type="single" collapsible className="w-full">
-              {experiences.map((exp, index) => (
-                <ExperienceCard
-                  key={index}
-                  {...exp}
-                  value={`item-${index}`}
-                  delay={0.1 * index}
-                />
-              ))}
-            </Accordion>
-          </Section>
-
-          <Section delay={0.4}>
-            <Heading
-              as="h3"
-              variant="section-title"
               className={cn("flex items-center gap-2",
                 titleTheme
               )}
@@ -409,6 +404,28 @@ export default function Home() {
                 </BioDesc>
               </BioSection>
             </Box>
+          </Section>
+
+          <Section delay={0.4}>
+            <Heading
+              as="h3"
+              variant="section-title"
+              className={cn("flex items-center gap-2 mb-6", titleTheme)}
+            >
+              <Briefcase className="h-5 w-5 " />
+              Experience
+            </Heading>
+
+            <Accordion type="single" collapsible className="w-full">
+              {experiences.map((exp, index) => (
+                <ExperienceCard
+                  key={index}
+                  {...exp}
+                  value={`item-${index}`}
+                  delay={0.1 * index}
+                />
+              ))}
+            </Accordion>
           </Section>
 
           <Section delay={0.6}>

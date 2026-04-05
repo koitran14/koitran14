@@ -33,8 +33,8 @@ const Modal: React.FC<ModalProps> = ({
                             leaveFrom="opacity-100 scale-100" 
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-md max-h-screen h-full overflow-hidden align-middle">
-                                <div className="relative rounded-lg flex w-fit items-center overflow-hidden p-1 bg-white shadow-2xl justify-center">
+                            <Dialog.Panel className="w-full max-w-[95vw] lg:max-w-6xl max-h-[95vh] flex overflow-hidden align-middle items-center justify-center">
+                                <div className="relative rounded-xl flex w-auto items-center overflow-hidden p-1 bg-white shadow-2xl justify-center max-w-full max-h-full">
                                     <div className="absolute right-4 top-4 z-10 rounded-full">
                                         <IconButton 
                                             aria-label={"close"}  
