@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { X, Bot, ArrowUp, Sparkles, ChevronRight, ArrowDown, LayoutTemplate } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useColorMode } from "@chakra-ui/react";
+import useContactHook from "@/hooks/useContactHook";
 
 interface Reference { title: string; url: string; description?: string; }
 interface Message { role: "bot" | "user"; text: string; references?: Reference[]; }
@@ -19,6 +20,7 @@ const renderMessageText = (text: string) => {
 
 export const ChatToggler = () => {
   const { colorMode } = useColorMode();
+  const contactModal = useContactHook();
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -159,12 +161,15 @@ export const ChatToggler = () => {
                       {/* Reference cards */}
                       {m.references && m.references.length > 0 && (
                         <div className={`flex flex-col gap-2 w-full ${m.role === "bot" ? "pl-9" : "pr-0 items-end"}`}>
-                          {m.references.map((ref, i) => (
+                          {m.references.map((ref, i) => {
+                            const isContact = ref.url.includes("contact") || ref.url.includes("#contact");
+                            return (
                             <motion.a
                               key={i}
-                              href={ref.url}
-                              target={ref.url.startsWith("http") ? "_blank" : "_self"}
-                              rel={ref.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                              href={isContact ? "#" : ref.url}
+                              onClick={isContact ? (e) => { e.preventDefault(); contactModal.onOpen(); } : undefined}
+                              target={ref.url.startsWith("http") && !isContact ? "_blank" : "_self"}
+                              rel={ref.url.startsWith("http") && !isContact ? "noopener noreferrer" : undefined}
                               initial={{ opacity: 0, y: 5 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.06 * i }}
@@ -179,7 +184,7 @@ export const ChatToggler = () => {
                               </div>
                               <ChevronRight size={16} className="shrink-0 text-zinc-400 dark:text-zinc-500 group-hover:text-orange-500 dark:group-hover:text-pink-400 group-hover:translate-x-0.5 transition-all" />
                             </motion.a>
-                          ))}
+                          )})}
                         </div>
                       )}
                     </motion.div>
