@@ -95,25 +95,33 @@ const ExperienceCard = ({
 
               {/* Company and Title */}
               <VStack align="flex-start" spacing={1} mb={4}>
-                <HStack
-                  spacing={2}
-                  align="center"
-                  w="full"
-                  justify="flex-start"
-                >
-                  <Text fontSize="sm" color={textColor} fontWeight="500">
-                    @<span className="font-bold">{company}</span>{location && ` · ${location}`}
+                <Box w="full" pr={4}>
+                  <Text fontSize="sm" color={textColor} fontWeight="500" lineHeight="1.6">
+                    <span className="font-normal opacity-60 mr-0.5">@</span>
+                    {companyLink ? (
+                      <Link
+                        href={companyLink}
+                        isExternal
+                        onClick={(e) => e.stopPropagation()}
+                        color={titleColor}
+                        fontWeight="600"
+                        _hover={{ color: primaryColor, textDecoration: "none" }}
+                        className="group transition-colors relative"
+                      >
+                        <span className="border-b border-transparent group-hover:border-current pb-[1px] transition-all">
+                          {company}
+                        </span>
+                        <ArrowUpRight 
+                          size={13} 
+                          className="inline-block ml-1 mb-0.5 opacity-50 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" 
+                        />
+                      </Link>
+                    ) : (
+                      <span className="font-semibold">{company}</span>
+                    )}
+                    {location && <span className="opacity-80"> · {location}</span>}
                   </Text>
-                  {companyLink && (
-                    <Link
-                      href={companyLink}
-                      isExternal
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <ArrowUpRight size={12} color="currentColor" />
-                    </Link>
-                  )}
-                </HStack>
+                </Box>
                 <Text
                   fontSize="lg"
                   fontWeight="600"
