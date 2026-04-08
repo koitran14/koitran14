@@ -13,6 +13,7 @@ import { Toolbar } from "@/components/toolbar";
 import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ChatToggler } from "@/components/ui/chat-toggler";
 
 export default function RootLayout({
   children,
@@ -46,6 +47,7 @@ export default function RootLayout({
               {children}
               <Analytics />
             </Container>
+            <ChatToggler />
             <Footer />
           </ChakraProvider>
         </TooltipProvider>
