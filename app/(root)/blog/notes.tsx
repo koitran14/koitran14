@@ -16,13 +16,13 @@ const TINT = {
 } as const;
 // one spine colour per chapter: [read, unread]
 const SPINES = [
-  ["bg-rose-400", "bg-rose-100 dark:bg-rose-950"],
-  ["bg-orange-400", "bg-orange-100 dark:bg-orange-950"],
-  ["bg-amber-400", "bg-amber-100 dark:bg-amber-950"],
-  ["bg-emerald-400", "bg-emerald-100 dark:bg-emerald-950"],
-  ["bg-sky-400", "bg-sky-100 dark:bg-sky-950"],
-  ["bg-indigo-400", "bg-indigo-100 dark:bg-indigo-950"],
-  ["bg-violet-400", "bg-violet-100 dark:bg-violet-950"],
+  ["bg-rose-400", "bg-rose-200 dark:bg-rose-950"],
+  ["bg-orange-400", "bg-orange-200 dark:bg-orange-950"],
+  ["bg-amber-400", "bg-amber-200 dark:bg-amber-950"],
+  ["bg-emerald-400", "bg-emerald-200 dark:bg-emerald-950"],
+  ["bg-sky-400", "bg-sky-200 dark:bg-sky-950"],
+  ["bg-indigo-400", "bg-indigo-200 dark:bg-indigo-950"],
+  ["bg-violet-400", "bg-violet-200 dark:bg-violet-950"],
 ];
 
 export type Entry = {
@@ -78,14 +78,14 @@ function Workbook({ s }: { s: Series }) {
 
   return (
     <div className="mt-7 grid grid-cols-[minmax(0,1fr)_22px] sm:grid-cols-[minmax(0,1fr)_30px]">
-      <div className="rounded-l-xl border border-r-0 border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/60 px-5 py-5 sm:px-6">
+      <div className="relative z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-[0_1px_2px_rgba(24,24,27,0.06),0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none px-5 py-5 sm:px-6">
         <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
           <span className={TINT.workbook.text}>WORKBOOK</span> · {s.chapters.length} CHƯƠNG
         </div>
-        {/* first word plain, the rest in italic violet, like the handbook's own cover */}
+        {/* first word plain, the rest in italic accent, like the handbook's own cover */}
         <Link href={s.href} className="group mt-2 block text-2xl sm:text-[28px] leading-snug text-zinc-900 dark:text-zinc-100" style={serif}>
           {s.title.split(" ")[0]}{" "}
-          <i className="text-violet-600 dark:text-violet-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <i className="text-orange-600 dark:text-orange-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {s.title.split(" ").slice(1).join(" ")}
           </i>
         </Link>
@@ -101,14 +101,14 @@ function Workbook({ s }: { s: Series }) {
             <Link
               key={m.href}
               href={m.href}
-              className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100 hover:border-zinc-500 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-zinc-400 dark:border-zinc-700 bg-white dark:bg-transparent px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100 hover:border-zinc-500 transition-colors"
             >
               {m.kind === "audio" ? <AudioIcon /> : <PlayIcon />} {m.label}
             </Link>
           ))}
         </div>
         <div className="mt-5 flex items-center gap-3">
-          <div className="h-0.5 flex-1 bg-zinc-200 dark:bg-zinc-800">
+          <div className="h-0.5 flex-1 bg-zinc-300 dark:bg-zinc-800">
             <div className="h-full bg-violet-500 transition-[width] duration-700" style={{ width: `${(done / s.chapters.length) * 100}%` }} />
           </div>
           <span className="text-xs tabular-nums text-zinc-600 dark:text-zinc-500" style={mono}>
@@ -125,7 +125,7 @@ function Workbook({ s }: { s: Series }) {
             title={`${c.n} · ${c.title}`}
             aria-label={`Chương ${c.n}: ${c.title}${read[i] ? " (đã đọc)" : ""}`}
             // the chapter to read next sticks out a little further
-            className={`h-6 rounded-r-md transition-transform hover:translate-x-1 ${read[i] || i === current ? SPINES[i % 7][0] : SPINES[i % 7][1]} ${
+            className={`h-6 rounded-r-md shadow-[0_1px_2px_rgba(24,24,27,0.12)] dark:shadow-none transition-transform hover:translate-x-1 ${read[i] || i === current ? SPINES[i % 7][0] : SPINES[i % 7][1]} ${
               i === current && next !== -1 ? "translate-x-1.5" : ""
             }`}
           />
@@ -144,7 +144,7 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
 
   return (
     <>
-      <div role="tablist" aria-label="Loại" className="mt-8 flex gap-x-6 overflow-x-auto overflow-y-hidden border-b border-zinc-200 dark:border-zinc-800">
+      <div role="tablist" aria-label="Loại" className="mt-8 flex gap-x-6 overflow-x-auto overflow-y-hidden border-b border-zinc-300 dark:border-zinc-800">
         {tabs.map((t) => (
           <button
             key={t}
@@ -169,11 +169,11 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
       {(tab === "all" || tab === "workbook") && series.map((s) => <Workbook key={s.slug} s={s} />)}
 
       {shown.length > 0 && (
-        <ul className="mt-9 border-b border-zinc-200 dark:border-zinc-800">
+        <ul className="mt-9 border-b border-zinc-300 dark:border-zinc-800">
           {shown.map((e) => (
-            <li key={e.slug} className="grid grid-cols-[56px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)] border-t border-zinc-200 dark:border-zinc-800">
+            <li key={e.slug} className="grid grid-cols-[56px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)] border-t border-zinc-300 dark:border-zinc-800">
               {/* margin column: entry number and date, ruled off in red like a notebook */}
-              <div className="border-r border-red-300 dark:border-red-900/80 py-5 pr-3 text-right text-xs leading-5" style={mono}>
+              <div className="border-r border-red-400 dark:border-red-900/80 py-5 pr-3 text-right text-xs leading-5" style={mono}>
                 <div className="text-zinc-700 dark:text-zinc-400">N° {String(e.n).padStart(2, "0")}</div>
                 <time dateTime={e.createdAt} className="text-zinc-500">{e.date}</time>
               </div>

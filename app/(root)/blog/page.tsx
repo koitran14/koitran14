@@ -45,7 +45,7 @@ export default async function BlogPage() {
         )}
       </div>
       <h1 className="mt-3 text-4xl sm:text-5xl tracking-tight text-zinc-900 dark:text-zinc-100" style={{ fontFamily: "var(--font-notes-serif)", lineHeight: 1.1 }}>
-        Notes <span className="text-zinc-400 dark:text-zinc-600">—</span> <span className="italic text-violet-600 dark:text-violet-400">sổ tay</span>
+        Notes <span className="text-zinc-400 dark:text-zinc-600">—</span> <span className="italic text-orange-600 dark:text-orange-400">sổ tay</span>
       </h1>
       <p className="mt-3 max-w-md leading-relaxed text-zinc-700 dark:text-zinc-400">
         Những gì mình đọc, học và nghĩ: bài viết, ghi chú ngắn và các bộ tài liệu học.
