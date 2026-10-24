@@ -58,6 +58,14 @@ export function PostForm() {
         <input name="title" required className={`${input} mt-1`} />
       </label>
       <label className="block text-sm">
+        <span className="text-zinc-700 dark:text-zinc-400">Type</span>
+        <select name="type" defaultValue="article" className={`${input} mt-1`}>
+          <option value="article">Bài viết</option>
+          <option value="note">Ghi chú</option>
+          <option value="doc">Tài liệu</option>
+        </select>
+      </label>
+      <label className="block text-sm">
         <span className="text-zinc-700 dark:text-zinc-400">Content</span>
         <textarea name="content" required rows={14} className={`${input} mt-1 font-mono`} />
         <span className="text-xs text-zinc-600 dark:text-zinc-500">Separate paragraphs with a blank line.</span>

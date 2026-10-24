@@ -4,22 +4,44 @@ import path from "path";
 import { createHash, createHmac, timingSafeEqual } from "crypto";
 import { cookies } from "next/headers";
 
+export type PostType = "article" | "note" | "doc";
+
 export type Post = {
   slug: string;
   title: string;
   content: string;
   published: boolean;
   createdAt: string;
+  /** Missing on posts saved before types existed; those are articles. */
+  type?: PostType;
 };
 
-// Long-form learning series built as static, interactive pages under public/learn. Listed with the posts, not editable from admin.
+// Long-form learning series with their own routes (e.g. /blog/cube-handbook). Listed with the posts, not editable from admin.
 export const SERIES = [
   {
     slug: "cube-handbook",
     title: "Cube.dev Engineering Handbook",
-    category: "Learning",
-    href: "/learn/cube-handbook/index.html",
+    summary: "Từ tầng ngữ nghĩa tới vận hành thực tế, có câu hỏi ôn tập cuối mỗi chương.",
+    href: "/blog/cube-handbook",
     createdAt: "2026-10-24T00:00:00.000Z",
+    // `key` is the localStorage suffix the handbook stores quiz answers under (ans:<key>); answered = read.
+    chapters: [
+      "Fundamentals",
+      "Architecture & Internals",
+      "Hands-on Implementation",
+      "Engineering Deep Dives",
+      "Production Engineering",
+      "Reference & Engineering Notes",
+      "Applied Case Studies",
+    ].map((title, i) => {
+      const n = String(i + 1).padStart(2, "0");
+      return { n, title, key: `ch${n}`, href: `/blog/cube-handbook/${n}` };
+    }),
+    // ids of the players on the handbook's index page
+    media: [
+      { kind: "audio" as const, label: "Nghe 15 phút", href: "/blog/cube-handbook#aud" },
+      { kind: "video" as const, label: "Xem video", href: "/blog/cube-handbook#vd" },
+    ],
   },
 ];
 

@@ -1,500 +1,246 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import {
-  Button,
-  Heading,
-  Image,
-  Link,
-  useColorModeValue,
-  Box,
-  Badge,
-  Text,
-  VStack,
-  HStack,
-  Icon,
-  Flex,
-} from "@chakra-ui/react";
+import { Heading, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
 import Section from "@/components/section";
-import Paragraph from "@/components/paragraph";
-import {
-  ChevronRightIcon,
-  InstagramIcon,
-  Mail,
-  Briefcase,
-  Calendar,
-  ArrowUpRight,
-  Settings,
-} from "lucide-react";
+import { ArrowUpRight, Box, Github, Linkedin, Mail } from "lucide-react";
 import { BioDesc, BioSection, BioYear } from "@/components/bio";
-import { Meta, MetaPlace } from "@/components/ui/meta";
-import { IoLogoGithub } from "react-icons/io5";
-import { motion } from "framer-motion";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
+import { useRef } from "react";
+import useContactHook from "@/hooks/useContactHook";
+import { experiences } from "@/data/experience";
+import { Highlight } from "@/components/highlight";
+import { StatList } from "@/components/stat-value";
+import { Reveal } from "@/components/reveal";
+import { FEATURES } from "@/lib/features";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-// Experience Card with Chakra Theme
-const ExperienceCard = ({
-  title,
-  company,
-  companyLink,
-  location,
-  period,
-  startDate,
-  endDate,
-  description,
-  skills,
-  isCurrent = false,
-  delay = 0,
-  value,
-}: any) => {
-  const primaryColor = useColorModeValue("orange.400", "pink.400");
-  const cardBg = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const textColor = useColorModeValue("gray.600", "gray.400");
-  const titleColor = useColorModeValue("gray.800", "gray.200");
-  const expandedBg = useColorModeValue("gray.50", "gray.750");
+const PersonalCard = dynamic(
+  () => import("@/components/personal-card").then((m) => ({ default: m.PersonalCard })),
+  { ssr: false }
+);
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.4 }}
-    >
-      <AccordionItem
-        value={value}
-        className="border-0 mb-3 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
-      >
-        <Box
-          bg={cardBg}
-          border="1px"
-          borderColor={borderColor}
-          borderRadius="xl"
-        >
-          <AccordionTrigger className="px-5 py-4 hover:no-underline">
-            <Box w="full">
-              {/* Header with badge and settings icon */}
-              <Flex justify="space-between" align="flex-start" mb={3}>
-                <Badge
-                  bg={primaryColor}
-                  color="white"
-                  px={3}
-                  py={1}
-                  borderRadius="full"
-                  fontSize="sm"
-                  fontWeight="600"
-                >
-                  {period}
-                </Badge>
-              </Flex>
+const skills = [
+  ["AI / LLM", "Claude API, MCP, Claude Code plugins, AWS Bedrock, OpenAI API, agent design"],
+  ["Languages", "TypeScript, JavaScript, Python, SQL, Java"],
+  ["Frameworks", "Node.js, NestJS, Next.js, React, Prisma, Airflow, Tailwind CSS"],
+  ["Data & Cloud", "PostgreSQL, MongoDB, Supabase, AWS (ECS, S3), Docker, GitLab CI/CD"],
+];
 
-              {/* Company and Title */}
-              <VStack align="flex-start" spacing={1} mb={4}>
-                <Box w="full" pr={4}>
-                  <Text fontSize="sm" color={textColor} fontWeight="500" lineHeight="1.6">
-                    <span className="font-normal opacity-60 mr-0.5">@</span>
-                    {companyLink ? (
-                      <Link
-                        href={companyLink}
-                        isExternal
-                        onClick={(e) => e.stopPropagation()}
-                        color={titleColor}
-                        fontWeight="600"
-                        _hover={{ color: primaryColor, textDecoration: "none" }}
-                        className="group transition-colors relative"
-                      >
-                        <span className="border-b border-transparent group-hover:border-current pb-[1px] transition-all">
-                          {company}
-                        </span>
-                        <ArrowUpRight 
-                          size={13} 
-                          className="inline-block ml-1 mb-0.5 opacity-50 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" 
-                        />
-                      </Link>
-                    ) : (
-                      <span className="font-semibold">{company}</span>
-                    )}
-                    {location && <span className="opacity-80"> · {location}</span>}
-                  </Text>
-                </Box>
-                <Text
-                  fontSize="lg"
-                  fontWeight="600"
-                  color={titleColor}
-                  lineHeight="short"
-                  textAlign="left"
-                >
-                  {title}
-                </Text>
-              </VStack>
+const projects = [
+  { name: "Real-Time 3D AI Assistant", meta: "Thesis · 94/100", desc: "A 3D AI host that holds unscripted voice conversations in the browser, with no install, GPU or headset.", href: "/works/3d-ai-assistant", img: "/images/works/3d-ai-assistant/cover.jpg" },
+  { name: "NetBot", meta: "2025", desc: "Natural-language ordering chatbot for internet cafés, parsed with ANTLR4 grammars.", href: "https://youtu.be/L75SCaAraMw", img: "https://img.youtube.com/vi/L75SCaAraMw/hqdefault.jpg" },
+  { name: "Sketcha", meta: "2024", desc: "Real-time collaborative whiteboard.", href: "/works/whiteboard-project", img: "/images/works/whiteboard-project/thumbnail.png" },
+  { name: "IU Blackboard", meta: "2024", desc: "Course management system for students and instructors.", href: "/works/iu-blackboard", img: "/images/works/iu-blackboard/image.png" },
+];
 
-              {/* Timeline Bar */}
-              <Box>
-                <Flex justify="space-between" mb={2}>
-                  <Text fontSize="xs" color={textColor} fontWeight="500">
-                    {startDate}
-                  </Text>
-                  <Text fontSize="xs" color={textColor} fontWeight="500">
-                    {isCurrent ? "Present" : endDate}
-                  </Text>
-                </Flex>
-                <Box position="relative">
-                  <Box
-                    h="2px"
-                    bg="gray.200"
-                    _dark={{ bg: "gray.600" }}
-                    borderRadius="full"
-                  />
-                  <Box
-                    position="absolute"
-                    top="0"
-                    left="0"
-                    h="2px"
-                    w="100%"
-                    bg={primaryColor}
-                    borderRadius="full"
-                  />
-                  {/* Timeline dots */}
-                  <Box
-                    position="absolute"
-                    left="0"
-                    top="-2px"
-                    w="6px"
-                    h="6px"
-                    bg={primaryColor}
-                    borderRadius="full"
-                  />
-                  <Box
-                    position="absolute"
-                    right="0"
-                    top="-2px"
-                    w="6px"
-                    h="6px"
-                    bg={isCurrent ? primaryColor : "gray.300"}
-                    borderRadius="full"
-                  />
-                </Box>
-              </Box>
-            </Box>
-          </AccordionTrigger>
-
-          <AccordionContent className="px-0 pb-0 pt-0">
-            <Box bg={expandedBg} px={5} pb={5} pt={2}>
-              <VStack align="flex-start" spacing={4} mt={2}>
-                {/* Description */}
-                <Box w="full">
-                  <Text
-                    fontSize="sm"
-                    fontWeight="600"
-                    color={titleColor}
-                    mb={2}
-                  >
-                    Responsibilities
-                  </Text>
-                  <VStack align="flex-start" spacing={2}>
-                    {description.map((item: string, index: number) => (
-                      <Flex key={index} align="flex-start" gap={2}>
-                        <Box
-                          w="4px"
-                          h="4px"
-                          bg={primaryColor}
-                          borderRadius="full"
-                          mt="6px"
-                          flexShrink={0}
-                        />
-                        <Text
-                          fontSize="sm"
-                          color={textColor}
-                          lineHeight="relaxed"
-                        >
-                          {item}
-                        </Text>
-                      </Flex>
-                    ))}
-                  </VStack>
-                </Box>
-
-                {/* Skills */}
-                <Box w="full">
-                  <Text
-                    fontSize="sm"
-                    fontWeight="600"
-                    color={titleColor}
-                    mb={2}
-                  >
-                    Technologies
-                  </Text>
-                  <Flex wrap="wrap" gap={2}>
-                    {skills.map((skill: string, index: number) => (
-                      <Badge
-                        key={index}
-                        variant="outline"
-                        borderColor={primaryColor}
-                        color={primaryColor}
-                        fontSize="xs"
-                        px={2}
-                        py={1}
-                        borderRadius="md"
-                      >
-                        {skill}
-                      </Badge>
-                    ))}
-                  </Flex>
-                </Box>
-              </VStack>
-            </Box>
-          </AccordionContent>
-        </Box>
-      </AccordionItem>
-    </motion.div>
-  );
+// Writes the pointer position, relative to the [data-spot] layer inside the hovered card,
+// as CSS vars so the spotlight gradient follows it without re-rendering.
+const trackPointer = (e: React.PointerEvent<HTMLElement>) => {
+  const spot = e.currentTarget.querySelector<HTMLElement>("[data-spot]");
+  if (!spot) return;
+  const r = spot.getBoundingClientRect();
+  spot.style.setProperty("--x", `${e.clientX - r.left}px`);
+  spot.style.setProperty("--y", `${e.clientY - r.top}px`);
 };
 
-export default function Home() {
-  const color = useColorModeValue("text-slate-500", "text-slate-400");
-  const titleTheme = useColorModeValue("text-orange-500", "text-pink-500");
+const socials = [
+  { label: "GitHub", value: "@koitran14", href: "https://github.com/koitran14", icon: Github },
+  { label: "LinkedIn", value: "in/koitran14", href: "https://linkedin.com/in/koitran14", icon: Linkedin },
+];
 
-  const experiences = [
-    {
-      title: "Software Engineer",
-      company: "PMAX - Total Marketing Partner · Full-time",
-      companyLink: "https://pmax.com.vn/",
-      location: "Quận 1, Ho Chi Minh City, Vietnam · Hybrid",
-      period: "2025-Present",
-      startDate: "Aug 2025",
-      endDate: "Present",
-      isCurrent: true,
-      description: [
-        "Developing scalable performant Web applications with React, Next.js, and TypeScript",
-        "Focusing on overall software architecture, team collaboration and user experience optimization",
-      ],
-      skills: ["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS"],
-    },
-    {
-      title: "AI Software Engineer",
-      company: "Delta Cognition · Contract",
-      companyLink: "https://www.linkedin.com/company/delta-cognition/",
-      location: "Quận 10, Ho Chi Minh City, Vietnam · Hybrid",
-      period: "2024-2025",
-      startDate: "Jun 2024",
-      endDate: "Jul 2025",
-      isCurrent: false,
-      description: [
-        "Developed and maintained scalable web applications using React, Next.js, and TypeScript",
-        "Collaborated with cross-functional teams to deliver high-quality software solutions",
-        "Enhanced user experience through responsive design and performance optimization",
-        "Participated in code reviews and maintained clean, well-documented codebases",
-      ],
-      skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Node.js"],
-    },
-  ];
+export default function Home() {
+  const { onOpen } = useContactHook();
+  // The card canvas ignores pointer events (it overlaps the text); the hero forwards them.
+  const heroRef = useRef<HTMLElement>(null!);
 
   return (
     <Section delay={0}>
-      <div className="py-4">
-        <div className="flex md:flex-row gap-6 items-center pb-8 flex-col-reverse md:text-left text-center ">
-          <div className="flex flex-col w-full">
-            <Heading
-              as="h2"
-              variant="page-title"
-              className="md:py-5 py-3 flex items-center justify-center md:justify-start gap-1"
-            >
-              Hi, I'm Koi!
-              <div className="animate-bounce">🥳</div>
-            </Heading>
-            <p
-              className={`${color} font-medium md:text-justify sm:w-[80%] md:w-full text-center self-center`}
-            >
-              {" "}
-              Being a Computer Science senior at International University and a
-              Saigonese full-stack Web Application developer, welcome to my
-              portfolio. 💖
+      <div className="py-8 space-y-2">
+        {/* Hero: text left, the lanyard card hangs from the navbar on the right */}
+        <header
+          ref={heroRef}
+          className="relative grid md:grid-cols-[minmax(0,1fr)_220px] gap-4 md:gap-8 items-center"
+        >
+          <div className="order-2 md:order-1 text-center md:text-left">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">AI Software Engineer · Saigon</p>
+            <Heading as="h1" variant="page-title">Tran Ngoc Dang Khoi</Heading>
+            <p className="mt-4 text-zinc-700 dark:text-zinc-400">
+              I build AI agent platforms and production automation — from LLM integration
+              (Claude, AWS Bedrock, MCP) to backend services, data pipelines and real-time frontends.
             </p>
           </div>
-          <div className="px-2 py-4 items-center justify-center flex relative group">
-            <Image
-              borderColor="whiteAlpha.800"
-              borderStyle="solid"
-              maxWidth="200px"
-              display="inline-block"
-              src="/images/koitran.jpg"
-              alt="Profile"
-              className="md:rounded-t-full md:rounded-b-none scale-105 rounded-full border-slate-500 border-4 group-hover:scale-110 group-hover:border-blue-600 transition-all ease-in-out duration-200"
+          <div className="order-1 md:order-2 relative h-[440px] -mt-12">
+            {/* wider and taller than the column so a dragged card isn't clipped */}
+            <PersonalCard
+              eventSource={heroRef}
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[100vw] pointer-events-none z-10"
             />
-
-            <motion.div
-              className="scale-0 group-hover:flex group-hover:scale-110 transition-all ease-in-out duration-300 group-hover:animate-bounce absolute top-4 right-4 
-                    text-3xl w-12 h-12 bg-white p-1 border-slate-400 border-2 rounded-full items-center justify-center"
-            >
-              👋
-            </motion.div>
+            <p className="absolute bottom-0 inset-x-0 text-center text-xs text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
+              drag me
+            </p>
           </div>
-        </div>
+        </header>
 
-        <Section delay={0.2}>
-          <Heading as="h3" variant="section-title">
-            About me
-          </Heading>
-          <Paragraph>
-            As a senior student at International University, I have a huge
-            passion on web application development, combining technical
-            expertise with an artistic touch. Explore my diverse portfolio and
-            join me in shaping a meaningful impact in the world of web
-            development and beyond. Visit my <Link href="/works/">works</Link>{" "}
-            now.
-          </Paragraph>
+        <Reveal as="section">
+          <Heading as="h2" variant="section-title">Experience</Heading>
+          <Accordion type="multiple" defaultValue={[experiences[0].slug]}>
+            {experiences.map((exp) => (
+              <AccordionItem key={exp.slug} value={exp.slug} className="border-b-0 border-t border-zinc-200 dark:border-zinc-800 py-4">
+                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                  <h3 className="font-medium text-zinc-900 dark:text-zinc-100">
+                    {exp.title}{" "}
+                    <a
+                      href={exp.companyLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-normal text-blue-600 dark:text-blue-400 hover:underline underline-offset-4"
+                    >
+                      @ {exp.shortCompany}
+                    </a>
+                  </h3>
+                  <span className="text-xs text-zinc-600 dark:text-zinc-500 font-mono shrink-0">{exp.shortPeriod}</span>
+                </div>
+                {exp.stats.length > 0 && (
+                  <StatList stats={exp.stats} size="text-[40px] sm:text-[52px]" className="mt-5" />
+                )}
+                <AccordionTrigger className="justify-start gap-1 py-0 mt-3 font-normal text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:no-underline">
+                  Summary
+                </AccordionTrigger>
+                <AccordionContent className="pb-0">
+                  <ul className="mt-3 space-y-2 text-sm text-zinc-700 dark:text-zinc-400 list-disc pl-4 marker:text-zinc-300 dark:marker:text-zinc-700">
+                    {exp.summary.map((p) => <li key={p}><Highlight text={p} /></li>)}
+                  </ul>
+                  <NextLink
+                    href={`/experience/${exp.slug}`}
+                    className="inline-block mt-3 text-sm text-blue-600 dark:text-blue-400 hover:underline underline-offset-4"
+                  >
+                    Read the full story →
+                  </NextLink>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </Reveal>
 
-          <div className="flex pt-9 pb-3 items-center justify-center">
-            <a href="/works">
-              <Button
-                variant="solid"
-                borderWidth={2}
-                borderRadius={0}
-                rightIcon={<ChevronRightIcon />}
-                _hover={{
-                  background: "orange",
-                  color: "#000000",
-                  transform: "scale(1.05)",
-                }}
+        <Reveal as="section">
+          <Heading as="h2" variant="section-title">Selected projects</Heading>
+          <ul className="grid sm:grid-cols-2 gap-4">
+            {projects.map((p) => {
+              const body = (
+                <>
+                  <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-100 dark:bg-zinc-900 transition-colors group-hover:border-blue-500/50">
+                    {/* glow that tracks the pointer across the thumbnail */}
+                    <div
+                      aria-hidden
+                      data-spot
+                      className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:hidden"
+                      style={{ background: "radial-gradient(180px circle at var(--x) var(--y), rgba(59,130,246,0.18), transparent 70%)" }}
+                    />
+                    {p.img ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={p.img}
+                        alt={`${p.name} screenshot`}
+                        loading="lazy"
+                        className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      // no screenshot for the thesis: show its score instead of an empty frame
+                      <div className="h-full w-full flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
+                        <Box className="h-7 w-7" strokeWidth={1.5} aria-hidden />
+                        <span className="mt-2 font-mono text-2xl font-medium">94/100</span>
+                        <span className="text-xs">graduation thesis</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-3 flex items-baseline justify-between gap-3">
+                    <span className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {p.name}
+                      {p.href && <ArrowUpRight className="inline h-3.5 w-3.5 ml-1 -mt-0.5 opacity-50" />}
+                    </span>
+                    <span className="text-xs font-mono text-zinc-600 dark:text-zinc-500 shrink-0">{p.meta}</span>
+                  </div>
+                  <p className="text-sm text-zinc-700 dark:text-zinc-400 mt-1">{p.desc}</p>
+                </>
+              );
+              return (
+                <li key={p.name} onPointerMove={trackPointer} className="relative">
+                  {p.href ? (
+                    <NextLink href={p.href} className="group block rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500">
+                      {body}
+                    </NextLink>
+                  ) : (
+                    <div className="group">{body}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <NextLink href="/works" className="inline-block mt-4 text-sm text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+            All works →
+          </NextLink>
+        </Reveal>
+
+        <Reveal as="section">
+          <Heading as="h2" variant="section-title">Skills</Heading>
+          <dl className="space-y-3 text-sm">
+            {skills.map(([k, v]) => (
+              <div key={k} className="grid sm:grid-cols-[140px_1fr] gap-1">
+                <dt className="text-zinc-600 dark:text-zinc-500">{k}</dt>
+                <dd className="text-zinc-700 dark:text-zinc-300">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
+
+        <Reveal as="section">
+          <Heading as="h2" variant="section-title">Education</Heading>
+          <BioSection>
+            <BioYear>2021 — 2025</BioYear>
+            <BioDesc>B.Sc. Computer Science, International University — VNU-HCM.</BioDesc>
+          </BioSection>
+          <BioSection>
+            <BioYear>2018 — 2021</BioYear>
+            <BioDesc>Tien Giang High School for the Gifted.</BioDesc>
+          </BioSection>
+        </Reveal>
+
+        <Reveal as="section">
+          <Heading as="h2" variant="section-title">Outside work</Heading>
+          <p className="text-zinc-700 dark:text-zinc-400">
+            Art, music, <Link as={NextLink} href="/gallery">photography</Link>
+            {FEATURES.blog ? (
+              <>, Pokémon — and occasionally <Link as={NextLink} href="/blog">writing</Link>.</>
+            ) : (
+              <> and Pokémon.</>
+            )}
+          </p>
+        </Reveal>
+
+        <Reveal as="section">
+          <Heading as="h2" variant="section-title">Contact</Heading>
+          <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm">
+            <button
+              onClick={onOpen}
+              className="inline-flex items-center gap-2 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              <Mail className="h-4 w-4" /> tndkhoi.work@gmail.com
+            </button>
+            {socials.map(({ label, value, href, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className="inline-flex items-center gap-2 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
-                My works
-              </Button>
-            </a>
+                <Icon className="h-4 w-4" /> {value}
+              </a>
+            ))}
           </div>
-
-          <Section delay={0.3}>
-            <Heading
-              as="h3"
-              variant="section-title"
-              className={cn("flex items-center gap-2",
-                titleTheme
-              )}
-            >
-              <Calendar className="h-5 w-5 " />
-              Bio
-            </Heading>
-
-            <Box mt={6}>
-              <BioSection
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-              >
-                <BioYear>2003</BioYear>
-                <BioDesc>Born in My Tho (Tien Giang), Viet Nam.</BioDesc>
-              </BioSection>
-
-              <BioSection
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.4 }}
-              >
-                <BioYear>2018 - 2021</BioYear>
-                <BioDesc>
-                  Student of Tien Giang High School for The Gifted.
-                </BioDesc>
-              </BioSection>
-
-              <BioSection
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.4 }}
-              >
-                <BioYear>2021 - present</BioYear>
-                <BioDesc>
-                  Pursuing a bachelor's degree in computer science at
-                  International University.
-                </BioDesc>
-              </BioSection>
-            </Box>
-          </Section>
-
-          <Section delay={0.4}>
-            <Heading
-              as="h3"
-              variant="section-title"
-              className={cn("flex items-center gap-2 mb-6", titleTheme)}
-            >
-              <Briefcase className="h-5 w-5 " />
-              Experience
-            </Heading>
-
-            <Accordion type="single" collapsible className="w-full">
-              {experiences.map((exp, index) => (
-                <ExperienceCard
-                  key={index}
-                  {...exp}
-                  value={`item-${index}`}
-                  delay={0.1 * index}
-                />
-              ))}
-            </Accordion>
-          </Section>
-
-          <Section delay={0.6}>
-            <Heading as="h3" variant="section-title">
-              I <span className="text-red-500">♥</span>
-            </Heading>
-            <Paragraph>
-              Art, Music, <Link href="/gallery">Photography</Link>, Pokémon, and{" "}
-              <Link href="/works">Coding</Link>. 🦄
-            </Paragraph>
-          </Section>
-
-          <Section delay={0.8}>
-            <Heading as="h3" variant="section-title">
-              Social
-            </Heading>
-            <MetaPlace>
-              <div className="col-start-1 flex items-center">
-                <Meta>INSTAGRAM</Meta>
-              </div>
-              <Link
-                className="sm:col-span-5 sm:col-start-2 col-start-3"
-                href="https://www.instagram.com/khoitran1403/"
-              >
-                <p className="flex gap-x-2 items-center w-fit px-2 rounded-md">
-                  <InstagramIcon className="h-[1.2rem] w-[1.2rem]" />{" "}
-                  @khoitran1403
-                </p>
-              </Link>
-            </MetaPlace>
-
-            <MetaPlace>
-              <div className="col-start-1 flex items-center">
-                <Meta>GITHUB</Meta>
-              </div>
-              <Link
-                className="sm:col-span-5 sm:col-start-2 col-start-3"
-                href="https://github.com/koitran14"
-              >
-                <p className="flex gap-x-2 items-center w-fit px-2 rounded-md">
-                  <IoLogoGithub className="h-[1.2rem] w-[1.2rem]" /> @koitran14{" "}
-                </p>
-              </Link>
-            </MetaPlace>
-
-            <MetaPlace>
-              <div className="col-start-1 flex items-center">
-                <Meta>GMAIL</Meta>
-              </div>
-              <Link
-                className="sm:col-span-5 sm:col-start-2 col-start-3"
-                href="#"
-              >
-                <p className="flex gap-x-2 items-center w-fit px-2 rounded-md">
-                  <Mail className="h-[1.2rem] w-[1.2rem]" />{" "}
-                  tndkhoi.work@gmail.com
-                </p>
-              </Link>
-            </MetaPlace>
-          </Section>
-        </Section>
+        </Reveal>
       </div>
     </Section>
   );

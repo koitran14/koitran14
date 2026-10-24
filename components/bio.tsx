@@ -11,10 +11,9 @@ const MotionText = motion(Text) as ForwardRefComponent<typeof Text, TextProps>
 export const BioSection = ({ children, ...props }: any) => (
   <MotionBox
     display="grid"
-    gridTemplateColumns={{ base: "1fr", md: "140px 1fr" }}
-    gap={{ base: 2, md: 6 }}
-    mb={4}
-    py={2}
+    gridTemplateColumns={{ base: "1fr", sm: "140px 1fr" }}
+    gap={1}
+    mb={3}
     {...props}
   >
     {children}
@@ -23,14 +22,14 @@ export const BioSection = ({ children, ...props }: any) => (
 
 // Simple BioYear with Chakra colors
 export const BioYear = ({ children, ...props }: any) => (
-  <MotionText fontWeight="semibold" _dark={{ color: "pink.500" }} color="orange.500" fontSize="md" {...props}>
+  <MotionText fontWeight="medium" _dark={{ color: "gray.400" }} color="gray.500" fontSize="sm" {...props}>
     {children}
   </MotionText>
 )
 
 // Clean BioDesc with Chakra theme
 export const BioDesc = ({ children, ...props }: any) => (
-  <MotionText color="gray.600" _dark={{ color: "gray.400" }} lineHeight="tall" fontSize="md" fontWeight={500} {...props}>
+  <MotionText color="gray.700" _dark={{ color: "gray.300" }} fontSize="sm" {...props}>
     {children}
   </MotionText>
 )

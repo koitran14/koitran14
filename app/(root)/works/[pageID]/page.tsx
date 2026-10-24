@@ -1,187 +1,182 @@
-"use client";
-
-import Section from "@/components/section";
-import { Meta, MetaPlace } from "@/components/ui/meta";
-import { Badge, Image, Link, useColorModeValue } from "@chakra-ui/react";
-import { Heading } from "@chakra-ui/react";
-import { MdStars } from "react-icons/md";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import Gallery from "@/components/ui/gallery";
-import Address from "@/components/ui/address";
-import { useEffect, useState } from "react";
-import { works } from "@/data/works";
-import { useParams } from "next/navigation";
+import { StatList } from "@/components/stat-value";
+import { Reveal } from "@/components/reveal";
+import { CaseStudy, CaseStudyHero } from "@/components/case-study";
+import { fieldLabel, splitTitle, works } from "@/data/works";
 
-const AlgoVisualizerPage = () => {
-  const params = useParams();
-  const themeColor = useColorModeValue("#f97316", "#22D3EE");
+const sorted = [...works].sort((a, b) => b.publishYear - a.publishYear);
 
-  const [windowWidth, setWindowWidth] = useState<number | null>(null);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    // Set initial width after component mounts
-    setWindowWidth(window.innerWidth);
-
-    // Add resize event listener
-    window.addEventListener("resize", handleResize);
-
-    // Clean up event listener
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const page = works.find((work) => work.id === params.pageID);
-
-  return (
-    <Section>
-      {page ? (
-        <>
-          <Address
-            prevLink="/works"
-            prevTitle="Works"
-            currentTitle={page.title}
-          />
-          <div>
-            <div className="pb-5 pt-2">
-              <Image
-                src={page.headingImg}
-                alt={page.title}
-                className="rounded-lg"
-              />
-            </div>
-            <div>
-              {/* Heading and description */}
-              <div className="flex items-start justify-between ">
-                <div className="flex gap-x-3 flex-col gap-y-1 justify-start w-full">
-                  <Badge className="text-lg w-fit">{page.publishYear}</Badge>
-                  <Heading
-                    className="max-w-[98%]"
-                    as="h3"
-                    fontSize={windowWidth && windowWidth >= 640 ? "25" : "22"}
-                    color={themeColor}
-                  >
-                    {page.title}
-                  </Heading>
-                </div>
-                {page.newest && (
-                  <div
-                    className="rounded-md px-2 py-1 text-white font-semibold flex items-center gap-x-1"
-                    style={{ backgroundColor: themeColor }}
-                  >
-                    <p>New</p>
-                    <MdStars className="h-[1.2rem] w-[1.2rem]" />
-                  </div>
-                )}
-              </div>
-              <p className="font-semibold text-slate-500 text-bold w-[70%]">
-                {page.author}
-              </p>
-              <div className="py-5">
-                <p className="text-justify">{page.description}</p>
-              </div>
-
-              {/* Place to put all sources and tags */}
-              {/* WEBSITE */}
-              {page.linkAttached.linkdemo && (
-                <MetaPlace>
-                  <div className="col-start-1 ">
-                    <Meta>WEBSITE</Meta>
-                  </div>
-                  <Link
-                    href={page.linkAttached.linkdemo}
-                    target="_blank"
-                    className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3"
-                  >
-                    {page.linkAttached.linkdemo}
-                  </Link>
-                </MetaPlace>
-              )}
-
-              {/* PLATFORM */}
-              <MetaPlace>
-                <div className="col-start-1 ">
-                  <Meta>PLATFORM</Meta>
-                </div>
-                <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">
-                  {page.platform}
-                </p>
-              </MetaPlace>
-
-              {/* STACK */}
-              <MetaPlace>
-                <div className="col-start-1 ">
-                  <Meta>STACK</Meta>
-                </div>
-                <p className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3">
-                  {page.stack}
-                </p>
-              </MetaPlace>
-
-              {/* GITHUB SOURCES */}
-              <MetaPlace>
-                <div className="col-start-1 ">
-                  <Meta>SOURCE</Meta>
-                </div>
-                <Link
-                  href={page.linkAttached.linkSource}
-                  className="sm:col-span-5 sm:col-start-2 col-span-4 col-start-3"
-                >
-                  {page.linkAttached.SourceTitle}
-                </Link>
-              </MetaPlace>
-            </div>
-          </div>
-
-          {page.demoVideo && (
-            <Heading
-              as="h3"
-              fontSize={18}
-              variant="section-title"
-              className=" py-4"
-            >
-              Demo Video
-            </Heading>
-          )}
-          {page.demoVideo && page.demoVideo.includes("youtube") && (
-            <iframe
-              width="100%"
-              height="280px"
-              src={page.demoVideo.replace("watch?v=", "embed/")}
-              title="YouTube video player"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="mt-4"
-            ></iframe>
-          )}
-          {page.demoVideo && !page.demoVideo.includes("youtube") && (
-            <video controls className="w-full h-auto">
-              <source src={page.demoVideo} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
-          <div>
-            <Heading
-              as="h3"
-              fontSize={18}
-              variant="section-title"
-              className=" py-4"
-            >
-              Screenshots
-            </Heading>
-            <Gallery images={page.images} />
-          </div>
-        </>
-      ) : (
-        <div className="h-full w-full flex items-center justify-center">
-          404: NOT FOUND
-        </div>
-      )}
-    </Section>
-  );
+const OWNER = "Trần Ngọc Đăng Khôi";
+// Vietnamese names are family-name first: initials = family + given name ("Trần … Khôi" -> "TK")
+const initials = (name: string) => {
+  const w = name.trim().split(/\s+/);
+  return (w[0][0] + (w.length > 1 ? w[w.length - 1][0] : "")).toUpperCase();
 };
 
-export default AlgoVisualizerPage;
+export const generateStaticParams = () => works.map(({ id }) => ({ pageID: id }));
+
+const label = "text-xl font-semibold tracking-[-0.01em] text-zinc-950 dark:text-zinc-50 mb-4";
+
+export default function WorkPage({ params }: { params: { pageID: string } }) {
+  const idx = sorted.findIndex((w) => w.id === params.pageID);
+  if (idx < 0) notFound();
+  const work = sorted[idx];
+  const { name, tagline } = splitTitle(work.title);
+  // owner first, then teammates in data order
+  const team = work.author.split(",").map((m) => m.trim()).sort((a, b) => Number(b === OWNER) - Number(a === OWNER));
+  const prev = sorted[idx - 1], next = sorted[idx + 1];
+  const youtube = work.demoVideo?.includes("youtube") ? work.demoVideo.replace("watch?v=", "embed/") : null;
+
+  return (
+    <article className="py-8 pb-24">
+      <Link href="/works" className="text-sm text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+        ← Works
+      </Link>
+
+      {work.caseStudy ? (
+        <CaseStudyHero
+          work={work}
+          data={work.caseStudy}
+          meta={`${work.publishYear} · ${tagline || fieldLabel(work.field)} · ${work.platform}`}
+        />
+      ) : (
+        <>
+        <p className="mt-8 text-xs font-mono text-zinc-600 dark:text-zinc-500">
+          {work.publishYear} · {fieldLabel(work.field)} · {work.platform}
+        </p>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+          {name}
+        </h1>
+        {tagline && <p className="mt-1 text-zinc-700 dark:text-zinc-400">{tagline}</p>}
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {work.linkAttached.linkdemo && (
+            <a
+              href={work.linkAttached.linkdemo}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md bg-zinc-900 dark:bg-zinc-100 px-4 py-2 text-sm font-medium text-white dark:text-zinc-900 hover:opacity-90 transition-opacity"
+            >
+              Live demo ↗
+            </a>
+          )}
+          <a
+            href={work.linkAttached.linkSource}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-md border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
+            Source ↗
+          </a>
+        </div>
+
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={work.headingImg}
+          alt={`${name} screenshot`}
+          className="mt-8 w-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+        />
+
+        {work.stats && <StatList stats={work.stats} size="text-[32px] sm:text-[40px]" className="mt-8 !grid-cols-2 sm:!grid-cols-4" />}
+        </>
+      )}
+
+      <Reveal>
+      <dl className="mt-8 border-b border-zinc-200 dark:border-zinc-800 text-sm">
+        <div className="grid sm:grid-cols-[120px_minmax(0,1fr)] gap-2 sm:gap-4 border-t border-zinc-200 dark:border-zinc-800 py-4">
+          <dt className="text-zinc-600 dark:text-zinc-500">{team.length > 1 ? `Team · ${team.length}` : "Team"}</dt>
+          <dd>
+            {team.length > 1 ? (
+              <ul className="grid sm:grid-cols-2 gap-x-4 gap-y-2.5">
+                {team.map((m) => (
+                  <li key={m} className="flex items-center gap-2.5 min-w-0">
+                    <span
+                      aria-hidden
+                      className={`grid h-7 w-7 shrink-0 place-items-center rounded-full font-mono text-[11px] font-medium ${
+                        m === OWNER
+                          ? "bg-blue-600 text-white dark:bg-blue-500"
+                          : "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+                      }`}
+                    >
+                      {initials(m)}
+                    </span>
+                    <span className="truncate text-zinc-800 dark:text-zinc-200">{m}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span className="text-zinc-800 dark:text-zinc-200">Solo project</span>
+            )}
+          </dd>
+        </div>
+        <div className="grid sm:grid-cols-[120px_minmax(0,1fr)] gap-2 sm:gap-4 border-t border-zinc-200 dark:border-zinc-800 py-4">
+          <dt className="text-zinc-600 dark:text-zinc-500">Stack</dt>
+          <dd className="flex flex-wrap gap-1.5">
+            {work.stack.split(",").map((s) => (
+              <span key={s} className="font-mono text-xs px-2 py-1 rounded-md border border-zinc-300 dark:border-zinc-700 text-zinc-800 dark:text-zinc-200">
+                {s.trim()}
+              </span>
+            ))}
+          </dd>
+        </div>
+      </dl>
+      </Reveal>
+
+      {work.caseStudy ? (
+        <CaseStudy data={work.caseStudy} />
+      ) : (
+        <Reveal as="section" className="mt-12">
+          <h2 className={label}>Overview</h2>
+          <p className="text-zinc-700 dark:text-zinc-400 leading-relaxed">{work.description}</p>
+        </Reveal>
+      )}
+
+      {work.demoVideo && (
+        <Reveal as="section" className="mt-12">
+          <h2 className={label}>Demo</h2>
+          {youtube ? (
+            <iframe
+              src={youtube}
+              title={`${name} demo video`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="aspect-video w-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+            />
+          ) : (
+            <video controls className="w-full rounded-lg">
+              <source src={work.demoVideo} type="video/mp4" />
+            </video>
+          )}
+        </Reveal>
+      )}
+
+      {work.images.length > 0 && (
+        <Reveal as="section" className="mt-12">
+          <h2 className={label}>Screenshots</h2>
+          <Gallery images={work.images} />
+        </Reveal>
+      )}
+
+      <nav className="mt-16 grid grid-cols-2 gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-6 text-sm">
+        {prev ? (
+          <Link href={`/works/${prev.id}`} className="group">
+            <span className="block text-xs text-zinc-600 dark:text-zinc-500">← Previous</span>
+            <span className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {splitTitle(prev.title).name}
+            </span>
+          </Link>
+        ) : <span />}
+        {next && (
+          <Link href={`/works/${next.id}`} className="group text-right">
+            <span className="block text-xs text-zinc-600 dark:text-zinc-500">Next →</span>
+            <span className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+              {splitTitle(next.title).name}
+            </span>
+          </Link>
+        )}
+      </nav>
+    </article>
+  );
+}

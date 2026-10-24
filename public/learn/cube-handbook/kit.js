@@ -11,13 +11,16 @@ const ICON = {
  hex: '<svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width="5"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M-43-25L0 0 43-25M0 0V50"/></g></svg>'};
 const art = $('article'), card = $('#card');
 
-// ---- T1 tools: highlight on/off + theme ----
-let kwOn = store.get('kw', true), theme = (()=>{try{return localStorage.getItem('chakra-ui-color-mode')}catch{return null}})() || 'dark';
+// ---- T1 tools: highlight on/off (the site toggle owns light/dark) ----
+let kwOn = store.get('kw', true);
+// the page wrapper aborts this signal when the reader leaves, so global listeners and body changes go away with it
+const sig = window.__hbSignal;
+// handbook styles are scoped to the .hb wrapper, so its classes and floating parts live there, not on <body>
+const root = art.closest('.hb') || document.body;
 function tools() {
- document.body.classList.toggle('kw-off', !kwOn); document.documentElement.dataset.theme = theme;
- $$('[data-tool=kw]').forEach(b => {b.innerHTML = ICON.mark; b.setAttribute('aria-pressed', kwOn); b.dataset.tip = kwOn ? 'Tắt tô sáng thuật ngữ' : 'Bật tô sáng thuật ngữ'});
- $$('[data-tool=theme]').forEach(b => {b.innerHTML = theme === 'dark' ? ICON.sun : ICON.moon; b.dataset.tip = theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối'});
- store.set('kw', kwOn); (()=>{try{localStorage.setItem('chakra-ui-color-mode', theme)}catch{}})()}
+ root.classList.toggle('kw-off', !kwOn);
+ $$('[data-tool=kw]').forEach(b => {b.innerHTML = ICON.mark; b.setAttribute('aria-pressed', kwOn); b.dataset.tip = kwOn ? 'Tắt tô sáng thuật ngữ' : 'Bật tô sáng thuật ngữ'}); 
+ store.set('kw', kwOn)}
 
 // ---- table of contents ----
 const qOf = i => QB.filter(q => q.s === i), done = l => l.filter(q => ANS[q.id]).length;
@@ -65,7 +68,7 @@ const tag = q => q.type === 'multi' ? 'Chọn nhiều đáp án' : 'Một đáp 
 const same = (a, b) => a.length === b.length && a.every(x => b.includes(x));
 function qHTML(q) {
  const st = ANS[q.id], multi = q.type === 'multi', right = [].concat(q.a), sel = st ? [].concat(st.v) : (SEL[q.id] || []);
- let h = `<span class="qt">${tag(q)}</span><p class="qq">${q.q}</p><div class="qo${multi ? ' multi' : ''}">` + q.o.map((o, j) => {
+ let h = `<span class="qt">${tag(q)}</span>${q.id.startsWith('nb') ? '<span class="qsrc" title="Câu hỏi do Gemini Notebook tạo bằng AI từ cùng bộ nguồn, đã biên tập lại">nguồn: Gemini Notebook</span>' : ''}<p class="qq">${q.q}</p><div class="qo${multi ? ' multi' : ''}">` + q.o.map((o, j) => {
   const c = !st ? (sel.includes(j) ? 'sel' : '') : right.includes(j) ? (sel.includes(j) ? 'right' : 'right miss') : sel.includes(j) ? 'wrong' : '';
   return `<button data-qid="${q.id}" data-v="${j}" class="${c}" ${st ? 'disabled' : ''}><span>${'ABCDE'[j]}</span>${o}</button>`}).join('') + '</div>';
  if (multi && !st) h += `<div class="qact"><button class="pri" data-qcheck="${q.id}" ${sel.length ? '' : 'disabled'}>Kiểm tra</button></div>`;
@@ -109,8 +112,7 @@ function onScroll() {
 document.addEventListener('click', e => {
  const t = e.target, b = t.closest('[data-tool],[data-tab],[data-v],[data-qcheck],[data-qgo]');
  if (b) {const d = b.dataset;
-  if (d.tool === 'kw') {kwOn = !kwOn; closeKw()} else if (d.tool === 'theme') theme = theme === 'dark' ? 'light' : 'dark';
-  else if (d.tab) tab = d.tab;
+  if (d.tool === 'kw') {kwOn = !kwOn; closeKw()}   else if (d.tab) tab = d.tab;
   else if (d.v != null) {const q = QB.find(x => x.id === d.qid), j = +d.v;
    if (q.type === 'multi') {const s = SEL[q.id] ??= []; s.includes(j) ? s.splice(s.indexOf(j), 1) : s.push(j)}
    else ANS[q.id] = {v: j, ok: j === q.a}}
@@ -122,9 +124,9 @@ document.addEventListener('click', e => {
  const st = t.closest('[data-step]'); if (st && kOpen) {const all = occ(kOpen.dataset.t); goKw(all[(all.indexOf(kOpen) + +st.dataset.step + all.length) % all.length]); return}
  const go = t.closest('[data-go]'); if (go) return goTerm(go.dataset.go);
  const side = t.closest('.card [data-t]'); if (side) return goTerm(side.dataset.t);
- if (kOpen && !t.closest('#kpop')) closeKw()});
-document.addEventListener('keydown', e => {if (e.key === 'Escape') closeKw(); if ((e.key === 'Enter' || e.key === ' ') && e.target.classList?.contains('kw')) {e.preventDefault(); openKw(e.target)}});
-document.addEventListener('mouseover', e => {if (kOpen) return; lit(e.target.closest('.card [data-t],.kw')?.dataset.t)});
+ if (kOpen && !t.closest('#kpop')) closeKw()}, {signal: sig});
+document.addEventListener('keydown', e => {if (e.key === 'Escape') closeKw(); if ((e.key === 'Enter' || e.key === ' ') && e.target.classList?.contains('kw')) {e.preventDefault(); openKw(e.target)}}, {signal: sig});
+document.addEventListener('mouseover', e => {if (kOpen) return; lit(e.target.closest('.card [data-t],.kw')?.dataset.t)}, {signal: sig});
 // ---- media per section: a slice of the overview audio + clips of Cube's workshop video ----
 // Add ?map=1 to the URL to set audio start/end for each section; marks are kept in localStorage and exported as JSON.
 const M = window.MEDIA, mapMode = new URLSearchParams(location.search).has('map');
@@ -138,21 +140,31 @@ if (M) {
  const FILM = '<svg viewBox="0 0 16 16"><rect x="1.5" y="3" width="13" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 6v4l3.5-2z" fill="currentColor"/></svg>';
  const dock = document.createElement('div'); dock.className = 'mdock';
  dock.innerHTML = '<button class="pp" data-m="pp" aria-label="Phát"></button><div class="mt"><div class="ttl"></div><div class="bar"><b></b></div></div><button class="x" data-m="close" aria-label="Đóng">×</button>';
- document.body.appendChild(dock);
+ root.appendChild(dock);
+ sig?.addEventListener('abort', () => {au.pause(); dock.remove(); panel?.remove()});
  function dockUI() {
   dock.querySelector('.pp').innerHTML = au.paused ? PLAY : PAUSE;
   const s = seg && SEC.find(x => x.n === seg.n), a = seg ? seg.at : 0, b = seg ? seg.end : au.duration;
-  dock.querySelector('.ttl').innerHTML = `${s ? s.n + ' · ' + s.t : M.audio.title}<span>${fmt(au.currentTime)} / ${seg ? fmt(seg.end) : fmt(au.duration)}</span>`;
+  dock.querySelector('.ttl').innerHTML = `${s ? s.n + ' · ' + s.t : M.audio.title}<span>audio AI · </span><span>${fmt(au.currentTime)} / ${seg ? fmt(seg.end) : fmt(au.duration)}</span>`;
   dock.querySelector('.bar b').style.width = Math.min(100, Math.max(0, (au.currentTime - a) / (b - a) * 100)) + '%';
   $$('[data-m=aud]').forEach(x => x.classList.toggle('on', !au.paused && seg?.n === x.dataset.n))}
- function playSeg(n) {const m = AM[n]; if (!m) return; seg = {n, at: m[0], end: m[1]}; au.currentTime = m[0]; au.play(); dock.classList.add('show'); closeYT()}
+ // sit just above whatever the site pins to the bottom of the screen (its toolbar, toasts)
+ // shortcut: only looks at Tailwind `fixed` elements, which is how the site pins them; widen if that changes
+ function placeDock() {
+  let h = 0;
+  document.querySelectorAll('[class*="fixed"]').forEach(e => {
+   if (root.contains(e)) return; const r = e.getBoundingClientRect();
+   if (r.height && r.height < innerHeight / 3 && r.bottom > innerHeight - 24 && r.top > innerHeight / 2) h = Math.max(h, innerHeight - r.top)});
+  dock.style.bottom = h + 12 + 'px'}
+ function playSeg(n) {const m = AM[n]; if (!m) return; seg = {n, at: m[0], end: m[1]}; au.currentTime = m[0]; au.play().catch(() => dockUI()); placeDock(); dock.classList.add('show'); closeYT()}
+ addEventListener('resize', placeDock, {signal: sig});
  au.addEventListener('timeupdate', () => {if (seg && !mapMode && au.currentTime >= seg.end) au.pause(); dockUI(); if (mapMode) panelUI()});
  ['play', 'pause', 'loadedmetadata'].forEach(ev => au.addEventListener(ev, () => {dockUI(); if (mapMode) panelUI()}));
  function rows() {
   SEC.forEach(s => {const sec = document.getElementById(s.id); let r = sec.querySelector('.mrow');
    if (!r) {r = document.createElement('div'); r.className = 'mrow'; (sec.querySelector('.gist') || sec.querySelector('h2')).after(r)}
    const a = AM[s.n], clips = M.demo[s.n] || [];
-   r.innerHTML = (a ? `<button class="mchip" data-m="aud" data-n="${s.n}">${HEAD}Nghe đoạn này <span>${fmt(a[0])}–${fmt(a[1])}</span></button>` : '') +
+   r.innerHTML = (a ? `<button class="mchip" data-m="aud" data-n="${s.n}">${HEAD}Nghe đoạn này <span title="Audio tổng quan do Gemini Notebook tạo bằng AI">${fmt(a[0])}–${fmt(a[1])}</span></button>` : '') +
     clips.map((c, i) => `<button class="mchip" data-m="yt" data-n="${s.n}" data-i="${i}">${FILM}Xem demo <span>${fmt(c[0])}</span>${c[2]}</button>`).join('') +
     (mapMode ? `<span class="mmap"><button data-m="set0" data-n="${s.n}">Đặt đầu</button><button data-m="set1" data-n="${s.n}">Đặt cuối</button>${a ? `<button data-m="clr" data-n="${s.n}">Xóa</button>` : ''}<em>${a ? fmt(a[0]) + '–' + fmt(a[1]) : 'chưa gán audio'}</em></span>` : '');
    r.hidden = !r.innerHTML}); dockUI()}
@@ -161,7 +173,7 @@ if (M) {
   const was = btn.classList.contains('on'); closeYT(); if (was) return;
   const c = M.demo[btn.dataset.n][+btn.dataset.i], box = document.createElement('div'); box.className = 'yt-box';
   box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${M.yt.id}?start=${c[0]}&end=${c[1]}&autoplay=1&rel=0" title="${c[2]}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>` +
-   `<p class="note">${fmt(c[0])}–${fmt(c[1])} trong buổi workshop của Cube. Demo chạy trên Cube Cloud, nên vài bước khác với cách tự host trong handbook. <a href="https://www.youtube.com/watch?v=${M.yt.id}&t=${c[0]}s" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p>`;
+   `<p class="note">${fmt(c[0])}–${fmt(c[1])} trong buổi workshop của Cube. Bản demo chạy trên Cube Cloud, do đó một số bước khác với cách self-host được mô tả trong tài liệu. Video thuộc Cube Dev, Inc., nhúng từ kênh YouTube chính thức của Cube. <a href="https://www.youtube.com/watch?v=${M.yt.id}&t=${c[0]}s" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p>`;
   btn.closest('.mrow').after(box); btn.classList.add('on'); au.pause()}
  // mapping tool: play the overview, stop where a section starts or ends, press the button on that section
  let panel = null;
@@ -171,7 +183,7 @@ if (M) {
   panel = document.createElement('div'); panel.className = 'mpanel';
   panel.innerHTML = `<span class="label">Gán mốc audio</span><div class="mp-row"><button class="pp" data-m="ppm"></button><button data-m="back">−5s</button><button data-m="fwd">+5s</button><span class="now"></span></div><input type="range" min="0" max="1000" value="0" aria-label="Vị trí audio">` +
    `<p>Phát audio, dừng ở chỗ một mục bắt đầu hoặc kết thúc, rồi bấm “Đặt đầu” hoặc “Đặt cuối” ngay dưới tiêu đề mục đó.</p><div class="mp-row"><button data-m="export">Copy JSON</button><button data-m="reset">Xóa hết</button></div>`;
-  document.body.appendChild(panel);
+  root.appendChild(panel);
   panel.querySelector('input').oninput = e => {if (au.duration) au.currentTime = e.target.value / 1000 * au.duration}}
  document.addEventListener('click', e => {const b = e.target.closest('[data-m]'); if (!b) return; const n = b.dataset.n, t = Math.round(au.currentTime);
   switch (b.dataset.m) {
@@ -188,10 +200,30 @@ if (M) {
    case 'reset': if (confirm('Xóa toàn bộ mốc audio đã gán?')) Object.keys(AM).forEach(k => delete AM[k]); break;
    case 'export': navigator.clipboard?.writeText(JSON.stringify(AM)); b.textContent = 'Đã copy'; setTimeout(() => b.textContent = 'Copy JSON', 1500); break}
   if (/^(set0|set1|clr|reset)$/.test(b.dataset.m)) {store.set('amap', AM); rows()}
-  dockUI(); panelUI()});
+  dockUI(); panelUI()}, {signal: sig});
  rows(); panelUI();
 }
 
-addEventListener('scroll', onScroll, {passive: true}); addEventListener('resize', fitCube);
+
+// ---- reminders and sources: a note under the byline, chapter sources at the end ----
+const SRC = window.SOURCES || [], mine = (window.CH_SOURCES || {})[key.slice(2)] || [];
+const notice = document.createElement('aside'); notice.className = 'notice';
+notice.innerHTML = '<span class="label">Lưu ý</span>Tài liệu này tổng hợp cách sử dụng Cube từ tài liệu chính thức, blog của Cube và một số bài viết khác; bản nháp được soạn với sự hỗ trợ của công cụ AI. Đây không phải tài liệu chính thức của Cube. Do Cube được cập nhật thường xuyên, cần đối chiếu với <a href="https://docs.cube.dev" target="_blank" rel="noopener">tài liệu chính thức</a> của phiên bản đang sử dụng trước khi áp dụng. <a href="#credits">Nguồn của chương</a>.';
+$('.metarow')?.after(notice);
+const end = $('.end');
+if (end) {
+ // a chapter may carry its own caveat in .end p; the rest of the block is built here
+ const extra = end.querySelector('p')?.textContent.trim() || '';
+ const nb = QB.filter(q => q.id.startsWith('nb')).length;
+ end.id = 'credits';
+ end.innerHTML = `<b style="color:var(--fg)">Nguồn của chương</b>` +
+  (mine.length ? `<ol class="src">${mine.map(id => SRC.find(x => x.id === id)).filter(Boolean).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title}${x.by ? ` · <span>${x.by}</span>` : ''}</li>`).join('')}</ol>` : '') +
+  (extra ? `<p><b>Ghi chú.</b> ${extra}</p>` : '') +
+  `<p><b>Tự kiểm tra.</b> ${QB.length} câu: ${nb ? `${nb} câu từ bộ trắc nghiệm do Gemini Notebook (AI) tạo, đã biên tập; ` : ''}${QB.length - nb} câu được soạn bổ sung theo nội dung chương với sự hỗ trợ của AI và đã được rà soát.</p>` +
+  (M ? `<p><b>Media.</b> Audio tổng quan do Gemini Notebook tạo bằng AI từ cùng bộ nguồn và có thể còn điểm chưa chính xác. Các đoạn demo trích từ buổi workshop chính thức của Cube trên YouTube; bản quyền video thuộc Cube Dev, Inc.</p>` : '') +
+  `<p><a href="/blog/cube-handbook#sources">Danh sách nguồn đầy đủ và các lưu ý →</a></p>`;
+}
+
+addEventListener('scroll', onScroll, {passive: true, signal: sig}); addEventListener('resize', fitCube, {signal: sig});
 tools(); toc(); renderCard(); onScroll();
 })();

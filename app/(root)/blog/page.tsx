@@ -1,69 +1,57 @@
 import Link from "next/link";
-import { SERIES, formatDate, getPosts, isAdmin } from "@/lib/blog";
-import { togglePublished } from "./actions";
+import { Be_Vietnam_Pro, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
+import { SERIES, getPosts, isAdmin } from "@/lib/blog";
+import { Notes, type Entry } from "./notes";
 
 export const dynamic = "force-dynamic";
 
+// Notebook typography for the Notes list; all three carry full Vietnamese glyphs.
+const serif = Source_Serif_4({ subsets: ["latin", "vietnamese"], style: ["normal", "italic"], variable: "--font-notes-serif" });
+const sans = Be_Vietnam_Pro({ subsets: ["latin", "vietnamese"], weight: ["400", "500"], variable: "--font-notes-sans" });
+const mono = JetBrains_Mono({ subsets: ["latin", "vietnamese"], variable: "--font-notes-mono" });
+
+const excerpt = (s: string, n = 160) => {
+  const first = s.trim().split(/\n\s*\n/)[0].replace(/\s+/g, " ");
+  return first.length > n ? first.slice(0, n).replace(/\s+\S*$/, "") + "…" : first;
+};
+// ~200 words a minute, never less than one
+const minutes = (s: string) => Math.max(1, Math.round(s.trim().split(/\s+/).length / 200));
+
 export default async function BlogPage() {
   const admin = isAdmin();
-  const posts = [
-    ...(await getPosts()).filter((p) => admin || p.published).map((p) => ({ ...p, href: `/blog/${p.slug}`, category: undefined as string | undefined })),
-    ...SERIES.map((s) => ({ ...s, published: true, content: "" })),
-  ].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const entries: Entry[] = (await getPosts())
+    .filter((p) => admin || p.published)
+    .map((p) => ({
+      slug: p.slug,
+      type: p.type ?? "article",
+      title: p.title,
+      excerpt: excerpt(p.content),
+      minutes: minutes(p.content),
+      published: p.published,
+      createdAt: p.createdAt,
+      date: new Date(p.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" }).replace("/", "."),
+    }));
 
   return (
-    <div className="py-8 pb-24">
+    <div className={`${serif.variable} ${sans.variable} ${mono.variable} py-8 pb-24`} style={{ fontFamily: "var(--font-notes-sans)" }}>
       <div className="flex items-baseline justify-between">
-        <h1 className="text-3xl font-semibold tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-          Blog
-        </h1>
+        <span className="text-xs text-zinc-600 dark:text-zinc-500" style={{ fontFamily: "var(--font-notes-mono)" }}>
+          VOL. 01 — {new Date().getFullYear()}
+        </span>
         {admin && (
           <Link href="/blog/admin" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
             + New post
           </Link>
         )}
       </div>
-      <p className="mt-2 text-zinc-700 dark:text-zinc-400">Notes on AI agents, engineering and things I learn along the way.</p>
+      <h1 className="mt-3 text-4xl sm:text-5xl tracking-tight text-zinc-900 dark:text-zinc-100" style={{ fontFamily: "var(--font-notes-serif)", lineHeight: 1.1 }}>
+        Notes <span className="text-zinc-400 dark:text-zinc-600">—</span> <span className="italic text-violet-600 dark:text-violet-400">sổ tay</span>
+      </h1>
+      <p className="mt-3 max-w-md leading-relaxed text-zinc-700 dark:text-zinc-400">
+        Những gì mình đọc, học và nghĩ: bài viết, ghi chú ngắn và các bộ tài liệu học.
+      </p>
 
-      {posts.length === 0 ? (
-        <p className="mt-12 text-sm text-zinc-600 dark:text-zinc-500">No posts yet.</p>
-      ) : (
-        <ul className="mt-10 divide-y divide-zinc-200 dark:divide-zinc-800 border-y border-zinc-200 dark:border-zinc-800">
-          {posts.map((post) => {
-            const label = (
-              <>
-                {post.category && (
-                  <span className="mr-2 text-xs font-medium uppercase tracking-wider text-blue-600 dark:text-blue-400">{post.category}</span>
-                )}
-                <span className="font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {post.title}
-                </span>
-                {!post.published && <span className="ml-2 text-xs text-amber-600 dark:text-amber-400">Draft</span>}
-              </>
-            );
-            return (
-            <li key={post.slug} className="flex items-baseline gap-4 py-4">
-              {/* series are static files in public/, so they need a full page load instead of client routing */}
-              {post.category ? (
-                <a href={post.href} className="flex-1 group">{label}</a>
-              ) : (
-                <Link href={post.href} className="flex-1 group">{label}</Link>
-              )}
-              <time className="text-xs text-zinc-600 dark:text-zinc-500 tabular-nums shrink-0" dateTime={post.createdAt}>
-                {formatDate(post.createdAt)}
-              </time>
-              {admin && !post.category && (
-                <form action={togglePublished.bind(null, post.slug)}>
-                  <button className="text-xs text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 underline underline-offset-2">
-                    {post.published ? "Unpublish" : "Publish"}
-                  </button>
-                </form>
-              )}
-            </li>
-            );
-          })}
-        </ul>
-      )}
+      <Notes entries={entries} series={SERIES} admin={admin} />
     </div>
   );
 }

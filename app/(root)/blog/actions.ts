@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { ADMIN_COOKIE, adminToken, checkPassword, getPosts, isAdmin, savePosts, slugify } from "@/lib/blog";
+import { ADMIN_COOKIE, adminToken, checkPassword, getPosts, isAdmin, savePosts, slugify, type PostType } from "@/lib/blog";
 
 export async function login(_: string | null, form: FormData) {
   if (!checkPassword(String(form.get("password") ?? ""))) return "Wrong password.";
@@ -32,7 +32,10 @@ export async function createPost(_: string | null, form: FormData) {
   let slug = slugify(title) || "post";
   if (posts.some((p) => p.slug === slug)) slug = `${slug}-${Date.now().toString(36)}`;
 
-  posts.push({ slug, title, content, published: form.get("published") === "on", createdAt: new Date().toISOString() });
+  const type = String(form.get("type") ?? "article");
+  if (!["article", "note", "doc"].includes(type)) return "Unknown post type.";
+
+  posts.push({ slug, title, content, type: type as PostType, published: form.get("published") === "on", createdAt: new Date().toISOString() });
   await savePosts(posts);
   revalidatePath("/blog");
   redirect(`/blog/${slug}`);

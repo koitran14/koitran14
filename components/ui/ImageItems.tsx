@@ -20,15 +20,16 @@ const ImageItems: React.FC<GalleryProp> = ({
                 className="transition-transform duration-500 ease-out group-hover:scale-110 origin-center"  
                 loading="lazy"
             />
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-            
-            {/* Animated Title */}
-            <div className="absolute bottom-0 left-0 w-full p-4 md:p-5 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 ease-out pointer-events-none flex items-center justify-between">
-                <span className="text-white/95 text-sm md:text-base font-normal tracking-[0.2em] lowercase drop-shadow-md">
-                    {image.alt}
-                </span>
-            </div>
+            {/* numeric alts ("1", "2") are just ordering, not captions */}
+            {image.alt && !/^\d+$/.test(image.alt) && (
+                <>
+                    {/* soft fade so the caption reads on bright screenshots; on hover devices it only shows on hover */}
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none transition-opacity duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100" />
+                    <p className="absolute inset-x-0 bottom-0 px-3 py-2.5 text-xs font-medium leading-snug text-white first-letter:uppercase pointer-events-none transition-all duration-300 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:translate-y-1 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-hover:translate-y-0">
+                        {image.alt}
+                    </p>
+                </>
+            )}
         </div>
     );
 }

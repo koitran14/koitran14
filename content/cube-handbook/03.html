@@ -54,26 +54,25 @@
 <body>
 <div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg></div>
 <div class="progress" id="prog"></div>
-<div class="top"><a href="index.html">← Cube.dev Engineering Handbook</a><span>Chương 03 / 07</span></div>
 <div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
 <aside class="card" id="card" aria-live="polite"></aside>
 <aside class="toc-side"><span class="label">Chương 03 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
 
 <article>
-  <div class="crumb"><a href="index.html"><b>Learning</b> / Cube.dev Handbook</a> / 03</div>
-  <h1>Hands-on Implementation: <i>tự dựng một bản chạy được</i></h1>
-  <p class="dek">Từ cài đặt, kết nối Postgres, viết data model đầu tiên, gọi API, đến một dashboard Angular và một ứng dụng low-code.</p>
+  <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 03</div>
+  <h1>Hands-on Implementation: <i>xây dựng một bản triển khai có thể vận hành</i></h1>
+  <p class="dek">Cài đặt, kết nối Postgres, viết data model đầu tiên, gọi API, sau đó xây dựng một dashboard Angular và một ứng dụng low-code.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 03 / 07</span><span>20 phút đọc</span></div>
-    <div class="tools"><button data-tool="kw"></button><button data-tool="theme"></button></div></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Một dự án Cube gồm ba thứ: biến môi trường để kết nối database, file data model trong thư mục model, và client gọi REST API. Làm đúng ba thứ này là có số liệu trên màn hình.</div>
+  <div class="idea"><small>Ý chính của chương</small>Một dự án Cube gồm ba thành phần: biến môi trường để kết nối database, các file data model trong thư mục model và client gọi REST API. Khi cả ba thành phần được cấu hình đúng, số liệu sẽ hiển thị trên giao diện.</div>
 
   <section id="s1">
     <span class="num">03.1</span>
     <h2>Chuẩn bị môi trường</h2>
     <p class="gist">Cài Cube CLI, tạo dự án, chạy Postgres và Cube bằng Docker Compose.</p>
-    <p>Handbook dùng Cube CLI để sinh khung dự án với driver Postgres, rồi dùng Docker Compose chạy Postgres và Cube ở chế độ nền. Đánh dấu từng bước khi làm xong; trạng thái được nhớ trong trình duyệt này.</p>
+    <p>Handbook dùng Cube CLI để sinh khung dự án với driver Postgres, sau đó dùng Docker Compose khởi chạy Postgres và Cube ở chế độ nền. Đánh dấu từng bước sau khi hoàn thành; trạng thái được nhớ trong trình duyệt này.</p>
     <figure>
       <div class="fig">
         <div class="figbar"><span>Ba bước cài đặt</span><span class="cprog" id="setupProg"></span></div>
@@ -87,29 +86,29 @@ cd ng-demo</pre></div></div>
             <div class="code"><div class="h"><span>terminal</span><button data-cp>Copy</button></div><pre>docker-compose up -d</pre></div></div>
         </div>
       </div>
-      <figcaption><b>Hình 1</b>Checklist cài đặt. Bấm Copy để chép lệnh.</figcaption>
+      <figcaption><b>Hình 1</b>Checklist cài đặt. Nút Copy sao chép lệnh tương ứng.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Cờ <code>-d postgres</code> trong lệnh tạo dự án chọn database driver. Cờ <code>-d</code> trong <code>docker-compose up</code> nghĩa khác: chạy nền (detached).</div>
+    <div class="take"><small>Ghi nhớ</small>Cờ <code>-d postgres</code> trong lệnh tạo dự án chọn database driver. Cờ <code>-d</code> trong <code>docker-compose up</code> mang nghĩa khác: chạy ở chế độ nền (detached).</div>
   </section>
 
   <section id="s2">
     <span class="num">03.2</span>
     <h2>Kết nối nguồn dữ liệu</h2>
     <p class="gist">Sáu biến môi trường cho kết nối, một biến cho bảo mật API.</p>
-    <p>Cube đọc thông tin kết nối từ file .env. Nguồn ở đây là Postgres, có thể chạy local hoặc trên cloud. Bấm từng dòng để xem biến đó làm gì. Biến cuối, CUBEJS_API_SECRET, không dùng để kết nối mà để kiểm tra token của client. Giá trị trong ví dụ là placeholder, thay bằng giá trị của bạn.</p>
+    <p>Cube đọc thông tin kết nối từ file .env. Nguồn dữ liệu trong ví dụ là Postgres, chạy local hoặc trên cloud. Chọn từng dòng để xem chức năng của biến tương ứng. Biến cuối cùng, CUBEJS_API_SECRET, không phục vụ kết nối mà dùng để kiểm tra token của client. Các giá trị trong ví dụ là placeholder và cần được thay bằng giá trị thực tế.</p>
     <figure>
       <div class="fig">
         <div class="yx"><div class="code"><div class="h"><span>.env</span><button data-cp>Copy</button></div><pre id="envC"></pre></div><div class="panel" id="envP"></div></div>
       </div>
-      <figcaption><b>Hình 2</b>Mỗi dòng .env là một biến; bấm để xem giải thích.</figcaption>
+      <figcaption><b>Hình 2</b>Mỗi dòng .env là một biến; chọn một dòng để xem giải thích.</figcaption>
     </figure>
-    <p>Sau khi kết nối, nạp dữ liệu mẫu. Handbook gợi ý hai bộ: bản dump thương mại điện tử <code>ecom-dump.sql</code>, hoặc bộ US Superstore 9.994 dòng. Data model ở mục sau dùng bảng orders theo cấu trúc Superstore.</p>
+    <p>Sau khi kết nối, cần nạp dữ liệu mẫu. Handbook gợi ý hai bộ: bản dump thương mại điện tử <code>ecom-dump.sql</code>, hoặc bộ US Superstore 9.994 dòng. Data model ở mục sau dùng bảng orders theo cấu trúc Superstore.</p>
     <details class="deep"><summary><span><small>Đọc sâu</small>Lệnh nạp dữ liệu và cấu trúc bảng orders</span></summary><div>
       <p>Nạp bản dump mẫu vào một database mới:</p>
       <div class="code"><div class="h"><span>terminal</span><button data-cp>Copy</button></div><pre>curl http://cube.dev/downloads/ecom-dump.sql &gt; ecom-dump.sql
 createdb ecom
 psql --dbname ecom -f ecom-dump.sql</pre></div>
-      <p>Bảng orders theo cấu trúc Superstore. Mỗi dòng là một sản phẩm trong đơn, nên order_id có thể lặp lại; row_num mới là primary key.</p>
+      <p>Bảng orders theo cấu trúc Superstore. Mỗi dòng là một sản phẩm trong đơn nên order_id có thể lặp lại; do đó primary key là row_num.</p>
       <div class="code"><div class="h"><span>SQL</span><button data-cp>Copy</button></div><pre>CREATE TABLE orders (
     row_num INT PRIMARY KEY,
     order_id TEXT,
@@ -140,7 +139,7 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
     <span class="num">03.3</span>
     <h2>Data model đầu tiên</h2>
     <p class="gist">Một file YAML cho bảng orders, hoặc file JavaScript tương đương.</p>
-    <p>Từ v0.33, Cube chuẩn hóa ba điều: thư mục model tách thành <code>model/cubes</code> (các cube gốc) và <code>model/views</code> (data mart); tên theo snake_case cho cả YAML và JavaScript; dùng sql_table thay cho câu SELECT * thừa. Bấm từng dòng trong hai file dưới đây.</p>
+    <p>Từ v0.33, Cube chuẩn hóa ba điều: thư mục model tách thành <code>model/cubes</code> (các cube gốc) và <code>model/views</code> (data mart); tên theo snake_case cho cả YAML và JavaScript; dùng sql_table thay cho câu SELECT * dư thừa. Chọn từng dòng trong hai file dưới đây để xem giải thích.</p>
     <figure>
       <div class="fig">
         <div class="tabs" id="mt"><button data-f="0" class="on">model/cubes/orders.yml</button><button data-f="1">model/cubes/users.js</button></div>
@@ -148,14 +147,14 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
       </div>
       <figcaption><b>Hình 3</b>Cùng cách khai báo measures, dimensions, segments, hai cú pháp.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>unique_orders dùng count_distinct trên order_id vì một đơn có nhiều dòng. Đếm bằng count sẽ ra số dòng sản phẩm, không phải số đơn.</div>
+    <div class="take"><small>Ghi nhớ</small>unique_orders dùng count_distinct trên order_id vì một đơn có nhiều dòng. Measure kiểu count trả về số dòng sản phẩm, không phải số đơn.</div>
   </section>
 
   <section id="s4">
     <span class="num">03.4</span>
     <h2>Truy vấn qua Cube</h2>
-    <p class="gist">Gửi JSON query tới REST API, nhận JSON có cùng tên trường.</p>
-    <p>REST API nhận truy vấn ở endpoint <code>/cubejs-api/v1/load</code>, kèm JWT trong header Authorization. Truy vấn liệt kê measures, dimensions và timeDimensions; mỗi trường trong kết quả mang đúng tên đã hỏi. Bấm một dòng ở bên trái để thấy dòng tương ứng bên phải.</p>
+    <p class="gist">Gửi JSON query tới REST API và nhận kết quả JSON với tên trường tương ứng.</p>
+    <p>REST API nhận truy vấn ở endpoint <code>/cubejs-api/v1/load</code>, kèm JWT trong header Authorization. Truy vấn liệt kê measures, dimensions và timeDimensions; mỗi trường trong kết quả giữ nguyên tên đã khai báo trong truy vấn. Chọn một dòng ở bên trái để làm nổi bật dòng tương ứng bên phải.</p>
     <figure>
       <div class="fig">
         <div class="tabs" id="qt"><button data-w="0" class="on">Query ↔ Response</button><button data-w="1">cURL</button></div>
@@ -170,19 +169,19 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
   -X POST \
   -d '{"query": {"measures": ["orders.count", "orders.total_sales"], "dimensions": ["orders.city"]}}' \
   http://localhost:4000/cubejs-api/v1/load</pre></div>
-          <p class="note">Lệnh này hỏi số đơn và tổng doanh số theo thành phố. Thay &lt;JWT_TOKEN&gt; bằng token ký bằng CUBEJS_API_SECRET.</p>
+          <p class="note">Lệnh này truy vấn số đơn và tổng doanh số theo thành phố. Thay &lt;JWT_TOKEN&gt; bằng token được ký bằng CUBEJS_API_SECRET.</p>
         </div>
       </div>
       <figcaption><b>Hình 4</b>Truy vấn và kết quả, nối với nhau theo tên trường.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Có granularity thì kết quả có thêm khóa mang hậu tố granularity, ví dụ <code>orders.order_date.month</code>.</div>
+    <div class="take"><small>Ghi nhớ</small>Khi truy vấn có granularity, kết quả có thêm khóa mang hậu tố granularity, ví dụ <code>orders.order_date.month</code>.</div>
   </section>
 
   <section id="s5">
     <span class="num">03.5</span>
     <h2>Tích hợp vào ứng dụng frontend</h2>
     <p class="gist">Ví dụ dùng Angular: cấu hình client một lần, mỗi biểu đồ theo dõi một query.</p>
-    <p>Handbook đặt tên mục này theo Next.js nhưng ví dụ thực tế dùng Angular, với các thư viện @cubejs-client/core, @cubejs-client/ngx và ng2-charts. Client được cấu hình một lần trong module gốc. Mỗi component biểu đồ đẩy query vào một Subject; client theo dõi Subject đó, gọi API và trả kết quả về, rồi chartPivot chuyển kết quả thành dạng biểu đồ dùng được.</p>
+    <p>Handbook đặt tên mục này theo Next.js nhưng ví dụ thực tế dùng Angular, với các thư viện @cubejs-client/core, @cubejs-client/ngx và ng2-charts. Client được cấu hình một lần trong module gốc. Mỗi component biểu đồ đẩy query vào một Subject; client theo dõi Subject đó, gọi API và trả kết quả về; sau đó chartPivot chuyển kết quả sang định dạng mà thư viện biểu đồ sử dụng được.</p>
     <figure>
       <div class="fig">
         <div class="tabs" id="at"><button data-g="0" class="on">Cài đặt</button><button data-g="1">app.module.ts</button><button data-g="2">chart.component.ts</button></div>
@@ -190,7 +189,7 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
           <p class="note">ng2-charts vẽ biểu đồ, @cubejs-client/core gọi API, @cubejs-client/ngx bọc client thành service của Angular.</p></div>
         <div id="ai1" hidden><div class="yx"><div class="code"><pre id="ac"></pre></div><div class="panel" id="ap"></div></div></div>
       </div>
-      <figcaption><b>Hình 5</b>Ba bước tích hợp. Ở hai tab code, bấm từng dòng để xem giải thích.</figcaption>
+      <figcaption><b>Hình 5</b>Ba bước tích hợp. Ở hai tab code, chọn từng dòng để xem giải thích.</figcaption>
     </figure>
   </section>
 
@@ -198,16 +197,16 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
     <span class="num">03.6</span>
     <h2>Dashboard phân tích cơ bản</h2>
     <p class="gist">Năm ô, một component dùng lại, khác nhau ở chartType, query và title.</p>
-    <p>Dashboard gồm ba ô số đơn lẻ và hai biểu đồ theo thời gian. Mọi ô đều là cùng một component app-chart. Bấm từng ô để xem thẻ khai báo tương ứng.</p>
+    <p>Dashboard gồm ba ô số đơn lẻ và hai biểu đồ theo thời gian. Tất cả các ô dùng chung component app-chart. Chọn từng ô để xem thẻ khai báo tương ứng.</p>
     <figure>
       <div class="fig">
         <div class="dash" id="dash"></div>
         <div class="panel" id="dashP"></div>
       </div>
-      <figcaption><b>Hình 6</b>Bố cục dashboard trong app.component.html. Ô trống vì đây là khung, không có dữ liệu thật.</figcaption>
+      <figcaption><b>Hình 6</b>Bố cục dashboard trong app.component.html. Các ô để trống vì đây là khung bố cục, không chứa dữ liệu thực.</figcaption>
     </figure>
     <details class="deep"><summary><span><small>Đọc sâu</small>Template của chart component</span></summary><div>
-      <p>Template xử lý hai trạng thái: khi chưa có dữ liệu thì hiện spinner, khi có rồi thì vẽ canvas biểu đồ hoặc in một con số đơn lẻ.</p>
+      <p>Template xử lý hai trạng thái: khi chưa có dữ liệu thì hiển thị spinner; khi đã có dữ liệu thì vẽ canvas biểu đồ hoặc hiển thị một con số đơn lẻ.</p>
       <div class="code"><div class="h"><span>chart.component.html</span><button data-cp>Copy</button></div><pre>&lt;div class="card"&gt;
   &lt;div class="card-body"&gt;
     &lt;h5 class="card-title"&gt;{{ title }}&lt;/h5&gt;
@@ -224,15 +223,15 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
     &lt;/div&gt;
   &lt;/div&gt;
 &lt;/div&gt;</pre></div>
-      <p>Lưu ý: template dùng showChart, chartLabels và chartOptions, nhưng đoạn chart.component.ts trong handbook không gán ba biến này. Khi làm thật cần tự bổ sung, ví dụ đặt showChart theo chartType.</p>
+      <p>Template dùng showChart, chartLabels và chartOptions, nhưng đoạn chart.component.ts trong handbook không gán ba biến này. Khi triển khai thực tế cần bổ sung phần gán này, ví dụ đặt showChart theo chartType.</p>
     </div></details>
   </section>
 
   <section id="s7">
     <span class="num">03.7</span>
     <h2>Kiểm tra kết quả truy vấn</h2>
-    <p class="gist">Developer Playground cho xem query, SQL sinh ra, độ trễ và trạng thái cache.</p>
-    <p>Trước khi tin con số trên dashboard, kiểm tra nó trong Developer Playground tại <code>http://localhost:4000</code>. Bốn bước dưới đây đi từ chọn trường tới đọc độ trễ.</p>
+    <p class="gist">Developer Playground hiển thị query, câu SQL được sinh ra, độ trễ và trạng thái cache.</p>
+    <p>Trước khi sử dụng số liệu trên dashboard, cần kiểm tra lại trong Developer Playground tại <code>http://localhost:4000</code>. Bốn bước dưới đây trình bày quy trình từ chọn trường đến đọc độ trễ.</p>
     <figure>
       <div class="fig">
         <div class="steps" id="pg"></div>
@@ -241,14 +240,14 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
       </div>
       <figcaption><b>Hình 7</b>Quy trình kiểm tra trong Playground. SQL ở bước 3 là minh họa.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Nếu con số lạ, đọc SQL trước. Phần lớn lỗi nằm ở join hoặc ở bộ lọc, và chúng hiện rõ trong câu SQL.</div>
+    <div class="take"><small>Ghi nhớ</small>Khi số liệu bất thường, cần đọc câu SQL trước tiên. Phần lớn lỗi nằm ở join hoặc bộ lọc, và các lỗi này thể hiện rõ trong câu SQL.</div>
   </section>
 
   <section id="s8">
     <span class="num">03.8</span>
     <h2>Bài lab: Bubble.io gọi Cube REST API</h2>
     <p class="gist">Một ứng dụng low-code lấy số liệu theo phân khúc khách hàng qua REST.</p>
-    <p>Bubble.io dùng plug-in API Connector để gọi Cube. Truy vấn có một tham số động là segment, đổi theo dropdown trên màn hình. Làm lần lượt các bước và đánh dấu.</p>
+    <p>Bubble.io dùng plug-in API Connector để gọi Cube. Truy vấn có một tham số động là segment, đổi theo dropdown trên màn hình. Thực hiện lần lượt các bước và đánh dấu sau khi hoàn thành.</p>
     <figure>
       <div class="fig">
         <div class="figbar"><span>Các bước trong Bubble.io</span><span class="cprog" id="labProg"></span></div>
@@ -271,10 +270,10 @@ psql --dbname ecom -f ecom-dump.sql</pre></div>
       </div>
       <figcaption><b>Hình 9</b>Payload thay đổi theo dropdown.</figcaption>
     </figure>
-    <a class="next-ch" href="04.html"><span><small>Chương tiếp theo</small><b>04 · Engineering Deep Dives</b></span><span>→</span></a>
+    <a class="next-ch" href="/blog/cube-handbook/04"><span><small>Chương tiếp theo</small><b>04 · Engineering Deep Dives</b></span><span>→</span></a>
   </section>
 
-  <div class="end"><b style="color:var(--fg)">Nguồn</b><p style="margin:6px 0 0">Tổng hợp từ Cube.dev Engineering Handbook. Câu tự kiểm tra lấy từ bộ trắc nghiệm Cube.dev trên Gemini Notebook, có bổ sung. Token và mật khẩu trong ví dụ đã thay bằng placeholder.</p></div>
+  <div class="end"><p>Token và mật khẩu trong ví dụ đã thay bằng placeholder.</p></div>
 </article>
 
 <script>
@@ -290,8 +289,8 @@ const lnClick = (pre, fn) => E(pre).onclick = e => {const l = e.target.closest('
 // copy buttons
 document.addEventListener('click', e => {const b = e.target.closest('[data-cp]'); if (!b) return;
  const t = b.closest('.code').querySelector('pre').innerText.replace(/ /g, ' ');
- (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => {b.textContent = 'Đã chép'; b.classList.add('ok')}, () => {b.textContent = 'Không chép được'})
-  .finally(() => setTimeout(() => {b.textContent = 'Copy'; b.classList.remove('ok')}, 1500))});
+ (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => {b.textContent = 'Đã sao chép'; b.classList.add('ok')}, () => {b.textContent = 'Không sao chép được'})
+  .finally(() => setTimeout(() => {b.textContent = 'Copy'; b.classList.remove('ok')}, 1500))}, {signal: window.__hbSignal});
 // checklists (Hình 1, 8)
 function checklist(id, progId) {const key = 'lab:ch03:' + id, st = store.get(key, {}), box = E(id), all = box.querySelectorAll('input');
  const upd = () => {let n = 0; all.forEach(c => {c.closest('.it').classList.toggle('done', c.checked); n += c.checked}); E(progId).innerHTML = `<i><b style="width:${n / all.length * 100}%"></b></i>${n}/${all.length}`};
@@ -299,10 +298,10 @@ function checklist(id, progId) {const key = 'lab:ch03:' + id, st = store.get(key
 checklist('setup', 'setupProg'); checklist('lab', 'labProg');
 // Hình 2
 const ENV = [['CUBEJS_DB_TYPE=postgres', 'type'], ['CUBEJS_DB_HOST=<DB_HOST>', 'host'], ['CUBEJS_DB_NAME=ecom_db', 'name'], ['CUBEJS_DB_USER=ecom_user', 'user'], ['CUBEJS_DB_PASS=<DB_PASSWORD>', 'pass'], ['CUBEJS_DB_PORT=5432', 'port'], ['CUBEJS_API_SECRET=<API_SECRET>', 'secret']];
-const ENVI = {type: ['CUBEJS_DB_TYPE', 'Loại driver. Ở đây là postgres, khớp với cờ -d postgres lúc tạo dự án.'], host: ['CUBEJS_DB_HOST', 'Địa chỉ máy chủ Postgres: localhost nếu chạy bằng Docker, hoặc tên miền của Postgres trên cloud.'],
- name: ['CUBEJS_DB_NAME', 'Tên database chứa dữ liệu, ví dụ database nạp từ bản dump.'], user: ['CUBEJS_DB_USER', 'Tài khoản Cube dùng để đọc dữ liệu. Nên là tài khoản chỉ có quyền đọc.'],
- pass: ['CUBEJS_DB_PASS', 'Mật khẩu của tài khoản trên. Không đưa file .env thật vào Git.'], port: ['CUBEJS_DB_PORT', 'Cổng Postgres, mặc định 5432.'],
- secret: ['CUBEJS_API_SECRET', 'Khóa bí mật Cube dùng để kiểm tra JWT mà client gửi trong header Authorization. Không liên quan tới kết nối database. Nên là chuỗi ngẫu nhiên dài.']};
+const ENVI = {type: ['CUBEJS_DB_TYPE', 'Loại driver, trong ví dụ là postgres, tương ứng với cờ -d postgres khi tạo dự án.'], host: ['CUBEJS_DB_HOST', 'Địa chỉ máy chủ Postgres: localhost nếu chạy bằng Docker, hoặc tên miền của Postgres trên cloud.'],
+ name: ['CUBEJS_DB_NAME', 'Tên database chứa dữ liệu, ví dụ database nạp từ bản dump.'], user: ['CUBEJS_DB_USER', 'Tài khoản Cube dùng để đọc dữ liệu. Nên dùng tài khoản chỉ có quyền đọc.'],
+ pass: ['CUBEJS_DB_PASS', 'Mật khẩu của tài khoản trên. Không đưa file .env thực tế vào Git.'], port: ['CUBEJS_DB_PORT', 'Cổng Postgres, mặc định 5432.'],
+ secret: ['CUBEJS_API_SECRET', 'Khóa bí mật Cube dùng để kiểm tra JWT mà client gửi trong header Authorization. Không liên quan tới kết nối database. Nên dùng một chuỗi ngẫu nhiên đủ dài.']};
 let envK = 'type'; const env = k => {envK = k; E('envC').innerHTML = lines(ENV, k); E('envP').innerHTML = info(ENVI, k, '')};
 lnClick('envC', env); env('type');
 // Hình 3
@@ -316,10 +315,10 @@ const M = [[['cubes:', 'cube'], ['  - name: orders', 'cube'], ['    sql_table: p
  [['cube(`users`, {', 'jscube'], ['  sql_table: `public.users`,', 'sqltable'], ['', ''], ['  measures: {', 'measure'], ['    count: {', 'count'], ['      sql: `id`,', 'count'], ['      type: `count`', 'count'], ['    }', 'count'], ['  },', 'measure'], ['', ''],
   ['  dimensions: {', 'dimension'], ['    city: {', 'dimension'], ['      sql: `city`,', 'dimension'], ['      type: `string`', 'dimension'], ['    },', 'dimension'], ['', ''],
   ['    signed_up: {', 'snake'], ['      sql: `created_at`,', 'snake'], ['      type: `time`', 'time'], ['    },', 'snake'], ['', ''], ['    company_name: {', 'snake'], ['      sql: `company_name`,', 'dimension'], ['      type: `string`', 'dimension'], ['    }', 'dimension'], ['  }', 'dimension'], ['});', 'jscube']]];
-const MI = {cube: ['Cube orders', 'Cube cho đơn hàng. File nằm trong model/cubes theo quy ước từ v0.33.'], jscube: ['cube() trong JavaScript', 'Hàm cube() nhận tên và một object cấu hình. Cấu trúc giống hệt bản YAML.'],
- sqltable: ['sql_table', 'Trỏ cube tới bảng có sẵn, thay cho sql: SELECT * FROM ...'], measure: ['measures', 'Danh sách các measure: những giá trị được tổng hợp.'],
+const MI = {cube: ['Cube orders', 'Cube cho đơn hàng. File nằm trong model/cubes theo quy ước từ v0.33.'], jscube: ['cube() trong JavaScript', 'Hàm cube() nhận tên và một object cấu hình. Cấu trúc tương ứng với bản YAML.'],
+ sqltable: ['sql_table', 'Trỏ cube tới bảng có sẵn, thay cho sql: SELECT * FROM ...'], measure: ['measures', 'Danh sách measure, tức các giá trị tổng hợp.'],
  count: ['type: count', 'Đếm số dòng. Với bảng Superstore, một dòng là một sản phẩm trong đơn, không phải một đơn.'], sum: ['type: sum', 'Cộng giá trị một cột: tổng doanh số (sales), tổng số lượng (quantity).'],
- cd: ['type: count_distinct', 'Đếm số giá trị khác nhau của order_id, tức số đơn thật. Cần vì order_id lặp lại ở nhiều dòng.'],
+ cd: ['type: count_distinct', 'Đếm số giá trị khác nhau của order_id, tức số đơn hàng thực tế. Cần dùng kiểu này vì order_id lặp lại ở nhiều dòng.'],
  dimension: ['dimensions', 'Thuộc tính để nhóm hoặc lọc, ví dụ city, order_id.'], pk: ['primary_key', 'row_num là primary key vì mỗi dòng có một giá trị riêng. Cube cần primary key để join và đếm không trùng.'],
  time: ['type: time', 'Time dimension, dùng được trong timeDimensions với granularity day, week, month...'],
  segment: ['segments', 'Điều kiện lọc được đặt tên sẵn. consumer_segment giữ các dòng có segment = Consumer. {CUBE} được thay bằng alias của bảng khi sinh SQL.'],
@@ -329,8 +328,8 @@ lnClick('mc', k => model(mf, k)); one('#mt', 'f', f => model(f, f ? 'jscube' : '
 // Hình 4: query and response lines share keys
 const QQ = [['{', ''], ['  "query": {', 'echo'], ['    "measures": [', 'measures'], ['      "orders.count",', 'count'], ['      "orders.total_sales"', 'sales'], ['    ],', 'measures'], ['    "timeDimensions": [', 'td'], ['      {', 'td'], ['        "dimension": "orders.order_date",', 'td'], ['        "granularity": "month"', 'gran'], ['      }', 'td'], ['    ],', 'td'], ['    "order": {', 'order'], ['      "orders.order_date": "asc"', 'order'], ['    }', 'order'], ['  }', 'echo'], ['}', '']];
 const QA = [['{', ''], ['  "query": { ... },', 'echo'], ['  "data": [', 'data'], ['    {', 'data'], ['      "orders.order_date.month": "2026-01-01T00:00:00.000",', 'gran'], ['      "orders.order_date": "2026-01-01T00:00:00.000",', 'td'], ['      "orders.count": 120,', 'count'], ['      "orders.total_sales": "15420.50"', 'sales'], ['    }', 'data'], ['  ]', 'data'], ['}', '']];
-const QI = {echo: ['query', 'Cube gửi lại chính truy vấn đã nhận trong kết quả, tiện để đối chiếu.'], measures: ['measures', 'Các measure cần tính. Mỗi measure thành một khóa trong mỗi dòng data.'],
- count: ['orders.count', 'Measure đếm dòng. Trong kết quả, giá trị nằm dưới đúng khóa orders.count.'], sales: ['orders.total_sales', 'Measure tổng doanh số. Ví dụ trong handbook trả về dạng chuỗi "15420.50".'],
+const QI = {echo: ['query', 'Kết quả trả về kèm theo truy vấn mà Cube đã tiếp nhận, thuận tiện cho việc đối chiếu.'], measures: ['measures', 'Các measure cần tính. Mỗi measure tương ứng với một khóa trong mỗi dòng data.'],
+ count: ['orders.count', 'Measure đếm dòng. Trong kết quả, giá trị nằm dưới khóa orders.count.'], sales: ['orders.total_sales', 'Measure tổng doanh số. Ví dụ trong handbook trả về dạng chuỗi "15420.50".'],
  td: ['timeDimensions', 'Time dimension dùng làm trục. Kết quả có khóa orders.order_date chứa mốc thời gian.'], gran: ['granularity', 'Với granularity month, kết quả có thêm khóa orders.order_date.month, mỗi dòng là một tháng.'],
  order: ['order', 'Sắp xếp các dòng trong mảng data theo order_date tăng dần.'], data: ['data', 'Mỗi phần tử là một dòng kết quả: một tháng, kèm giá trị các measure.']};
 const qr = k => {E('qq').innerHTML = lines(QQ, k); E('qa').innerHTML = lines(QA, k); E('qp').innerHTML = info(QI, k, '')};
@@ -348,13 +347,13 @@ const NG = [[['import { BrowserModule } from \'@angular/platform-browser\';', 'i
   ['    this.cubejs', 'watch'], ['      .watch(this.querySubject)', 'watch'], ['      .subscribe(this.resultChanged, err => console.log(\'HTTP Error\', err));', 'watch'], ['', ''], ['    this.querySubject.next(this.query);', 'next'], ['  }', 'init'], ['', ''],
   ['  resultChanged(res) {', 'pivot'], ['    this.chartData = res.chartPivot();', 'pivot'], ['    this.ready = true;', 'pivot'], ['  }', 'pivot'], ['}', 'comp']]];
 const NGI = {imp: ['Import', 'ChartsModule từ ng2-charts để vẽ, CubejsClientModule từ @cubejs-client/ngx để gọi Cube.'], opts: ['cubejsOptions', 'Cấu hình chung cho client: token và địa chỉ API.'],
- token: ['token', 'JWT gửi kèm mọi request. Trong ví dụ này token nằm thẳng trong code frontend; ứng dụng thật nên lấy token từ backend theo từng người dùng.'], url: ['apiUrl', 'Gốc REST API của Cube. Client tự nối thêm /load khi truy vấn.'],
+ token: ['token', 'JWT gửi kèm mọi request. Trong ví dụ này token được viết trực tiếp trong code frontend; ứng dụng thực tế nên lấy token từ backend theo từng người dùng.'], url: ['apiUrl', 'Gốc REST API của Cube. Client tự động nối thêm /load khi truy vấn.'],
  mod: ['NgModule', 'Module gốc của ứng dụng Angular.'], root: ['CubejsClientModule.forRoot', 'Đăng ký client một lần cho cả ứng dụng. Mọi component sau đó nhận CubejsClient qua dependency injection.'],
- imp2: ['Import', 'CubejsClient là service gọi Cube; Subject của rxjs là kênh đẩy query vào.'], comp: ['Component app-chart', 'Một component dùng cho mọi ô trên dashboard.'],
- input: ['@Input', 'Ba tham số truyền từ ngoài vào: kiểu biểu đồ, query, tiêu đề.'], state: ['Trạng thái', 'ready điều khiển spinner; chartData và chartLabels là dữ liệu cho biểu đồ.'],
- subj: ['querySubject', 'Kênh phát query. Mỗi lần gọi next() với query mới, client sẽ gọi lại API.'], inject: ['Inject CubejsClient', 'Angular đưa client đã cấu hình bằng forRoot vào component.'],
- init: ['ngOnInit', 'Chạy khi component khởi tạo: tạo Subject, gắn callback, bắt đầu theo dõi.'], watch: ['watch()', 'Theo dõi Subject. Mỗi query mới trên Subject sinh một request tới Cube; kết quả đi vào resultChanged, lỗi được log ra.'],
- next: ['next(this.query)', 'Đẩy query đầu tiên vào Subject, kích hoạt request đầu tiên.'], pivot: ['chartPivot()', 'Chuyển kết quả của Cube sang dạng pivot phù hợp để vẽ biểu đồ, rồi tắt spinner.']};
+ imp2: ['Import', 'CubejsClient là service gọi Cube; Subject của rxjs là kênh truyền query.'], comp: ['Component app-chart', 'Một component dùng cho mọi ô trên dashboard.'],
+ input: ['@Input', 'Ba tham số đầu vào: kiểu biểu đồ, query và tiêu đề.'], state: ['Trạng thái', 'ready điều khiển spinner; chartData và chartLabels là dữ liệu cho biểu đồ.'],
+ subj: ['querySubject', 'Kênh phát query. Mỗi lần gọi next() với query mới, client sẽ gọi lại API.'], inject: ['Inject CubejsClient', 'Angular cung cấp cho component client đã được cấu hình bằng forRoot.'],
+ init: ['ngOnInit', 'Chạy khi component khởi tạo: tạo Subject, gắn callback, bắt đầu theo dõi.'], watch: ['watch()', 'Theo dõi Subject. Mỗi query mới trên Subject sinh một request tới Cube; kết quả được chuyển tới resultChanged, lỗi được ghi ra console.'],
+ next: ['next(this.query)', 'Đẩy query đầu tiên vào Subject, kích hoạt request đầu tiên.'], pivot: ['chartPivot()', 'Chuyển kết quả của Cube sang dạng pivot phù hợp để vẽ biểu đồ, sau đó tắt spinner.']};
 let af = 1; const ang = (f, k) => {af = f; E('ac').innerHTML = lines(NG[f - 1], k); E('ap').innerHTML = info(NGI, k, '')};
 lnClick('ac', k => ang(af, k));
 one('#at', 'g', g => {E('ai0').hidden = !!g; E('ai1').hidden = !g; if (g) ang(g, g === 1 ? 'root' : 'watch')}); ang(1, 'root');
@@ -365,110 +364,110 @@ const VIS = {singleValue: '<span class="big">—</span>', line: '<svg viewBox="0
  stackedBar: '<svg viewBox="0 0 100 30" preserveAspectRatio="none"><g fill="currentColor"><rect x="4" y="14" width="14" height="16" opacity=".5"/><rect x="4" y="8" width="14" height="6"/><rect x="28" y="10" width="14" height="20" opacity=".5"/><rect x="28" y="4" width="14" height="6"/><rect x="52" y="16" width="14" height="14" opacity=".5"/><rect x="52" y="11" width="14" height="5"/><rect x="76" y="8" width="14" height="22" opacity=".5"/><rect x="76" y="2" width="14" height="6"/></g></svg>'};
 E('dash').innerHTML = TILE.map((t, i) => `<button data-d="${i}" class="${i > 2 ? 'w' : ''}${i ? '' : ' on'}"><span>${t[0]}</span>${VIS[t[1]]}<small>${t[1]}</small></button>`).join('');
 const dash = i => {const t = TILE[i]; E('dashP').innerHTML = `<h5>${t[0]}</h5><div class="code" style="margin:6px 0 10px"><pre>${esc(`<div class="${t[3]}">\n  <app-chart chartType="${t[1]}" [query]="${t[2]}" title="${t[0]}"></app-chart>\n</div>`)}</pre></div>` +
- (t[1] === 'singleValue' ? 'Ô số đơn lẻ: template in chartData bằng thẻ h1 thay vì vẽ canvas.' : 'Biểu đồ theo thời gian, vẽ bằng canvas của ng2-charts.') + ` Nội dung của ${t[2]} được khai báo trong app.component.ts; handbook không in phần này.`};
+ (t[1] === 'singleValue' ? 'Ô số đơn lẻ: template hiển thị chartData bằng thẻ h1 thay vì vẽ canvas.' : 'Biểu đồ theo thời gian, vẽ bằng canvas của ng2-charts.') + ` Nội dung của ${t[2]} được khai báo trong app.component.ts; handbook không in phần này.`};
 one('#dash', 'd', dash); dash(0);
 // Hình 7
-const PG = [['Build', 'Mở tab Build', 'Chọn các measures và dimensions cần kiểm tra.'], ['JSON Query', 'Bấm JSON Query', 'Xem payload chuẩn do Playground tạo ra. Có thể chép thẳng sang code client hoặc cURL.'],
- ['SQL Query', 'Bấm SQL Query', 'Xem câu SQL mà Schema Compiler biên dịch. Đây là chỗ kiểm tra join, bộ lọc và cách gom nhóm có đúng không.'], ['Console', 'Mở Debugging Console', 'Xem độ trễ thực thi (execution time) và trạng thái caching của truy vấn.']];
+const PG = [['Build', 'Mở tab Build', 'Chọn các measures và dimensions cần kiểm tra.'], ['JSON Query', 'Bấm JSON Query', 'Xem payload chuẩn do Playground tạo ra. Có thể sao chép trực tiếp sang code client hoặc lệnh cURL.'],
+ ['SQL Query', 'Bấm SQL Query', 'Xem câu SQL mà Schema Compiler biên dịch. Tại bước này có thể kiểm tra tính đúng đắn của join, bộ lọc và cách gom nhóm.'], ['Console', 'Mở Debugging Console', 'Xem độ trễ thực thi (execution time) và trạng thái caching của truy vấn.']];
 const PGS = ['<div class="chips"><span>orders.count</span><span>orders.total_sales</span><span class="d">orders.city</span></div><p class="note" style="margin:0">Ô xanh là measure, ô xám là dimension.</p>',
  `<div class="code"><pre>${esc('{\n  "measures": ["orders.count", "orders.total_sales"],\n  "dimensions": ["orders.city"]\n}')}</pre></div>`,
  `<div class="code"><div class="h"><span>SQL (minh họa)</span></div><pre>${esc('SELECT\n  "orders".city "orders__city",\n  count(*) "orders__count",\n  sum("orders".sales) "orders__total_sales"\nFROM public.orders AS "orders"\nGROUP BY 1')}</pre></div>`,
- '<div class="rows"><div><b>Execution</b>Thời gian chạy truy vấn</div><div><b>Cache</b>Kết quả lấy từ cache hay phải chạy xuống database</div></div>'];
+ '<div class="rows"><div><b>Execution</b>Thời gian chạy truy vấn</div><div><b>Cache</b>Kết quả được lấy từ cache hay phải truy vấn database</div></div>'];
 const pg = i => {E('pg').innerHTML = PG.map((p, j) => `<button data-i="${j}" class="${j === i ? 'on' : j < i ? 'past' : ''}"><b>${j + 1}</b>${p[0]}</button>`).join('');
  E('pgP').innerHTML = `<h5>${i + 1}. ${PG[i][1]}</h5>${PG[i][2]}`; E('pgS').innerHTML = PGS[i]};
 E('pg').onclick = e => {const b = e.target.closest('[data-i]'); if (b) pg(+b.dataset.i)}; pg(0);
 // Hình 9
 const SEGV = ['orders.consumer_segment', 'orders.corporate_segment', 'orders.all'];
-const SEGN = ['Chỉ lấy các dòng có segment = Consumer.', 'Chỉ lấy các dòng có segment = Corporate.', 'Handbook dùng giá trị orders.all, nhưng model ở 03.3 không khai báo segment này. Cần tự định nghĩa, hoặc bỏ hẳn trường segments khi muốn lấy tất cả.'];
+const SEGN = ['Chỉ lấy các dòng có segment = Consumer.', 'Chỉ lấy các dòng có segment = Corporate.', 'Handbook dùng giá trị orders.all, nhưng model ở 03.3 không khai báo segment này. Cần định nghĩa thêm segment này, hoặc bỏ trường segments khi cần lấy toàn bộ dữ liệu.'];
 const sg = s => {E('sgC').textContent = JSON.stringify({query: {measures: ['orders.count', 'orders.unique_orders', 'orders.total_sales'], timeDimensions: [{dimension: 'orders.order_date', granularity: 'month'}], segments: [SEGV[s]]}}, null, 2); E('sgN').textContent = SEGN[s]};
 one('#sg', 's', sg); sg(0);
 
 // ---- chapter data for kit.js ----
 window.CH = {key: 'ch03', minutes: 20,
- next: {href: '04.html', n: '04', t: 'Engineering Deep Dives'},
+ next: {href: '/blog/cube-handbook/04', n: '04', t: 'Engineering Deep Dives'},
  sections: [
   {id: 's1', n: '03.1', t: 'Chuẩn bị môi trường', sum: ['Cài Cube CLI, tạo dự án với driver Postgres.', 'Docker Compose chạy Postgres và Cube ở chế độ nền.'], terms: ['cli', 'compose']},
   {id: 's2', n: '03.2', t: 'Kết nối nguồn dữ liệu', sum: ['Biến CUBEJS_DB_* mô tả kết nối Postgres.', 'CUBEJS_API_SECRET dùng để kiểm tra JWT, không liên quan database.', 'Dữ liệu mẫu: ecom dump hoặc US Superstore.'], terms: ['env', 'secret', 'jwt']},
-  {id: 's3', n: '03.3', t: 'Data model đầu tiên', sum: ['Từ v0.33: model/cubes và model/views, snake_case, sql_table.', 'count đếm dòng, count_distinct đếm đơn thật.', 'Segment là điều kiện WHERE đặt tên sẵn, gọi lại trong query.'], terms: ['sqltable', 'snake', 'measure', 'dimension', 'pk', 'segment']},
-  {id: 's4', n: '03.4', t: 'Truy vấn qua Cube', sum: ['POST JSON query tới /cubejs-api/v1/load kèm JWT.', 'Kết quả dùng đúng tên trường đã hỏi.', 'granularity sinh thêm khóa có hậu tố như .month.'], terms: ['rest', 'jwt', 'timedim', 'granularity']},
+  {id: 's3', n: '03.3', t: 'Data model đầu tiên', sum: ['Từ v0.33: model/cubes và model/views, snake_case, sql_table.', 'count đếm số dòng, count_distinct đếm số đơn thực tế.', 'Segment là điều kiện WHERE được đặt tên sẵn và tham chiếu lại trong query.'], terms: ['sqltable', 'snake', 'measure', 'dimension', 'pk', 'segment']},
+  {id: 's4', n: '03.4', t: 'Truy vấn qua Cube', sum: ['POST JSON query tới /cubejs-api/v1/load kèm JWT.', 'Kết quả giữ nguyên tên trường đã khai báo trong truy vấn.', 'granularity sinh thêm khóa có hậu tố như .month.'], terms: ['rest', 'jwt', 'timedim', 'granularity']},
   {id: 's5', n: '03.5', t: 'Tích hợp frontend', sum: ['Ví dụ dùng Angular, không phải Next.js.', 'forRoot cấu hình client một lần.', 'watch() theo dõi Subject; chartPivot() chuẩn bị dữ liệu vẽ.'], terms: ['ngx', 'pivot', 'jwt']},
-  {id: 's6', n: '03.6', t: 'Dashboard cơ bản', sum: ['Năm ô cùng dùng component app-chart.', 'Khác nhau ở chartType, query, title.'], terms: ['pivot']},
-  {id: 's7', n: '03.7', t: 'Kiểm tra kết quả', sum: ['Build, JSON Query, SQL Query, Debugging Console.', 'Đọc SQL để bắt lỗi join và bộ lọc.'], terms: ['playground']},
+  {id: 's6', n: '03.6', t: 'Dashboard cơ bản', sum: ['Năm ô cùng dùng component app-chart.', 'Các ô chỉ khác nhau ở chartType, query và title.'], terms: ['pivot']},
+  {id: 's7', n: '03.7', t: 'Kiểm tra kết quả', sum: ['Build, JSON Query, SQL Query, Debugging Console.', 'Đọc SQL để phát hiện lỗi join và bộ lọc.'], terms: ['playground']},
   {id: 's8', n: '03.8', t: 'Bài lab Bubble.io', sum: ['API Connector gọi REST API kèm JWT.', 'Tham số segments đổi theo dropdown.'], terms: ['apiconn', 'segment', 'rest']}],
  terms: {
   cli: ['Cube CLI',
    'Công cụ dòng lệnh của Cube (gói npm cubejs-cli), dùng để sinh khung dự án với database driver chọn qua cờ -d.',
-   'Giống bộ khởi tạo nhanh: gõ một lệnh là có sẵn thư mục dự án cùng các file cấu hình, khỏi tự tạo từng file.'],
+   'Tương tự một bộ khởi tạo nhanh: chỉ với một lệnh, thư mục dự án và các file cấu hình được tạo sẵn, không cần tạo thủ công từng file.'],
   compose: ['Docker Compose',
    'Công cụ định nghĩa và chạy ứng dụng nhiều container từ một file docker-compose.yml; lệnh up -d khởi động toàn bộ dịch vụ ở chế độ detached.',
-   'Như một tờ danh sách ghi sẵn: Postgres một dòng, Cube một dòng. Gõ một lệnh là cả hai cùng bật lên và chạy ngầm phía sau.'],
+   'Tương tự một danh sách ghi sẵn: Postgres một dòng, Cube một dòng. Một lệnh duy nhất khởi động cả hai và để chúng chạy ở chế độ nền.'],
   env: ['.env',
    'File khai báo biến môi trường dạng KEY=VALUE; Cube đọc từ đây thông tin kết nối database (CUBEJS_DB_*) và khóa CUBEJS_API_SECRET.',
-   'Giống tờ giấy ghi địa chỉ, tên đăng nhập và mật khẩu đưa cho Cube để nó tự tìm tới chỗ chứa số liệu. Tờ này không bao giờ được đưa lên mạng công khai.'],
+   'Tương tự một tờ giấy ghi địa chỉ, tên đăng nhập và mật khẩu giao cho Cube để hệ thống tìm tới nơi lưu số liệu. Tờ giấy này không bao giờ được đưa lên mạng công khai.'],
   secret: ['CUBEJS_API_SECRET',
    'Khóa bí mật Cube dùng để xác minh chữ ký của JWT mà client gửi tới API; không tham gia vào kết nối database.',
-   'Như con dấu riêng của công ty: giấy tờ đóng đúng dấu này Cube mới tiếp, giấy làm giả dấu thì bị trả về.'],
+   'Tương tự con dấu riêng của một công ty: Cube chỉ tiếp nhận giấy tờ mang đúng con dấu này; giấy tờ có dấu giả bị trả về.'],
   jwt: ['JWT',
    'JSON Web Token: chuỗi JSON được ký số, gửi trong header Authorization để Cube xác thực người gọi và đọc thông tin đi kèm.',
-   'Giống thẻ ra vào có chữ ký: mỗi lần hỏi số liệu, ứng dụng chìa thẻ này ra để Cube biết ai đang hỏi và thẻ có phải thật không.'],
+   'Tương tự thẻ ra vào có chữ ký: mỗi lần yêu cầu số liệu, ứng dụng xuất trình thẻ này để Cube xác định ai đang yêu cầu và thẻ có hợp lệ hay không.'],
   sqltable: ['sql_table',
-   'Thuộc tính của cube trỏ thẳng tới một bảng có sẵn trong database, thay cho khai báo sql: SELECT * FROM ...; được chuẩn hóa từ v0.33.',
-   'Thay vì viết cả câu "lấy hết mọi thứ trong bảng orders", chỉ cần ghi tên bảng public.orders. Ngắn hơn và ít chỗ gõ sai hơn.'],
+   'Thuộc tính của cube trỏ trực tiếp tới một bảng có sẵn trong database, thay cho khai báo sql: SELECT * FROM ...; được chuẩn hóa từ v0.33.',
+   'Thay vì viết cả câu "lấy toàn bộ dữ liệu trong bảng orders", chỉ cần ghi tên bảng public.orders. Cách viết này ngắn hơn và ít khả năng sai sót hơn.'],
   snake: ['snake_case',
    'Quy ước đặt tên chữ thường, các từ nối bằng dấu gạch dưới (vd signed_up); là chuẩn mặc định của Cube từ v0.33 cho cả YAML lẫn JavaScript.',
-   'Viết tên kiểu total_sales thay vì TotalSales hay totalSales. Cả dự án chung một kiểu viết thì không phải nhớ chỗ nào viết hoa.'],
+   'Tên được viết theo dạng total_sales thay vì TotalSales hay totalSales. Khi toàn bộ dự án dùng chung một quy ước, người viết không phải ghi nhớ vị trí chữ hoa.'],
   measure: ['measure',
    'Trường định lượng của cube, tính bằng một hàm tổng hợp (count, sum, count_distinct...) trên các dòng thuộc mỗi nhóm kết quả.',
-   'Là con số bạn muốn đo: có bao nhiêu đơn, tổng bán được bao nhiêu tiền. Luôn là kết quả đếm hoặc cộng dồn từ nhiều dòng.'],
+   'Là con số cần đo: có bao nhiêu đơn, tổng doanh thu là bao nhiêu. Giá trị này là kết quả đếm hoặc cộng dồn từ nhiều dòng.'],
   dimension: ['dimension',
    'Thuộc tính định tính hoặc thời gian của cube, dùng để nhóm (GROUP BY) và lọc các measure.',
-   'Là góc nhìn để chia con số ra: theo thành phố, theo tháng, theo mã đơn. Hỏi "doanh số theo thành phố" thì thành phố là thứ đang được chia.'],
+   'Là góc nhìn dùng để phân chia con số: theo thành phố, theo tháng, theo mã đơn. Với câu hỏi "doanh số theo thành phố", thành phố là tiêu chí phân chia.'],
   pk: ['primary_key',
    'Dimension được đánh dấu primary_key: true, có giá trị duy nhất trên mỗi dòng; Cube dựa vào nó để join đúng và tránh đếm trùng.',
-   'Như số căn cước của từng dòng: không dòng nào trùng dòng nào, nhờ vậy Cube chắc chắn mỗi dòng chỉ được tính đúng một lần.'],
+   'Tương tự số căn cước của từng dòng: không có hai dòng trùng nhau, nhờ đó Cube bảo đảm mỗi dòng chỉ được tính một lần.'],
   segment: ['segment',
    'Điều kiện lọc (biểu thức WHERE) được khai báo và đặt tên sẵn trong cube, áp vào query qua trường segments.',
-   'Như một bộ lọc lưu sẵn: đặt tên "khách Consumer" một lần, lần sau chỉ cần gọi tên thay vì gõ lại điều kiện.'],
+   'Tương tự một bộ lọc lưu sẵn: đặt tên "khách Consumer" một lần, các lần sau chỉ cần gọi tên thay vì viết lại điều kiện.'],
   timedim: ['timeDimensions',
    'Phần của query chỉ định time dimension làm trục thời gian, kèm granularity để gom các mốc thời gian.',
-   'Là chỗ bạn dặn Cube: "xếp số liệu theo ngày đặt hàng, gom theo từng tháng". Kết quả ra thành một chuỗi theo thời gian, sẵn để vẽ biểu đồ đường.'],
+   'Là phần query yêu cầu Cube "xếp số liệu theo ngày đặt hàng, gom theo từng tháng". Kết quả là một chuỗi theo thời gian, sẵn sàng cho biểu đồ đường.'],
   granularity: ['granularity',
    'Mức chia thời gian (day, week, month, quarter, year...) dùng để gom các dòng của một time dimension; kết quả có thêm khóa mang hậu tố tương ứng, vd .month.',
-   'Là chọn gom theo ngày, theo tuần hay theo tháng. Chọn month thì đơn hàng của cả tháng gộp lại thành một điểm trên biểu đồ.'],
+   'Là lựa chọn gom dữ liệu theo ngày, tuần hay tháng. Với month, đơn hàng của cả tháng được gộp thành một điểm trên biểu đồ.'],
   rest: ['REST API',
    'Giao diện HTTP của Cube nhận query dạng JSON và trả kết quả JSON; endpoint chính là /cubejs-api/v1/load, xác thực bằng JWT.',
-   'Như quầy giao dịch của Cube qua mạng: ứng dụng nộp một tờ phiếu ghi câu hỏi, Cube trả lại tờ phiếu ghi số liệu.'],
+   'Tương tự quầy giao dịch của Cube trên mạng: ứng dụng nộp phiếu ghi câu hỏi, Cube trả lại phiếu ghi số liệu.'],
   ngx: ['@cubejs-client/ngx',
    'Thư viện Angular bọc @cubejs-client/core thành CubejsClientModule và service CubejsClient, cấu hình qua forRoot và cấp cho component bằng dependency injection.',
-   'Là bộ chuyển giúp ứng dụng Angular nói chuyện với Cube: cấu hình một lần ở chỗ gốc, sau đó màn hình nào cần cũng lấy ra dùng được ngay.'],
+   'Là bộ chuyển đổi giúp ứng dụng Angular giao tiếp với Cube: cấu hình một lần ở module gốc, sau đó mọi màn hình cần đến đều sử dụng được.'],
   pivot: ['chartPivot',
    'Phương thức của ResultSet trong Cube client, xoay kết quả truy vấn thành dữ liệu theo trục x (thường là thời gian) và các chuỗi giá trị, làm đầu vào cho thư viện biểu đồ.',
-   'Cube trả số liệu như một bảng kê dài; hàm này sắp lại thành hàng và cột đúng khuôn mà thư viện vẽ biểu đồ cần.'],
+   'Cube trả số liệu như một bảng kê dài; hàm này sắp xếp lại thành hàng và cột theo đúng định dạng mà thư viện biểu đồ yêu cầu.'],
   playground: ['Developer Playground',
    'Giao diện web của Cube (mặc định cổng 4000) để dựng query, xem JSON query, câu SQL do Schema Compiler sinh ra, độ trễ thực thi và trạng thái cache.',
-   'Như phòng chạy thử trước buổi diễn: chọn số liệu muốn xem, nhìn được Cube sẽ hỏi database câu gì và mất bao lâu, rồi mới đưa vào ứng dụng thật.'],
+   'Tương tự buổi tổng duyệt trước khi biểu diễn: chọn số liệu cần xem, quan sát câu truy vấn Cube gửi tới database và thời gian thực thi, sau đó mới đưa vào ứng dụng thực tế.'],
   apiconn: ['API Connector',
    'Plug-in của Bubble.io để khai báo các lời gọi HTTP tới API bên ngoài: kiểu xác thực, header, method, endpoint và tham số động.',
-   'Là ổ cắm để ứng dụng Bubble kéo dữ liệu từ dịch vụ khác. Ở bài này nó cắm vào Cube để lấy số liệu theo lựa chọn trên dropdown.']},
+   'Tương tự một ổ cắm để ứng dụng Bubble lấy dữ liệu từ dịch vụ khác. Trong bài lab này, plug-in kết nối với Cube để lấy số liệu theo lựa chọn trên dropdown.']},
  alias: {cli: ['Cube CLI'], compose: ['Docker Compose'], env: ['.env'], secret: ['CUBEJS_API_SECRET'], jwt: ['JWT'], sqltable: ['sql_table'], snake: ['snake_case'], measure: ['measures', 'measure'], dimension: ['dimensions', 'dimension'], pk: ['primary_key', 'primary key'], segment: ['segments', 'segment'], timedim: ['timeDimensions', 'time dimension'], granularity: ['granularity'], rest: ['REST API'], ngx: ['@cubejs-client/ngx'], pivot: ['chartPivot'], playground: ['Developer Playground'], apiconn: ['API Connector']},
  rel: {cli: ['compose'], compose: ['cli'], env: ['secret'], secret: ['jwt', 'env'], jwt: ['secret', 'rest'], sqltable: ['snake'], snake: ['sqltable'], measure: ['dimension'], dimension: ['measure', 'pk'], pk: ['dimension'],
   segment: ['dimension'], timedim: ['granularity'], granularity: ['timedim'], rest: ['jwt'], ngx: ['pivot', 'rest'], pivot: ['ngx'], playground: ['rest'], apiconn: ['rest', 'jwt']},
  // nb* from the Gemini Notebook quiz; ch03_q* written for this chapter
  quiz: [
   {id: 'ch03_q1', s: 0, type: 'one', q: 'Trong lệnh cubejs new ng-demo -d postgres, cờ -d làm gì?', o: ['Chọn database driver là Postgres', 'Chạy dự án ở chế độ nền (detached)', 'Bật chế độ debug', 'Xóa dự án cũ cùng tên'], a: 0,
-   ex: 'Ở đây -d chọn driver. Đừng nhầm với -d của docker-compose up.', why: {1: 'Đó là nghĩa của -d trong docker-compose up -d.'}},
-  {id: 'ch03_q2', s: 0, type: 'one', q: 'Lệnh docker-compose up -d trong bài làm gì?', o: ['Chạy container Postgres và Cube ở chế độ nền', 'Cài Cube CLI toàn cục', 'Tạo khung dự án mới', 'Nạp dữ liệu mẫu vào Postgres'], a: 0,
-   ex: 'Docker Compose dựng Postgres và Cube Engine theo file docker-compose.yml, chạy nền.', why: {1: 'Cài CLI dùng npm install -g cubejs-cli.', 2: 'Tạo dự án dùng cubejs new.', 3: 'Nạp dữ liệu dùng createdb và psql.'}},
-  {id: 'ch03_q3', s: 1, type: 'multi', q: 'Những biến nào cho Cube biết phải kết nối tới database nào?', o: ['CUBEJS_DB_TYPE', 'CUBEJS_DB_HOST', 'CUBEJS_DB_NAME', 'CUBEJS_API_SECRET'], a: [0, 1, 2],
+   ex: 'Trong lệnh này, -d chọn driver; cần phân biệt với -d của docker-compose up.', why: {1: 'Đó là nghĩa của -d trong docker-compose up -d.'}},
+  {id: 'ch03_q2', s: 0, type: 'one', q: 'Lệnh docker-compose up -d trong chương này có chức năng gì?', o: ['Chạy container Postgres và Cube ở chế độ nền', 'Cài Cube CLI toàn cục', 'Tạo khung dự án mới', 'Nạp dữ liệu mẫu vào Postgres'], a: 0,
+   ex: 'Docker Compose dựng Postgres và Cube Engine theo file docker-compose.yml, ở chế độ nền.', why: {1: 'Cài CLI dùng npm install -g cubejs-cli.', 2: 'Tạo dự án dùng cubejs new.', 3: 'Nạp dữ liệu dùng createdb và psql.'}},
+  {id: 'ch03_q3', s: 1, type: 'multi', q: 'Những biến nào xác định database mà Cube kết nối tới?', o: ['CUBEJS_DB_TYPE', 'CUBEJS_DB_HOST', 'CUBEJS_DB_NAME', 'CUBEJS_API_SECRET'], a: [0, 1, 2],
    ex: 'Các biến CUBEJS_DB_* mô tả kết nối database.', why: {3: 'API secret dùng để kiểm tra JWT của client, không tham gia kết nối database.'}},
-  {id: 'ch03_q4', s: 1, type: 'one', q: 'CUBEJS_API_SECRET được dùng vào việc gì?', o: ['Kiểm tra JWT mà client gửi trong header Authorization', 'Làm mật khẩu đăng nhập Postgres', 'Mã hóa file Parquet trong Cube Store', 'Đặt tên database mặc định'], a: 0,
-   ex: 'Token client gửi phải được ký bằng đúng secret này thì Cube mới chấp nhận.', why: {1: 'Mật khẩu database là CUBEJS_DB_PASS.'}},
-  {id: 'nb7', s: 2, type: 'one', q: 'Từ v0.33 của Cube Core, thay đổi nào được đưa vào tiêu chuẩn data modeling để đồng nhất và hợp với YAML?', o: ['Chuyển sang quy ước tên snake_case làm mặc định và cấu trúc thư mục model với hai thư mục con cubes và views.', 'Bắt buộc mọi Cube dùng sql thủ công thay vì sql_table.', 'Loại bỏ các loại joins như one_to_many và many_to_one.', 'Bắt buộc chuyển toàn bộ model từ YAML sang JavaScript.'], a: 0,
-   ex: 'v0.33 chuẩn hóa snake_case thay cho camelCase để hợp với YAML và tách rõ thư mục cubes và views.',
-   why: {1: 'v0.33 thêm tham số gọn sql_table để khai báo bảng ngắn hơn.', 2: 'v0.33 chuẩn hóa tên relationship (one_to_many, many_to_one...) chứ không loại bỏ.', 3: 'YAML vẫn là định dạng chính.'}},
-  {id: 'ch03_q5', s: 2, type: 'one', q: 'Bảng orders kiểu Superstore có một dòng cho mỗi sản phẩm trong đơn. Muốn đếm số đơn hàng thật, dùng measure nào?', o: ['unique_orders (count_distinct trên order_id)', 'count (type: count)', 'total_quantity (sum trên quantity)', 'total_sales (sum trên sales)'], a: 0,
-   ex: 'order_id lặp lại ở nhiều dòng, nên phải đếm giá trị khác nhau.', why: {1: 'count đếm số dòng, tức số dòng sản phẩm.', 2: 'Đây là tổng số lượng sản phẩm.', 3: 'Đây là tổng doanh số.'}},
-  {id: 'ch03_q6', s: 2, type: 'one', q: 'Muốn chỉ tính trên khách hàng Consumer mà không viết lại điều kiện WHERE, cách nào đúng với model trong bài?', o: ['Thêm "segments": ["orders.consumer_segment"] vào query', 'Tạo measure mới cho mỗi phân khúc', 'Đổi sql_table sang bảng khác', 'Thêm dimension city vào query'], a: 0,
+  {id: 'ch03_q4', s: 1, type: 'one', q: 'CUBEJS_API_SECRET có chức năng gì?', o: ['Kiểm tra JWT mà client gửi trong header Authorization', 'Làm mật khẩu đăng nhập Postgres', 'Mã hóa file Parquet trong Cube Store', 'Đặt tên database mặc định'], a: 0,
+   ex: 'Cube chỉ chấp nhận token của client khi token được ký bằng đúng secret này.', why: {1: 'Mật khẩu database là CUBEJS_DB_PASS.'}},
+  {id: 'nb7', s: 2, type: 'one', q: 'Từ v0.33 của Cube Core, tiêu chuẩn data modeling thay đổi như thế nào để đồng nhất và phù hợp với YAML?', o: ['Chuyển sang quy ước tên snake_case làm mặc định và cấu trúc thư mục model với hai thư mục con cubes và views.', 'Bắt buộc mọi Cube dùng sql thủ công thay vì sql_table.', 'Loại bỏ các loại joins như one_to_many và many_to_one.', 'Bắt buộc chuyển toàn bộ model từ YAML sang JavaScript.'], a: 0,
+   ex: 'v0.33 chuẩn hóa snake_case thay cho camelCase để phù hợp với YAML và tách rõ thư mục cubes và views.',
+   why: {1: 'v0.33 thêm tham số gọn sql_table để khai báo bảng ngắn hơn.', 2: 'v0.33 chuẩn hóa tên relationship (one_to_many, many_to_one...), không loại bỏ chúng.', 3: 'YAML vẫn là định dạng chính.'}},
+  {id: 'ch03_q5', s: 2, type: 'one', q: 'Bảng orders theo cấu trúc Superstore có một dòng cho mỗi sản phẩm trong đơn. Để đếm số đơn hàng thực tế, cần dùng measure nào?', o: ['unique_orders (count_distinct trên order_id)', 'count (type: count)', 'total_quantity (sum trên quantity)', 'total_sales (sum trên sales)'], a: 0,
+   ex: 'order_id lặp lại ở nhiều dòng, nên cần đếm các giá trị khác nhau.', why: {1: 'count đếm số dòng, tức số dòng sản phẩm.', 2: 'Đây là tổng số lượng sản phẩm.', 3: 'Đây là tổng doanh số.'}},
+  {id: 'ch03_q6', s: 2, type: 'one', q: 'Để chỉ tính trên khách hàng Consumer mà không viết lại điều kiện WHERE, cách nào phù hợp với model trong chương?', o: ['Thêm "segments": ["orders.consumer_segment"] vào query', 'Tạo measure mới cho mỗi phân khúc', 'Đổi sql_table sang bảng khác', 'Thêm dimension city vào query'], a: 0,
    ex: 'Segment consumer_segment đã đóng gói điều kiện segment = Consumer.', why: {1: 'Không cần nhân bản measure; segment áp được cho mọi measure.', 3: 'city chỉ nhóm theo thành phố, không lọc phân khúc.'}},
   {id: 'ch03_q7', s: 3, type: 'one', q: 'Vì sao kết quả có khóa orders.order_date.month?', o: ['Vì query có timeDimensions với granularity month', 'Vì bảng orders có cột tên month', 'Vì Cube luôn gom theo tháng mặc định', 'Vì có sắp xếp theo order_date'], a: 0,
    ex: 'Granularity được nối vào tên time dimension trong kết quả.', why: {2: 'Không có granularity thì không gom theo mốc thời gian.', 3: 'order chỉ sắp xếp, không tạo khóa mới.'}},
@@ -476,19 +475,20 @@ window.CH = {key: 'ch03', minutes: 20,
    ex: 'Token đi trong header Authorization; body chỉ chứa query.'},
   {id: 'ch03_q9', s: 4, type: 'one', q: 'CubejsClientModule.forRoot(cubejsOptions) trong app.module.ts làm gì?', o: ['Đăng ký client một lần với token và apiUrl cho toàn ứng dụng', 'Tạo một Cube mới trong data model', 'Khởi chạy Cube server bên trong trình duyệt', 'Vẽ biểu đồ đầu tiên'], a: 0,
    ex: 'Sau đó mọi component nhận CubejsClient đã cấu hình qua dependency injection.'},
-  {id: 'ch03_q10', s: 4, type: 'one', q: 'Trong ChartComponent, điều gì xảy ra mỗi khi querySubject.next(query) được gọi?', o: ['watch() gửi request mới tới Cube và kết quả đi vào resultChanged', 'Component bị hủy và tạo lại', 'Query được lưu vào Cube Store', 'Không có gì cho tới khi tải lại trang'], a: 0,
+  {id: 'ch03_q10', s: 4, type: 'one', q: 'Trong ChartComponent, điều gì xảy ra mỗi khi querySubject.next(query) được gọi?', o: ['watch() gửi request mới tới Cube và kết quả đi vào resultChanged', 'Component bị hủy và tạo lại', 'Query được lưu vào Cube Store', 'Không có thay đổi nào cho tới khi tải lại trang'], a: 0,
    ex: 'watch() theo dõi Subject; mỗi query mới sinh một request, kết quả qua chartPivot() vào chartData.'},
   {id: 'ch03_q11', s: 5, type: 'one', q: 'Năm ô trên dashboard khác nhau ở điểm nào?', o: ['Các thuộc tính chartType, query và title truyền vào app-chart', 'Mỗi ô là một component riêng', 'Mỗi ô kết nối một Cube server khác', 'Mỗi ô dùng một token khác'], a: 0,
-   ex: 'Cùng một component, chỉ khác input.'},
-  {id: 'ch03_q12', s: 6, type: 'one', q: 'Trong Developer Playground, muốn xem câu SQL mà Schema Compiler sinh ra thì bấm gì?', o: ['SQL Query', 'JSON Query', 'Tab Build', 'Debugging Console'], a: 0,
-   ex: 'SQL Query hiện câu SQL đã biên dịch.', why: {1: 'JSON Query hiện payload gửi tới API.', 2: 'Build dùng để chọn trường.', 3: 'Console cho xem độ trễ và trạng thái cache.'}},
-  {id: 'ch03_q13', s: 6, type: 'one', q: 'Muốn biết một truy vấn có lấy từ cache hay không, xem ở đâu?', o: ['Debugging Console', 'JSON Query', 'File .env', 'Tab Build'], a: 0,
-   ex: 'Debugging Console hiện execution time và trạng thái caching.'},
+   ex: 'Các ô dùng cùng một component, chỉ khác nhau ở input.'},
+  {id: 'ch03_q12', s: 6, type: 'one', q: 'Trong Developer Playground, cần chọn mục nào để xem câu SQL mà Schema Compiler sinh ra?', o: ['SQL Query', 'JSON Query', 'Tab Build', 'Debugging Console'], a: 0,
+   ex: 'SQL Query hiển thị câu SQL đã biên dịch.', why: {1: 'JSON Query hiển thị payload gửi tới API.', 2: 'Build dùng để chọn trường.', 3: 'Console hiển thị độ trễ và trạng thái cache.'}},
+  {id: 'ch03_q13', s: 6, type: 'one', q: 'Trạng thái cache của một truy vấn được hiển thị ở đâu?', o: ['Debugging Console', 'JSON Query', 'File .env', 'Tab Build'], a: 0,
+   ex: 'Debugging Console hiển thị execution time và trạng thái caching.'},
   {id: 'ch03_q14', s: 7, type: 'multi', q: 'Với model ở 03.3, giá trị nào điền được vào tham số segments trong payload Bubble?', o: ['orders.consumer_segment', 'orders.corporate_segment', 'orders.city', 'orders.count'], a: [0, 1],
    ex: 'Chỉ hai segment này được khai báo trong orders.yml.', why: {2: 'city là dimension, không phải segment.', 3: 'count là measure.'}},
-  {id: 'ch03_q15', s: 7, type: 'one', q: 'Khi cấu hình API Connector, chọn kiểu Authentication nào?', o: ['Private key in header', 'OAuth2 user-agent flow', 'Không xác thực', 'HTTP Basic auth'], a: 0,
+  {id: 'ch03_q15', s: 7, type: 'one', q: 'Khi cấu hình API Connector, cần chọn kiểu Authentication nào?', o: ['Private key in header', 'OAuth2 user-agent flow', 'Không xác thực', 'HTTP Basic auth'], a: 0,
    ex: 'JWT được gửi qua header Authorization, nên dùng Private key in header.'}]};
 </script>
+<script src="sources.js"></script>
 <script src="media.js"></script>
 <script src="kit.js"></script>
 </body>

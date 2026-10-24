@@ -27,6 +27,10 @@
 .routes .pills{margin-top:6px}
 .route-note{font-size:15px;color:var(--muted);margin:12px 0 0;min-height:24px}
 .demo{margin-top:56px}
+.notes{display:grid;grid-template-columns:150px 1fr;gap:10px 20px;margin:18px 0 8px;font-size:15px;line-height:1.6;color:var(--body)}
+.notes dt{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.notes dd{margin:0}
+#srcList h3{font-size:18px;margin:22px 0 4px}
+@media(max-width:700px){.notes{grid-template-columns:1fr;gap:2px}.notes dd{margin-bottom:10px}}
 .demo iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
 .moments{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;font-size:14px}
 .moments li{display:grid;grid-template-columns:48px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
@@ -66,33 +70,32 @@
  <svg class="w2" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/></g></svg>
 </div>
 <div class="progress" id="prog"></div>
-<div class="top"><a href="/blog">← Blog</a><a href="/">Khoi Tran</a></div>
 
 <article>
   <div class="crumb"><b>Learning</b> / Data / Semantic layer</div>
   <h1>Cube.dev <i>Engineering Handbook</i></h1>
-  <p class="dek">Bảy chương, đi từ “Cube là gì” đến đưa lên production. Mỗi chương đọc trong một lần ngồi, có nghe, xem và tự kiểm tra.</p>
+  <p class="dek">Tài liệu gồm bảy chương, trình bày từ câu hỏi “Cube là gì” đến triển khai trên production. Mỗi chương có thể đọc trọn trong một buổi, kèm audio, video và câu hỏi tự kiểm tra.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>7 chương · 54 mục</span><span>khoảng 2 giờ đọc · 96 câu tự kiểm tra</span></div>
-    <div class="tools"><button data-tool="theme"></button></div></div>
+    </div>
 
   <div class="media">
     <div class="aud" id="aud">
       <button class="pp" id="pp" aria-label="Phát"></button>
       <div style="min-width:0"><div class="aud-t">Nghe tổng quan · Kiến trúc tầng ngữ nghĩa <span id="atime">0:00</span></div><div class="scrub" id="scrub"></div></div>
       <button class="chip" id="rate">1×</button>
-      <a class="note" href="01.html?map=1" style="grid-column:1/-1;font-size:12px;margin:0">Gán mốc audio cho từng mục →</a>
-      <audio id="au" src="media/overview.m4a" preload="metadata"></audio>
+      <span class="note" style="grid-column:1/-1;font-size:12px;margin:0">Audio do Gemini Notebook tạo bằng AI từ bộ nguồn của handbook.</span>
+      <audio id="au" src="/learn/cube-handbook/media/overview.m4a" preload="metadata"></audio>
     </div>
     <div>
-      <div class="vid"><video id="vd" src="media/handbook.mp4" preload="metadata" controls playsinline></video></div>
-      <div class="vcap"><span><b style="font:500 12px var(--mono);color:var(--fg);margin-right:8px">Video</b>Sổ tay kỹ thuật Cube</span><span id="vtime"></span></div>
+      <div class="vid"><video id="vd" src="/learn/cube-handbook/media/handbook.mp4" preload="metadata" controls playsinline></video></div>
+      <div class="vcap"><span><b style="font:500 12px var(--mono);color:var(--fg);margin-right:8px">Video</b>Sổ tay kỹ thuật Cube · do Gemini Notebook tạo bằng AI</span><span id="vtime"></span></div>
     </div>
   </div>
 
   <div class="demo">
     <span class="label">Video demo gốc · Cube workshop · 39 phút</span>
     <div class="vid"><iframe id="yt" src="https://www.youtube-nocookie.com/embed/7ZQGGepDjUQ?rel=0" title="Building Agentic Analytics with Cube" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
-    <p class="note">Đội sáng lập Cube đi từ kho dữ liệu Snowflake tới dashboard, embedded và MCP trên Cube Cloud. Các đoạn demo đã được gắn vào đúng mục trong từng chương; bấm một mốc để mở mục đó.</p>
+    <p class="note">Các nhà sáng lập Cube trình bày quy trình từ kho dữ liệu Snowflake đến dashboard, embedded và MCP trên Cube Cloud. Mỗi đoạn demo được liên kết với mục tương ứng trong các chương; chọn một mốc thời gian để mở mục đó. Người trình bày: Artyom (CEO) và Pavel (CTO), đồng sáng lập Cube. Video thuộc Cube Dev, Inc.</p>
     <ol class="moments" id="moments"></ol>
   </div>
 
@@ -104,37 +107,51 @@
 
   <ol class="path" id="path"></ol>
 
-  <div class="end"><b style="color:var(--fg)">Nguồn</b><p style="margin:6px 0 0">Tổng hợp từ tài liệu chính thức, blog kỹ thuật của Cube và ghi chú cá nhân. Audio và video tạo bằng Gemini Notebook từ cùng bộ nguồn.</p></div>
+  <section class="end" id="sources">
+    <h2 style="font-size:28px">Nguồn và lưu ý khi đọc</h2>
+    <dl class="notes">
+      <dt>Tính chất tài liệu</dt><dd>Ghi chú kỹ thuật về cách sử dụng Cube, tổng hợp từ các nguồn liệt kê bên dưới. Cube Dev, Inc. không liên kết, không tài trợ và không xác nhận nội dung này. Cube và các tên sản phẩm được nhắc tới là thương hiệu của chủ sở hữu tương ứng.</dd>
+      <dt>Cách biên soạn</dt><dd>Các nguồn được tập hợp trong Gemini Notebook. Bản nháp được soạn bằng công cụ AI (Gemini, Claude), sau đó được biên tập và rà soát. Những chỗ tài liệu nguồn có dấu hiệu chưa chính xác đều được ghi chú trong chương tương ứng.</dd>
+      <dt>Phiên bản</dt><dd>Nhiều chi tiết gắn với phiên bản cụ thể (v0.28, v0.33, v0.34), trong khi Cube thay đổi nhanh. Cần đối chiếu với <a href="https://docs.cube.dev" target="_blank" rel="noopener">tài liệu chính thức</a> trước khi áp dụng vào dự án thực tế.</dd>
+      <dt>Số liệu</dt><dd>Các con số về độ chính xác của AI, chi phí và độ trễ ở chương 04 và 07 là số minh họa lấy từ tài liệu nguồn và case study, chưa được đo lại độc lập.</dd>
+      <dt>Code mẫu</dt><dd>Token, mật khẩu và secret đã được thay bằng placeholder. Cần chạy thử ở môi trường dev trước khi dùng cho production.</dd>
+      <dt>Audio, video, câu hỏi</dt><dd>Audio tổng quan, video “Sổ tay kỹ thuật Cube” và một phần câu tự kiểm tra do Gemini Notebook tạo bằng AI, có thể còn lỗi phát âm hoặc diễn đạt. Video workshop thuộc Cube Dev, Inc., được nhúng từ YouTube và không đăng tải lại.</dd>
+      <dt>Góp ý</dt><dd>Lỗi nội dung hoặc chỗ thiếu ghi nguồn xin gửi về <a href="mailto:tndkhoi.work@gmail.com">tndkhoi.work@gmail.com</a> để được chỉnh sửa.</dd>
+    </dl>
+    <div id="srcList"></div>
+  </section>
 </article>
 
+<script src="sources.js"></script>
 <script src="media.js"></script>
 <script>
 // one row per demo moment, linked to every handbook section it illustrates
 const mm = {};
 Object.entries(MEDIA.demo).forEach(([n, clips]) => clips.forEach(c => {(mm[c[0]] ??= {t: c[0], label: c[2], secs: []}).secs.push(n)}));
 const fmtT = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
-moments.innerHTML = Object.values(mm).sort((a, b) => a.t - b.t).map(m => `<li><b>${fmtT(m.t)}</b><span><a href="${m.secs[0].slice(0, 2)}.html#s${+m.secs[0].split('.')[1]}">${m.label}</a><small>Mục ${m.secs.join(', ')}</small></span></li>`).join('');
+moments.innerHTML = Object.values(mm).sort((a, b) => a.t - b.t).map(m => `<li><b>${fmtT(m.t)}</b><span><a href="/blog/cube-handbook/${m.secs[0].slice(0, 2)}#s${+m.secs[0].split('.')[1]}">${m.label}</a><small>Mục ${m.secs.join(', ')}</small></span></li>`).join('');
+srcList.innerHTML = [...new Set(SOURCES.map(x => x.g))].map(g => `<h3>${g}</h3><ol class="src">${SOURCES.filter(x => x.g === g).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title} · <span>${x.by}</span></li>`).join('')}</ol>`).join('');
 </script>
 <script>
 const CHS = [
- {n: '01', t: 'Fundamentals', vi: 'Cube.dev là gì, giải quyết vấn đề gì, khi nào nên dùng.', lvl: 'Nền tảng', min: 14, href: '01.html', key: 'ch01', q: 12,
+ {n: '01', t: 'Fundamentals', vi: 'Định nghĩa Cube.dev, các vấn đề Cube.dev giải quyết và những trường hợp nên sử dụng.', lvl: 'Nền tảng', min: 14, href: '/blog/cube-handbook/01', key: 'ch01', q: 12,
   s: ['What Is Cube.dev?', 'The Semantic Layer Concept', 'Problems Cube.dev Solves', 'Core Concepts and Terminology', 'Cube.dev Use Cases', 'Benefits, Limitations & Alternatives']},
- {n: '02', href: '02.html', key: 'ch02', t: 'Architecture & Internals', vi: 'Các thành phần của Cube và một truy vấn đi qua hệ thống thế nào.', lvl: 'Nền tảng', min: 12, q: 13,
+ {n: '02', href: '/blog/cube-handbook/02', key: 'ch02', t: 'Architecture & Internals', vi: 'Các thành phần của Cube và quá trình một truy vấn được xử lý trong hệ thống.', lvl: 'Nền tảng', min: 12, q: 13,
   s: ['High-Level Architecture', 'Core Components and Responsibilities', 'Query Lifecycle', 'Request-to-Response Flow', 'Data Sources and Query Execution', 'Architecture Diagrams']},
- {n: '03', href: '03.html', key: 'ch03', t: 'Hands-on Implementation', vi: 'Tự dựng một ứng dụng Cube chạy được, từ cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
+ {n: '03', href: '/blog/cube-handbook/03', key: 'ch03', t: 'Hands-on Implementation', vi: 'Xây dựng một ứng dụng Cube hoạt động được, từ khâu cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
   s: ['Environment Setup', 'Connect a Data Source', 'Create Your First Data Model', 'Query Data Through Cube.dev', 'Integrate with a Frontend App', 'Build a Basic Analytics Dashboard', 'Validate Query Results', 'Implementation Labs']},
- {n: '04', href: '04.html', key: 'ch04', t: 'Engineering Deep Dives', vi: 'Hiểu sâu cơ chế bên trong và kiểm chứng bằng thực nghiệm.', lvl: 'Nâng cao', min: 24, q: 17,
+ {n: '04', href: '/blog/cube-handbook/04', key: 'ch04', t: 'Engineering Deep Dives', vi: 'Cơ chế hoạt động bên trong của Cube, kèm các thực nghiệm kiểm chứng.', lvl: 'Nâng cao', min: 24, q: 17,
   s: ['Data Modeling', 'Measures, Dimensions & Granularity', 'Joins, Fanout & Double Counting', 'SQL Generation and Inspection', 'Query Execution and Optimization', 'Caching Mechanisms', 'Pre-aggregations', 'Authentication, Authorization & Multi-tenancy', 'Source Code Investigation', 'Experiments & Performance Analysis']},
- {n: '05', href: '05.html', key: 'ch05', t: 'Production Engineering', vi: 'Đưa Cube lên production, vận hành và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
+ {n: '05', href: '/blog/cube-handbook/05', key: 'ch05', t: 'Production Engineering', vi: 'Triển khai Cube lên production, vận hành và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
   s: ['Deployment Architecture', 'Environment Configuration & Secrets', 'Authentication and Security Configuration', 'Observability, Logs & Monitoring', 'Performance Troubleshooting', 'Common Production Issues', 'CI/CD and Release Management', 'Production Readiness Checklist']},
- {n: '06', href: '06.html', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tra cứu nhanh khi code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
+ {n: '06', href: '/blog/cube-handbook/06', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tài liệu tra cứu khi viết code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
   s: ['Configuration Reference', 'API & Query Examples', 'Common Patterns and Code Snippets', 'Error Messages & Solutions', 'Troubleshooting Checklist', 'Glossary', 'Useful Commands & Tools', 'External References']},
- {n: '07', href: '07.html', key: 'ch07', t: 'Applied Case Studies', vi: 'Áp dụng vào một bài toán thật và ghi lại bằng chứng kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
+ {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Applied Case Studies', vi: 'Áp dụng Cube vào một bài toán cụ thể và ghi nhận bằng chứng kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
   s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']}];
-const ROUTES = [['Mới tìm hiểu', ['01', '02', '03'], 'Đọc lần lượt 01 → 02 → 03: hiểu khái niệm, xem kiến trúc, rồi tự dựng một bản chạy được.'],
- ['Muốn làm ngay', ['03', '06'], 'Vào thẳng 03 để cài đặt và viết model đầu tiên; mở 06 bên cạnh để tra cú pháp.'],
- ['Chuẩn bị production', ['04', '05', '07'], 'Đọc 04 để hiểu cache, join và phân quyền, 05 để vận hành, rồi xem 07 như một ví dụ trọn vẹn.'],
- ['Tra cứu nhanh', ['06'], 'Chương 06 gom cấu hình, ví dụ API, thông báo lỗi và lệnh hay dùng.']];
+const ROUTES = [['Người mới tìm hiểu', ['01', '02', '03'], 'Đọc lần lượt 01 → 02 → 03: nắm khái niệm, tìm hiểu kiến trúc, sau đó tự xây dựng một bản chạy được.'],
+ ['Bắt đầu thực hành', ['03', '06'], 'Bắt đầu từ chương 03 để cài đặt và viết model đầu tiên; dùng chương 06 song song để tra cứu cú pháp.'],
+ ['Chuẩn bị production', ['04', '05', '07'], 'Chương 04 trình bày cache, join và phân quyền; chương 05 trình bày vận hành; chương 07 là một ví dụ đầy đủ.'],
+ ['Tra cứu', ['06'], 'Chương 06 tập hợp cấu hình, ví dụ API, thông báo lỗi và các lệnh thường dùng.']];
 const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
 function renderPath(hot) {
  path.className = 'path' + (hot ? ' filtered' : '');
@@ -165,15 +182,9 @@ rate.onclick = () => {au.playbackRate = {1: 1.25, 1.25: 1.5, 1.5: 2, 2: 1}[au.pl
 vd.addEventListener('play', () => au.pause());
 vd.addEventListener('loadedmetadata', () => vtime.textContent = fmt(vd.duration));
 
-// theme + progress + cube rotation
-let theme = (()=>{try{return localStorage.getItem('chakra-ui-color-mode')}catch{return null}})() || 'dark';
-const SUN = '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M3.4 12.6l1.3-1.3M11.3 4.7l1.3-1.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
- MOON = '<svg viewBox="0 0 16 16"><path d="M13.4 9.8A5.6 5.6 0 0 1 6.2 2.6a5.6 5.6 0 1 0 7.2 7.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
-const tb = document.querySelector('[data-tool=theme]');
-function applyTheme() {document.documentElement.dataset.theme = theme; tb.innerHTML = theme === 'dark' ? SUN : MOON; tb.dataset.tip = theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối'; (()=>{try{localStorage.setItem('chakra-ui-color-mode', theme)}catch{}})()}
-tb.onclick = () => {theme = theme === 'dark' ? 'light' : 'dark'; applyTheme()}; applyTheme();
+// progress + cube rotation
 addEventListener('scroll', () => {const h = document.documentElement; prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
- document.querySelectorAll('.wire svg').forEach((v, i) => v.style.transform = `rotate(${(i ? -1 : 1) * scrollY * .08}deg)`)}, {passive: true});
+ document.querySelectorAll('.wire svg').forEach((v, i) => v.style.transform = `rotate(${(i ? -1 : 1) * scrollY * .08}deg)`)}, {passive: true, signal: window.__hbSignal});
 </script>
 </body>
 </html>

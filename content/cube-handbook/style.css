@@ -1,15 +1,16 @@
 /* Cube handbook mockup: research-note look (D · T1 · H4 · Q1) */
 :root{--bg:#FFFFFF;--fg:#0B0B0C;--body:#2F2F33;--muted:#6B6B73;--line:#E7E7EA;--soft:#F6F6F7;--acc:#2563EB;--acc-soft:#EEF3FF;--bad:#C2410C;--hl:rgba(37,99,235,.14);--hl2:rgba(37,99,235,.3);
---serif:"Newsreader",Georgia,serif;--sans:"Archivo",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+--serif:var(--font-newsreader),Georgia,serif;--sans:var(--font-archivo),system-ui,sans-serif;--mono:var(--font-jbmono),ui-monospace,monospace}
 :root[data-theme=dark]{--bg:#0A0A0B;--fg:#F4F4F5;--body:#C9C9CF;--muted:#8B8B94;--line:#232327;--soft:#121214;--acc:#60A5FA;--acc-soft:#0F1B33;--bad:#FB923C;--hl:rgba(96,165,250,.2);--hl2:rgba(96,165,250,.36)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--body);font:400 18px/1.75 var(--sans);-webkit-font-smoothing:antialiased}
+body{margin:0;color:var(--body);font:400 18px/1.75 var(--sans);-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
+ol{list-style:decimal}ul{list-style:disc}
 a{color:var(--acc)}
 .progress{position:fixed;top:0;left:0;height:2px;background:var(--acc);width:0;z-index:30}
 .top{position:sticky;top:0;z-index:10;background:var(--bg);display:flex;gap:8px;justify-content:space-between;align-items:center;max-width:1080px;margin:0 auto;padding:16px 24px;font:500 12px var(--mono);color:var(--muted)}
 .top a{color:var(--muted);text-decoration:none}.top a:hover{color:var(--fg)}
-article{position:relative;max-width:680px;margin:0 auto;padding:40px 24px 160px;font-size:calc(18px * var(--fs,1))}
+article{position:relative;max-width:680px;margin:0 auto;padding:40px 24px 160px;overflow-wrap:break-word;font-size:calc(18px * var(--fs,1))}
 .crumb{font:500 12px var(--mono);letter-spacing:.06em;color:var(--muted)}
 .crumb a{color:var(--muted);text-decoration:none}.crumb b{color:var(--acc);font-weight:500}
 h1{font:400 56px/1.05 var(--serif);letter-spacing:-.02em;color:var(--fg);margin:18px 0 18px}
@@ -106,9 +107,9 @@ details.deep th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:up
 .kw.on{background:var(--acc);color:var(--bg);text-decoration-color:transparent}
 .kw.flash{animation:kwf 1.2s}
 @keyframes kwf{0%,40%{box-shadow:0 0 0 4px var(--hl2)}100%{box-shadow:0 0 0 4px transparent}}
-.kw-off .kw{background:none!important;text-decoration:none!important;color:inherit!important;pointer-events:none}
+body.kw-off .kw{background:none!important;text-decoration:none!important;color:inherit!important;pointer-events:none}
 .kpop{position:absolute;z-index:40;width:min(320px,calc(100vw - 24px));padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--bg);box-shadow:0 14px 36px rgba(0,0,0,.12);font-size:14px;line-height:1.55;color:var(--body)}
-.kpop[hidden],.kw-off .kpop{display:none}
+.kpop[hidden],body.kw-off .kpop{display:none}
 .kpop .kh{display:flex;align-items:baseline;gap:8px}
 .kpop .kh b{font:400 20px/1.2 var(--serif);color:var(--fg)}
 .kpop .kh span{font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
@@ -190,8 +191,8 @@ details.deep th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:up
 .yt-box{margin:0 0 26px}
 .yt-box iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
 .yt-box .note{margin:8px 0 0;font-size:13px}
-.mdock{position:fixed;left:50%;bottom:20px;transform:translate(-50%,160%);width:min(560px,calc(100% - 32px));z-index:20;display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:8px 10px 8px 8px;border:1px solid var(--line);border-radius:999px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.1);transition:transform .3s}
-.mdock.show{transform:translate(-50%,0)}
+.mdock{position:fixed;left:50%;bottom:84px;transform:translate(-50%,12px);opacity:0;visibility:hidden;pointer-events:none;width:min(560px,calc(100% - 32px));z-index:60;display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:8px 10px 8px 8px;border:1px solid var(--line);border-radius:999px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.1);transition:transform .25s,opacity .25s,visibility .25s}
+.mdock.show{transform:translate(-50%,0);opacity:1;visibility:visible;pointer-events:auto}
 .mdock .pp,.mpanel .pp{width:36px;height:36px;border-radius:50%;border:0;background:var(--fg);color:var(--bg);display:grid;place-items:center;cursor:pointer}
 .mdock .pp svg,.mpanel .pp svg{width:13px;height:13px}
 .mdock .ttl{font-size:13px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -208,8 +209,15 @@ details.deep th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:up
 .mp-row button:not(.pp){font:500 12px var(--sans);border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:4px 10px;cursor:pointer;color:var(--fg)}
 .mpanel .now{font:400 12px var(--mono);color:var(--muted);margin-left:auto}
 .mpanel input{width:100%;margin:10px 0 0;accent-color:var(--acc)}
+/* reminders and sources */
+.notice{margin:22px 0 0;padding:12px 16px;border:1px solid var(--line);border-left:2px solid var(--muted);border-radius:0 10px 10px 0;font-size:14px;line-height:1.6;color:var(--muted)}
+.notice .label{margin-bottom:4px}
+.end p{margin:10px 0 0}
+.end ol.src{margin:10px 0 0;padding-left:20px}.end ol.src li{margin:3px 0}.end ol.src span{color:var(--muted)}
+.qsrc{margin-left:8px;font:500 10px var(--mono);letter-spacing:.06em;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:0 5px}
 /* grid/flex children default to min-width:auto, which lets long code or tokens push figures past a phone screen */
 .fig :is(div,li,label,ul){min-width:0}
-.panel,.rows,.fig li{overflow-wrap:anywhere}
+/* set on every element: the site's Chakra reset gives each element its own word-wrap, so inheritance would not reach them */
+.fig *{overflow-wrap:anywhere}
 @media(max-width:600px){.fig table{display:block;overflow-x:auto}}
 @media(max-width:1000px){.num{position:static;display:block;margin-bottom:6px}figure{margin:32px 0}figcaption{margin:12px 0 0}h1{font-size:42px}}

@@ -11,7 +11,7 @@ export default function AdminPage() {
   return (
     <div className="py-8 pb-24">
       <div className="flex items-baseline justify-between">
-        <Link href="/blog" className="text-sm text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">← Blog</Link>
+        <Link href="/blog" className="text-sm text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">← Notes</Link>
         {admin && (
           <form action={logout}>
             <button className="text-sm text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">Sign out</button>

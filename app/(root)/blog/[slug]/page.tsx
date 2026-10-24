@@ -1,19 +1,17 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { SERIES, formatDate, getPosts, isAdmin } from "@/lib/blog";
+import { notFound } from "next/navigation";
+import { formatDate, getPosts, isAdmin } from "@/lib/blog";
 
 export const dynamic = "force-dynamic";
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
-  const series = SERIES.find((s) => s.slug === params.slug);
-  if (series) redirect(series.href);
   const post = (await getPosts()).find((p) => p.slug === params.slug);
   if (!post || (!post.published && !isAdmin())) notFound();
 
   return (
     <article className="py-8 pb-24">
       <Link href="/blog" className="text-sm text-zinc-600 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100">
-        ← Blog
+        ← Notes
       </Link>
       <h1 className="mt-6 text-3xl font-semibold tracking-tight" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
         {post.title}

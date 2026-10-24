@@ -3,7 +3,7 @@
 // audio: start/end (seconds) inside the overview audio; filled in with the mapping tool (add ?map=1 to a chapter URL).
 window.MEDIA = {
  yt: {id: '7ZQGGepDjUQ', title: 'Building Agentic Analytics with Cube (workshop, 39 phút)'},
- audio: {src: 'media/overview.m4a', title: 'Kiến trúc tầng ngữ nghĩa Cube', marks: {
+ audio: {src: '/learn/cube-handbook/media/overview.m4a', title: 'Kiến trúc tầng ngữ nghĩa Cube', marks: {
   // from a Whisper transcript of the overview; the audio is a discussion, so it covers the conceptual sections and skips the hands-on ones
   '01.1': [63, 92], '01.2': [42, 92], '01.3': [0, 42], '01.5': [770, 860],
   '02.1': [92, 177], '02.2': [177, 210], '02.3': [638, 690],
