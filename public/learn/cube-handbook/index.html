@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cube.dev Engineering Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.wire .w1{top:110px;width:min(280px,calc(50% - 476px));right:max(12px,calc((50% - 440px - 280px) / 2))}
+.wire .w2{top:auto;bottom:90px;left:max(12px,calc((50% - 440px - 170px) / 2));right:auto}
+/* media */
+.media{display:grid;gap:14px;margin-top:32px}
+.aud{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:12px}
+.pp{width:44px;height:44px;border-radius:50%;border:0;background:var(--fg);color:var(--bg);display:grid;place-items:center;cursor:pointer}
+.pp svg{width:16px;height:16px}
+.aud-t{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--fg);margin-bottom:6px}
+.aud-t span{color:var(--muted);font:400 12px var(--mono)}
+.scrub{position:relative;height:28px;display:flex;align-items:center;gap:2px;cursor:pointer}
+.scrub i{flex:1;background:var(--line);border-radius:1px;min-width:1px}.scrub i.on{background:var(--acc)}
+.chip{font:500 12px var(--mono);border:1px solid var(--line);background:transparent;border-radius:6px;padding:4px 8px;cursor:pointer;color:var(--fg)}
+.vid{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
+.vid video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.vcap{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-top:8px}
+/* routes */
+.routes{margin-top:72px}
+.routes .pills{margin-top:6px}
+.route-note{font-size:15px;color:var(--muted);margin:12px 0 0;min-height:24px}
+.demo{margin-top:56px}
+.demo iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+.moments{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;font-size:14px}
+.moments li{display:grid;grid-template-columns:48px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.moments b{font:400 12px/1.9 var(--mono);color:var(--acc);font-weight:400}
+.moments a{color:var(--body);text-decoration:none}.moments a:hover{color:var(--fg)}
+.moments small{display:block;font:400 11px var(--mono);color:var(--muted)}
+@media(max-width:700px){.moments{grid-template-columns:1fr}}
+/* chapter path */
+.path{list-style:none;margin:28px 0 0;padding:0;position:relative}
+.path:before{content:"";position:absolute;left:21px;top:24px;bottom:24px;border-left:1px dashed var(--line)}
+.ch{position:relative;display:grid;grid-template-columns:44px 1fr;gap:18px;padding:18px 0;transition:opacity .3s}
+.ch .no{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font:500 13px var(--mono);color:var(--fg)}
+.ch.hot .no{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.ch .no em{position:absolute;top:-6px;right:-8px;font:normal 500 10px var(--mono);background:var(--acc);color:var(--bg);border-radius:999px;padding:1px 5px}
+.path.filtered .ch:not(.hot){opacity:.35}
+.ch h3{margin:6px 0 2px;font-size:25px}
+.ch h3 a{color:var(--fg);text-decoration:none}.ch h3 a:hover{color:var(--acc)}
+.ch .why{margin:0 0 10px;font-size:16px;color:var(--body)}
+.ch .facts{display:flex;flex-wrap:wrap;gap:6px 16px;font:400 12px var(--mono);color:var(--muted)}
+.ch .facts .lvl{color:var(--acc)}
+.ch .bar{height:3px;background:var(--line);border-radius:2px;margin-top:10px;max-width:260px}.ch .bar b{display:block;height:100%;background:var(--acc);border-radius:2px}
+.ch details{margin-top:10px}
+.ch summary{cursor:pointer;font-size:13px;color:var(--muted);list-style:none}
+.ch summary::-webkit-details-marker{display:none}
+.ch summary:before{content:"+ ";font-family:var(--mono)}.ch details[open] summary:before{content:"− "}
+.ch ol{margin:8px 0 0;padding-left:0;list-style:none;font-size:14px;columns:2;column-gap:24px}
+.ch ol li{padding:3px 0;break-inside:avoid;color:var(--body)}
+.ch ol li b{font:400 11px var(--mono);color:var(--muted);margin-right:6px;font-weight:400}
+.ch .go{display:inline-flex;gap:6px;align-items:center;margin-top:12px;font:500 13px var(--sans);color:var(--bg);background:var(--fg);border-radius:8px;padding:7px 14px;text-decoration:none}
+.ch .soon{display:inline-block;margin-top:12px;font:500 12px var(--mono);color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:6px 12px}
+@media(max-width:700px){.ch ol{columns:1}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true">
+ <svg class="w1" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg>
+ <svg class="w2" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/></g></svg>
+</div>
+<div class="progress" id="prog"></div>
+<div class="top"><a href="/blog">← Blog</a><a href="/">Khoi Tran</a></div>
+
+<article>
+  <div class="crumb"><b>Learning</b> / Data / Semantic layer</div>
+  <h1>Cube.dev <i>Engineering Handbook</i></h1>
+  <p class="dek">Bảy chương, đi từ “Cube là gì” đến đưa lên production. Mỗi chương đọc trong một lần ngồi, có nghe, xem và tự kiểm tra.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>7 chương · 54 mục</span><span>khoảng 2 giờ đọc · 96 câu tự kiểm tra</span></div>
+    <div class="tools"><button data-tool="theme"></button></div></div>
+
+  <div class="media">
+    <div class="aud" id="aud">
+      <button class="pp" id="pp" aria-label="Phát"></button>
+      <div style="min-width:0"><div class="aud-t">Nghe tổng quan · Kiến trúc tầng ngữ nghĩa <span id="atime">0:00</span></div><div class="scrub" id="scrub"></div></div>
+      <button class="chip" id="rate">1×</button>
+      <a class="note" href="01.html?map=1" style="grid-column:1/-1;font-size:12px;margin:0">Gán mốc audio cho từng mục →</a>
+      <audio id="au" src="media/overview.m4a" preload="metadata"></audio>
+    </div>
+    <div>
+      <div class="vid"><video id="vd" src="media/handbook.mp4" preload="metadata" controls playsinline></video></div>
+      <div class="vcap"><span><b style="font:500 12px var(--mono);color:var(--fg);margin-right:8px">Video</b>Sổ tay kỹ thuật Cube</span><span id="vtime"></span></div>
+    </div>
+  </div>
+
+  <div class="demo">
+    <span class="label">Video demo gốc · Cube workshop · 39 phút</span>
+    <div class="vid"><iframe id="yt" src="https://www.youtube-nocookie.com/embed/7ZQGGepDjUQ?rel=0" title="Building Agentic Analytics with Cube" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+    <p class="note">Đội sáng lập Cube đi từ kho dữ liệu Snowflake tới dashboard, embedded và MCP trên Cube Cloud. Các đoạn demo đã được gắn vào đúng mục trong từng chương; bấm một mốc để mở mục đó.</p>
+    <ol class="moments" id="moments"></ol>
+  </div>
+
+  <div class="routes">
+    <span class="label">Bắt đầu từ đâu?</span>
+    <div class="pills" id="routes"></div>
+    <p class="route-note" id="rnote"></p>
+  </div>
+
+  <ol class="path" id="path"></ol>
+
+  <div class="end"><b style="color:var(--fg)">Nguồn</b><p style="margin:6px 0 0">Tổng hợp từ tài liệu chính thức, blog kỹ thuật của Cube và ghi chú cá nhân. Audio và video tạo bằng Gemini Notebook từ cùng bộ nguồn.</p></div>
+</article>
+
+<script src="media.js"></script>
+<script>
+// one row per demo moment, linked to every handbook section it illustrates
+const mm = {};
+Object.entries(MEDIA.demo).forEach(([n, clips]) => clips.forEach(c => {(mm[c[0]] ??= {t: c[0], label: c[2], secs: []}).secs.push(n)}));
+const fmtT = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+moments.innerHTML = Object.values(mm).sort((a, b) => a.t - b.t).map(m => `<li><b>${fmtT(m.t)}</b><span><a href="${m.secs[0].slice(0, 2)}.html#s${+m.secs[0].split('.')[1]}">${m.label}</a><small>Mục ${m.secs.join(', ')}</small></span></li>`).join('');
+</script>
+<script>
+const CHS = [
+ {n: '01', t: 'Fundamentals', vi: 'Cube.dev là gì, giải quyết vấn đề gì, khi nào nên dùng.', lvl: 'Nền tảng', min: 14, href: '01.html', key: 'ch01', q: 12,
+  s: ['What Is Cube.dev?', 'The Semantic Layer Concept', 'Problems Cube.dev Solves', 'Core Concepts and Terminology', 'Cube.dev Use Cases', 'Benefits, Limitations & Alternatives']},
+ {n: '02', href: '02.html', key: 'ch02', t: 'Architecture & Internals', vi: 'Các thành phần của Cube và một truy vấn đi qua hệ thống thế nào.', lvl: 'Nền tảng', min: 12, q: 13,
+  s: ['High-Level Architecture', 'Core Components and Responsibilities', 'Query Lifecycle', 'Request-to-Response Flow', 'Data Sources and Query Execution', 'Architecture Diagrams']},
+ {n: '03', href: '03.html', key: 'ch03', t: 'Hands-on Implementation', vi: 'Tự dựng một ứng dụng Cube chạy được, từ cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
+  s: ['Environment Setup', 'Connect a Data Source', 'Create Your First Data Model', 'Query Data Through Cube.dev', 'Integrate with a Frontend App', 'Build a Basic Analytics Dashboard', 'Validate Query Results', 'Implementation Labs']},
+ {n: '04', href: '04.html', key: 'ch04', t: 'Engineering Deep Dives', vi: 'Hiểu sâu cơ chế bên trong và kiểm chứng bằng thực nghiệm.', lvl: 'Nâng cao', min: 24, q: 17,
+  s: ['Data Modeling', 'Measures, Dimensions & Granularity', 'Joins, Fanout & Double Counting', 'SQL Generation and Inspection', 'Query Execution and Optimization', 'Caching Mechanisms', 'Pre-aggregations', 'Authentication, Authorization & Multi-tenancy', 'Source Code Investigation', 'Experiments & Performance Analysis']},
+ {n: '05', href: '05.html', key: 'ch05', t: 'Production Engineering', vi: 'Đưa Cube lên production, vận hành và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
+  s: ['Deployment Architecture', 'Environment Configuration & Secrets', 'Authentication and Security Configuration', 'Observability, Logs & Monitoring', 'Performance Troubleshooting', 'Common Production Issues', 'CI/CD and Release Management', 'Production Readiness Checklist']},
+ {n: '06', href: '06.html', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tra cứu nhanh khi code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
+  s: ['Configuration Reference', 'API & Query Examples', 'Common Patterns and Code Snippets', 'Error Messages & Solutions', 'Troubleshooting Checklist', 'Glossary', 'Useful Commands & Tools', 'External References']},
+ {n: '07', href: '07.html', key: 'ch07', t: 'Applied Case Studies', vi: 'Áp dụng vào một bài toán thật và ghi lại bằng chứng kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
+  s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']}];
+const ROUTES = [['Mới tìm hiểu', ['01', '02', '03'], 'Đọc lần lượt 01 → 02 → 03: hiểu khái niệm, xem kiến trúc, rồi tự dựng một bản chạy được.'],
+ ['Muốn làm ngay', ['03', '06'], 'Vào thẳng 03 để cài đặt và viết model đầu tiên; mở 06 bên cạnh để tra cú pháp.'],
+ ['Chuẩn bị production', ['04', '05', '07'], 'Đọc 04 để hiểu cache, join và phân quyền, 05 để vận hành, rồi xem 07 như một ví dụ trọn vẹn.'],
+ ['Tra cứu nhanh', ['06'], 'Chương 06 gom cấu hình, ví dụ API, thông báo lỗi và lệnh hay dùng.']];
+const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
+function renderPath(hot) {
+ path.className = 'path' + (hot ? ' filtered' : '');
+ path.innerHTML = CHS.map(c => {
+  const ans = c.key ? Object.values(store.get('ans:' + c.key, {})) : [], ok = ans.filter(a => a.ok).length, order = hot ? hot.indexOf(c.n) : -1;
+  return `<li class="ch${order >= 0 ? ' hot' : ''}" id="ch${c.n}"><div class="no">${c.n}${order >= 0 && hot.length > 1 ? `<em>${order + 1}</em>` : ''}</div><div>
+   <h3>${c.href ? `<a href="${c.href}">${c.t}</a>` : c.t}</h3><p class="why">${c.vi}</p>
+   <div class="facts"><span class="lvl">${c.lvl}</span><span>${c.s.length} mục</span><span>${c.min} phút</span>${c.q ? `<span>${c.q} câu tự kiểm tra</span>` : ''}</div>
+   ${c.q ? `<div class="bar" title="Câu đúng"><b style="width:${ok / c.q * 100}%"></b></div>` : ''}
+   <details><summary>Xem ${c.s.length} mục</summary><ol>${c.s.map((s, i) => `<li><b>${c.n}.${i + 1}</b>${s}</li>`).join('')}</ol></details>
+   ${c.href ? `<a class="go" href="${c.href}">${ok ? 'Đọc tiếp' : 'Bắt đầu đọc'} →</a>` : '<span class="soon">Đang viết</span>'}</div></li>`}).join('')}
+routes.innerHTML = ROUTES.map((r, i) => `<button data-r="${i}">${r[0]}</button>`).join('');
+routes.onclick = e => {const b = e.target.closest('[data-r]'); if (!b) return; const on = !b.classList.contains('on');
+ routes.querySelectorAll('button').forEach(x => x.classList.toggle('on', on && x === b)); rnote.textContent = on ? ROUTES[+b.dataset.r][2] : ''; renderPath(on ? ROUTES[+b.dataset.r][1] : null)};
+renderPath(null);
+
+// audio: native element, custom controls
+const PLAY = '<svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>', PAUSE = '<svg viewBox="0 0 16 16"><path d="M3 2h4v12H3zM9 2h4v12H9z" fill="currentColor"/></svg>';
+const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '–:––';
+scrub.innerHTML = Array.from({length: 72}, (_, i) => `<i style="height:${30 + Math.round(60 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * .43)))}%"></i>`).join('');
+const bars = [...scrub.children];
+function aui() {pp.innerHTML = au.paused ? PLAY : PAUSE; pp.setAttribute('aria-label', au.paused ? 'Phát' : 'Tạm dừng');
+ atime.textContent = `${fmt(au.currentTime)} / ${fmt(au.duration)}`; const k = au.currentTime / au.duration || 0; bars.forEach((b, i) => b.classList.toggle('on', i / bars.length < k))}
+pp.onclick = () => {au.paused ? (vd.pause(), au.play()) : au.pause()};
+scrub.onclick = e => {const r = scrub.getBoundingClientRect(); if (au.duration) au.currentTime = (e.clientX - r.left) / r.width * au.duration};
+rate.onclick = () => {au.playbackRate = {1: 1.25, 1.25: 1.5, 1.5: 2, 2: 1}[au.playbackRate]; rate.textContent = au.playbackRate + '×'};
+['play', 'pause', 'timeupdate', 'loadedmetadata'].forEach(ev => au.addEventListener(ev, aui)); aui();
+vd.addEventListener('play', () => au.pause());
+vd.addEventListener('loadedmetadata', () => vtime.textContent = fmt(vd.duration));
+
+// theme + progress + cube rotation
+let theme = (()=>{try{return localStorage.getItem('chakra-ui-color-mode')}catch{return null}})() || 'dark';
+const SUN = '<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 1.5v1.8M8 12.7v1.8M1.5 8h1.8M12.7 8h1.8M3.4 3.4l1.3 1.3M11.3 11.3l1.3 1.3M3.4 12.6l1.3-1.3M11.3 4.7l1.3-1.3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
+ MOON = '<svg viewBox="0 0 16 16"><path d="M13.4 9.8A5.6 5.6 0 0 1 6.2 2.6a5.6 5.6 0 1 0 7.2 7.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>';
+const tb = document.querySelector('[data-tool=theme]');
+function applyTheme() {document.documentElement.dataset.theme = theme; tb.innerHTML = theme === 'dark' ? SUN : MOON; tb.dataset.tip = theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối'; (()=>{try{localStorage.setItem('chakra-ui-color-mode', theme)}catch{}})()}
+tb.onclick = () => {theme = theme === 'dark' ? 'light' : 'dark'; applyTheme()}; applyTheme();
+addEventListener('scroll', () => {const h = document.documentElement; prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+ document.querySelectorAll('.wire svg').forEach((v, i) => v.style.transform = `rotate(${(i ? -1 : 1) * scrollY * .08}deg)`)}, {passive: true});
+</script>
+</body>
+</html>

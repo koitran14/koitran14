@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · Reference &amp; Engineering Notes · Cube.dev Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* reference page: search bar, copy buttons, panes that open up while searching */
+.find{position:sticky;top:50px;z-index:9;background:var(--bg);margin:40px 0 0;padding:12px 0;border-bottom:1px solid var(--line)}
+.find label{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--soft)}
+.find label:focus-within{border-color:var(--acc)}
+.find input{flex:1;min-width:0;border:0;background:none;outline:0;font:400 16px var(--sans);color:var(--fg)}
+.find kbd{font:500 11px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.find small{display:block;margin-top:6px;font:400 12px var(--mono);color:var(--muted);min-height:18px}
+.find svg{width:16px;height:16px;color:var(--muted);flex:none}
+.empty{display:none;margin-top:48px;padding:24px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);text-align:center}
+.searching .empty.show{display:block}
+.searching .ref.miss,section.miss,.searching .next-ch{display:none}
+.pane:not(.on){display:none}
+.searching .pane{display:block}
+.searching [data-pbar]{display:none}
+.pt{display:none;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+.searching .pt{display:block}
+.ref+.ref{margin-top:14px}
+.cp{font:500 11px var(--mono);color:var(--muted);background:none;border:1px solid var(--line);border-radius:5px;padding:0 8px;cursor:pointer}
+.cp:hover{color:var(--fg);border-color:var(--muted)}.cp.ok{color:var(--acc);border-color:var(--acc)}
+.figbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;color:var(--muted)}
+.rows{display:grid;gap:10px;margin-top:4px}
+.rows div{display:grid;grid-template-columns:110px 1fr;gap:12px;font-size:15px}
+.rows div b{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.rows div.fix b{color:var(--acc)}
+.panel .code{margin-top:12px}
+/* safe division demo */
+.out{margin-top:14px;padding:14px 18px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:400 14px/1.7 var(--mono);color:var(--fg)}
+.out.bad{border-color:var(--bad);color:var(--bad)}
+.tree{font:400 14px/1.8 var(--mono);padding:14px 18px;border:1px solid var(--line);border-radius:10px;background:var(--bg);margin:0;white-space:pre;overflow-x:auto}
+/* checklist + glossary + links */
+.chk label{display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;font-size:15px;line-height:1.5}
+.chk .ref{margin:0}
+.chk input{margin:4px 0 0;accent-color:var(--acc)}
+.chk label b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chk label:has(input:checked){border-color:var(--acc);background:var(--acc-soft)}
+.gl{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gl .ref{margin:0}
+.gl button{display:block;width:100%;height:100%;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer}
+.gl button b{display:block;font:400 18px/1.3 var(--serif);color:var(--fg)}
+.gl button span{display:block;margin-top:6px;font-size:14px;line-height:1.5;color:var(--muted)}
+.gl button:not(.open) span{filter:blur(4px);user-select:none}
+.searching .gl button span{filter:none}
+.gl button.open{border-color:var(--acc)}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);text-decoration:none;color:var(--fg);font:400 14px var(--mono)}
+.links a small{display:block;font:400 13px var(--sans);color:var(--muted);margin-bottom:2px}
+.links a:hover{border-color:var(--acc)}
+.links .ref+.ref{margin:0}
+@media(max-width:700px){.gl,.links{grid-template-columns:1fr}.rows div{grid-template-columns:1fr;gap:0}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="top"><a href="index.html">← Cube.dev Engineering Handbook</a><span>Chương 06 / 07</span></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 06 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="index.html"><b>Learning</b> / Cube.dev Handbook</a> / 06</div>
+  <h1>Reference &amp; <i>Engineering Notes</i></h1>
+  <p class="dek">Trang tra cứu: cấu hình, ví dụ API, mẫu code, thông báo lỗi, thuật ngữ và lệnh hay dùng. Gõ vào ô tìm kiếm để lọc.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 06 / 07</span><span>10 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button><button data-tool="theme"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Chương này không cần đọc từ đầu đến cuối. Mở nó cạnh editor, tìm đúng thứ cần, copy, rồi quay lại làm việc.</div>
+
+  <div class="find" role="search">
+    <label><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Tìm cấu hình, API, lỗi, lệnh, thuật ngữ…" aria-label="Tìm trong chương" autocomplete="off"><kbd>/</kbd></label>
+    <small id="qn" aria-live="polite"></small>
+  </div>
+
+  <section id="s1">
+    <span class="num">06.1</span>
+    <h2>Cấu hình hệ thống</h2>
+    <p class="gist">Cấu hình nằm trong cube.js, hoặc cube.py từ v0.34.</p>
+    <p>Ví dụ dưới đây làm hai việc. Hàm queryRewrite tự thêm filter tenant từ securityContext vào mọi truy vấn, nên mỗi tenant chỉ thấy dữ liệu của mình (RLS). Hàm scheduledRefreshContexts liệt kê các tenant để refresh worker build pre-aggregations riêng cho từng tenant.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" data-pbar><button data-pane="0" class="on">cube.js</button><button data-pane="1">cube.py</button></div>
+        <div class="pane ref on"><span class="pt">cube.js</span><div class="code"><div class="h"><span>cube.js · query_rewrite theo tenant</span><button class="cp">Copy</button></div><pre>module.exports = {
+  queryRewrite: (query, { securityContext }) =&gt; {
+    // inject tenant filter (RLS) into every query
+    if (securityContext &amp;&amp; securityContext.tenant_id) {
+      query.filters.push({
+        member: 'orders.tenant_id',
+        operator: 'equals',
+        values: [securityContext.tenant_id]
+      });
+    }
+    return query;
+  },
+  scheduledRefreshContexts: () =&gt; [
+    { securityContext: { tenant_id: 'tenant_a' } },
+    { securityContext: { tenant_id: 'tenant_b' } }
+  ]
+};</pre></div></div>
+        <div class="pane ref"><span class="pt">cube.py</span><div class="code"><div class="h"><span>cube.py · từ v0.34</span><button class="cp">Copy</button></div><pre>def query_rewrite(query, context):
+    security_context = context.get('securityContext', {})
+    if 'tenant_id' in security_context:
+        query['filters'].append({
+            'member': 'orders.tenant_id',
+            'operator': 'equals',
+            'values': [security_context['tenant_id']]
+        })
+    return query</pre></div>
+          <p class="note">Bản Python trong handbook chỉ có thân hàm. Cách đăng ký hàm với Cube trong cube.py nên đối chiếu tài liệu chính thức của phiên bản đang dùng.</p></div>
+      </div>
+      <figcaption><b>Hình 1</b>Cùng một query_rewrite, viết bằng JavaScript và Python.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s2">
+    <span class="num">06.2</span>
+    <h2>Ví dụ API và truy vấn</h2>
+    <p class="gist">Một câu hỏi “doanh thu theo vùng”, viết cho ba API.</p>
+    <p>SQL API nói chuyện như Postgres, gọi là Semantic SQL; measure được lấy qua hàm MEASURE(). REST API nhận JSON tại <code>POST /cubejs-api/v1/load</code>, trục thời gian khai báo trong timeDimensions. GraphQL API dùng tên camelCase và lọc thời gian bằng <code>inDateRange</code>.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" data-pbar><button data-pane="0" class="on">SQL API</button><button data-pane="1">REST API</button><button data-pane="2">GraphQL API</button></div>
+        <div class="pane ref on"><span class="pt">SQL API</span><div class="code"><div class="h"><span>Semantic SQL · cổng Postgres</span><button class="cp">Copy</button></div><pre>SELECT
+  "orders".region AS "region",
+  MEASURE("orders".total_sales) AS "total_sales"
+FROM "orders" AS "orders"
+WHERE "orders".order_date &gt;= '2026-01-01'
+GROUP BY 1
+ORDER BY 2 DESC;</pre></div></div>
+        <div class="pane ref"><span class="pt">REST API</span><div class="code"><div class="h"><span>POST /cubejs-api/v1/load · Authorization: &lt;JWT_TOKEN&gt;</span><button class="cp">Copy</button></div><pre>{
+  "query": {
+    "measures": ["orders.total_sales"],
+    "dimensions": ["orders.region"],
+    "timeDimensions": [{
+      "dimension": "orders.order_date",
+      "dateRange": ["2026-01-01", "2026-12-31"],
+      "granularity": "month"
+    }],
+    "order": { "orders.total_sales": "desc" }
+  }
+}</pre></div></div>
+        <div class="pane ref"><span class="pt">GraphQL API</span><div class="code"><div class="h"><span>GraphQL</span><button class="cp">Copy</button></div><pre>query LoadSalesData {
+  cube(where: { orders: { orderDate: { inDateRange: ["2026-01-01", "2026-12-31"] } } }) {
+    orders {
+      region
+      totalSales
+      orderDate {
+        month
+      }
+    }
+  }
+}</pre></div></div>
+      </div>
+      <figcaption><b>Hình 2</b>Chuyển tab để so sánh. Ví dụ REST và GraphQL chia theo tháng; ví dụ SQL thì không.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s3">
+    <span class="num">06.3</span>
+    <h2>Mẫu code hay dùng</h2>
+    <p class="gist">Cấu trúc thư mục chuẩn, phép chia an toàn với NULLIF, và segment nhiều điều kiện.</p>
+    <p>Từ v0.33, model chia thành hai thư mục: <code>model/cubes</code> và <code>model/views</code>. Hai mẫu YAML bên dưới hay được dùng lại.</p>
+    <figure>
+      <div class="fig">
+        <div class="ref"><span class="pt">Cấu trúc thư mục</span><pre class="tree">model/
+├── cubes/
+│   └── orders.yml
+└── views/
+    └── sales_mart.yml</pre></div>
+        <div class="ref" style="margin-top:20px"><div class="code"><div class="h"><span>Safe division · NULLIF</span><button class="cp">Copy</button></div><pre>cubes:
+  - name: sales_metrics
+    sql_table: public.sales
+
+    measures:
+      - name: total_revenue
+        sql: revenue
+        type: sum
+
+      - name: total_orders
+        type: count
+
+      - name: average_order_value
+        type: number
+        sql: "{total_revenue} * 1.0 / NULLIF({total_orders}, 0)"</pre></div>
+          <div class="figbar" style="margin:16px 0 0"><div class="seg" id="dOrd"><button data-o="0" class="on">120 đơn</button><button data-o="1">0 đơn</button></div><div class="seg" id="dFn"><button data-d="0">Không NULLIF</button><button data-d="1" class="on">Có NULLIF</button></div></div>
+          <div class="out" id="dOut"></div></div>
+        <div class="ref" style="margin-top:20px"><div class="code"><div class="h"><span>Segment nhiều điều kiện</span><button class="cp">Copy</button></div><pre>segments:
+  - name: high_value_completed
+    sql: "{CUBE}.status = 'completed' AND {CUBE}.amount &gt; 1000"</pre></div></div>
+      </div>
+      <figcaption><b>Hình 3</b>Đổi số đơn về 0 và bỏ NULLIF để thấy vì sao cần nó. Số liệu minh họa.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>NULLIF(x, 0) trả về NULL khi x bằng 0. Chia cho NULL ra NULL thay vì lỗi, nên truy vấn không bị hỏng.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">06.4</span>
+    <h2>Thông báo lỗi và cách sửa</h2>
+    <p class="gist">Ba lỗi gặp nhiều nhất, kèm cú pháp sửa.</p>
+    <p>Chọn lỗi để xem nguyên nhân và cách sửa: thiếu FILTER_GROUP, build pre-aggregation bị timeout (cần export bucket), hoặc sai tên member. Khi đang tìm kiếm, cả ba lỗi hiện cùng lúc.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" data-pbar><button data-pane="0" class="on">Filter group error</button><button data-pane="1">Pre-aggregation building error</button><button data-pane="2">Unknown member</button></div>
+        <div class="pane ref panel on"><h5>Filter group error</h5><div class="rows"><div><b>Nguyên nhân</b><span>Dùng nhiều FILTER_PARAMS nhưng không bọc trong FILTER_GROUP.</span></div><div class="fix"><b>Cách sửa</b><span>Bọc các điều kiện bằng FILTER_GROUP trong SQL nguồn.</span></div></div>
+          <div class="code"><div class="h"><span>sql</span><button class="cp">Copy</button></div><pre>WHERE ${FILTER_GROUP(FILTER_PARAMS.a.filter('a'), FILTER_PARAMS.b.filter('b'))}</pre></div></div>
+        <div class="pane ref panel"><h5>Pre-aggregation building error</h5><div class="rows"><div><b>Nguyên nhân</b><span>Quét dữ liệu thô vượt quá timeout của data warehouse khi build rollup.</span></div><div class="fix"><b>Cách sửa</b><span>Dùng <code>external: true</code> cho pre-aggregation và cấu hình export bucket trong cấu hình driver.</span></div></div></div>
+        <div class="pane ref panel"><h5>Unknown member 'Orders.count'</h5><div class="rows"><div><b>Nguyên nhân</b><span>Sai chữ hoa/thường, hoặc tên cũ còn sót sau khi chuyển sang quy ước v0.33.</span></div><div class="fix"><b>Cách sửa</b><span>Dùng tên snake_case đúng như khai báo: <code>Orders.count</code> → <code>orders.count</code>.</span></div></div></div>
+      </div>
+      <figcaption><b>Hình 4</b>Lỗi → nguyên nhân → cú pháp sửa.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s5">
+    <span class="num">06.5</span>
+    <h2>Checklist khi kết quả sai hoặc chậm</h2>
+    <p class="gist">Kiểm tra SQL sinh ra, trạng thái cache, rồi múi giờ.</p>
+    <p>Dùng khi số liệu lệch hoặc P95 tăng đột ngột. Đánh dấu từng bước khi đã kiểm tra xong.</p>
+    <figure>
+      <div class="fig chk" style="display:grid;gap:8px">
+        <label class="ref"><input type="checkbox"><span><b>1 · SQL sinh ra</b>Mở Playground, xem tab SQL Query: câu lệnh biên dịch có đúng điều kiện JOIN và WHERE không.</span></label>
+        <label class="ref"><input type="checkbox"><span><b>2 · Trạng thái pre-aggregation</b>Xem log: truy vấn là cache hit hay cache miss. Nếu miss, kiểm tra refresh_key của pre-aggregation.</span></label>
+        <label class="ref"><input type="checkbox"><span><b>3 · Múi giờ</b>Chỉ số theo thời gian lệch 1–2 giờ: kiểm tra có dimension nào dùng SQL_UTILS.convertTz() mà lại được đưa vào timeDimensions không. Cube đã tự chuyển múi giờ cho timeDimensions, nên múi giờ bị đổi hai lần.</span></label>
+      </div>
+      <figcaption><b>Hình 5</b>Ba bước, theo thứ tự từ rẻ đến đắt. Trạng thái không được lưu.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Cache miss thì xem refresh_key. Lệch múi giờ thì tìm convertTz() trên dimension đang dùng trong timeDimensions.</div>
+  </section>
+
+  <section id="s6">
+    <span class="num">06.6</span>
+    <h2>Thuật ngữ</h2>
+    <p class="gist">Tám thuật ngữ gặp nhiều nhất trong handbook.</p>
+    <p>Thử đoán nghĩa trước, rồi bấm vào thẻ để xem định nghĩa. Ba thuật ngữ đi cùng nhau: pre-aggregations được lưu trong Cube Store, và aggregate awareness là cách Cube tự chọn đúng bảng đó khi trả lời.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Bấm thẻ để lật</span><button class="cp" id="glAll">Mở tất cả</button></div>
+        <div class="gl" id="gl"></div>
+      </div>
+      <figcaption><b>Hình 6</b>Glossary dạng thẻ lật.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s7">
+    <span class="num">06.7</span>
+    <h2>Lệnh và công cụ</h2>
+    <p class="gist">Health check, kiểm tra schema, mở Playground.</p>
+    <p>Endpoint /readyz cho biết Cube đã sẵn sàng nhận request. Lệnh lấy nguyên từ handbook. Tên lệnh CLI có thể khác giữa các phiên bản Cube; chạy <code>--help</code> để xác nhận trước khi đưa vào CI.</p>
+    <figure>
+      <div class="fig">
+        <div class="ref"><div class="code"><div class="h"><span>Health check API</span><button class="cp">Copy</button></div><pre>curl http://localhost:4000/readyz</pre></div></div>
+        <div class="ref"><div class="code"><div class="h"><span>Kiểm tra cú pháp schema (linting)</span><button class="cp">Copy</button></div><pre>cubejs-cli check</pre></div></div>
+        <div class="ref"><div class="code"><div class="h"><span>Chạy Developer Playground</span><button class="cp">Copy</button></div><pre>cubejs-cli dev-playground</pre></div></div>
+      </div>
+      <figcaption><b>Hình 7</b>Bấm Copy để chép lệnh.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s8">
+    <span class="num">06.8</span>
+    <h2>Tài liệu tham khảo</h2>
+    <p class="gist">Bốn nơi để đối chiếu khi handbook không đủ hoặc đã cũ.</p>
+    <p>Cube thay đổi nhanh giữa các phiên bản. Với cấu hình và tên biến môi trường, tài liệu chính thức là nguồn nên tin hơn handbook này.</p>
+    <figure>
+      <div class="fig links">
+        <a class="ref" href="https://docs.cube.dev" target="_blank" rel="noopener"><small>Tài liệu chính thức</small>docs.cube.dev</a>
+        <a class="ref" href="https://github.com/cube-js/cube" target="_blank" rel="noopener"><small>Mã nguồn GitHub</small>github.com/cube-js/cube</a>
+        <a class="ref" href="https://slack.cube.dev" target="_blank" rel="noopener"><small>Cộng đồng Slack</small>slack.cube.dev</a>
+        <a class="ref" href="https://cube.dev/docs/style-guide" target="_blank" rel="noopener"><small>Style guide</small>cube.dev/docs/style-guide</a>
+      </div>
+      <figcaption><b>Hình 8</b>Liên kết mở trong tab mới.</figcaption>
+    </figure>
+    <a class="next-ch" href="07.html"><span><small>Chương tiếp theo</small><b>07 · Applied Case Studies</b></span><span>→</span></a>
+  </section>
+
+  <div class="empty" id="qEmpty">Không tìm thấy mục nào khớp. Thử từ khóa ngắn hơn, ví dụ “lỗi”, “jwt”, “readyz”.</div>
+
+  <div class="end"><b style="color:var(--fg)">Nguồn</b><p style="margin:6px 0 0">Tổng hợp từ Cube.dev Engineering Handbook, phần 06. Câu tự kiểm tra viết cho chương này.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+const art = document.querySelector('article');
+// tabs and pills switch the .pane siblings inside the same figure
+art.addEventListener('click', e => {const b = e.target.closest('[data-pane]'); if (!b) return; const f = b.closest('.fig'), i = +b.dataset.pane;
+ f.querySelectorAll('[data-pane]').forEach(x => x.classList.toggle('on', x === b)); f.querySelectorAll('.pane').forEach((p, j) => p.classList.toggle('on', j === i))});
+// copy buttons on every code block
+art.addEventListener('click', e => {const b = e.target.closest('.cp:not(#glAll)'); if (!b) return; const t = b.closest('.code').querySelector('pre').textContent;
+ const done = ok => {b.textContent = ok ? 'Đã copy' : 'Không copy được'; b.classList.toggle('ok', ok); setTimeout(() => {b.textContent = 'Copy'; b.classList.remove('ok')}, 1600)};
+ const legacy = () => {const r = document.createRange(); r.selectNodeContents(b.closest('.code').querySelector('pre')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); let ok = false; try {ok = document.execCommand('copy')} catch {} s.removeAllRanges(); done(ok)};
+ navigator.clipboard ? navigator.clipboard.writeText(t).then(() => done(true), legacy) : legacy()});
+// Hình 3: safe division
+let dO = 0, dF = 1;
+function div() {const n = dO ? 0 : 120, rev = 12000000;
+ dOut.classList.toggle('bad', !!dO && !dF);
+ dOut.innerHTML = `total_revenue = 12.000.000 · total_orders = ${n}<br>average_order_value = ` +
+  (n ? '100.000' : dF ? 'NULL <span style="color:var(--muted)">· truy vấn vẫn chạy, ô hiện trống</span>' : 'ERROR: division by zero <span style="color:var(--muted)">· cả truy vấn thất bại</span>')}
+one('#dOrd', 'o', i => {dO = i; div()}); one('#dFn', 'd', i => {dF = i; div()}); div();
+// Hình 6: glossary
+// each card: [term, academic definition, plain-language version]
+const GL = [['Aggregate Awareness', 'Khả năng của Cube phân tích truy vấn, so với các pre-aggregation hiện có và tự viết lại truy vấn để đọc từ bảng rollup phù hợp thay vì data warehouse.', 'Bạn chỉ việc hỏi, Cube tự biết câu trả lời đã có sẵn ở ngăn nào và lấy ra.'],
+ ['Context Variables', 'Các biến CUBE, FILTER_PARAMS, SQL_UTILS, COMPILE_CONTEXT dùng trong data model để sinh SQL động theo truy vấn và người gọi.', 'Những chỗ trống trong mẫu câu SQL, được Cube điền vào lúc chạy tùy ai hỏi và hỏi gì.'],
+ ['Cube Store', 'Engine lưu trữ và xử lý phân tán do Cube viết riêng, chứa các bảng pre-aggregation.', 'Cái kho nhỏ ngay sau quầy: món hay bán được xếp sẵn, khách hỏi là có ngay.'],
+ ['Semantic SQL', 'Phương ngữ SQL tương thích giao thức Postgres của SQL API, mở rộng thêm hàm MEASURE().', 'Công cụ nào nói chuyện được với Postgres thì cũng nói chuyện được với Cube.'],
+ ['Pre-aggregations', 'Bảng kết quả tổng hợp (rollup) tính trước theo measure, dimension và granularity, lưu trong Cube Store.', 'Bảng điểm tổng kết đã cộng sẵn, hỏi là đọc ra, không phải cộng lại từng bài.'],
+ ['MCP Server', 'Server theo Model Context Protocol, cho phép AI Agent khám phá và truy vấn các metric đã định nghĩa trong Cube.', 'Ổ cắm chuẩn để trợ lý AI cắm vào Cube và hỏi số liệu, thay vì tự mò vào bảng thô.'],
+ ['PDT', 'Persistent Derived Table: bảng dẫn xuất được Looker build và lưu lại trong data warehouse, vai trò tương tự pre-aggregation bên Cube.', 'Cách Looker làm sẵn bảng tổng hợp, chỉ khác là cất ngay trong kho chính.'],
+ ['Fanout', 'Hiện tượng số dòng bị nhân lên khi join theo quan hệ khai báo sai (ví dụ one-to-many), khiến measure dạng sum bị đếm trùng.', 'Một đơn hàng bị chép thành ba dòng vì nối nhầm, nên tổng doanh thu bị cộng gấp ba.']];
+gl.innerHTML = GL.map(g => `<div class="ref"><button><b>${g[0]}</b><span>${g[1]}</span><span><i>Dễ hiểu:</i> ${g[2]}</span></button></div>`).join('');
+gl.onclick = e => {const b = e.target.closest('button'); if (b) b.classList.toggle('open')};
+glAll.onclick = () => {const all = [...gl.querySelectorAll('button')], open = all.some(b => !b.classList.contains('open')); all.forEach(b => b.classList.toggle('open', open)); glAll.textContent = open ? 'Úp tất cả' : 'Mở tất cả'};
+// search: filters every .ref; a section stays when its heading or any of its items matches
+const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase();
+const SECS = [...art.querySelectorAll('section')].map(s => ({s, head: fold(s.querySelector('h2').textContent + ' ' + s.querySelector('.gist').textContent), refs: [...s.querySelectorAll('.ref')].map(r => [r, fold(r.textContent)])}));
+const qIn = document.getElementById('q');
+function find() {
+ const t = fold(qIn.value.trim()); let hit = 0, items = 0;
+ art.classList.toggle('searching', !!t);
+ SECS.forEach(({s, head, refs}) => {const h = t && head.includes(t); let n = 0;
+  refs.forEach(([r, txt]) => {const ok = !t || h || txt.includes(t); r.classList.toggle('miss', !ok); if (ok) n++});
+  const show = !t || h || n; s.classList.toggle('miss', !show); if (t && show) {hit++; items += n}});
+ qn.textContent = t ? `${hit} mục · ${items} khối khớp “${qIn.value.trim()}”. Esc để xóa.` : '';
+ qEmpty.classList.toggle('show', !!t && !hit);
+ dispatchEvent(new Event('scroll'))}
+qIn.oninput = find;
+qIn.onkeydown = e => {if (e.key === 'Escape') {qIn.value = ''; find()}};
+document.addEventListener('keydown', e => {if (e.key === '/' && !e.target.closest('input,textarea')) {e.preventDefault(); qIn.focus()}});
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'ch06', minutes: 10,
+ next: {href: '07.html', n: '07', t: 'Applied Case Studies'},
+ sections: [
+  {id: 's1', n: '06.1', t: 'Cấu hình hệ thống', sum: ['Cấu hình viết trong cube.js, hoặc cube.py từ v0.34.', 'queryRewrite thêm filter tenant từ securityContext.', 'scheduledRefreshContexts liệt kê tenant cần build pre-aggregation.'], terms: ['queryrewrite', 'secctx', 'refreshctx', 'rls']},
+  {id: 's2', n: '06.2', t: 'Ví dụ API', sum: ['SQL API: cú pháp Postgres, measure qua MEASURE().', 'REST API: JSON gửi tới /cubejs-api/v1/load.', 'GraphQL API: tên camelCase, lọc bằng inDateRange.'], terms: ['semsql', 'measurefn', 'rest', 'timedim']},
+  {id: 's3', n: '06.3', t: 'Mẫu code', sum: ['Thư mục model/cubes và model/views (v0.33).', 'NULLIF tránh lỗi chia cho 0.', 'Segment gom nhiều điều kiện lọc thành một tên.'], terms: ['nullif', 'segment']},
+  {id: 's4', n: '06.4', t: 'Lỗi và cách sửa', sum: ['Filter group error: bọc bằng FILTER_GROUP.', 'Build lỗi: external pre-aggregation và export bucket.', 'Unknown member: sửa tên theo snake_case.'], terms: ['filtergroup', 'exportbucket', 'preagg']},
+  {id: 's5', n: '06.5', t: 'Checklist sự cố', sum: ['Xem SQL sinh ra trong Playground.', 'Xem cache hit hay miss; nếu miss, kiểm tra refresh_key.', 'Lệch 1–2 giờ: convertTz() trên dimension dùng làm timeDimension.'], terms: ['refreshkey', 'converttz', 'timedim']},
+  {id: 's6', n: '06.6', t: 'Thuật ngữ', sum: ['Tám thuật ngữ: aggregate awareness, context variables, Cube Store, Semantic SQL, pre-aggregations, MCP, PDT, fanout.'], terms: ['aggaware', 'cubestore', 'preagg', 'semsql']},
+  {id: 's7', n: '06.7', t: 'Lệnh và công cụ', sum: ['/readyz để health check.', 'Lệnh kiểm tra schema và mở Playground theo handbook; xác nhận lại bằng --help.'], terms: ['readyz']},
+  {id: 's8', n: '06.8', t: 'Tài liệu tham khảo', sum: ['Docs, GitHub, Slack, style guide.', 'Tài liệu chính thức là nguồn nên tin hơn khi có khác biệt.'], terms: []}],
+ terms: {
+  queryrewrite: ['queryRewrite', 'Hook cấu hình trong cube.js (query_rewrite trong cube.py) nhận query JSON cùng securityContext và trả về query đã sửa trước khi Cube biên dịch thành SQL. Thường dùng để chèn filter bắt buộc như tenant_id.', 'Như người kiểm duyệt đứng giữa: mọi phiếu yêu cầu đi qua tay họ, và họ luôn ghi thêm dòng "chỉ lấy dữ liệu của công ty A" trước khi chuyển xuống kho.'],
+  secctx: ['securityContext', 'Object chứa các claim giải mã từ payload của JWT (ví dụ tenant_id, role), được Cube truyền vào queryRewrite, data model và cấu hình để áp quyền truy cập.', 'Phần thông tin in trên thẻ ra vào của bạn: bạn là ai, thuộc công ty nào, được xem gì. Cube đọc phần này để biết nên cho bạn thấy những gì.'],
+  refreshctx: ['scheduledRefreshContexts', 'Hàm cấu hình trả về danh sách securityContext mà refresh worker lần lượt dùng để build pre-aggregation riêng cho từng tenant.', 'Danh sách khách hàng giao cho người làm ca đêm: với mỗi tên trong danh sách, họ chuẩn bị sẵn một phần riêng, không trộn lẫn của ai với ai.'],
+  rls: ['RLS', 'Row-Level Security: cơ chế giới hạn quyền truy cập ở mức từng dòng dữ liệu dựa trên danh tính người gọi. Trong Cube thường hiện thực bằng queryRewrite kèm securityContext.', 'Cùng một bảng lương, nhưng mỗi nhân viên mở ra chỉ thấy dòng của chính mình, dòng của người khác bị che đi.'],
+  semsql: ['Semantic SQL', 'Phương ngữ SQL tương thích giao thức Postgres mà SQL API của Cube nhận, mở rộng thêm hàm MEASURE() để gọi measure đã khai báo trong data model.', 'Công cụ nào biết nói chuyện với Postgres thì cũng nói chuyện được với Cube, chỉ cần học thêm một từ mới là MEASURE.'],
+  measurefn: ['MEASURE()', 'Hàm tổng hợp của Semantic SQL, trả về giá trị của một measure theo đúng công thức trong data model thay vì để client tự viết SUM, COUNT.', 'Như gọi món theo tên trong thực đơn: bạn chỉ nói "cho tôi doanh thu", bếp tự nấu theo công thức chuẩn, không ai tự pha chế mỗi người một kiểu.'],
+  rest: ['REST API', 'Giao diện HTTP của Cube nhận query JSON tại POST /cubejs-api/v1/load, kèm JWT trong header Authorization, và trả kết quả dạng JSON.', 'Như gửi phiếu đặt hàng điền sẵn các ô: muốn gì, theo vùng nào, trong khoảng thời gian nào. Gửi đi là nhận về bảng kết quả.'],
+  timedim: ['timeDimensions', 'Trường trong query JSON khai báo dimension thời gian, dateRange và granularity. Cube tự xử lý chuyển múi giờ cho các trường này.', 'Phần "theo thời gian" của câu hỏi: lấy từ ngày nào đến ngày nào, và chia theo ngày, tuần hay tháng.'],
+  nullif: ['NULLIF', 'Hàm SQL chuẩn NULLIF(a, b) trả về NULL khi a bằng b, ngược lại trả về a. Dùng ở mẫu số để biến phép chia cho 0 thành NULL thay vì lỗi.', 'Như dặn trước "nếu không có đơn nào thì để trống ô này": thay vì cả bảng báo lỗi, chỉ ô đó để trống.'],
+  segment: ['segment', 'Điều kiện lọc (biểu thức WHERE) được đặt tên và khai báo trong cube, dùng lại được trong mọi truy vấn chỉ bằng tên.', 'Như lưu sẵn một bộ lọc trong Excel với tên "đơn lớn đã hoàn tất": lần sau chỉ cần bấm tên, không phải đặt lại từng điều kiện.'],
+  filtergroup: ['FILTER_GROUP', 'Hàm trong SQL nguồn dùng để bọc nhiều FILTER_PARAMS, giúp Cube giữ đúng logic nhóm điều kiện (AND/OR) giữa inner query và outer query.', 'Như đặt dấu ngoặc trong phép tính: không có ngoặc thì "a hoặc b và c" có thể bị hiểu sai thứ tự, ra kết quả khác hẳn.'],
+  exportbucket: ['export bucket', 'Bucket lưu trữ trung gian (S3 hoặc GCS) mà data warehouse xuất dữ liệu ra trước khi Cube Store nạp vào, giúp build pre-aggregation lớn nhanh hơn và tránh timeout.', 'Thay vì bê từng thùng hàng qua cửa nhỏ, bên kho chất hết lên xe tải đỗ ở bãi chung, rồi bên nhận tự ra bãi lấy một lần.'],
+  preagg: ['pre-aggregation', 'Bảng kết quả tổng hợp (rollup) mà Cube tính trước theo các measure, dimension và granularity đã khai báo, lưu trong Cube Store để trả lời truy vấn mà không quét lại dữ liệu thô.', 'Giống bảng điểm tổng kết cuối kỳ: thay vì cộng lại từng bài kiểm tra mỗi lần phụ huynh hỏi, nhà trường đã cộng sẵn và chỉ việc đọc ra.'],
+  refreshkey: ['refresh_key', 'Thuộc tính của pre-aggregation (hoặc cube) quy định khi nào dữ liệu được coi là cũ và cần build lại: theo chu kỳ (every) hoặc theo kết quả một câu SQL kiểm tra.', 'Như lịch thay nước bể cá: hoặc cứ mỗi tuần thay một lần, hoặc chỉ thay khi thử thấy nước đã đục.'],
+  converttz: ['SQL_UTILS.convertTz()', 'Hàm tiện ích trong context variables, sinh SQL chuyển một cột thời gian sang múi giờ của truy vấn. Không dùng cho dimension đã đưa vào timeDimensions vì Cube đã tự chuyển.', 'Như đổi giờ Hà Nội sang giờ Tokyo: đổi một lần là đúng, đổi thêm lần nữa thì lệch hẳn hai tiếng.'],
+  aggaware: ['aggregate awareness', 'Khả năng của Cube phân tích truy vấn, so với danh sách pre-aggregation hiện có và tự viết lại truy vấn để đọc từ bảng rollup phù hợp trong Cube Store thay vì data warehouse.', 'Bạn chỉ việc hỏi, Cube tự biết câu trả lời đã có sẵn ở ngăn nào và lấy ra, bạn không cần biết các ngăn đó tồn tại.'],
+  cubestore: ['Cube Store', 'Engine lưu trữ và xử lý phân tán do Cube viết riêng, chứa các bảng pre-aggregation và trả lời truy vấn trúng rollup thay cho data warehouse.', 'Như cái kho nhỏ ngay sau quầy bán hàng: món hay bán được xếp sẵn ở đây, khách hỏi là lấy ngay, không phải chạy ra kho tổng ở ngoại thành.'],
+  readyz: ['/readyz', 'Endpoint readiness probe: trả về thành công khi instance Cube đã khởi động xong và sẵn sàng nhận request. Load balancer và Kubernetes dùng nó để quyết định có chuyển traffic tới node hay không.', 'Như tấm biển "Đang mở cửa" treo trước tiệm: người dẫn khách nhìn biển rồi mới đưa khách vào.']},
+ alias: {queryrewrite: ['queryRewrite', 'query_rewrite'], secctx: ['securityContext'], refreshctx: ['scheduledRefreshContexts'], rls: ['RLS'], semsql: ['Semantic SQL'], measurefn: ['MEASURE()'],
+  rest: ['REST API'], timedim: ['timeDimensions'], nullif: ['NULLIF'], segment: ['segment'], filtergroup: ['FILTER_GROUP'], exportbucket: ['export bucket'], preagg: ['pre-aggregations', 'pre-aggregation'],
+  refreshkey: ['refresh_key'], converttz: ['convertTz()'], aggaware: ['aggregate awareness'], cubestore: ['Cube Store'], readyz: ['/readyz']},
+ rel: {queryrewrite: ['secctx', 'rls'], secctx: ['queryrewrite', 'refreshctx'], refreshctx: ['secctx', 'preagg'], rls: ['queryrewrite'], semsql: ['measurefn'], measurefn: ['semsql'],
+  rest: ['timedim'], timedim: ['converttz'], nullif: [], segment: [], filtergroup: [], exportbucket: ['preagg'], preagg: ['cubestore', 'aggaware', 'refreshkey'],
+  refreshkey: ['preagg'], converttz: ['timedim'], aggaware: ['preagg'], cubestore: ['preagg'], readyz: []},
+ quiz: [
+  {id: 'ch06_q1', s: 0, type: 'one', q: 'Trong ví dụ cube.js, queryRewrite đảm bảo điều gì?', o: ['Mọi truy vấn được thêm filter orders.tenant_id theo securityContext, nên tenant chỉ thấy dữ liệu của mình', 'Mọi truy vấn được chuyển sang SQL API', 'Pre-aggregations được build lại sau mỗi truy vấn', 'JWT được ký lại với secret mới'], a: 0,
+   ex: 'queryRewrite đọc tenant_id trong securityContext và đẩy thêm một filter vào truy vấn: đây là RLS theo tenant.', why: {2: 'Lịch build do refresh worker và scheduledRefreshContexts lo, không phải queryRewrite.'}},
+  {id: 'ch06_q2', s: 1, type: 'one', q: 'Trong SQL API, cách gọi measure total_sales đã định nghĩa trong model là gì?', o: ['SUM("orders".total_sales)', 'MEASURE("orders".total_sales)', 'COUNT(*) với GROUP BY', 'Gửi JSON tới /cubejs-api/v1/load'], a: 1,
+   ex: 'Semantic SQL dùng MEASURE() để lấy đúng công thức đã khai báo, không tự viết lại phép tổng hợp.', why: {0: 'Tự viết SUM là định nghĩa lại công thức ở phía client, dễ gây metric drift.', 3: 'Đó là cách gọi REST API.'}},
+  {id: 'ch06_q3', s: 2, type: 'one', q: 'Nếu bỏ NULLIF khỏi average_order_value và một nhóm có 0 đơn hàng, điều gì có thể xảy ra?', o: ['Kết quả bằng 0', 'Truy vấn lỗi chia cho 0', 'Cube tự bỏ qua nhóm đó', 'Kết quả bằng total_revenue'], a: 1,
+   ex: 'Chia cho 0 làm cả truy vấn lỗi trên nhiều data warehouse. NULLIF đổi 0 thành NULL nên kết quả là NULL thay vì lỗi.'},
+  {id: 'ch06_q4', s: 3, type: 'one', q: 'Truy vấn báo "Unknown member \'Orders.count\'" sau khi chuyển sang quy ước v0.33. Sửa thế nào?', o: ['Bật CUBEJS_ROLLUP_ONLY', 'Đổi thành orders.count cho khớp tên snake_case đã khai báo', 'Bọc truy vấn trong FILTER_GROUP', 'Thêm export bucket'], a: 1,
+   ex: 'Tên member phải khớp chính xác với khai báo, kể cả chữ hoa/thường.'},
+  {id: 'ch06_q5', s: 4, type: 'one', q: 'Chỉ số theo ngày lệch đúng vài giờ so với kỳ vọng. Nên kiểm tra gì trước?', o: ['Độ dài CUBEJS_API_SECRET', 'Dimension dùng SQL_UTILS.convertTz() có đang được đưa vào timeDimensions không', 'Số router node', 'Tên thư mục model/views'], a: 1,
+   ex: 'Cube tự chuyển múi giờ cho timeDimensions; dùng thêm convertTz() trên chính dimension đó thì múi giờ bị đổi hai lần.'},
+  {id: 'ch06_q6', s: 5, type: 'one', q: 'Aggregate awareness nghĩa là gì?', o: ['Cube tự chọn bảng pre-aggregation phù hợp để trả lời truy vấn', 'Data warehouse tự tạo index cho bảng lớn', 'AI Agent tự viết measure mới', 'Looker tự tạo PDT'], a: 0,
+   ex: 'Người gọi không cần biết rollup nào tồn tại; Cube tự định tuyến truy vấn vào bảng phù hợp.', why: {3: 'PDT là khái niệm của Looker, không phải aggregate awareness của Cube.'}},
+  {id: 'ch06_q7', s: 6, type: 'one', q: 'Endpoint /readyz dùng để làm gì?', o: ['Kiểm tra Cube đã sẵn sàng nhận request chưa (health check)', 'Build lại toàn bộ pre-aggregations', 'Lint data model', 'Mở Developer Playground'], a: 0,
+   ex: 'Load balancer hoặc Kubernetes gọi /readyz để biết node đã sẵn sàng phục vụ.'},
+  {id: 'ch06_q8', s: 7, type: 'one', q: 'Tên một biến môi trường trong handbook khác với tài liệu chính thức của phiên bản bạn đang dùng. Nên làm gì?', o: ['Tin handbook vì nó tổng hợp sẵn', 'Đối chiếu và theo docs.cube.dev cho đúng phiên bản', 'Thử cả hai trên production', 'Bỏ qua biến đó'], a: 1,
+   ex: 'Cube thay đổi nhanh giữa các phiên bản; tài liệu chính thức là nguồn chuẩn cho cấu hình.'}]};
+</script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>
