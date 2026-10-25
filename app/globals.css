@@ -45,7 +45,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
-  .dark {
+  .dark, [data-theme="dark"] {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
@@ -79,6 +79,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* the hero's card canvas is wider than its column; clip (not hidden) keeps sticky working */
+    overflow-x: clip;
   }
 
   .no-scrollbar::-webkit-scrollbar {

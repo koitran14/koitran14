@@ -164,15 +164,15 @@ const Gallery: React.FC<GalleryProps> = ({
                                 </div>
 
                                 {/* Minimalist Editorial Tag at Top Left */}
-                                {activeImageItem?.alt && (
+                                {activeImageItem?.alt && !/^\d+$/.test(activeImageItem.alt) && (
                                     <motion.div 
                                         initial={{ opacity: 0, x: -15 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         key={activeImageItem.alt}
                                         className="absolute top-6 left-6 md:top-8 md:left-10 z-50 pointer-events-none flex items-center md:gap-4 gap-3 mix-blend-difference"
                                     >
-                                        <div className="h-[1.5px] w-6 md:w-10 bg-white/80" />
-                                        <span className="text-white/95 text-xs md:text-sm font-normal tracking-[0.3em] lowercase">
+                                        <div className="h-[1.5px] w-6 md:w-8 bg-white/80" />
+                                        <span className="text-white/95 text-sm font-medium first-letter:uppercase">
                                             {activeImageItem.alt}
                                         </span>
                                     </motion.div>

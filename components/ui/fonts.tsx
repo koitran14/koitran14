@@ -4,10 +4,10 @@ const Fonts = () => {
     return (
         <Global
             styles={`
-                @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=M+PLUS+Rounded+1c:wght@100;300;400;500;700&family=Open+Sans:wght@300&family=Ysabeau+Infant:wght@300&display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
             `}
         />
     );
 }
- 
+
 export default Fonts;

@@ -4,7 +4,9 @@ import { StyleFunctionProps, mode } from "@chakra-ui/theme-tools";
 const styles = {
   global: (props: StyleFunctionProps | Record<string, any>) => ({
     body: {
-      bg: mode('white', '#202023')(props)
+      bg: mode('#FAFAFA', '#0A0A0B')(props),
+      color: mode('#18181B', '#E4E4E7')(props),
+      lineHeight: 1.7
     }
   })
 }
@@ -12,27 +14,33 @@ const styles = {
 const components = {
   Heading: {
     variants: {
-      'section-title': {
-        textDecoration: 'underline',
+      'page-title': {
+        fontSize: { base: 36, md: 48 },
+        fontWeight: 600,
+        lineHeight: 1.05,
+        letterSpacing: '-0.03em'
+      },
+      'section-title': (props: StyleFunctionProps | Record<string, any>) => ({
         fontSize: 20,
-        textUnderlineOffset: 6,
-        textDecorationColor: '#525252',
-        textDecorationThickness: 4,
-        marginTop: 3,
-        marginBottom: 4
-      }
+        fontWeight: 600,
+        letterSpacing: '-0.01em',
+        color: mode('#09090B', '#FAFAFA')(props),
+        marginTop: 14,
+        marginBottom: 5
+      })
     }
   },
   Link: {
     baseStyle: (props: StyleFunctionProps | Record<string, any>) => ({
-      color: mode('#3d7aed', '#ff63c3')(props),
+      color: mode('#2563EB', '#60A5FA')(props),
       textUnderlineOffset: 3
     })
   }
 }
 
 const fonts = {
-  heading: "'M PLUS Rounded 1c'"
+  heading: "'Space Grotesk', system-ui, sans-serif",
+  body: "'Archivo', system-ui, sans-serif"
 }
 
 const colors = {

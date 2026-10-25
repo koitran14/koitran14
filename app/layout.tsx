@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import "./globals.css";
 import NavBar from "@/components/navbar";
 import { ChakraProvider, Container } from "@chakra-ui/react";
@@ -14,12 +15,19 @@ import { Toaster } from "@/components/ui/toaster";
 import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ChatToggler } from "@/components/ui/chat-toggler";
+import { FEATURES } from "@/lib/features";
+import { Backdrop } from "@/components/backdrop";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const wide = pathname.startsWith("/blog/cube-handbook");
+  // the floating contact toolbar would sit over the article and the audio player while reading
+  const reading = pathname.startsWith("/blog");
+
   React.useEffect(() => {
     const isFirstVisit = localStorage.getItem("isFirstVisit");
 
@@ -39,15 +47,17 @@ export default function RootLayout({
         <TooltipProvider>
           <ChakraProvider theme={theme}>
             <Fonts />
+            <Backdrop />
             <NavBar />
             <ModalProvider />
             <Toaster />
-            <Container maxW="container.sm" pt={20} px={8} className="scrollbar-custom relative">
-              <Toolbar />
+            {/* the handbook lays out its own column and side rails, so it gets the full width */}
+            <Container maxW={wide ? "none" : "container.sm"} pt={20} px={wide ? 0 : 8} className="scrollbar-custom relative">
+              {!reading && <Toolbar />}
               {children}
               <Analytics />
             </Container>
-            <ChatToggler />
+            {FEATURES.chat && <ChatToggler />}
             <Footer />
           </ChakraProvider>
         </TooltipProvider>

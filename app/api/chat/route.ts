@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { NextRequest, NextResponse } from "next/server";
 import Groq from "groq-sdk";
+import { FEATURES } from "@/lib/features";
 import fs from "fs";
 import path from "path";
 
@@ -10,6 +11,8 @@ const getGroqClient = () => {
 };
 
 export async function POST(req: NextRequest) {
+  // chat is switched off site-wide; don't spend LLM calls on direct requests
+  if (!FEATURES.chat) return NextResponse.json({ error: "Not found" }, { status: 404 });
   try {
     const body = await req.json();
     const messagesArray = Array.isArray(body.messages) ? body.messages : [{ role: "user", content: body.message }];

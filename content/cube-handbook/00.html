@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>00 · How Cube Works · Cube.dev Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* figures used only in this chapter; every class and id carries the x- prefix */
+:root{--g1:#2f6fd6;--g2:#c2265f;--g3:#0f8a7e;--g4:#a15c00;--x-llm:#7a4fd0}
+:root[data-theme=dark]{--g1:#6ea2ff;--g2:#f0628f;--g3:#3cc4b4;--g4:#f2b25c;--x-llm:#b294f5}
+.x-fig{display:grid;gap:14px;font-size:15px;line-height:1.6}
+.x-fig [hidden]{display:none}
+.x-pre{margin:0;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto;font:400 12.5px/1.6 var(--mono);color:var(--fg);white-space:pre-wrap;max-width:100%}
+.x-pre .x-hl{background:color-mix(in srgb,var(--g2) 16%,transparent);color:var(--g2);font-weight:500;border-radius:3px}
+.x-pre .x-add{background:color-mix(in srgb,var(--g3) 16%,transparent);color:var(--g3);font-weight:500;border-radius:3px}
+.x-pre .x-cm{color:var(--muted)}
+.x-lbl{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.x-cap{color:var(--muted);font-size:14px;margin:0}
+.x-who{--c:var(--muted);display:inline-block;font:500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;white-space:nowrap;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.x-who.user{--c:var(--g1)}.x-who.llm{--c:var(--x-llm)}.x-who.cube{--c:var(--g2)}.x-who.db{--c:var(--g3)}
+.x-st-t{font:400 22px/1.3 var(--serif);color:var(--fg)}
+:is(.x-chip,.x-dot,.x-btn,.x-opt,.x-yl):focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+/* 00.1 chain */
+.x-rail{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative}
+.x-rail:before{content:"";position:absolute;left:calc(100% / 10);right:calc(100% / 10);top:9px;height:1.5px;background:var(--line)}
+.x-node{--c:var(--muted);position:relative;display:grid;justify-items:center;align-content:start;gap:6px;padding:0 8px;text-align:center}
+.x-node.user{--c:var(--g1)}.x-node.llm{--c:var(--x-llm)}.x-node.cube{--c:var(--g2)}.x-node.db{--c:var(--g3)}
+.x-pt{width:20px;height:20px;border-radius:50%;border:2px solid var(--c);background:var(--soft);position:relative;z-index:1}
+.x-node.llm .x-pt{background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 22%,transparent)}
+.x-node b{font-size:14.5px;line-height:1.35;color:var(--fg);overflow-wrap:normal}
+.x-node .x-d{font-size:13px;color:var(--muted);line-height:1.45;overflow-wrap:normal}
+/* 00.2 stepper */
+.x-chips{display:flex;flex-wrap:wrap;gap:8px}
+.x-chip{font:500 14px/1.4 var(--sans);padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--body);cursor:pointer;text-align:left}
+.x-chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.x-fig.x-cq{container-type:inline-size}
+.x-steptrack{list-style:none;margin:2px 0 0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));position:relative}
+.x-steptrack:before{content:"";position:absolute;left:calc(100% / 14);right:calc(100% / 14);top:15px;height:1.5px;background:var(--line)}
+.x-dot{--c:var(--muted);position:relative;width:100%;display:grid;justify-items:center;gap:6px;padding:0 2px;border:0;background:none;color:var(--muted);cursor:pointer;font:500 12.5px/1.3 var(--sans);text-align:center}
+.x-dot.user{--c:var(--g1)}.x-dot.llm{--c:var(--x-llm)}.x-dot.cube{--c:var(--g2)}.x-dot.db{--c:var(--g3)}
+.x-dot .x-n{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--c);color:var(--c);background:var(--bg);font:500 12px var(--mono);transition:background .2s,color .2s}
+.x-dot.done .x-n{background:color-mix(in srgb,var(--c) 18%,var(--bg))}
+.x-dot.cur .x-n{background:var(--c);color:var(--bg)}
+.x-dot.cur{color:var(--fg)}
+.x-dot:hover .x-n{box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 22%,transparent)}
+.x-curbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding-top:12px}
+.x-curbar .x-nav{gap:6px}
+.x-stage{display:grid;gap:12px}
+.x-top{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.x-exp p{margin:0}.x-exp p+p{margin-top:8px}.x-exp ol{margin:8px 0 0;padding-left:20px}
+.x-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.x-two>div{display:grid;gap:6px;align-content:start}
+.x-two>.x-warn{display:block}
+.x-prompt{font:400 20px/1.5 var(--serif);color:var(--fg);padding:14px 16px;border-radius:10px;background:color-mix(in srgb,var(--g1) 10%,var(--bg))}
+.x-ph1{border-radius:4px;padding:0 3px}
+.x-tbl{overflow-x:auto}
+table.x-map{width:100%;border-collapse:collapse;font-size:14px}
+table.x-map th{white-space:nowrap;overflow-wrap:normal;text-align:left;font:500 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line)}
+table.x-map td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.x-map td code{white-space:nowrap}
+table.x-map td:nth-child(-n+2){overflow-wrap:normal}
+table.x-map td:nth-child(2){white-space:nowrap}
+.x-sw{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+.x-nav{display:flex;gap:8px;justify-content:space-between}
+.x-btn{font:500 14px var(--sans);padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer}
+.x-btn.pri{background:var(--acc);border-color:var(--acc);color:var(--bg)}
+.x-btn:disabled{opacity:.4;cursor:default}
+.x-answer{font-size:17px;padding:14px 16px;border-radius:10px;background:color-mix(in srgb,var(--x-llm) 10%,var(--bg))}
+.x-warn{padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--bad) 10%,var(--bg));font-size:14px}
+.x-co{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;border-top:1px dashed var(--line);padding-top:14px}
+.x-co>div{display:grid;gap:6px;align-content:start}
+.x-co .x-pre{max-height:460px}
+.x-where{font:400 12px var(--mono);color:var(--muted)}
+.x-outl{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--g3)}
+.x-fullpre{max-height:520px;margin-bottom:6px}
+/* 00.3 YAML */
+.x-pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.x-pipe>div{padding:10px;border-radius:8px;background:var(--bg);border:1px solid var(--line);font-size:13.5px;line-height:1.45;display:grid;gap:4px;align-content:start}
+.x-pipe .x-n{font:500 13px var(--mono);color:var(--acc)}
+.x-yaml{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}
+.x-ycode{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 0;overflow:auto;font:400 12.5px/1.6 var(--mono)}
+.x-yl{display:block;width:100%;padding:0 12px;white-space:pre-wrap;border:0;border-left:3px solid transparent;background:none;color:var(--fg);font:inherit;text-align:left;cursor:pointer}
+.x-yl:hover{background:var(--soft)}
+.x-yl.sel{background:var(--acc-soft);border-left-color:var(--acc)}
+.x-yinfo{position:sticky;top:90px;display:grid;gap:10px;padding:16px 18px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.x-yinfo .x-st-t{font-size:19px}
+.x-yinfo dl{margin:0;display:grid;gap:10px}
+.x-yinfo dt{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.x-yinfo dd{margin:2px 0 0}
+/* 00.4 playground */
+.x-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.x-pan{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:10px;align-content:start;transition:border-color .25s,box-shadow .25s}
+.x-grid>#x-p3,.x-grid>#x-p4{grid-column:1/-1}
+.x-pan.active{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-soft)}
+.x-ph{display:flex;gap:10px;align-items:baseline;font:500 16px var(--sans);color:var(--fg)}
+.x-ph .x-n{font:400 24px/1 var(--serif);color:var(--acc)}
+.x-pick{display:grid;gap:6px}
+.x-opts{display:flex;flex-wrap:wrap;gap:6px}
+.x-opt{font:500 14px var(--sans);padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--body);cursor:pointer}
+.x-opt[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+table.x-db{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+table.x-db th{white-space:nowrap;overflow-wrap:normal;text-align:left;font:500 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:5px 8px;border-bottom:1px solid var(--line)}
+table.x-db td{padding:5px 8px;border-bottom:1px solid var(--line);white-space:nowrap;overflow-wrap:normal}
+table.x-db .x-num{text-align:right}
+tr.x-out td{opacity:.35;text-decoration:line-through}
+tr.x-out td:last-child{text-decoration:none}
+.x-note{font-size:12px;color:var(--muted);font-style:italic}
+.x-skip{padding:14px;border-radius:10px;background:color-mix(in srgb,var(--g3) 12%,var(--bg));color:var(--g3);font-weight:500}
+.x-bars{display:grid;gap:8px}
+.x-bar{display:grid;grid-template-columns:110px 1fr 70px;gap:8px;align-items:center;font-size:14px}
+.x-track{height:18px;background:var(--soft);border-radius:5px;overflow:hidden}
+.x-fill{display:block;height:100%;border-radius:5px;transition:width .4s}
+.x-v{text-align:right;font-variant-numeric:tabular-nums;font-weight:500;color:var(--fg)}
+.x-log{display:grid;gap:6px}
+.x-logrow{display:flex;gap:10px;align-items:center;font-size:13.5px;flex-wrap:wrap}
+.x-tag{font:500 11px var(--mono);padding:2px 8px;border-radius:6px}
+.x-tag.miss{color:var(--g2);background:color-mix(in srgb,var(--g2) 14%,transparent)}
+.x-tag.hit{color:var(--g3);background:color-mix(in srgb,var(--g3) 14%,transparent)}
+@media(max-width:1000px){.x-co,.x-grid,.x-yaml,.x-two{grid-template-columns:1fr}.x-yinfo{position:static}.x-pipe{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.x-fig{padding:16px}.x-pipe{grid-template-columns:1fr}.x-bar{grid-template-columns:80px 1fr 64px}.x-prompt{font-size:18px}}
+@container (max-width:560px){
+.x-rail{grid-template-columns:1fr;gap:0}
+.x-rail:before{display:none}
+.x-node{grid-template-columns:20px minmax(0,1fr);justify-items:start;text-align:left;column-gap:14px;row-gap:2px;padding:0 0 18px}
+.x-node:last-child{padding-bottom:0}
+.x-node:not(:last-child):after{content:"";position:absolute;left:9px;top:20px;bottom:0;width:1.5px;background:var(--line)}
+.x-node .x-pt{grid-row:1 / span 3}
+.x-node>:not(.x-pt){grid-column:2}
+.x-chips{flex-direction:column}
+.x-chip{display:flex;gap:10px;align-items:center;width:100%}
+.x-chip:before{content:"";flex:none;width:12px;height:12px;border-radius:50%;border:1.5px solid currentColor;box-sizing:border-box}
+.x-chip[aria-pressed=true]:before{border-width:4px}
+.x-dot .x-dl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.x-dot .x-n{width:26px;height:26px;font-size:11px}
+.x-steptrack:before{top:13px}
+.x-curbar .x-st-t{font-size:18px}
+}
+@container (max-width:640px){
+table.x-map,table.x-map tbody,table.x-map tr,table.x-map td{display:block}
+table.x-map thead{display:none}
+table.x-map tr{padding:10px 0;border-bottom:1px solid var(--line)}
+table.x-map td{padding:2px 0;border:0}
+table.x-map td:nth-child(2){display:inline;color:var(--muted);font-size:13px}
+table.x-map td:nth-child(3){display:inline;margin-left:8px}
+table.x-map td code{white-space:normal}
+}
+@media(prefers-reduced-motion:reduce){.x-fig *{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 00 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 00</div>
+  <h1>Cube hoạt động <i>như thế nào?</i></h1>
+  <p class="dek">Theo dõi một câu hỏi cụ thể từ người dùng, qua LLM và Cube, xuống database và trở lại, để xác định việc mà từng thành phần đảm nhận.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương mở đầu</span><span>15 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>LLM chỉ làm hai việc: hiểu câu hỏi và diễn đạt câu trả lời. LLM không viết SQL. Toàn bộ phần ở giữa do Cube thực hiện bằng code tất định: cùng một query JSON của cùng một người hỏi luôn cho cùng một câu SQL và cùng một con số.</div>
+
+  <section id="s1">
+    <span class="num">00.1</span>
+    <h2>LLM tham gia ở bước nào?</h2>
+    <p class="gist">LLM đứng ở hai đầu của chuỗi xử lý. Cube và database ở giữa không dùng LLM.</p>
+    <p>Toàn bộ chương dùng chung một ví dụ: bảng <code>orders</code> gồm 10 đơn hàng của hai shop A và B, ngày hiện tại là 23/10/2026, người hỏi là nhân viên shop A.</p>
+    <p>Cube tiếp nhận một yêu cầu có dạng “cho số X, chia theo Y” dưới dạng query JSON, tự viết SQL, chạy SQL trên database rồi trả kết quả. Khi người dùng hỏi bằng tiếng Việt, cần thêm một LLM ở phía trước để chuyển câu hỏi thành query JSON đó. Mỗi trường trong query JSON là tên một member do Cube công bố, ví dụ <code>orders.revenue</code>.</p>
+    <figure>
+      <div class="fig x-fig x-cq">
+        <ol class="x-rail" aria-label="Chuỗi xử lý từ câu hỏi đến câu trả lời">
+          <li class="x-node user"><span class="x-pt"></span><span class="x-who user">Người dùng</span><b>Nhập câu hỏi</b><span class="x-d">“Doanh thu tháng 10 ở Hà Nội?”</span></li>
+          <li class="x-node llm"><span class="x-pt"></span><span class="x-who llm">LLM</span><b>Hiểu câu hỏi, chọn member</b><span class="x-d">Câu tiếng Việt → Cube query JSON</span></li>
+          <li class="x-node cube"><span class="x-pt"></span><span class="x-who cube">Cube</span><b>Kiểm tra, thêm quyền, viết SQL</b><span class="x-d">JSON → SQL, không có LLM</span></li>
+          <li class="x-node db"><span class="x-pt"></span><span class="x-who db">Database</span><b>Chạy SQL</b><span class="x-d">Trả về các dòng số liệu</span></li>
+          <li class="x-node llm"><span class="x-pt"></span><span class="x-who llm">LLM</span><b>Viết câu trả lời</b><span class="x-d">Số liệu → câu tiếng Việt (tuỳ chọn)</span></li>
+        </ol>
+      </div>
+      <figcaption><b>Hình 1</b>Năm bước của chuỗi xử lý, đọc từ trái sang phải. Hai điểm tô đặc là hai vị trí duy nhất có LLM.</figcaption>
+    </figure>
+    <div class="take"><small>Điểm mấu chốt</small>LLM chỉ làm hai việc: hiểu câu hỏi và diễn đạt câu trả lời. LLM không viết SQL mà chỉ chọn tên từ một danh sách do Cube cung cấp. Phần giữa là code chạy cố định: cùng một JSON của cùng một người hỏi luôn cho cùng một câu SQL và cùng một con số.</div>
+    <p>Bản thân Cube (bản open source) không chứa LLM. LLM nằm trong ứng dụng hoặc agent đặt phía trước, ví dụ một chatbot dùng Claude, hoặc trong tính năng AI của Cube Cloud. Cách làm trong cả hai trường hợp giống nhau: đọc danh sách member của Cube, sau đó sinh query JSON.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">00.2</span>
+    <h2>Một câu hỏi qua bảy bước</h2>
+    <p class="gist">Từ câu hỏi tiếng Việt đến query JSON, từ query JSON đến SQL, rồi từ số liệu trở lại câu trả lời.</p>
+    <p>Hình 2 cho phép chọn một trong ba câu hỏi và đi qua từng bước. Mỗi bước ghi rõ thành phần thực hiện, công việc, đoạn code chạy ở bước đó và output của đoạn code.</p>
+    <figure>
+      <div class="fig x-fig x-cq">
+        <span class="x-lbl">Câu hỏi (người hỏi: nhân viên shop A, ngày 23/10/2026)</span>
+        <div class="x-chips" id="x-prompts" role="group" aria-label="Chọn câu hỏi"></div>
+        <ol class="x-steptrack" id="x-stepper" aria-label="Bảy bước"></ol>
+        <div class="x-curbar">
+          <div class="x-top" id="x-cur" aria-live="polite"></div>
+          <div class="x-nav"><button class="x-btn" id="x-bprev">← Trước</button><button class="x-btn pri" id="x-bnext">Tiếp →</button></div>
+        </div>
+        <div class="x-stage" id="x-stage"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Bảy bước của một câu hỏi. Chọn câu hỏi phía trên, chọn bước bằng các chấm số hoặc hai nút Trước, Tiếp.</figcaption>
+    </figure>
+    <p>Hai bước cần chú ý nhất là bước 3 và bước 4. Ở bước 3, đầu ra duy nhất của LLM là một query JSON. Ở bước 4, Cube xác thực token, đưa payload của token vào securityContext, sau đó hàm queryRewrite trong file <code>cube.js</code> thêm filter <code>shop_id</code> vào query. LLM không thấy điều kiện này và không thể gỡ bỏ điều kiện đó.</p>
+    <div class="take"><small>Ghi nhớ</small>Từ bước 4 trở đi không còn LLM. Nếu LLM bịa ra một member không tồn tại, Cube trả lỗi thay vì âm thầm trả về số sai.</div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Toàn bộ code server ghép lại (bước 2 → 7 trong một file)</span></summary><div>
+      <p>Đoạn code dưới đây gộp các bước 2 đến 7 vào một route <code>/api/ask</code>. Model và tên biến giữ nguyên như trong các bước ở Hình 2.</p>
+      <pre class="x-pre x-fullpre" id="x-full"></pre>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">00.3</span>
+    <h2>File YAML là từ điển</h2>
+    <p class="gist">File YAML nối tên dễ hiểu với cột thật trong database. Cả LLM lẫn SQL compiler của Cube đều đọc từ file này.</p>
+    <p>File YAML (data model) do developer viết tay. File này có vai trò như một cuốn từ điển: nối <b>tên dễ hiểu</b> như doanh thu, thành phố với <b>cột thật trong database</b>. Đây là phần cốt lõi của semantic layer. Mỗi measure là một con số cần tính; mỗi dimension là một góc nhìn để chia nhóm hoặc lọc. Khối measures và dimensions trong file liệt kê đầy đủ các member mà cube cung cấp.</p>
+    <p>Cube đọc YAML theo năm bước, khi khởi động hoặc mỗi khi file được lưu ở dev mode.</p>
+    <figure>
+      <div class="fig x-fig">
+        <div class="x-pipe">
+          <div><span class="x-n">1</span><b>Tìm file</b><span class="x-cap">Mọi file <code>.yml</code> trong thư mục <code>model/</code></span></div>
+          <div><span class="x-n">2</span><b>Parse</b><span class="x-cap">YAML → object: danh sách cube, mỗi cube có measures, dimensions, joins</span></div>
+          <div><span class="x-n">3</span><b>Thay template</b><span class="x-cap"><code>{CUBE}</code> → alias của cube hiện tại; <code>{shops}</code> → alias của cube shops</span></div>
+          <div><span class="x-n">4</span><b>Kiểm tra</b><span class="x-cap">Tên trùng, sai type, join tới cube không tồn tại → báo lỗi</span></div>
+          <div><span class="x-n">5</span><b>Giữ trong bộ nhớ</b><span class="x-cap">Dùng cho hai việc: trả <code>/v1/meta</code> (LLM đọc) và viết SQL</span></div>
+        </div>
+      </div>
+      <figcaption><b>Hình 3</b>Năm bước Cube đọc data model.</figcaption>
+    </figure>
+    <p>Bước 5 giải thích vì sao một file phục vụ được hai đối tượng. Endpoint /v1/meta trả danh sách member kèm title và description để LLM đọc; SQL compiler dùng <code>sql</code> và <code>type</code> của cùng member đó để viết câu truy vấn. Member khai báo public: false không xuất hiện trong /v1/meta nhưng vẫn được dùng bên trong Cube, ví dụ để phân quyền.</p>
+    <figure>
+      <div class="fig x-fig">
+        <div class="x-yaml">
+          <div class="x-ycode" id="x-ycode" role="list"></div>
+          <div class="x-yinfo" id="x-yinfo"></div>
+        </div>
+      </div>
+      <figcaption><b>Hình 4</b>File <code>model/cubes/orders.yml</code>. Chọn một dòng để xem ý nghĩa của dòng đó, cách Cube sử dụng và kết quả chuyển đổi tương ứng.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Title và description không ảnh hưởng SQL, nhưng quyết định LLM chọn đúng member và điền đúng giá trị filter, ví dụ “đã huỷ” thành <code>cancelled</code>.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">00.4</span>
+    <h2>Thực hành: Cube xử lý một query JSON</h2>
+    <p class="gist">Khi đã có query JSON, Cube tra YAML, viết SQL, chạy database và lưu kết quả. Phần này không có LLM.</p>
+    <p>Hình 5 bỏ qua LLM và bắt đầu từ query JSON do frontend gửi tới. Chọn các nút ở ô 1; ba ô còn lại thay đổi theo. Ô 2 tô màu những dòng YAML mà SQL compiler đang dùng. Ô 3 hiển thị bảng orders với 10 đơn của hai shop.</p>
+    <figure>
+      <div class="fig x-fig">
+        <div class="x-grid">
+          <div class="x-pan" id="x-p1">
+            <div class="x-ph"><span class="x-n">1</span>Frontend gửi query</div>
+            <div class="x-pick"><span class="x-lbl">Chỉ số (measure)</span>
+              <div class="x-opts" data-key="m"><button class="x-opt" data-opt="revenue">Doanh thu</button><button class="x-opt" data-opt="count">Số đơn</button></div></div>
+            <div class="x-pick"><span class="x-lbl">Chia theo (dimension)</span>
+              <div class="x-opts" data-key="d"><button class="x-opt" data-opt="city">Thành phố</button><button class="x-opt" data-opt="status">Trạng thái</button><button class="x-opt" data-opt="month">Tháng</button></div></div>
+            <div class="x-pick"><span class="x-lbl">Người hỏi (đăng nhập)</span>
+              <div class="x-opts" data-key="s"><button class="x-opt" data-opt="A">Nhân viên shop A</button><button class="x-opt" data-opt="B">Nhân viên shop B</button></div></div>
+            <span class="x-lbl">JSON gửi cho Cube</span>
+            <pre class="x-pre" id="x-q"></pre>
+          </div>
+          <div class="x-pan" id="x-p2">
+            <div class="x-ph"><span class="x-n">2</span>Cube tra YAML và viết SQL</div>
+            <span class="x-lbl">YAML (rút gọn), dòng đang dùng tô hồng</span>
+            <pre class="x-pre" id="x-model"></pre>
+            <span class="x-lbl">SQL do Cube sinh ra</span>
+            <pre class="x-pre" id="x-sql"></pre>
+            <p class="x-cap">Dòng tô xanh lục là điều kiện Cube <b>tự thêm</b> từ thông tin đăng nhập.</p>
+          </div>
+          <div class="x-pan" id="x-p3">
+            <div class="x-ph"><span class="x-n">3</span>Database chạy SQL</div>
+            <div id="x-dbwrap"><span class="x-lbl">Bảng orders (10 đơn)</span><div class="x-tbl"><table class="x-db" id="x-db"></table></div></div>
+            <div class="x-skip" id="x-skip" hidden>Không chạy database: câu này vừa được hỏi, Cube lấy kết quả đã lưu trong cache.</div>
+            <p class="x-cap" id="x-p3cap"></p>
+          </div>
+          <div class="x-pan" id="x-p4">
+            <div class="x-ph"><span class="x-n">4</span>Cube trả kết quả</div>
+            <div class="x-bars" id="x-bars"></div>
+            <span class="x-lbl">JSON trả về</span>
+            <pre class="x-pre" id="x-json"></pre>
+          </div>
+        </div>
+        <div class="x-pan">
+          <div class="x-ph">Cube lưu kết quả (cache)</div>
+          <p class="x-cap">Khi một câu hỏi đã gửi trước đó được gửi lại, Cube trả kết quả đã lưu mà không truy vấn database.</p>
+          <div class="x-log" id="x-log"></div>
+          <div><button class="x-btn" id="x-clear">Xoá cache</button></div>
+        </div>
+      </div>
+      <figcaption><b>Hình 5</b>Mô phỏng gồm bốn ô: query JSON → YAML và SQL → database → kết quả, kèm nhật ký cache.</figcaption>
+    </figure>
+    <p>Ô 3 cho thấy tác dụng của filter <code>shop_id</code>: các dòng gạch mờ thuộc shop còn lại bị loại trước khi tính, các dòng giữ lại được gom theo màu rồi tính trong từng nhóm. Nhật ký cache cho thấy khi cùng một câu hỏi được gửi lại, Cube trả kết quả đã lưu mà không chạy SQL. Theo đoạn code ở bước 6 của mục 00.2, trước khi dùng cache Cube so sánh refresh key đã lưu với refresh key hiện tại để xác định dữ liệu nguồn đã thay đổi hay chưa.</p>
+    <div class="take"><small>Ghi nhớ</small>Cùng query JSON và cùng người hỏi thì cùng một câu SQL. Cache chỉ bỏ qua bước chạy database, không làm thay đổi kết quả.</div>
+    <a class="next-ch" href="/blog/cube-handbook/01"><span><small>Chương tiếp theo</small><b>01 · Fundamentals</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// the 10 orders every figure in this chapter reads from
+const ORDERS = [
+  {id: 1, shop: 'A', date: '2026-09-03', city: 'Hà Nội', status: 'completed', amount: 500},
+  {id: 2, shop: 'A', date: '2026-09-08', city: 'HCM', status: 'completed', amount: 300},
+  {id: 3, shop: 'B', date: '2026-09-10', city: 'Hà Nội', status: 'completed', amount: 700},
+  {id: 4, shop: 'A', date: '2026-09-21', city: 'Hà Nội', status: 'cancelled', amount: 200},
+  {id: 5, shop: 'B', date: '2026-09-25', city: 'HCM', status: 'pending', amount: 250},
+  {id: 6, shop: 'A', date: '2026-10-02', city: 'HCM', status: 'completed', amount: 400},
+  {id: 7, shop: 'A', date: '2026-10-06', city: 'Hà Nội', status: 'pending', amount: 150},
+  {id: 8, shop: 'B', date: '2026-10-11', city: 'Hà Nội', status: 'completed', amount: 600},
+  {id: 9, shop: 'A', date: '2026-10-15', city: 'HCM', status: 'cancelled', amount: 100},
+  {id: 10, shop: 'A', date: '2026-10-19', city: 'Hà Nội', status: 'completed', amount: 350}];
+
+// ---- Hình 2: question → query, seven steps ----
+const META = `Cube: orders  (Đơn hàng — mỗi dòng là một đơn hàng)
+
+MEASURES (con số):
+- orders.revenue      "Doanh thu"  Tổng tiền đơn hàng (nghìn đồng)
+- orders.order_count  "Số đơn"     Đếm số đơn hàng
+
+DIMENSIONS (cách chia / lọc):
+- orders.city         "Thành phố"  string. Giá trị: Hà Nội, HCM
+- orders.status       "Trạng thái" string. Giá trị: completed (hoàn tất),
+                                   pending (đang xử lý), cancelled (đã huỷ)
+- orders.created_at   "Ngày đặt"   time`;
+
+const PROMPTS = [
+  {q: 'Doanh thu tháng 10 ở Hà Nội là bao nhiêu?',
+   spans: [['Doanh thu', 0], ['tháng 10', 1], ['ở Hà Nội', 2], ['bao nhiêu', 3]],
+   map: [['Doanh thu', 'measure', 'orders.revenue', 'Khớp với title “Doanh thu” trong danh sách.'],
+    ['tháng 10', 'time filter', 'created_at từ 2026-10-01 đến 2026-10-31', 'Câu hỏi không ghi năm, nhưng ngày hiện tại là 23/10/2026 nên hiểu là tháng 10/2026.'],
+    ['ở Hà Nội', 'filter', 'orders.city = Hà Nội', '“Hà Nội” nằm trong danh sách giá trị của dimension city.'],
+    ['bao nhiêu', '(cách trả lời)', 'không chia nhóm', 'Câu hỏi cần một con số tổng nên query không có dimensions.']],
+   json: `{
+  "measures": ["orders.revenue"],
+  "timeDimensions": [{
+    "dimension": "orders.created_at",
+    "dateRange": ["2026-10-01", "2026-10-31"]
+  }],
+  "filters": [{
+    "member": "orders.city",
+    "operator": "equals",
+    "values": ["Hà Nội"]
+  }]
+}`,
+   checks: ['orders.revenue: có trong model ✓', 'orders.created_at: có, kiểu time ✓', 'orders.city: có ✓'],
+   sql: `SELECT
+  sum("orders".amount) "orders__revenue"
+FROM public.orders AS "orders"
+WHERE ("orders".created_at >= '2026-10-01T00:00:00'
+   AND "orders".created_at <= '2026-10-31T23:59:59')
+  AND ("orders".city = 'Hà Nội')
+  <add>AND ("orders".shop_id = 'A')</add>      -- Cube thêm từ token`,
+   rows: `orders__revenue
+---------------
+500
+(1 row)        ← đơn #7 (150k) + đơn #10 (350k)`,
+   resp: `{ "data": [ { "orders.revenue": "500" } ] }`,
+   answer: 'Doanh thu tháng 10/2026 tại Hà Nội của shop A là <b>500.000đ</b>.',
+   rowsJs: `[ { orders__revenue: "500" } ]`,
+   params: `["2026-10-01T00:00:00.000", "2026-10-31T23:59:59.999", "Hà Nội", "A"]`},
+  {q: 'Thành phố nào có nhiều đơn nhất?',
+   spans: [['Thành phố nào', 0], ['nhiều đơn nhất', 1]],
+   map: [['Thành phố nào', 'dimension', 'orders.city', 'Cụm “nào” cho thấy cần chia nhóm theo thành phố.'],
+    ['nhiều đơn nhất', 'measure + sắp xếp', 'orders.order_count, giảm dần', '“đơn” khớp “Số đơn”; “nhất” nghĩa là sắp xếp từ lớn đến nhỏ.']],
+   json: `{
+  "measures": ["orders.order_count"],
+  "dimensions": ["orders.city"],
+  "order": { "orders.order_count": "desc" }
+}`,
+   checks: ['orders.order_count: có ✓', 'orders.city: có ✓', 'order theo một measure đã chọn ✓'],
+   sql: `SELECT
+  "orders".city "orders__city",
+  count(*) "orders__order_count"
+FROM public.orders AS "orders"
+<add>WHERE ("orders".shop_id = 'A')</add>      -- Cube thêm từ token
+GROUP BY 1
+ORDER BY 2 DESC`,
+   rows: `orders__city | orders__order_count
+-------------+--------------------
+Hà Nội       | 4
+HCM          | 3
+(2 rows)`,
+   resp: `{
+  "data": [
+    { "orders.city": "Hà Nội", "orders.order_count": "4" },
+    { "orders.city": "HCM",    "orders.order_count": "3" }
+  ]
+}`,
+   answer: '<b>Hà Nội</b> có nhiều đơn nhất với 4 đơn, tiếp theo là HCM với 3 đơn.',
+   rowsJs: `[
+  { orders__city: "Hà Nội", orders__order_count: "4" },
+  { orders__city: "HCM",    orders__order_count: "3" }
+]`,
+   params: `["A"]`},
+  {q: 'Tháng trước có bao nhiêu đơn bị huỷ?',
+   spans: [['Tháng trước', 0], ['bao nhiêu đơn', 1], ['bị huỷ', 2]],
+   map: [['Tháng trước', 'time filter', 'created_at từ 2026-09-01 đến 2026-09-30', 'Ngày hiện tại là 23/10/2026, nên tháng trước là tháng 9/2026.'],
+    ['bao nhiêu đơn', 'measure', 'orders.order_count', 'Khớp “Số đơn”.'],
+    ['bị huỷ', 'filter', 'orders.status = cancelled', 'Description liệt kê “cancelled (đã huỷ)”. Thiếu dòng này, LLM dễ đoán sai thành “canceled” hoặc “huỷ”.']],
+   json: `{
+  "measures": ["orders.order_count"],
+  "timeDimensions": [{
+    "dimension": "orders.created_at",
+    "dateRange": ["2026-09-01", "2026-09-30"]
+  }],
+  "filters": [{
+    "member": "orders.status",
+    "operator": "equals",
+    "values": ["cancelled"]
+  }]
+}`,
+   checks: ['orders.order_count: có ✓', 'orders.status: có ✓', 'orders.created_at: có, kiểu time ✓'],
+   sql: `SELECT
+  count(*) "orders__order_count"
+FROM public.orders AS "orders"
+WHERE ("orders".created_at >= '2026-09-01T00:00:00'
+   AND "orders".created_at <= '2026-09-30T23:59:59')
+  AND ("orders".status = 'cancelled')
+  <add>AND ("orders".shop_id = 'A')</add>      -- Cube thêm từ token`,
+   rows: `orders__order_count
+-------------------
+1
+(1 row)        ← đơn #4`,
+   resp: `{ "data": [ { "orders.order_count": "1" } ] }`,
+   answer: 'Trong tháng 9/2026, shop A có <b>1 đơn bị huỷ</b>.',
+   rowsJs: `[ { orders__order_count: "1" } ]`,
+   params: `["2026-09-01T00:00:00.000", "2026-09-30T23:59:59.999", "cancelled", "A"]`}];
+
+const META_RAW = `{
+  "cubes": [{
+    "name": "orders",
+    "title": "Đơn hàng",
+    "description": "Mỗi dòng là một đơn hàng",
+    "measures": [
+      { "name": "orders.revenue", "title": "Doanh thu",
+        "type": "number", "aggType": "sum",
+        "description": "Tổng tiền đơn hàng (nghìn đồng)" },
+      { "name": "orders.order_count", "title": "Số đơn",
+        "type": "number", "aggType": "count" }
+    ],
+    "dimensions": [
+      { "name": "orders.city", "title": "Thành phố", "type": "string",
+        "description": "Giá trị: Hà Nội, HCM" },
+      { "name": "orders.status", "title": "Trạng thái", "type": "string",
+        "description": "completed (hoàn tất), pending (đang xử lý), cancelled (đã huỷ)" },
+      { "name": "orders.created_at", "title": "Ngày đặt", "type": "time" }
+    ]
+  }]
+}
+// Không có orders.shop_id: YAML khai báo public: false nên bị ẩn`;
+
+const plain = s => s.replace(/<[^>]+>/g, '');
+function rewritten(p) {
+  const q = JSON.parse(p.json);
+  q.filters = q.filters || [];
+  q.filters.push({member: 'orders.shop_id', operator: 'equals', values: ['A']});
+  return JSON.stringify(q, null, 2);
+}
+
+// code that runs at each step, and what it outputs
+const CODE = [
+  {where: 'frontend · React',
+   code: p => `async function onSubmit(question) {
+  // gửi câu hỏi lên server ứng dụng
+  // (cookie đăng nhập đi kèm → server biết user thuộc shop A)
+  const res = await fetch("/api/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ question }),
+  });
+  const { answer, data } = await res.json();
+  setAnswer(answer);      // bước 7
+  setChartData(data);     // bước 6, nếu muốn vẽ chart
+}
+
+onSubmit(${JSON.stringify(p.q)});`,
+   outL: 'request gửi đi',
+   out: p => `POST /api/ask
+Cookie: session=…   (user: an@shopA, shop_id = "A")
+
+{ "question": ${JSON.stringify(p.q)} }`},
+  {where: 'server ứng dụng · Node.js',
+   code: () => `import jwt from "jsonwebtoken";
+import cubejs from "@cubejs-client/core";
+
+// tạo token cho Cube từ user đang đăng nhập
+const token = jwt.sign({ shop_id: user.shopId },
+                       process.env.CUBEJS_API_SECRET);
+const cube = cubejs(token, { apiUrl: process.env.CUBE_URL });
+
+// 1) hỏi Cube: "có những member nào?"
+//    → GET /cubejs-api/v1/meta  (Cube sinh từ YAML)
+const meta = await cube.meta();
+
+// 2) biến meta thành danh sách chữ cho LLM đọc
+const members = meta.cubes.flatMap(c => [
+  ...c.measures.map(m =>
+    \`- \${m.name} "\${m.title}" measure. \${m.description ?? ""}\`),
+  ...c.dimensions.map(d =>
+    \`- \${d.name} "\${d.title}" \${d.type}. \${d.description ?? ""}\`),
+]).join("\\n");
+
+// 3) ghép system prompt
+const system = \`Chuyển câu hỏi thành Cube query JSON.
+Chỉ dùng các member bên dưới. Hôm nay là \${today()}.
+Trả về đúng một object JSON, không giải thích.
+
+\${members}\`;`,
+   outL: 'meta Cube trả về (đầu vào của bước này)',
+   out: () => META_RAW},
+  {where: 'server ứng dụng · gọi LLM',
+   code: p => `import Anthropic from "@anthropic-ai/sdk";
+const llm = new Anthropic();   // đọc ANTHROPIC_API_KEY
+
+const res = await llm.messages.create({
+  model: "claude-sonnet-5-5",
+  max_tokens: 1024,
+  system,                                   // từ bước 2
+  messages: [{ role: "user", content: question }],
+});
+
+// LLM trả về chuỗi, parse thành object
+const query = JSON.parse(res.content[0].text);
+
+// question = ${JSON.stringify(p.q)}`,
+   outL: 'query (object JS)',
+   out: p => p.json},
+  {where: 'server ứng dụng + cube.js (bên trong Cube)',
+   code: () => `// ── server ứng dụng ──────────────────────────
+async function loadWithRetry(query, tries = 2) {
+  try {
+    // gửi query + token → GET /cubejs-api/v1/load
+    return await cube.load(query);
+  } catch (err) {
+    if (tries === 0) throw err;
+    // trả lỗi cho LLM để LLM chọn lại member
+    const fixed = await askLLM(
+      \`Query bị lỗi: \${err.message}. Hãy sửa JSON.\`);
+    return loadWithRetry(fixed, tries - 1);
+  }
+}
+const resultSet = await loadWithRetry(query);
+
+// ── cube.js (file cấu hình của Cube server) ─
+// Cube tự verify JWT bằng CUBEJS_API_SECRET,
+// payload → securityContext = { shop_id: "A" }
+module.exports = {
+  queryRewrite: (query, { securityContext }) => {
+    query.filters = query.filters ?? [];
+    query.filters.push({
+      member: "orders.shop_id",
+      operator: "equals",
+      values: [securityContext.shop_id],
+    });
+    return query;
+  },
+};`,
+   outL: 'query sau queryRewrite (bên trong Cube)',
+   out: p => rewritten(p) + `
+
+// Nếu LLM trả member không tồn tại, ví dụ orders.profit:
+// HTTP 400
+// { "type": "UserError", "error": "'profit' not found for path 'orders.profit'" }`},
+  {where: 'bên trong Cube · bản rút gọn để hiểu ý',
+   code: () => `// Cube compiler thật phức tạp hơn nhiều (join, timezone,
+// pre-aggregation…). Đây là ý chính: tra YAML rồi ghép chuỗi.
+function compile(query, model) {
+  const cube = model.orders;               // YAML đã parse
+  const t = '"orders"';
+  const select = [], where = [], params = [], groupBy = [];
+
+  // dimension → SELECT + GROUP BY
+  for (const name of query.dimensions ?? []) {
+    const d = cube.dimensions[name.split(".")[1]];   // city → { sql: "city" }
+    select.push(\`\${t}.\${d.sql} "\${name.replace(".", "__")}"\`);
+    groupBy.push(select.length);
+  }
+  // measure → hàm tổng hợp
+  for (const name of query.measures) {
+    const m = cube.measures[name.split(".")[1]];     // revenue → { sql, type: sum }
+    const expr = m.type === "count" ? "count(*)" : \`\${m.type}(\${t}.\${m.sql})\`;
+    select.push(\`\${expr} "\${name.replace(".", "__")}"\`);
+  }
+  // timeDimensions.dateRange → WHERE theo ngày
+  for (const td of query.timeDimensions ?? []) {
+    const col = \`\${t}.\${cube.dimensions.created_at.sql}\`;
+    params.push(td.dateRange[0] + "T00:00:00.000", td.dateRange[1] + "T23:59:59.999");
+    where.push(\`(\${col} >= $\${params.length - 1} AND \${col} <= $\${params.length})\`);
+  }
+  // filters → WHERE (gồm cả filter shop_id từ bước 4)
+  for (const f of query.filters ?? []) {
+    const d = cube.dimensions[f.member.split(".")[1]];
+    params.push(f.values[0]);
+    where.push(\`(\${t}.\${d.sql} = $\${params.length})\`);
+  }
+
+  let sql = \`SELECT \${select.join(", ")} FROM \${cube.sql_table} AS \${t}\`;
+  if (where.length)   sql += \` WHERE \${where.join(" AND ")}\`;
+  if (groupBy.length) sql += \` GROUP BY \${groupBy.join(", ")}\`;
+  return [sql, params];
+}`,
+   outL: 'SQL + params (xem bản thật bằng GET /cubejs-api/v1/sql)',
+   out: p => p.sql.replace(/<\/?add>/g, '') + `
+
+params: ${p.params}`},
+  {where: 'bên trong Cube · bản rút gọn',
+   code: () => `// Query Orchestrator (rút gọn)
+async function execute(sql, params) {
+  const key = hash(sql + JSON.stringify(params));
+
+  // còn cache và dữ liệu chưa đổi → trả kết quả đã lưu
+  const cached = await cache.get(key);
+  if (cached && cached.refreshKey === await getRefreshKey())
+    return cached.rows;
+
+  // chưa có → chạy DB qua hàng đợi
+  // (100 request cùng key chỉ chạy 1 lần)
+  const rows = await queue.run(key, () =>
+    driver.query(sql, params));   // Postgres: pg.query(sql, params)
+
+  await cache.set(key, { rows, refreshKey: await getRefreshKey() });
+  return rows;
+}
+
+// đổi alias "orders__revenue" → "orders.revenue", trả JSON
+res.json({
+  data: rows.map(r => renameKeys(r, k => k.replace("__", "."))),
+  annotation,
+});
+
+// ── về lại server ứng dụng ──
+const data = resultSet.tablePivot();`,
+   outL: 'rows từ driver → JSON từ Cube',
+   out: p => `// driver.query trả về:
+${p.rowsJs}
+
+// Cube trả cho server ứng dụng (/v1/load):
+${p.resp}`},
+  {where: 'server ứng dụng · gọi LLM lần 2',
+   code: () => `const reply = await llm.messages.create({
+  model: "claude-sonnet-5-5",
+  max_tokens: 300,
+  system: "Trả lời ngắn gọn bằng tiếng Việt. " +
+          "Chỉ dùng số liệu được cung cấp, không tự tính thêm. " +
+          "Tiền tính bằng nghìn đồng.",
+  messages: [{
+    role: "user",
+    content: \`Câu hỏi: \${question}
+Dữ liệu từ Cube: \${JSON.stringify(data)}\`,
+  }],
+});
+
+// trả về frontend (bước 1 nhận)
+res.json({ answer: reply.content[0].text, data });`,
+   outL: 'response trả về frontend',
+   out: p => JSON.stringify({answer: plain(p.answer), data: JSON.parse(p.resp).data}, null, 2)}];
+
+const FULL = `// server/ask.js — toàn bộ luồng, bước 2 → 7
+import jwt from "jsonwebtoken";
+import cubejs from "@cubejs-client/core";
+import Anthropic from "@anthropic-ai/sdk";
+
+const llm = new Anthropic();
+
+app.post("/api/ask", async (req, res) => {
+  const { question } = req.body;                       // bước 1 gửi lên
+  const user = req.user;                                // từ session đăng nhập
+
+  // ── Bước 2: lấy meta từ Cube, ghép prompt ──
+  const token = jwt.sign({ shop_id: user.shopId }, process.env.CUBEJS_API_SECRET);
+  const cube = cubejs(token, { apiUrl: process.env.CUBE_URL });
+  const meta = await cube.meta();
+  const members = meta.cubes.flatMap(c => [
+    ...c.measures.map(m => \`- \${m.name} "\${m.title}" measure. \${m.description ?? ""}\`),
+    ...c.dimensions.map(d => \`- \${d.name} "\${d.title}" \${d.type}. \${d.description ?? ""}\`),
+  ]).join("\\n");
+  const system = \`Chuyển câu hỏi thành Cube query JSON.
+Chỉ dùng các member bên dưới. Hôm nay là \${new Date().toISOString().slice(0, 10)}.
+Trả về đúng một object JSON, không giải thích.
+
+\${members}\`;
+
+  // ── Bước 3: LLM đổi câu hỏi → query JSON ──
+  const askLLM = async (content) => {
+    const r = await llm.messages.create({
+      model: "claude-sonnet-5-5", max_tokens: 1024, system,
+      messages: [{ role: "user", content }],
+    });
+    return JSON.parse(r.content[0].text);
+  };
+  let query = await askLLM(question);
+
+  // ── Bước 4–6: Cube kiểm tra, thêm quyền, viết SQL, chạy DB ──
+  let resultSet;
+  for (let tries = 0; ; tries++) {
+    try { resultSet = await cube.load(query); break; }
+    catch (err) {
+      if (tries === 2) return res.status(400).json({ error: err.message });
+      query = await askLLM(\`Câu hỏi: \${question}\\nQuery bị lỗi: \${err.message}. Hãy sửa JSON.\`);
+    }
+  }
+  const data = resultSet.tablePivot();
+
+  // ── Bước 7: LLM diễn đạt kết quả ──
+  const reply = await llm.messages.create({
+    model: "claude-sonnet-5-5", max_tokens: 300,
+    system: "Trả lời ngắn gọn bằng tiếng Việt. Chỉ dùng số liệu được cung cấp. Tiền tính bằng nghìn đồng.",
+    messages: [{ role: "user", content: \`Câu hỏi: \${question}\\nDữ liệu từ Cube: \${JSON.stringify(data)}\` }],
+  });
+
+  res.json({ answer: reply.content[0].text, data, query });
+});`;
+
+const G = ['var(--g1)', 'var(--g2)', 'var(--g3)', 'var(--g4)'];
+const STAGES = [
+  {who: 'user', whoL: 'Người dùng', t: 'Nhập câu hỏi'},
+  {who: 'app', whoL: 'Code ứng dụng', t: 'Gom ngữ cảnh'},
+  {who: 'llm', whoL: 'LLM', t: 'Hiểu câu hỏi'},
+  {who: 'cube', whoL: 'Cube', t: 'Kiểm tra + quyền'},
+  {who: 'cube', whoL: 'Cube', t: 'Viết SQL'},
+  {who: 'db', whoL: 'Database', t: 'Chạy SQL'},
+  {who: 'llm', whoL: 'LLM', t: 'Viết câu trả lời'}];
+let pi = 0, si = 0;
+
+function promptHtml(p) {
+  let html = esc(p.q);
+  p.spans.forEach(([txt, c]) => {html = html.replace(esc(txt), `<span class="x-ph1" style="background:color-mix(in srgb, ${G[c]} 22%, transparent);box-shadow:inset 0 -2px 0 ${G[c]}">${esc(txt)}</span>`)});
+  return html;
+}
+const sqlHl = s => esc(s).replace(/&lt;add&gt;/g, '<span class="x-add">').replace(/&lt;\/add&gt;/g, '</span>').replace(/(--[^\n]*)/g, '<span class="x-cm">$1</span>');
+function codeOut(p) {
+  const c = CODE[si];
+  return `<div class="x-co">
+    <div><span class="x-lbl">Code chạy ở bước này</span><span class="x-where">chạy ở: ${esc(c.where)}</span><pre class="x-pre">${esc(c.code(p))}</pre></div>
+    <div><span class="x-outl">→ Output</span><span class="x-where">${esc(c.outL)}</span><pre class="x-pre">${esc(c.out(p))}</pre></div></div>`;
+}
+function stageHtml() {
+  const p = PROMPTS[pi], s = STAGES[si];
+  let body = '';
+  if (si === 0) body = `<div class="x-prompt">${esc(p.q)}</div>
+    <div class="x-exp"><p>Người dùng nhập câu hỏi bằng ngôn ngữ tự nhiên. Cube <b>không hiểu được</b> câu này: Cube chỉ nhận JSON gồm measures, dimensions, filters. Cần một bước chuyển đổi ở giữa, và đó là nhiệm vụ của LLM.</p></div>`;
+  if (si === 1) body = `<div class="x-exp"><p>Trước khi gọi LLM, code ứng dụng (không phải LLM) gom ba thành phần vào một prompt:</p>
+    <ol><li><b>Danh sách member</b> lấy từ <code>GET /cubejs-api/v1/meta</code>. Cube sinh danh sách này từ file YAML (mục 00.3), gồm tên, title và description.</li><li><b>Ngày hiện tại</b>, để LLM hiểu các cụm như “tháng trước”, “tháng 10”.</li><li><b>Câu hỏi</b> của người dùng.</li></ol>
+    <p>LLM chỉ biết những gì có trong prompt này. Description trong YAML càng rõ thì LLM chọn member càng đúng.</p></div>
+    <span class="x-lbl">Prompt gửi cho LLM</span>
+    <pre class="x-pre">[SYSTEM]
+Chuyển câu hỏi thành Cube query JSON.
+Chỉ dùng các member bên dưới. Hôm nay là 2026-10-23.
+Trả về đúng một object JSON, không giải thích.
+
+${esc(META)}
+
+[USER]
+${esc(p.q)}</pre>`;
+  if (si === 2) body = `<div class="x-prompt">${promptHtml(p)}</div>
+    <div class="x-exp"><p>LLM đọc câu hỏi, tách thành từng cụm từ, sau đó tìm cho mỗi cụm member phù hợp nhất trong danh sách ở bước 2. LLM <b>không viết SQL</b>; LLM chỉ <b>chọn</b> tên có sẵn và điền giá trị cho filter.</p></div>
+    <div class="x-tbl"><table class="x-map"><thead><tr><th>Cụm từ</th><th>Loại</th><th>Chọn</th><th>Lý do</th></tr></thead><tbody>
+      ${p.map.map((m, i) => `<tr><td><span class="x-sw" style="background:${G[p.spans[i] ? p.spans[i][1] : 0]}"></span><b>${esc(m[0])}</b></td><td>${esc(m[1])}</td><td><code>${esc(m[2])}</code></td><td class="x-cap">${esc(m[3])}</td></tr>`).join('')}
+    </tbody></table></div>
+    <span class="x-lbl">LLM trả về (đầu ra duy nhất của LLM ở bước này)</span>
+    <pre class="x-pre">${esc(p.json)}</pre>`;
+  if (si === 3) body = `<div class="x-exp"><p>Từ bước này trở đi <b>không còn LLM</b>. Ứng dụng gửi JSON ở bước 3 tới Cube kèm token đăng nhập. Cube thực hiện hai việc:</p>
+    <ol><li><b>Kiểm tra</b> mọi member có tồn tại trong YAML hay không.</li><li><b>Thêm điều kiện phân quyền</b> từ token: người hỏi thuộc shop A nên Cube tự thêm <code>shop_id = 'A'</code>. LLM không biết và không cần biết điều kiện này, nên dù LLM chọn sai, dữ liệu của shop khác vẫn không bị lộ.</li></ol></div>
+    <div class="x-two">
+      <div><span class="x-lbl">Kiểm tra</span><pre class="x-pre">${p.checks.map(esc).join('\n')}\n\ntoken → { "shop_id": "A" }\n→ thêm filter orders.shop_id = 'A'</pre></div>
+      <div class="x-warn"><b>Nếu LLM bịa tên member</b>, ví dụ <code>orders.profit</code>, Cube trả lỗi dạng <code>'profit' not found for path 'orders.profit'</code>. Ứng dụng có thể gửi lỗi đó lại cho LLM để chọn lại. Đây là lợi thế lớn so với cách để LLM tự viết SQL: lỗi bị chặn ngay, không âm thầm sinh ra số sai.</div>
+    </div>`;
+  if (si === 4) body = `<div class="x-exp"><p>Cube tra từng member trong YAML để lấy đoạn SQL tương ứng, rồi ghép lại: measure thành <code>SUM</code>/<code>COUNT</code>, dimension thành <code>GROUP BY</code>, filter và timeDimension thành <code>WHERE</code>. Đây là code thông thường: cùng một JSON luôn cho ra cùng một câu SQL.</p></div>
+    <pre class="x-pre">${sqlHl(p.sql)}</pre>`;
+  if (si === 5) body = `<div class="x-exp"><p>Cube gửi SQL xuống database (Postgres, BigQuery…), nhận các dòng kết quả, đổi tên cột về tên member, rồi trả JSON cho ứng dụng. Nếu câu này vừa được hỏi, Cube lấy kết quả từ cache và không chạy database (xem mục 00.4).</p></div>
+    <div class="x-two"><div><span class="x-lbl">Database trả về</span><pre class="x-pre">${esc(p.rows)}</pre></div><div><span class="x-lbl">Cube trả cho ứng dụng</span><pre class="x-pre">${esc(p.resp)}</pre></div></div>`;
+  if (si === 6) body = `<div class="x-exp"><p>Bước này không bắt buộc: ứng dụng có thể chỉ vẽ biểu đồ từ JSON. Nếu cần trả lời bằng câu, ứng dụng gọi LLM lần thứ hai với câu hỏi gốc và JSON kết quả. LLM chỉ <b>diễn đạt</b> số liệu Cube cung cấp, không tự tính ra số mới.</p></div>
+    <div class="x-answer">${p.answer}</div>`;
+  return body + codeOut(p);
+}
+$('x-full').textContent = FULL;
+function renderB() {
+  $('x-prompts').innerHTML = PROMPTS.map((p, i) => `<button class="x-chip" data-i="${i}" aria-pressed="${i === pi}">${esc(p.q)}</button>`).join('');
+  $('x-stepper').innerHTML = STAGES.map((s, i) => `<li><button class="x-dot ${s.who}${i < si ? ' done' : ''}${i === si ? ' cur' : ''}" data-i="${i}" aria-current="${i === si ? 'step' : 'false'}" title="${esc(s.whoL)}: ${esc(s.t)}"><span class="x-n">${i + 1}</span><span class="x-dl">${esc(s.t)}</span></button></li>`).join('');
+  const s = STAGES[si];
+  $('x-cur').innerHTML = `<span class="x-who ${s.who}">${s.whoL}</span><span class="x-st-t">Bước ${si + 1}/${STAGES.length} · ${esc(s.t)}</span>`;
+  $('x-stage').innerHTML = stageHtml();
+  $('x-bprev').disabled = si === 0;
+  $('x-bnext').disabled = si === STAGES.length - 1;
+}
+$('x-prompts').addEventListener('click', e => {const b = e.target.closest('.x-chip'); if (!b) return; pi = +b.dataset.i; renderB()});
+$('x-stepper').addEventListener('click', e => {const b = e.target.closest('.x-dot'); if (!b) return; si = +b.dataset.i; renderB()});
+$('x-bprev').addEventListener('click', () => {si = Math.max(0, si - 1); renderB()});
+$('x-bnext').addEventListener('click', () => {si = Math.min(STAGES.length - 1, si + 1); renderB()});
+renderB();
+
+// ---- Hình 4: YAML explorer, each line is [text, block it belongs to] ----
+const YAML = [
+  ['# model/cubes/orders.yml', 'file'], ['cubes:', 'file'], ['  - name: orders', 'cube'], ['    sql_table: public.orders', 'table'],
+  ['    title: Đơn hàng', 'desc'], ['    description: Mỗi dòng là một đơn hàng', 'desc'], ['', null],
+  ['    joins:', 'join'], ['      - name: shops', 'join'], ['        sql: "{CUBE}.shop_id = {shops}.id"', 'join'], ['        relationship: many_to_one', 'join'], ['', null],
+  ['    measures:', 'measures'], ['      - name: revenue', 'm_rev'], ['        title: Doanh thu', 'm_rev'], ['        description: Tổng tiền đơn hàng (nghìn đồng)', 'm_rev'], ['        sql: amount', 'm_rev'], ['        type: sum', 'm_rev'],
+  ['      - name: order_count', 'm_cnt'], ['        title: Số đơn', 'm_cnt'], ['        type: count', 'm_cnt'], ['', null],
+  ['    dimensions:', 'dims'], ['      - name: id', 'd_id'], ['        sql: id', 'd_id'], ['        type: number', 'd_id'], ['        primary_key: true', 'd_id'],
+  ['      - name: city', 'd_city'], ['        title: Thành phố', 'd_city'], ['        description: "Giá trị: Hà Nội, HCM"', 'd_city'], ['        sql: city', 'd_city'], ['        type: string', 'd_city'],
+  ['      - name: status', 'd_status'], ['        title: Trạng thái', 'd_status'], ['        description: "completed (hoàn tất), pending (đang xử lý), cancelled (đã huỷ)"', 'd_status'], ['        sql: status', 'd_status'], ['        type: string', 'd_status'],
+  ['      - name: shop_id', 'd_shop'], ['        sql: shop_id', 'd_shop'], ['        type: string', 'd_shop'], ['        public: false', 'd_shop'],
+  ['      - name: created_at', 'd_time'], ['        title: Ngày đặt', 'd_time'], ['        sql: created_at', 'd_time'], ['        type: time', 'd_time']];
+const YINFO = {
+  file: {t: 'Vị trí file', what: 'Mọi file YAML đặt trong thư mục <code>model/</code> của project Cube. Một file có thể chứa một hoặc nhiều cube; thông thường mỗi bảng một file.', use: 'Cube quét thư mục này khi khởi động. Ở dev mode, mỗi khi file được lưu, Cube tự đọc lại.', becomes: 'Danh sách cube trong bộ nhớ.'},
+  cube: {t: 'name: orders', what: 'Tên của cube. Thường đặt theo tên bảng, nhưng có thể đặt khác.', use: 'Là phần đầu của mọi tên member: <code>orders.revenue</code>, <code>orders.city</code>. LLM và frontend gọi member theo tên này.', becomes: `Tiền tố "orders." và alias bảng trong SQL:\nFROM public.orders AS "orders"`},
+  table: {t: 'sql_table', what: 'Bảng thật trong database mà cube này đọc. Có thể thay bằng <code>sql: SELECT … </code> nếu cần lọc hoặc ghép bảng trước.', use: 'Đặt vào mệnh đề FROM.', becomes: `FROM public.orders AS "orders"`},
+  desc: {t: 'title / description', what: 'Tên hiển thị và mô tả bằng lời cho người (và LLM) đọc.', use: 'Không ảnh hưởng SQL. Hai trường này được trả ra ở <code>/v1/meta</code>, nên LLM đọc chúng ở bước 2 của mục 00.2 để hiểu cube chứa gì.', becomes: `Trong /v1/meta:\n{ "name": "orders", "title": "Đơn hàng",\n  "description": "Mỗi dòng là một đơn hàng" }`},
+  join: {t: 'joins', what: 'Khai báo cách cube này nối với cube <code>shops</code>. <code>{CUBE}</code> là cube hiện tại, <code>{shops}</code> là cube kia. <code>many_to_one</code>: nhiều đơn thuộc một shop.', use: 'Chỉ dùng khi query có member của cả hai cube, ví dụ “doanh thu theo tên shop”. Cube tự tìm đường join; người hỏi và LLM không cần viết JOIN.', becomes: `LEFT JOIN public.shops AS "shops"\n  ON "orders".shop_id = "shops".id`},
+  measures: {t: 'measures:', what: 'Danh sách <b>con số</b>: các đại lượng được cộng, đếm hoặc tính trung bình.', use: 'Mỗi measure trở thành một biểu thức tổng hợp trong SELECT.', becomes: 'SUM(...), COUNT(...), AVG(...)'},
+  m_rev: {t: 'measure: revenue', what: '<code>sql: amount</code> là cột cần tính, <code>type: sum</code> là cách tính. Title và description giúp người và LLM hiểu đây là “doanh thu”.', use: 'Khi query có <code>orders.revenue</code>, Cube ghép <code>type</code> và <code>sql</code>. LLM tìm thấy member này nhờ title “Doanh thu”.', becomes: `sum("orders".amount) "orders__revenue"`},
+  m_cnt: {t: 'measure: order_count', what: '<code>type: count</code> không cần <code>sql</code>: đếm số dòng.', use: 'Dùng cho câu hỏi dạng “bao nhiêu đơn”.', becomes: `count(*) "orders__order_count"`},
+  dims: {t: 'dimensions:', what: 'Danh sách <b>góc nhìn</b>: các cột dùng để chia nhóm hoặc lọc.', use: 'Dimension trong query trở thành SELECT + GROUP BY. Dimension trong filters trở thành WHERE.', becomes: 'GROUP BY …  /  WHERE …'},
+  d_id: {t: 'dimension: id (primary_key)', what: 'Khoá chính của bảng. Bắt buộc khi có join.', use: 'Cube dùng khoá chính để đếm đúng, tránh đếm trùng khi join (một đơn không bị nhân lên nhiều lần).', becomes: `count(distinct "orders".id) khi cần`},
+  d_city: {t: 'dimension: city', what: 'Cột <code>city</code>, kiểu chuỗi. Description liệt kê các giá trị có thể có.', use: 'Chia nhóm: <code>GROUP BY</code>. Lọc: <code>WHERE city = …</code>. Description giúp LLM viết đúng giá trị “Hà Nội” thay vì “Ha Noi”.', becomes: `SELECT "orders".city "orders__city" … GROUP BY 1\nhoặc\nWHERE "orders".city = 'Hà Nội'`},
+  d_status: {t: 'dimension: status', what: 'Giá trị trong database là tiếng Anh (cancelled), người dùng hỏi bằng tiếng Việt (bị huỷ).', use: 'Description là cầu nối: cho LLM biết “đã huỷ” tương ứng với <code>cancelled</code>. Thiếu dòng này, LLM có thể điền sai giá trị filter và nhận kết quả bằng 0.', becomes: `WHERE "orders".status = 'cancelled'`},
+  d_shop: {t: 'dimension: shop_id (public: false)', what: '<code>public: false</code>: ẩn khỏi <code>/v1/meta</code>. LLM và frontend không thấy member này.', use: 'Chỉ dùng nội bộ để phân quyền: <code>queryRewrite</code> trong <code>cube.js</code> tự thêm filter theo shop của người đăng nhập.', becomes: `AND ("orders".shop_id = 'A')   -- tự thêm`},
+  d_time: {t: 'dimension: created_at (type: time)', what: 'Kiểu <code>time</code> cho phép hỏi theo khoảng ngày và theo ngày, tuần, tháng, năm.', use: '<code>dateRange</code> trở thành điều kiện WHERE theo ngày; <code>granularity: month</code> trở thành <code>date_trunc</code>.', becomes: `WHERE "orders".created_at >= '2026-10-01' …\ndate_trunc('month', "orders".created_at)`}};
+let ysel = 'm_rev';
+function renderC() {
+  $('x-ycode').innerHTML = YAML.map(([txt, b]) => b === null ? '<span class="x-yl" role="listitem"> </span>'
+    : `<button class="x-yl${b === ysel ? ' sel' : ''}" data-b="${b}" role="listitem">${esc(txt) || ' '}</button>`).join('');
+  const y = YINFO[ysel];
+  $('x-yinfo').innerHTML = `<span class="x-st-t">${y.t}</span><dl>
+    <div><dt>Nghĩa là</dt><dd>${y.what}</dd></div>
+    <div><dt>Cube dùng nó để</dt><dd>${y.use}</dd></div>
+    <div><dt>Biến thành</dt><dd><pre class="x-pre">${esc(y.becomes)}</pre></dd></div></dl>`;
+}
+$('x-ycode').addEventListener('click', e => {const b = e.target.closest('[data-b]'); if (!b) return; ysel = b.dataset.b; renderC()});
+renderC();
+
+// ---- Hình 5: playground, no LLM ----
+const M = {
+  revenue: {label: 'Doanh thu', member: 'orders.revenue', sql: 'SUM(amount)', line: 'revenue:     SUM(amount)', calc: rs => rs.reduce((a, r) => a + r.amount, 0), fmt: v => v.toLocaleString('vi-VN') + 'k'},
+  count: {label: 'Số đơn', member: 'orders.order_count', sql: 'COUNT(*)', line: 'order_count: COUNT(*)', calc: rs => rs.length, fmt: v => v + ' đơn'}};
+const D = {
+  city: {label: 'Thành phố', member: 'orders.city', sql: 'city', line: 'city:        city', key: r => r.city},
+  status: {label: 'Trạng thái', member: 'orders.status', sql: 'status', line: 'status:      status', key: r => r.status},
+  month: {label: 'Tháng', member: 'orders.created_at', sql: "date_trunc('month', created_at)", line: 'created_at:  created_at  # time', key: r => r.date.slice(0, 7)}};
+let st = {m: 'revenue', d: 'city', s: 'A'};
+const cache = new Map(), log = [];
+const pans = ['x-p1', 'x-p2', 'x-p3', 'x-p4'].map($), optGroups = $('x-p1').querySelectorAll('.x-opts');
+
+function queryText() {
+  const m = M[st.m], d = D[st.d];
+  const dimPart = st.d === 'month' ? `  "timeDimensions": [{\n    "dimension": "orders.created_at",\n    "granularity": "month"\n  }]` : `  "dimensions": ["${d.member}"]`;
+  return `{\n  "measures": ["${m.member}"],\n${dimPart}\n}\n\n// kèm token: { "shop_id": "${st.s}" }`;
+}
+function modelHtml() {
+  const L = (on, txt) => on ? `<span class="x-hl">${esc(txt)}</span>` : esc(txt);
+  return ['cube: orders', '  measures:', '    ' + L(st.m === 'revenue', M.revenue.line), '    ' + L(st.m === 'count', M.count.line),
+    '  dimensions:', '    ' + L(st.d === 'city', D.city.line), '    ' + L(st.d === 'status', D.status.line), '    ' + L(st.d === 'month', D.month.line)].join('\n');
+}
+function sqlHtml() {
+  const m = M[st.m], d = D[st.d];
+  return ['SELECT', `  <span class="x-hl">${esc(d.sql)}</span>  AS "${st.d}",`, `  <span class="x-hl">${esc(m.sql)}</span>  AS "${st.m}"`, 'FROM orders',
+    `<span class="x-add">WHERE shop_id = '${st.s}'</span>   <span class="x-cm">-- tự thêm từ token</span>`, 'GROUP BY 1', 'ORDER BY 1'].join('\n');
+}
+function groups() {
+  const map = new Map();
+  ORDERS.filter(r => r.shop === st.s).forEach(r => {const k = D[st.d].key(r); if (!map.has(k)) map.set(k, []); map.get(k).push(r)});
+  return [...map.keys()].sort().map((k, i) => ({k, rows: map.get(k), v: M[st.m].calc(map.get(k)), color: G[i % G.length]}));
+}
+function renderDb(gs) {
+  const colorOf = new Map(); gs.forEach(g => g.rows.forEach(r => colorOf.set(r.id, g.color)));
+  const dimCol = st.d === 'month' ? 'date' : st.d;
+  const head = '<tr><th>shop_id</th><th>created_at</th><th>city</th><th>status</th><th class="x-num">amount</th><th></th></tr>';
+  const body = ORDERS.map(r => {
+    const inn = r.shop === st.s;
+    const cell = (col, txt, cls = '') => `<td class="${cls}">${inn && col === dimCol ? `<span class="x-sw" style="background:${colorOf.get(r.id)}"></span>` : ''}${txt}</td>`;
+    return `<tr class="${inn ? '' : 'x-out'}">` + cell('shop', r.shop) + cell('date', r.date) + cell('city', r.city) + cell('status', r.status) +
+      cell('amount', r.amount.toLocaleString('vi-VN') + 'k', 'x-num') + `<td class="x-note">${inn ? '' : 'bị loại'}</td></tr>`;
+  }).join('');
+  $('x-db').innerHTML = `<thead>${head}</thead><tbody>${body}</tbody>`;
+}
+function renderD() {
+  optGroups.forEach(g => g.querySelectorAll('.x-opt').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.opt === st[g.dataset.key]))));
+  $('x-q').textContent = queryText();
+  $('x-model').innerHTML = modelHtml();
+  $('x-sql').innerHTML = sqlHtml();
+  const key = JSON.stringify(st), hit = cache.has(key), gs = groups();
+  renderDb(gs);
+  $('x-dbwrap').hidden = hit; $('x-skip').hidden = !hit;
+  const other = st.s === 'A' ? 'B' : 'A';
+  $('x-p3cap').innerHTML = hit ? 'Kết quả giống lần trước và không cần chạy lại SQL.'
+    : `Dòng gạch mờ là đơn của <b>shop ${other}</b>, bị loại bởi <code>WHERE shop_id = '${st.s}'</code>. Các dòng còn lại được gom theo màu, rồi tính ${M[st.m].sql} trong từng nhóm.`;
+  const max = Math.max(...gs.map(g => g.v), 1);
+  $('x-bars').innerHTML = gs.map(g => `<div class="x-bar"><span><span class="x-sw" style="background:${g.color}"></span>${esc(g.k)}</span><span class="x-track"><span class="x-fill" style="width:${(g.v / max * 100).toFixed(1)}%;background:${g.color}"></span></span><span class="x-v">${M[st.m].fmt(g.v)}</span></div>`).join('');
+  const dimName = st.d === 'month' ? 'orders.created_at.month' : D[st.d].member;
+  $('x-json').textContent = JSON.stringify({data: gs.map(g => ({[dimName]: g.k, [M[st.m].member]: String(g.v)}))}, null, 2);
+  log.unshift({txt: `${M[st.m].label} theo ${D[st.d].label.toLowerCase()} · shop ${st.s}`, hit}); if (log.length > 6) log.pop();
+  cache.set(key, true);
+  $('x-log').innerHTML = log.map((l, i) => `<div class="x-logrow"><span class="x-tag ${l.hit ? 'hit' : 'miss'}">${l.hit ? 'CÓ SẴN' : 'CHẠY DB'}</span><span>${esc(l.txt)}</span>${i === 0 ? '<span class="x-cap">(vừa hỏi)</span>' : ''}</div>`).join('');
+  animate(hit);
+}
+// light up the four panels in order; on a cache hit the last two go faster
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let timers = [];
+function animate(hit) {
+  timers.forEach(clearTimeout); timers = [];
+  pans.forEach(x => x.classList.remove('active'));
+  if (reduce) return;
+  pans.forEach((p, i) => timers.push(setTimeout(() => pans.forEach(x => x.classList.toggle('active', x === p)), i * (hit && i >= 2 ? 250 : 550))));
+  timers.push(setTimeout(() => pans.forEach(x => x.classList.remove('active')), 2600));
+}
+optGroups.forEach(g => g.addEventListener('click', e => {const b = e.target.closest('.x-opt'); if (!b) return; st = {...st, [g.dataset.key]: b.dataset.opt}; renderD()}));
+$('x-clear').addEventListener('click', () => {cache.clear(); log.length = 0; $('x-log').innerHTML = '<p class="x-cap">Đã xoá cache. Câu hỏi tiếp theo sẽ chạy SQL trên database.</p>'});
+renderD();
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'ch00', minutes: 15,
+ next: {href: '/blog/cube-handbook/01', n: '01', t: 'Fundamentals'},
+ sections: [
+  {id: 's1', n: '00.1', t: 'LLM tham gia ở bước nào', sum: ['Chuỗi xử lý: người dùng → LLM → Cube → database → LLM.', 'LLM chỉ hiểu câu hỏi và diễn đạt câu trả lời; LLM không viết SQL.', 'Cube bản open source không chứa LLM; LLM nằm ở ứng dụng phía trước hoặc trong Cube Cloud.'], terms: ['llm', 'qjson', 'member']},
+  {id: 's2', n: '00.2', t: 'Một câu hỏi qua bảy bước', sum: ['Ứng dụng ghép danh sách member từ /v1/meta, ngày hiện tại và câu hỏi thành prompt.', 'LLM chọn member và trả về query JSON.', 'Cube kiểm tra member, thêm filter shop_id qua queryRewrite, viết SQL và chạy database.', 'LLM diễn đạt kết quả thành câu (tuỳ chọn).'], terms: ['meta', 'qjson', 'secctx', 'rewrite', 'compiler']},
+  {id: 's3', n: '00.3', t: 'File YAML là từ điển', sum: ['Data model nối tên dễ hiểu với cột thật trong database.', 'Cube đọc YAML qua năm bước và giữ kết quả trong bộ nhớ.', 'Title và description phục vụ LLM qua /v1/meta; sql và type phục vụ SQL compiler.', 'public: false ẩn member khỏi /v1/meta nhưng vẫn dùng được để phân quyền.'], terms: ['datamodel', 'semantic', 'measure', 'dimension', 'hidden']},
+  {id: 's4', n: '00.4', t: 'Thực hành: Cube xử lý một query JSON', sum: ['Từ query JSON, Cube tra YAML, viết SQL, chạy database, trả kết quả.', 'Filter shop_id loại các đơn của shop khác trước khi tính.', 'Câu hỏi lặp lại được trả từ cache khi refresh key chưa đổi.'], terms: ['qjson', 'compiler', 'cache', 'refresh']}],
+ terms: {
+  llm: ['LLM', 'Large Language Model: mô hình ngôn ngữ lớn sinh văn bản từ prompt. Trong luồng của chương này, LLM chuyển câu hỏi tự nhiên thành query JSON và diễn đạt kết quả thành câu trả lời; LLM không viết SQL.', 'Người phiên dịch ở quầy: nghe câu hỏi tiếng Việt, điền vào mẫu phiếu có sẵn, rồi đọc lại kết quả cho người hỏi. Người phiên dịch không vào kho lấy hàng.'],
+  semantic: ['semantic layer', 'Tầng trung gian giữa database và các ứng dụng, ánh xạ bảng và cột thành khái niệm kinh doanh (measures, dimensions) và giữ định nghĩa chỉ số tập trung tại một nơi.', 'Cuốn từ điển chung: “doanh thu” được định nghĩa một lần, ai tra cũng nhận cùng một nghĩa.'],
+  datamodel: ['data model', 'Tập file YAML hoặc JavaScript trong thư mục model/ khai báo cubes, measures, dimensions, joins; Cube đọc và kiểm tra các file này khi khởi động.', 'Bản từ điển do developer viết tay, nối tên dễ hiểu như “Doanh thu” với cột thật amount trong database.'],
+  member: ['member', 'Tên đầy đủ của một measure hoặc dimension theo dạng cube.tên, ví dụ orders.revenue. Query JSON tham chiếu dữ liệu thông qua các member.', 'Một món trong thực đơn: khi gọi món phải ghi đúng tên trong thực đơn, không tự đặt tên mới.'],
+  measure: ['measure', 'Trường định lượng được tính bằng hàm tổng hợp như sum hay count trên dữ liệu nguồn.', 'Con số cần đo: tổng tiền, số đơn.'],
+  dimension: ['dimension', 'Thuộc tính dùng để nhóm (GROUP BY) hoặc lọc (WHERE); có các kiểu như string, number, time.', 'Góc nhìn để chia con số: theo thành phố, theo trạng thái, theo tháng.'],
+  qjson: ['query JSON', 'Đối tượng JSON mô tả truy vấn bằng member: measures, dimensions, timeDimensions, filters, order. Ứng dụng gửi đối tượng này tới REST API của Cube (/v1/load).', 'Phiếu yêu cầu có sẵn các ô: cần số gì, chia theo gì, lọc theo điều kiện nào.'],
+  meta: ['/v1/meta', 'Endpoint của REST API trả danh sách cubes và members kèm title, description, type, sinh ra từ data model. Member khai báo public: false không có trong kết quả.', 'Tờ thực đơn Cube đưa cho LLM: chỉ ghi những món được phép gọi.'],
+  hidden: ['public: false', 'Thuộc tính ẩn một member khỏi /v1/meta, nên LLM và frontend không thấy member đó. Member vẫn tồn tại trong data model và được dùng nội bộ, ví dụ trong queryRewrite.', 'Món có trong bếp nhưng không in trên thực đơn: khách không gọi được, đầu bếp vẫn dùng.'],
+  secctx: ['securityContext', 'Đối tượng chứa thông tin về người gọi, lấy từ payload của JWT sau khi Cube xác thực token bằng CUBEJS_API_SECRET; ví dụ { shop_id: "A" }.', 'Thẻ nhân viên đi kèm mỗi yêu cầu, cho Cube biết người hỏi thuộc shop nào.'],
+  rewrite: ['queryRewrite', 'Hàm cấu hình trong cube.js nhận query và securityContext, trả về query đã sửa. Hàm này thường dùng để thêm filter phân quyền trước khi Cube sinh SQL.', 'Người kiểm duyệt phiếu: đóng thêm dấu “chỉ shop A” lên mọi phiếu của nhân viên shop A trước khi chuyển xuống kho.'],
+  compiler: ['SQL compiler', 'Thành phần của Cube tra từng member trong data model và ghép thành câu SQL: measure thành hàm tổng hợp, dimension thành GROUP BY, filter thành WHERE. Cùng một query của cùng một người hỏi luôn cho cùng một câu SQL.', 'Thợ ghép câu theo khuôn: cùng một phiếu yêu cầu thì luôn ra cùng một câu SQL.'],
+  cache: ['cache', 'Bộ nhớ lưu kết quả theo khoá băm của SQL và params. Khi khoá trùng và refresh key chưa đổi, Cube trả kết quả đã lưu mà không truy vấn database.', 'Sổ ghi lại các câu trả lời vừa tra: câu hỏi cũ được trả lời lập tức, không cần xuống kho lần nữa.'],
+  refresh: ['refresh key', 'Giá trị Cube dùng để biết dữ liệu nguồn đã thay đổi hay chưa. Kết quả trong cache chỉ được dùng khi refresh key lúc lưu trùng với refresh key hiện tại.', 'Dấu ngày trên tờ ghi chú: khi dữ liệu đã đổi, ghi chú cũ hết hiệu lực.']},
+ alias: {llm: ['LLM'], semantic: ['semantic layer'], datamodel: ['data model'], member: ['member'], measure: ['measures', 'measure'], dimension: ['dimensions', 'dimension'],
+  qjson: ['query JSON'], meta: ['/v1/meta'], hidden: ['public: false'], secctx: ['securityContext'], rewrite: ['queryRewrite'], compiler: ['SQL compiler'], cache: ['cache'], refresh: ['refresh key']},
+ rel: {llm: ['qjson', 'meta'], semantic: ['datamodel', 'member'], datamodel: ['semantic', 'member', 'hidden'], member: ['measure', 'dimension', 'meta'], measure: ['dimension', 'member'], dimension: ['measure', 'member'],
+  qjson: ['member', 'compiler'], meta: ['member', 'hidden', 'llm'], hidden: ['meta', 'rewrite'], secctx: ['rewrite'], rewrite: ['secctx', 'hidden'], compiler: ['qjson', 'datamodel'], cache: ['refresh'], refresh: ['cache']},
+ quiz: [
+  {id: 'ch00_q1', s: 0, type: 'one', q: 'Trong chuỗi xử lý ở Hình 1, thành phần nào viết câu SQL chạy trên database?', o: ['LLM, dựa trên câu hỏi tiếng Việt', 'Cube, từ query JSON và file YAML', 'Frontend, trước khi gửi request', 'Database, tự sinh SQL từ JSON'], a: 1,
+   ex: 'LLM chỉ chọn member và trả về query JSON. Cube tra YAML và viết SQL bằng code tất định.',
+   why: {0: 'LLM không viết SQL; LLM chỉ chọn tên member có sẵn và điền giá trị filter.', 2: 'Frontend chỉ gửi câu hỏi hoặc query JSON.', 3: 'Database chỉ chạy câu SQL mà Cube gửi xuống.'}},
+  {id: 'ch00_q2', s: 0, type: 'multi', q: 'LLM đảm nhận những việc nào trong chuỗi xử lý?', o: ['Hiểu câu hỏi và chuyển thành query JSON', 'Thêm điều kiện phân quyền shop_id', 'Diễn đạt số liệu thành câu trả lời (tuỳ chọn)', 'Chạy SQL trên database'], a: [0, 2],
+   ex: 'LLM chỉ đứng ở hai đầu: hiểu câu hỏi và diễn đạt câu trả lời.',
+   why: {1: 'Cube thêm điều kiện này từ token đăng nhập thông qua queryRewrite.', 3: 'Database chạy SQL; LLM không tham gia bước này.'}},
+  {id: 'ch00_q3', s: 1, type: 'one', q: 'Điều kiện shop_id = \'A\' trong câu SQL ở bước 5 đến từ đâu?', o: ['LLM tự thêm vì đọc được rằng người hỏi thuộc shop A', 'Token đăng nhập: Cube đưa payload vào securityContext, queryRewrite thêm filter', 'Người dùng ghi rõ tên shop trong câu hỏi', 'File YAML cố định giá trị A cho mọi truy vấn'], a: 1,
+   ex: 'Server ứng dụng ký token với shop_id của người dùng; Cube xác thực token, đưa payload vào securityContext, và queryRewrite thêm filter shop_id.',
+   why: {0: 'LLM không thấy shop_id: member này khai báo public: false nên không có trong /v1/meta.', 2: 'Cả ba câu hỏi mẫu đều không nhắc tới shop.', 3: 'YAML chỉ khai báo dimension shop_id; giá trị lấy từ token của từng người hỏi.'}},
+  {id: 'ch00_q4', s: 1, type: 'one', q: 'LLM trả về một member không tồn tại, ví dụ orders.profit. Điều gì xảy ra?', o: ['Cube vẫn chạy và trả về 0', 'Cube trả lỗi; ứng dụng có thể gửi lỗi đó lại cho LLM để chọn lại', 'Database tự tạo cột profit', 'Cube tự thay bằng orders.revenue'], a: 1,
+   ex: 'Cube kiểm tra mọi member trước khi viết SQL. Lỗi bị chặn ngay thay vì âm thầm sinh ra số sai.',
+   why: {0: 'Cube không chạy query có member không tồn tại; Cube trả HTTP 400.', 2: 'Database không nhận được câu SQL nào trong trường hợp này.', 3: 'Cube không tự đoán member thay thế.'}},
+  {id: 'ch00_q5', s: 2, type: 'one', q: 'Vì sao description của dimension status cần liệt kê “cancelled (đã huỷ)”?', o: ['Để Cube sinh SQL nhanh hơn', 'Để LLM chuyển “bị huỷ” thành đúng giá trị cancelled trong filter', 'Để database tạo index cho cột status', 'Để ẩn status khỏi /v1/meta'], a: 1,
+   ex: 'Description được trả ra ở /v1/meta và đưa vào prompt. Thiếu dòng này, LLM có thể điền sai giá trị filter và nhận kết quả bằng 0.',
+   why: {0: 'Description không ảnh hưởng SQL.', 2: 'Description không tác động tới database.', 3: 'Ẩn member dùng public: false, không dùng description.'}},
+  {id: 'ch00_q6', s: 2, type: 'one', q: 'Khai báo public: false trên dimension shop_id có tác dụng gì?', o: ['Xoá cột shop_id khỏi database', 'Ẩn member khỏi /v1/meta; queryRewrite vẫn dùng được member này để phân quyền', 'Cho phép LLM đọc shop_id để tự lọc', 'Bỏ qua filter shop_id khi viết SQL'], a: 1,
+   ex: 'LLM và frontend không thấy shop_id, nhưng Cube vẫn dùng member này để thêm điều kiện phân quyền.',
+   why: {0: 'YAML không thay đổi dữ liệu trong database.', 2: 'Ngược lại: member bị ẩn khỏi LLM.', 3: 'Filter shop_id vẫn xuất hiện trong SQL, như dòng tô xanh lục ở Hình 5.'}},
+  {id: 'ch00_q7', s: 3, type: 'one', q: 'Một câu hỏi giống hệt vừa được gửi lại và refresh key chưa đổi. Cube làm gì?', o: ['Chạy lại SQL trên database', 'Trả kết quả đã lưu trong cache, không chạy database', 'Gọi LLM để kiểm tra lại kết quả', 'Trả lỗi vì câu hỏi bị trùng'], a: 1,
+   ex: 'Cùng SQL và params cho cùng khoá cache; khi refresh key chưa đổi, Cube trả kết quả đã lưu.',
+   why: {0: 'Đây là trường hợp cache miss hoặc dữ liệu đã thay đổi.', 2: 'Cube không gọi LLM ở bước nào.', 3: 'Câu hỏi trùng là trường hợp bình thường; cache tồn tại để phục vụ trường hợp này.'}},
+  {id: 'ch00_q8', s: 3, type: 'one', q: 'Ở Hình 5, nhân viên shop B chọn “Số đơn” chia theo “Thành phố”. Kết quả là gì?', o: ['Hà Nội 6 đơn, HCM 4 đơn', 'Hà Nội 2 đơn, HCM 1 đơn', 'Hà Nội 4 đơn, HCM 3 đơn', 'Database trả lỗi vì thiếu quyền'], a: 1,
+   ex: 'WHERE shop_id = \'B\' giữ lại đơn #3, #5, #8: Hà Nội có #3 và #8, HCM có #5.',
+   why: {0: 'Đây là kết quả khi đếm cả 10 đơn, tức là bỏ qua filter shop_id.', 2: 'Đây là kết quả của shop A.', 3: 'Shop B có quyền với dữ liệu của shop B; filter chỉ loại các đơn của shop A.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -88,7 +88,7 @@ export const Toolbar = () => {
               <TooltipTrigger asChild>
                 <Link
                   target="_blank"
-                  href="https://www.linkedin.com/in/koitran1403/"
+                  href="https://www.linkedin.com/in/koitran14/"
                 >
                   <Button
                     size="icon"
@@ -133,7 +133,8 @@ export const Toolbar = () => {
               isExpanded && "md:scale-0 md:w-0"
             )}
           >
-            <Button size="icon" variant="ghost" className="rounded-full p-1">
+            {/* collapsed stand-in for the social links: clicking reveals them */}
+            <Button size="icon" variant="ghost" className="rounded-full p-1" aria-label="Show social links" onClick={handleMouseEnter}>
               <Contact strokeWidth={2} className="w-5 h-5" />
             </Button>
           </div>

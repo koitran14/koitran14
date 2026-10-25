@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Engineering Deep Dives · Cube.dev Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* figures used only in this chapter */
+.figbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;color:var(--muted)}
+.rows{display:grid;gap:10px;margin-top:4px}
+.rows div{display:grid;grid-template-columns:110px 1fr;gap:12px;font-size:15px}
+.rows div b{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.rows div.fix b{color:var(--acc)}
+.rows div.bad b{color:var(--bad)}
+.yx{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start}
+.yx .panel{margin:0;position:sticky;top:90px}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.cmp div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.55}
+.cmp div b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cmp div:first-child{border-color:var(--acc)}.cmp div:first-child b{color:var(--acc)}
+/* Hình 1: where a member shows up */
+.surf{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.surf div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:13px;color:var(--muted);transition:opacity .3s,border-color .3s}
+.surf div b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg);margin-bottom:6px}
+.surf div.off{opacity:.4;border-style:dashed}
+.surf div.lock{border-color:var(--acc)}
+/* Hình 2: one bar per time bucket */
+.bars{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:24px;border-bottom:1px solid var(--line)}
+.bars div{flex:1;position:relative;background:var(--acc);border-radius:4px 4px 0 0;opacity:.85;transition:height .3s}
+.bars div span{position:absolute;top:-20px;left:0;right:0;text-align:center;font:500 11px var(--mono);color:var(--fg)}
+.blab{display:flex;gap:6px;margin-top:6px}.blab span{flex:1;text-align:center;font:400 10px var(--mono);color:var(--muted)}
+/* small data tables inside figures */
+.jt{width:100%;border-collapse:collapse;font:13px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.jt th,.jt td{padding:7px 10px;border-top:1px solid var(--line);text-align:left}
+.jt th{font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-top:0}
+.jt tr.dup td{color:var(--bad)}
+.jt tr.out td{color:var(--muted);text-decoration:line-through;opacity:.6}
+.jt td.n{text-align:right}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;font-size:14px;color:var(--muted)}
+.total b{font:400 30px var(--serif);color:var(--fg)}
+.total b.bad{color:var(--bad)}
+/* Hình 9: request flow */
+.flow{display:grid;gap:8px}
+.flow div{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:start;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.flow div b{font:500 11px/1.9 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.flow div code{white-space:pre-wrap;word-break:break-word}
+.flow div.warn{border-color:var(--bad)}.flow div.warn b{color:var(--bad)}
+/* Hình 11: range bars on a 0 to 100 axis */
+.rng{display:grid;gap:14px}
+.rng div{display:grid;grid-template-columns:130px 1fr;gap:12px;align-items:center;font-size:13px;cursor:pointer}
+.rng div i{position:relative;height:22px;background:var(--bg);border:1px solid var(--line);border-radius:6px}
+.rng div i:after{content:"";position:absolute;top:3px;bottom:3px;left:var(--a);width:calc(var(--b) - var(--a));background:var(--muted);border-radius:3px;opacity:.5;transition:.3s}
+.rng div.on i:after{background:var(--acc);opacity:1}
+.rng div.on span{color:var(--fg)}
+.axis{display:flex;justify-content:space-between;margin-left:142px;font:400 10px var(--mono);color:var(--muted)}
+@media(max-width:700px){.yx,.cmp,.surf{grid-template-columns:1fr}.flow div,.rng div{grid-template-columns:1fr}.axis{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 04 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 04</div>
+  <h1>Engineering <i>Deep Dives</i></h1>
+  <p class="dek">Mười chủ đề kỹ thuật bên trong Cube: đặt tên model, chọn relationship cho join, context variables, cache, phân quyền, multi-tenancy và một benchmark về AI Agent.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 04 / 07</span><span>24 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Phần lớn lỗi số liệu bắt nguồn từ model khai báo sai, không phải từ data warehouse. Các mục dưới đây phân tích những điểm dễ sai nhất và cơ chế Cube cung cấp để tránh chúng.</div>
+
+  <section id="s1">
+    <span class="num">04.1</span>
+    <h2>Data Modeling</h2>
+    <p class="gist">Ba quy ước từ v0.33 giúp model gọn, dễ đọc với cả người lẫn AI Agent.</p>
+    <ul>
+      <li>Tách thư mục: <code>model/cubes</code> chứa cube thô, <code>model/views</code> chứa data mart cho các ứng dụng tiêu thụ.</li>
+      <li>Mọi tên cube, view, measure, dimension dùng snake_case.</li>
+      <li>Kiểm soát hiển thị bằng tham số public, đặt được trên cube, view, measure và dimension. Mặc định là <code>public: true</code>.</li>
+    </ul>
+    <p>Khi đặt <code>public: false</code> cho một cube thô, cube đó không còn xuất hiện trong các API công khai nhưng vẫn hiển thị trong Developer Playground với biểu tượng khóa. Chọn từng giá trị bên dưới để so sánh.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><code>cubes: - name: internal_orders</code><div class="seg" id="pub"><button data-pv="1" class="on">public: true</button><button data-pv="0">public: false</button></div></div>
+        <div class="surf" id="surf"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Cùng một cube, phạm vi hiển thị thay đổi theo tham số public.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Ví dụ ẩn cube thô</span></summary><div>
+      <div class="code"><pre>cubes:
+  - name: internal_orders
+    sql_table: raw.orders
+    public: false   # ẩn cube thô khỏi API công khai
+
+    measures:
+      - name: raw_count
+        type: count</pre></div>
+      <p>Cách dùng phổ biến: ẩn cube thô và chỉ công khai view đã chọn lọc trường. Người dùng và AI Agent chỉ thấy những trường mà view cho phép.</p>
+    </div></details>
+  </section>
+
+  <section id="s2">
+    <span class="num">04.2</span>
+    <h2>Measures, Dimensions &amp; Granularity</h2>
+    <p class="gist">Một measure count_distinct trên user_id đủ để tính DAU, WAU và MAU.</p>
+    <p>Không cần khai báo ba measure riêng. Khi truy vấn truyền timeDimensions với granularity là <code>day</code>, <code>week</code> hay <code>month</code>, cùng một measure <code>active_users</code> trả về DAU, WAU hoặc MAU tương ứng. Có thể đổi granularity bên dưới; hình tính trực tiếp các giá trị trên 14 ngày dữ liệu minh họa.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span id="gLab"></span><div class="seg" id="gran"><button data-g="0" class="on">day</button><button data-g="1">week</button><button data-g="2">month</button></div></div>
+        <div class="bars" id="bars"></div>
+        <div class="blab" id="blab"></div>
+        <p class="note" id="gNote"></p>
+      </div>
+      <figcaption><b>Hình 2</b>Một measure, ba granularity. Dữ liệu minh họa: 8 người dùng trong 14 ngày.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>count_distinct không cộng dồn được. Để có WAU, cần truy vấn với granularity week thay vì cộng bảy giá trị DAU.</div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Các kiểu measure và khai báo active_users</span></summary><div>
+      <table><tr><th>Kiểu</th><th>Chức năng</th></tr>
+        <tr><td><code>count</code></td><td>Đếm số dòng.</td></tr>
+        <tr><td><code>sum</code></td><td>Tính tổng.</td></tr>
+        <tr><td><code>count_distinct</code></td><td>Đếm số giá trị khác nhau.</td></tr>
+        <tr><td><code>count_distinct_approx</code></td><td>Đếm xấp xỉ bằng thuật toán HyperLogLog, nhanh hơn nhiều trên tập dữ liệu lớn. Handbook ghi chú hỗ trợ tốt trên Snowflake từ v0.28.</td></tr></table>
+      <div class="code" style="margin-top:14px"><pre>measures:
+  - name: active_users
+    type: count_distinct
+    sql: user_id</pre></div>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">04.3</span>
+    <h2>Joins, Fanout &amp; Double Counting</h2>
+    <p class="gist">Khai báo relationship sai làm tổng bị nhân lên.</p>
+    <p>Cube nối cube bằng LEFT JOIN. Khi nối <code>line_items</code> với <code>orders</code>, mỗi đơn hàng lặp lại theo số dòng hàng của nó. Khi relationship được khai báo là <code>many_to_one</code>, Cube điều chỉnh SQL để mỗi đơn chỉ được cộng một lần. Nếu khai báo sai, fanout xảy ra và tổng tiền bị double counting.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Tổng <code>orders.total_amount</code> trên phép join line_items → orders</span><div class="seg" id="rel"><button data-rl="0" class="on">many_to_one (đúng)</button><button data-rl="1">one_to_one (sai)</button></div></div>
+        <table class="jt" id="jt"></table>
+        <div class="total"><span id="fanTxt"></span><b id="fanSum"></b></div>
+      </div>
+      <figcaption><b>Hình 3</b>Hai đơn hàng, bốn dòng hàng. Đơn #1 có ba dòng hàng nên có nguy cơ bị cộng ba lần. Số minh họa.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Ba loại relationship và Entities Graph</span></summary><div>
+      <p><code>many_to_one</code>: nhiều đơn hàng thuộc một khách hàng. <code>one_to_many</code>: một khách hàng có nhiều đơn hàng. <code>one_to_one</code>: mỗi bản ghi bên này ứng với đúng một bản ghi bên kia. Hướng khai báo tính từ cube chứa khối joins.</p>
+      <div class="code"><pre>cubes:
+  - name: line_items
+    sql_table: public.line_items
+
+    joins:
+      - name: orders
+        sql: "{CUBE}.order_id = {orders.id}"
+        relationship: many_to_one</pre></div>
+      <p style="margin-top:14px">Khi sinh SQL, Cube dựng một Entities Graph từ các joins. Theo handbook, nếu phát hiện phép JOIN có nguy cơ fanout với phép aggregate, Cube tự điều chỉnh cấu trúc SQL hoặc cảnh báo nhà phát triển. Cơ chế này chỉ hoạt động đúng khi relationship được khai báo đúng.</p>
+    </div></details>
+  </section>
+
+  <section id="s4">
+    <span class="num">04.4</span>
+    <h2>SQL Generation and Inspection</h2>
+    <p class="gist">Semantic SQL cho phép gọi measure bằng hàm MEASURE() trong câu SQL theo cú pháp Postgres.</p>
+    <p>Client viết SQL gần như thông thường; điểm khác biệt duy nhất là gọi <code>MEASURE("orders".total_sales)</code> thay vì tự viết <code>sum(...)</code>. Schema Compiler tra định nghĩa measure trong model và biên dịch thành SQL gốc cho data warehouse. Ba bước bên dưới minh họa quá trình này.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="sg"><button data-sq="0" class="on">1 · Semantic SQL</button><button data-sq="1">2 · Tra model</button><button data-sq="2">3 · SQL gốc</button></div>
+        <div class="yx"><div class="code"><pre id="sgC"></pre></div><div class="panel" id="sgP"></div></div>
+      </div>
+      <figcaption><b>Hình 4</b>Từ truy vấn của client tới câu lệnh thực thi trên data warehouse. SQL ở bước 3 là minh họa.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s5">
+    <span class="num">04.5</span>
+    <h2>Context Variables</h2>
+    <p class="gist">Context variables cho phép SQL trong model thay đổi theo truy vấn và theo người dùng.</p>
+    <p>Sáu biến thường gặp gồm: CUBE, FILTER_PARAMS, FILTER_GROUP, SQL_UTILS.convertTz(), COMPILE_CONTEXT và SECURITY_CONTEXT. Biến cuối đã deprecated, nên thay bằng query_rewrite. Chọn từng biến để xem chức năng và các lưu ý khi sử dụng.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="cv"></div>
+        <div class="panel" id="cvP"></div>
+      </div>
+      <figcaption><b>Hình 5</b>Sáu context variables và điểm dễ sai của từng biến.</figcaption>
+    </figure>
+    <p>FILTER_GROUP cần thiết khi SQL nguồn dùng nhiều FILTER_PARAMS và truy vấn có toán tử khác AND. Trong ví dụ bên dưới, client lọc <code>a &gt; 1 OR b &gt; 1</code> và kết quả đúng phải có 3 dòng.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Bộ lọc của client: <code>a &gt; 1 OR b &gt; 1</code></span><div class="seg" id="fgS"><button data-fg="0" class="on">Không có FILTER_GROUP</button><button data-fg="1">Có FILTER_GROUP</button></div></div>
+        <div class="code"><pre id="fgC"></pre></div>
+        <table class="jt" id="fgT" style="margin-top:12px"></table>
+        <div class="total"><span id="fgTxt"></span><b id="fgSum"></b></div>
+      </div>
+      <figcaption><b>Hình 6</b>Inner query lọc bằng AND trong khi outer query yêu cầu OR, nên inner query đã loại các dòng hợp lệ. Số minh họa.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Chỉ dùng FILTER_PARAMS cho predicate pushdown, như bảng partition hay shard của BigQuery. Logic nghiệp vụ phức tạp nên chuyển về tầng upstream (dbt hoặc transformation trong data warehouse).</div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>FILTER_PARAMS dạng chuỗi và dạng hàm</span></summary><div>
+      <p>Dạng chuỗi: chuyển điều kiện ngày từ truy vấn vào SQL nguồn để data warehouse không phải quét toàn bộ bảng.</p>
+      <div class="code"><pre>cubes:
+  - name: order_facts
+    sql: |
+      SELECT * FROM orders
+      WHERE {FILTER_PARAMS.order_facts.date.filter('date')}</pre></div>
+      <p style="margin-top:14px">Dạng hàm: tự xây dựng điều kiện, ví dụ chỉ đọc các shard BigQuery nằm trong khoảng ngày.</p>
+      <div class="code"><pre>cube(`events`, {
+  sql: `
+    SELECT * FROM schema.\`events*\`
+    WHERE ${FILTER_PARAMS.events.date.filter(
+      (x, y) =&gt; `
+        _TABLE_SUFFIX &gt;= FORMAT_TIMESTAMP('%Y%m%d', TIMESTAMP(${x})) AND
+        _TABLE_SUFFIX &lt;= FORMAT_TIMESTAMP('%Y%m%d', TIMESTAMP(${y}))
+      `
+    )}
+  `
+})</pre></div>
+      <p style="margin-top:14px">Handbook gọi việc lạm dụng FILTER_PARAMS là anti-pattern: SQL nguồn trở thành một hàm phụ thuộc tham số từ giao diện, model khó bảo trì, khó tối ưu pre-aggregation và khó tái sử dụng.</p>
+      <p>Cách viết đúng với FILTER_GROUP:</p>
+      <div class="code"><pre>cube(`filter_group`, {
+  sql: `
+    SELECT * FROM data
+    WHERE ${FILTER_GROUP(
+      FILTER_PARAMS.filter_group.a.filter('a'),
+      FILTER_PARAMS.filter_group.b.filter('b')
+    )}
+  `
+})</pre></div>
+    </div></details>
+  </section>
+
+  <section id="s6">
+    <span class="num">04.6</span>
+    <h2>Caching Mechanisms</h2>
+    <p class="gist">Hai tầng cache: Query Result Cache và pre-aggregations.</p>
+    <p>Tầng 1 là Query Result Cache: lưu kết quả JSON của các truy vấn gần đây trong bộ nhớ (development) hoặc Cube Store (production). Cube Store thay Redis làm cache driver mặc định từ v0.32; v0.36 bỏ hẳn driver Redis. Tầng 2 là pre-aggregations: các bảng rollup vật lý build sẵn trong Cube Store, làm mới theo refresh_key. Chọn một tiêu chí để so sánh với truy vấn trực tiếp vào data warehouse. Các con số là ví dụ trong handbook; giá trị trên hệ thống thực tế sẽ khác.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="ca"></div>
+        <div class="cmp" id="caP"></div>
+      </div>
+      <figcaption><b>Hình 7</b>Hai tầng cache và truy vấn trực tiếp, theo từng tiêu chí.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s7">
+    <span class="num">04.7</span>
+    <h2>Pre-aggregations</h2>
+    <p class="gist">Bảng rollup tính sẵn, lưu trong Cube Store, để truy vấn không phải chạy lại trên data warehouse.</p>
+    <p>Từ v0.28, kiểu pre-aggregation được khuyến nghị là <code>rollup</code>, và nơi lưu mặc định cho external pre-aggregations là Cube Store. Chọn từng dòng YAML để xem vai trò của dòng đó.</p>
+    <figure>
+      <div class="fig">
+        <div class="yx"><div class="code"><pre id="paC"></pre></div><div class="panel" id="paP"></div></div>
+      </div>
+      <figcaption><b>Hình 8</b>Khai báo rollup <code>sales_daily</code> cho cube orders.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Tăng tốc build và bên trong Cube Store</span></summary><div>
+      <p><b>Batching</b> (từ v0.28): tăng tốc build pre-aggregation cho các driver BigQuery, ClickHouse, MongoDB và MySQL.</p>
+      <p><b>Export bucket</b>: data warehouse xuất trực tiếp ra cloud bucket trước khi nạp vào Cube Store. Handbook liệt kê Redshift (qua AWS S3) và Snowflake (qua S3 và Google Cloud Storage).</p>
+      <p><b>Cube Store</b> là một hệ CSDL phân tán chuyên cho pre-aggregation. Bên trong dùng Apache Arrow DataFusion (query engine viết bằng Rust, thực thi dạng cột), RocksDB cho metadata, và file Parquet nén. Truy vấn khớp với rollup chỉ quét các cột cần dùng thay vì đọc lại dòng thô từ data warehouse. Handbook nêu độ trễ P95 dưới 250ms; đây là số liệu từ handbook, không phải cam kết chung.</p>
+    </div></details>
+  </section>
+
+  <section id="s8">
+    <span class="num">04.8</span>
+    <h2>Authentication, Authorization &amp; Multi-tenancy</h2>
+    <p class="gist">JWT mang danh tính, securityContext chứa danh tính đó, query_rewrite chuyển danh tính thành bộ lọc.</p>
+    <p>Ứng dụng client tạo JWT chứa các claim như <code>tenant_id</code>, <code>role</code>, <code>user_id</code>. Cube giải mã JWT và đưa claim vào securityContext. Hook queryRewrite trong <code>cube.js</code> chèn bộ lọc RLS vào mọi truy vấn trước khi SQL tới data warehouse. Chọn một bên gọi để xem luồng xử lý.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Truy vấn <code>orders.total_amount</code></span><div class="seg" id="tn"><button data-tn="0" class="on">Tenant acme</button><button data-tn="1">Tenant globex</button><button data-tn="2">JWT thiếu tenant_id</button></div></div>
+        <div class="flow" id="flow"></div>
+      </div>
+      <figcaption><b>Hình 9</b>Từ JWT tới SQL. Bảng orders minh họa có 3 dòng thuộc 2 tenant.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Trong ví dụ của handbook, khi JWT thiếu <code>tenant_id</code>, queryRewrite không thêm bộ lọc nào và truy vấn truy cập được dữ liệu của mọi tenant. Khi triển khai thực tế, nên từ chối truy vấn trong trường hợp này.</div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>queryRewrite trong cube.js</span></summary><div>
+      <div class="code"><pre>module.exports = {
+  queryRewrite: (query, { securityContext }) =&gt; {
+    if (securityContext &amp;&amp; securityContext.tenant_id) {
+      query.filters.push({
+        member: 'orders.tenant_id',
+        operator: 'equals',
+        values: [securityContext.tenant_id]
+      });
+    }
+    return query;
+  }
+};</pre></div>
+    </div></details>
+  </section>
+
+  <section id="s9">
+    <span class="num">04.9</span>
+    <h2>Source Code Investigation</h2>
+    <p class="gist">Meta API trả về model đang chạy; cube.js hoặc cube.py chứa các hook cấu hình.</p>
+    <p>Để xác định model thực sự công khai những thành phần nào, gọi Meta API. Để thay đổi hành vi của Cube, xem trong file cấu hình.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="mt"><button data-mt="0" class="on">Meta API</button><button data-mt="1">File cấu hình</button></div>
+        <div class="code"><pre id="mtC"></pre></div>
+        <div class="panel" id="mtP"></div>
+      </div>
+      <figcaption><b>Hình 10</b>Hai vị trí nên kiểm tra trước khi đọc mã nguồn Cube.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s10">
+    <span class="num">04.10</span>
+    <h2>Experiments &amp; Performance Analysis</h2>
+    <p class="gist">Một benchmark trong handbook: AI Agent trả lời chính xác hơn khi truy vấn qua semantic layer.</p>
+    <p>Handbook mô tả một paired benchmark với các AI Agent như Claude và ChatGPT. Đây là số liệu từ case study trong handbook, không phải kết quả chung cho mọi hệ thống. Chọn từng thanh để xem chi tiết.</p>
+    <figure>
+      <div class="fig">
+        <div class="rng" id="rng"><div data-ex="0" class="on"><span>Schema thô</span><i style="--a:55%;--b:60%"></i></div><div data-ex="1"><span>Semantic layer</span><i style="--a:80%;--b:85%"></i></div></div>
+        <div class="axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        <div class="panel" id="rngP"></div>
+      </div>
+      <figcaption><b>Hình 11</b>Độ chính xác của AI Agent theo handbook. Số liệu từ case study trong handbook.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Lưu ý khi diễn giải số liệu</span></summary><div>
+      <p>Handbook ghi mức tăng 17 đến 23 điểm phần trăm, từ mức 55–60% lên 80–85%. Nếu cộng trực tiếp, 55–60% thêm 17–23 điểm chỉ cho khoảng 72–83%, nên hai cách diễn đạt không khớp hoàn toàn. Handbook cũng không nêu số câu hỏi, bộ dữ liệu hay cách chấm. Do đó, nên xem đây là xu hướng, không dùng làm số liệu so sánh chính xác.</p>
+    </div></details>
+    <a class="next-ch" href="/blog/cube-handbook/05"><span><small>Chương tiếp theo</small><b>05 · Production Engineering</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// Hình 1
+const SURF = [['REST · GraphQL · SQL API', 'Client truy vấn được cube này.', 'Cube này không hiển thị.'], ['Meta API', 'Cube được liệt kê trong danh sách model, AI Agent đọc được.', 'Không liệt kê.'], ['Developer Playground', 'Hiển thị bình thường.', 'Vẫn hiển thị, kèm biểu tượng khóa.']];
+function surfShow(p) {surf.innerHTML = SURF.map((s, i) => `<div class="${p ? '' : i < 2 ? 'off' : 'lock'}"><b>${s[0]}</b>${p ? s[1] : s[2]}</div>`).join('')}
+one('#pub', 'pv', surfShow); surfShow(1);
+// Hình 2: count_distinct computed for real on 14 days of sample activity
+const ACT = [[1, 2, 3], [1, 2, 4], [1, 3], [2, 5], [1, 2, 3, 6], [1], [4, 7], [1, 2], [2, 3, 8], [1, 5], [2, 3], [1, 2, 6], [3], [1, 8]];
+const GR = [['day', 'DAU', 1], ['week', 'WAU', 7], ['month', 'MAU', 14]];
+function gran(g) {
+ const n = GR[g][2], b = [];
+ for (let i = 0; i < ACT.length; i += n) b.push({l: n === 1 ? 'N' + (i + 1) : n === 7 ? 'Tuần ' + (i / 7 + 1) : 'Tháng', v: new Set(ACT.slice(i, i + n).flat()).size});
+ bars.innerHTML = b.map(x => `<div style="height:${x.v / 8 * 100}%"><span>${x.v}</span></div>`).join('');
+ blab.innerHTML = b.map(x => `<span>${x.l}</span>`).join('');
+ gLab.innerHTML = `granularity: <b>${GR[g][0]}</b> → ${GR[g][1]}`;
+ const sumDay = ACT.reduce((s, d) => s + d.length, 0);
+ gNote.textContent = g === 0 ? `Tổng 7 cột đầu là ${ACT.slice(0, 7).reduce((s, d) => s + d.length, 0)}, nhưng tuần 1 chỉ có 7 người khác nhau. Chuyển sang week để kiểm tra.`
+  : g === 1 ? 'Mỗi người chỉ được đếm một lần trong tuần dù hoạt động nhiều ngày.' : `Cả tháng có 8 người khác nhau, trong khi tổng DAU của 14 ngày là ${sumDay}.`}
+one('#gran', 'g', gran); gran(0);
+// Hình 3: fanout with two orders and four line items
+const LI = [['li_1', 1, 100], ['li_2', 1, 100], ['li_3', 1, 100], ['li_4', 2, 200]];
+function fan(bad) {
+ jt.innerHTML = '<tr><th>line_item</th><th>order_id</th><th>orders.amount</th><th>được cộng?</th></tr>' + LI.map((r, i) => {const dup = i > 0 && r[1] === LI[i - 1][1];
+  return `<tr class="${dup ? bad ? 'dup' : 'out' : ''}"><td>${r[0]}</td><td>#${r[1]}</td><td class="n">${r[2]}</td><td>${dup ? bad ? 'có, lặp lại' : 'không' : 'có'}</td></tr>`}).join('');
+ fanTxt.textContent = bad ? 'Cube coi mỗi dòng là một đơn riêng và cộng cả các bản lặp' : 'Cube xác định phía orders là “một”, mỗi đơn chỉ được cộng một lần';
+ fanSum.textContent = bad ? '500' : '300'; fanSum.className = bad ? 'bad' : ''}
+one('#rel', 'rl', fan); fan(0);
+// Hình 4
+const SG = [['SELECT\n  "orders".region,\n  MEASURE("orders".total_sales) AS revenue\nFROM\n  "orders" AS "orders"\nWHERE\n  "orders".order_date >= \'2026-01-01\'\nGROUP BY 1', 'Client gửi Semantic SQL', 'Cú pháp tương thích Postgres. Điểm khác duy nhất: MEASURE() gọi tên measure đã định nghĩa, client không cần biết công thức.'],
+ ['cubes:\n  - name: orders\n    sql_table: public.orders\n    measures:\n      - name: total_sales\n        sql: sales\n        type: sum', 'Schema Compiler tra model', 'Compiler tìm total_sales trong cube orders và đọc được định nghĩa sql: sales, type: sum. Join, bộ lọc bảo mật và pre-aggregation phù hợp cũng được xác định ở bước này.'],
+ ['SELECT\n  "orders".region,\n  sum("orders".sales) AS revenue\nFROM public.orders AS "orders"\nWHERE "orders".order_date >= \'2026-01-01\'\nGROUP BY 1', 'SQL gốc gửi tới data warehouse', 'Minh họa. SQL thực tế phụ thuộc dialect của data warehouse và phiên bản Cube; có thể khác về alias, cách ép kiểu thời gian và thứ tự mệnh đề.']];
+function sgShow(i) {sgC.innerHTML = esc(SG[i][0]); sgP.innerHTML = `<h5>${SG[i][1]}</h5>${SG[i][2]}`}
+one('#sg', 'sq', sgShow); sgShow(0);
+// Hình 5
+const CV = [['CUBE', 'Tham chiếu tới chính cube hiện tại, để không phải viết lại tên cube.', 'sql: "{CUBE}.customer_id = {customers.id}"'],
+ ['FILTER_PARAMS', 'Chuyển bộ lọc của truy vấn xuống SQL nguồn (predicate pushdown) để data warehouse không phải quét toàn bộ bảng. Chỉ nên dùng hạn chế, cho mục đích hiệu năng.', "WHERE {FILTER_PARAMS.order_facts.date.filter('date')}"],
+ ['FILTER_GROUP', 'Bọc nhiều FILTER_PARAMS để logic AND/OR giữa inner query và outer query khớp nhau. Xem Hình 6.', "WHERE ${FILTER_GROUP(\n  FILTER_PARAMS.filter_group.a.filter('a'),\n  FILTER_PARAMS.filter_group.b.filter('b'))}"],
+ ['SQL_UTILS.convertTz()', 'Chuyển đổi thời gian sang múi giờ của truy vấn. Dimension dùng convertTz() không được đưa vào timeDimensions, vì Cube đã tự chuyển múi giờ cho timeDimensions và kết quả sẽ bị chuyển đổi hai lần. Nên tạo hai dimension riêng cho hai mục đích.', ''],
+ ['COMPILE_CONTEXT', 'Biên dịch model khác nhau cho từng tenant, dựa vào context_to_app_id. Trong YAML truy cập bằng cú pháp Jinja {{ }}, trong JS bằng template literal ${ }.', 'sql_table: "user_{{ COMPILE_CONTEXT.securityContext.deployment_id }}.users"'],
+ ['SECURITY_CONTEXT', 'Đã được đánh dấu deprecated và có thể bị gỡ bỏ ở phiên bản sau; thay bằng query_rewrite trong cube.js hoặc cube.py. Lấy giá trị bằng SECURITY_CONTEXT.type.unsafeValue() có nguy cơ SQL injection nếu không kiểm tra đầu vào.', '']];
+cv.innerHTML = CV.map((c, i) => `<button data-cv="${i}" class="${i ? '' : 'on'}">${c[0]}</button>`).join('');
+const cvShow = i => cvP.innerHTML = `<h5>${CV[i][0]}</h5>${CV[i][1]}` + (CV[i][2] ? `<div class="code" style="margin-top:12px"><pre style="padding:10px 14px">${esc(CV[i][2])}</pre></div>` : '');
+one('#cv', 'cv', cvShow); cvShow(0);
+// Hình 6: inner WHERE with and without FILTER_GROUP, client asks a > 1 OR b > 1
+const FR = [[2, 0], [0, 2], [2, 2], [0, 0]];
+function fg(on) {
+ fgC.innerHTML = esc(on ? "-- model\nWHERE ${FILTER_GROUP(FILTER_PARAMS.filter_group.a.filter('a'),\n                     FILTER_PARAMS.filter_group.b.filter('b'))}\n-- inner query sinh ra\nWHERE ((a > 1) OR (b > 1))"
+  : "-- model\nWHERE ${FILTER_PARAMS.filter_group.a.filter('a')}\n  AND ${FILTER_PARAMS.filter_group.b.filter('b')}\n-- inner query sinh ra\nWHERE (a > 1) AND (b > 1)");
+ const keep = r => on ? r[0] > 1 || r[1] > 1 : r[0] > 1 && r[1] > 1, want = r => r[0] > 1 || r[1] > 1;
+ fgT.innerHTML = '<tr><th>a</th><th>b</th><th>client yêu cầu</th><th>inner query giữ</th></tr>' + FR.map(r => `<tr class="${want(r) && !keep(r) ? 'dup' : keep(r) ? '' : 'out'}"><td>${r[0]}</td><td>${r[1]}</td><td>${want(r) ? 'có' : 'không'}</td><td>${keep(r) ? 'có' : 'không'}</td></tr>`).join('');
+ const n = FR.filter(keep).length; fgTxt.textContent = on ? 'Inner và outer query cùng dùng logic OR' : 'Hai dòng hợp lệ bị loại ở inner query'; fgSum.textContent = n + ' / 3 dòng'; fgSum.className = n < 3 ? 'bad' : ''}
+one('#fgS', 'fg', fg); fg(0);
+// Hình 7
+const CA = [['Độ tươi dữ liệu', 'Theo TTL, ví dụ 2–5 phút.', 'Làm mới định kỳ theo refresh_key, ví dụ mỗi giờ.', 'Thời gian thực.'],
+ ['Chi phí data warehouse', 'Bằng 0 khi truy vấn khớp cache.', 'Handbook ước tính giảm khoảng 90–95%; chỉ phát sinh chi phí build định kỳ.', 'Tăng nhanh khi số người dùng tăng.'],
+ ['Độ trễ', 'Dưới 50ms.', 'Dưới 250ms (P95).', '2–15 giây tùy tập dữ liệu.']];
+ca.innerHTML = CA.map((c, i) => `<button data-ca="${i}" class="${i ? '' : 'on'}">${c[0]}</button>`).join('');
+const caShow = i => caP.innerHTML = ['Query Result Cache', 'Pre-aggregations', 'Truy vấn trực tiếp'].map((n, j) => `<div><b>${n}</b>${CA[i][j + 1]}</div>`).join('');
+one('#ca', 'ca', caShow); caShow(0);
+// Hình 8: pre-aggregation YAML explorer
+const PA = [['cubes:', 'cube'], ['  - name: orders', 'cube'], ['    sql_table: public.orders', 'cube'], ['', ''], ['    measures:', 'm'], ['      - name: total_sales', 'm'], ['        sql: sales', 'm'], ['        type: sum', 'm'], ['', ''], ['    dimensions:', 'd'], ['      - name: order_date', 'd'], ['        sql: order_date', 'd'], ['        type: time', 'd'], ['', ''],
+ ['    pre_aggregations:', 'pa'], ['      - name: sales_daily', 'pa'], ['        measures:', 'pm'], ['          - total_sales', 'pm'], ['        time_dimension: order_date', 'pd'], ['        granularity: day', 'gr'], ['        partition_granularity: month', 'part'], ['        refresh_key:', 'rk'], ['          every: 1 hour', 'rk']];
+const PI = {cube: ['Cube nguồn', 'Cube orders đọc bảng public.orders. Rollup được build từ chính cube này.'],
+ m: ['Measure gốc', 'total_sales cộng cột sales. Đây là phép tính được rollup thực hiện sẵn.'],
+ d: ['Dimension thời gian', 'order_date có kiểu time nên dùng được làm trục thời gian cho rollup.'],
+ pa: ['pre_aggregations', 'Khai báo một rollup tên sales_daily. Bảng này được build và lưu trong Cube Store.'],
+ pm: ['measures của rollup', 'Những measure được tính sẵn. Truy vấn chỉ dùng được rollup khi các measure được yêu cầu nằm trong danh sách này.'],
+ pd: ['time_dimension của rollup', 'Trục thời gian được nhóm sẵn, đi kèm granularity ở dòng dưới. Rollup chỉ khai báo time dimension, nên truy vấn nhóm thêm theo dimension khác sẽ không khớp với rollup.'],
+ gr: ['granularity', 'Granularity của time_dimension trong rollup: mỗi ngày một dòng. Bắt buộc khi khai báo time_dimension.'],
+ part: ['partition_granularity', 'Chia rollup thành các partition theo tháng, để build và làm mới theo từng phần.'],
+ rk: ['refresh_key', 'Build lại rollup mỗi giờ. Đổi lại, số liệu có thể trễ tối đa khoảng một giờ so với data warehouse.']};
+function paShow(k) {paC.innerHTML = PA.map(([t, c]) => `<span class="ln${c && c === k ? ' on' : ''}" data-pa="${c}">${esc(t).replace(/^(\s*-?\s*)([a-z_]+):/, '$1<span class="k">$2</span>:') || ' '}</span>`).join('');
+ paP.innerHTML = `<h5>${PI[k][0]}</h5>${PI[k][1]}`}
+paC.onclick = e => {const l = e.target.closest('.ln'); if (l && l.dataset.pa) paShow(l.dataset.pa)};
+paShow('pa');
+// Hình 9: JWT → securityContext → queryRewrite → SQL
+const TN = [{tenant_id: 'acme', role: 'viewer', user_id: 'u_17'}, {tenant_id: 'globex', role: 'admin', user_id: 'u_42'}, {role: 'viewer', user_id: 'u_99'}];
+const ORD = [['acme', 120], ['acme', 80], ['globex', 300]];
+function flowShow(i) {
+ const c = TN[i], t = c.tenant_id, rows = ORD.filter(r => !t || r[0] === t);
+ flow.innerHTML = `<div><b>1 · JWT</b><span>Header <code>Authorization: &lt;JWT_TOKEN&gt;</code>. Claims sau khi giải mã:<br><code>${esc(JSON.stringify(c))}</code></span></div>
+  <div><b>2 · securityContext</b><span>Cube đưa claims vào <code>securityContext</code>, các hook ở bước sau đọc dữ liệu từ đây.</span></div>
+  <div class="${t ? '' : 'warn'}"><b>3 · queryRewrite</b><span>${t ? `Thêm bộ lọc <code>orders.tenant_id equals '${t}'</code>.` : 'Không có tenant_id nên điều kiện if không thỏa; queryRewrite không thêm bộ lọc nào.'}</span></div>
+  <div class="${t ? '' : 'warn'}"><b>4 · SQL tới warehouse</b><span><code>${t ? `WHERE "orders".tenant_id = '${t}'` : '(không có WHERE theo tenant)'}</code><br>${rows.length} dòng, tổng ${rows.reduce((s, r) => s + r[1], 0)}${t ? '' : ', gồm dữ liệu của mọi tenant'}.</span></div>`}
+one('#tn', 'tn', flowShow); flowShow(0);
+// Hình 10
+const MT = [['curl -H "Authorization: <JWT_TOKEN>" \\\n  http://localhost:4000/cubejs-api/v1/meta', 'Meta API', 'Trả về cấu hình data model đang chạy: cubes, views, measures, dimensions mà người gọi được phép thấy. Dùng để kiểm tra model động, hoặc cho ứng dụng và AI Agent làm discovery trên data model.'],
+ ['cube.js   // hoặc cube.py từ v0.34\n  queryRewrite   // sửa truy vấn theo ngữ cảnh\n  extendContext  // bổ sung ngữ cảnh cho request', 'File cấu hình', 'Cấu hình nâng cao đặt trong cube.js, hoặc cube.py từ v0.34. Các hook như queryRewrite và extendContext là nơi cần kiểm tra đầu tiên khi Cube trả về kết quả khác với kỳ vọng.']];
+function mtShow(i) {mtC.innerHTML = esc(MT[i][0]); mtP.innerHTML = `<h5>${MT[i][1]}</h5>${MT[i][2]}`}
+one('#mt', 'mt', mtShow); mtShow(0);
+// Hình 11
+const EX = [['Schema thô: 55–60%', 'AI Agent đọc bảng thô và tự viết SQL. Theo handbook, lỗi chủ yếu do tự suy đoán phép join, áp sai bộ lọc hoặc chọn sai cột chỉ số.'],
+ ['Semantic layer: 80–85%', 'AI Agent gọi Semantic SQL trên các certified metrics, và kết quả đi qua RLS. Handbook ghi mức tăng 17–23 điểm.']];
+const exShow = i => rngP.innerHTML = `<h5>${EX[i][0]}</h5>${EX[i][1]}`;
+one('#rng', 'ex', exShow); exShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'ch04', minutes: 24,
+ next: {href: '/blog/cube-handbook/05', n: '05', t: 'Production Engineering'},
+ sections: [
+  {id: 's1', n: '04.1', t: 'Data Modeling', sum: ['Từ v0.33: thư mục cubes và views, tên snake_case.', 'Tham số public ẩn thành phần khỏi API công khai, Playground vẫn hiển thị kèm biểu tượng khóa.'], terms: ['public']},
+  {id: 's2', n: '04.2', t: 'Measures & Granularity', sum: ['Một measure count_distinct trên user_id đủ cho DAU, WAU, MAU.', 'Đổi granularity trong truy vấn, không khai báo thêm measure.', 'count_distinct không cộng dồn được.'], terms: ['cdistinct', 'granularity']},
+  {id: 's3', n: '04.3', t: 'Joins & Fanout', sum: ['Cube dùng LEFT JOIN; khai báo sai relationship làm tổng bị nhân lên.', 'Khai báo relationship đúng để Cube chống double counting.'], terms: ['fanout']},
+  {id: 's4', n: '04.4', t: 'SQL Generation', sum: ['Semantic SQL gọi measure bằng MEASURE().', 'Schema Compiler tra model và sinh SQL gốc cho data warehouse.'], terms: ['semsql', 'dw']},
+  {id: 's5', n: '04.5', t: 'Context Variables', sum: ['CUBE, FILTER_PARAMS, FILTER_GROUP, convertTz, COMPILE_CONTEXT, SECURITY_CONTEXT.', 'FILTER_PARAMS chỉ cho predicate pushdown; nhiều FILTER_PARAMS thì bọc FILTER_GROUP.', 'SECURITY_CONTEXT đã deprecated, dùng query_rewrite.'], terms: ['filterparams', 'filtergroup', 'pushdown', 'compilectx', 'queryrewrite']},
+  {id: 's6', n: '04.6', t: 'Caching', sum: ['Tầng 1: Query Result Cache theo TTL.', 'Tầng 2: pre-aggregations trong Cube Store, làm mới theo refresh_key.'], terms: ['resultcache', 'preagg', 'cubestore']},
+  {id: 's7', n: '04.7', t: 'Pre-aggregations', sum: ['Rollup là kiểu khuyến nghị, lưu trong Cube Store.', 'measures, dimensions, granularity quyết định truy vấn nào khớp với rollup.', 'refresh_key cân bằng giữa độ tươi dữ liệu và chi phí.'], terms: ['preagg', 'rollup', 'cubestore', 'refreshkey']},
+  {id: 's8', n: '04.8', t: 'Auth & Multi-tenancy', sum: ['JWT → securityContext → queryRewrite → SQL có bộ lọc RLS.', 'Khi thiếu claim tenant, ví dụ không áp bộ lọc nào; cần chặn trường hợp này.'], terms: ['jwt', 'seccontext', 'queryrewrite', 'rls']},
+  {id: 's9', n: '04.9', t: 'Source Code', sum: ['Meta API trả về model đang chạy.', 'Hook queryRewrite, extendContext nằm trong cube.js hoặc cube.py.'], terms: ['metaapi', 'queryrewrite']},
+  {id: 's10', n: '04.10', t: 'Experiments', sum: ['Theo benchmark trong handbook: 55–60% với schema thô, 80–85% qua semantic layer.', 'Thiếu chi tiết phương pháp nên chỉ xem là xu hướng.'], terms: ['semantic', 'semsql', 'rls']}],
+ terms: {
+  public: ['public', 'Tham số boolean khai báo được trên cube, view, measure và dimension, quyết định thành phần đó có được công khai qua các API (REST, GraphQL, SQL API, Meta API) hay không; mặc định là true. Thành phần public: false vẫn hiển thị trong Developer Playground kèm biểu tượng khóa.', 'Tương tự công tắc "cho khách xem" gắn trên từng món trong bếp: khi tắt, khách gọi món không còn thấy món đó, nhưng đầu bếp vẫn thấy và vẫn dùng nó làm nguyên liệu cho món khác.'],
+  cdistinct: ['count_distinct', 'Kiểu measure đếm số giá trị phân biệt của một cột, tương đương COUNT(DISTINCT ...). Đây là phép tổng hợp không cộng dồn được (non-additive): kết quả theo week hay month không bằng tổng kết quả của các day bên trong.', 'Đếm số người khác nhau, không đếm số lượt. Một khách ghé quán cả bảy ngày thì trong tuần vẫn chỉ tính là một khách, nên cộng số khách từng ngày sẽ cho ra con số bị thổi phồng.'],
+  granularity: ['granularity', 'Đơn vị thời gian dùng để nhóm một time dimension (day, week, month, quarter, year...), truyền trong timeDimensions của truy vấn hoặc cố định trong định nghĩa một pre-aggregation.', 'Tương tự việc xem sổ ghi chép theo từng ngày, từng tuần hay từng tháng: dữ liệu không đổi, chỉ khác cách gom các trang lại với nhau.'],
+  fanout: ['fanout', 'Hiện tượng các dòng của bảng phía "một" bị nhân bản sau phép JOIN với bảng phía "nhiều", khiến phép aggregate như sum cộng cùng một giá trị nhiều lần (double counting). Cube ngăn được hiện tượng này khi relationship được khai báo đúng.', 'Một hóa đơn có ba món, khi ghép hóa đơn với danh sách món thì tổng tiền hóa đơn bị lặp lại trên ba dòng. Cộng cả ba dòng đồng nghĩa với tính tiền ba lần cho cùng một hóa đơn.'],
+  semsql: ['Semantic SQL', 'Phương ngữ SQL tương thích Postgres mà SQL API của Cube nhận, có thêm hàm MEASURE() để tham chiếu measure đã định nghĩa trong data model; Cube biên dịch nó thành SQL gốc theo dialect của data warehouse.', 'Client vẫn viết truy vấn như SQL thông thường, chỉ gọi tên chỉ số thay vì tự viết công thức, tương tự gọi "món số 5" trong thực đơn mà không cần biết cách nấu.'],
+  filterparams: ['FILTER_PARAMS', 'Context variable cho phép SQL nguồn của một cube đọc bộ lọc mà truy vấn đang áp lên một member và chèn nó thành điều kiện WHERE, ở dạng chuỗi qua .filter(\'cột\') hoặc dạng hàm nhận cận dưới và cận trên.', 'Chuyển điều kiện của người hỏi trực tiếp vào lệnh lấy dữ liệu gốc. Với câu hỏi về doanh số tháng 3, lệnh chỉ mở ngăn tủ tháng 3 thay vì lấy toàn bộ tủ ra sau đó mới lọc.'],
+  filtergroup: ['FILTER_GROUP', 'Context variable bọc nhiều FILTER_PARAMS thành một nhóm, để Cube dựng điều kiện trong inner query theo đúng cấu trúc logic (AND/OR) của bộ lọc client, khớp với outer query.', 'Khi người hỏi yêu cầu "lấy điều kiện này HOẶC điều kiện kia", FILTER_GROUP bảo đảm bước lọc đầu tiên cũng hiểu là "hoặc", không hiểu nhầm thành "và" dẫn tới loại bỏ những dòng hợp lệ.'],
+  pushdown: ['predicate pushdown', 'Kỹ thuật tối ưu đưa điều kiện lọc (predicate) xuống tầng thực thi gần nguồn dữ liệu nhất, để engine chỉ quét các partition hoặc shard liên quan thay vì toàn bộ bảng.', 'Tương tự việc dặn thủ kho từ đầu "chỉ lấy hàng tháng 3", thay vì mang cả kho ra sau đó mới chọn. Lượng hàng cần chuyển ít hơn nên nhanh hơn và tốn ít chi phí hơn.'],
+  compilectx: ['COMPILE_CONTEXT', 'Context variable có giá trị tại thời điểm biên dịch data model (chứa securityContext), dùng qua cú pháp Jinja {{ }} trong YAML hoặc template literal ${ } trong JS để sinh model khác nhau cho từng tenant; mỗi phiên bản model được phân biệt bằng context_to_app_id.', 'Mỗi khách hàng nhận một bản model riêng được tạo từ cùng một bản mẫu, chỉ khác phần tên khách, chẳng hạn để trỏ tới đúng bảng dữ liệu của khách đó.'],
+  seccontext: ['securityContext', 'Đối tượng Cube gắn vào mỗi request, chứa các claims trong JWT đã được giải mã và xác thực chữ ký; các hook như queryRewrite và COMPILE_CONTEXT đọc nó để áp quy tắc truy cập.', 'Tương tự thẻ tên Cube cấp cho người hỏi sau khi soát vé: ghi rõ người này thuộc công ty nào, giữ vai trò gì, để các bước sau xác định phạm vi dữ liệu được phép xem.'],
+  queryrewrite: ['query_rewrite', 'Hook cấu hình (queryRewrite trong cube.js, query_rewrite trong cube.py) nhận truy vấn cùng securityContext và trả về truy vấn đã sửa trước khi biên dịch; thường dùng để chèn bộ lọc theo tenant hoặc từ chối truy vấn không hợp lệ.', 'Tương tự người gác cửa đọc thẻ tên của người hỏi, sau đó ghi thêm vào phiếu yêu cầu dòng "chỉ lấy dữ liệu của công ty acme" trước khi chuyển phiếu vào trong.'],
+  jwt: ['JWT', 'JSON Web Token: chuỗi gồm header, payload và chữ ký số, cho phép bên nhận kiểm tra nguồn gốc và tính toàn vẹn của các claims (như tenant_id, role, user_id). Cube đọc JWT từ header Authorization.', 'Tương tự một tấm vé có dấu niêm phong: ghi rõ người giữ vé là ai, thuộc công ty nào; chỉ cần một chữ trên vé bị sửa, con dấu sẽ không còn khớp.'],
+  rls: ['Row-Level Security', 'Cơ chế kiểm soát truy cập ở mức dòng: cùng một truy vấn, mỗi người dùng chỉ nhận các dòng thỏa điều kiện gắn với danh tính của họ. Trong Cube thường được hiện thực bằng query_rewrite chèn bộ lọc lấy từ securityContext.', 'Cùng một bảng lương, nhưng mỗi trưởng phòng mở ra chỉ thấy nhân viên thuộc phòng đó; các dòng còn lại như được che đi.'],
+  preagg: ['pre-aggregation', 'Bảng tổng hợp Cube tính sẵn từ một cube theo tập measures, dimensions và granularity định trước, mặc định lưu trong Cube Store và làm mới theo refresh_key; truy vấn khớp được Cube định tuyến tới bảng này thay vì data warehouse.', 'Tương tự một quán ăn ninh sẵn nồi nước dùng từ sáng: khách gọi món là có thể phục vụ, không phải hầm xương lại từ đầu cho từng bát.'],
+  rollup: ['rollup', 'Kiểu pre-aggregation được khuyến nghị từ v0.28: lưu kết quả đã group by theo danh sách measures, dimensions và một time dimension ở granularity xác định.', 'Là bản tóm tắt sổ bán hàng, mỗi ngày một dòng tổng. Để tính doanh số cả năm, chỉ cần cộng 365 dòng thay vì duyệt hàng triệu hóa đơn.'],
+  cubestore: ['Cube Store', 'Engine lưu trữ và truy vấn phân tán của Cube, chuyên cho pre-aggregation: thực thi dạng cột bằng Apache Arrow DataFusion, giữ metadata trong RocksDB và dữ liệu trong file Parquet nén.', 'Tương tự tủ lạnh riêng của Cube để cất các món đã chuẩn bị sẵn, xếp theo từng loại nguyên liệu, nên cần món nào chỉ mở đúng ngăn chứa món đó.'],
+  refreshkey: ['refresh_key', 'Thuộc tính quy định khi nào một pre-aggregation (hoặc cache của cube) được coi là cũ và phải build lại, theo chu kỳ như every: 1 hour hoặc theo kết quả một câu SQL kiểm tra.', 'Tương tự lịch nấu lại nồi nước dùng: mỗi giờ một nồi mới. Đổi lại, bát khách đang dùng có thể lấy từ nồi đã nấu cách đó gần một giờ.'],
+  resultcache: ['Query Result Cache', 'Tầng cache thứ nhất của Cube: lưu kết quả JSON của các truy vấn gần đây trong bộ nhớ (development) hoặc Cube Store (production) và trả lại trực tiếp khi một truy vấn giống hệt đến trong thời hạn TTL.', 'Tương tự việc ghi nhớ câu trả lời vừa đưa ra: nếu có người hỏi lại đúng câu đó trong vài phút, câu trả lời cũ được nhắc lại mà không cần tra sổ.'],
+  metaapi: ['Meta API', 'Endpoint REST /cubejs-api/v1/meta trả về metadata của data model đang chạy (cubes, views, measures, dimensions) trong phạm vi người gọi được phép thấy.', 'Tương tự thực đơn của Cube: ứng dụng hoặc AI Agent đọc thực đơn để biết có những món nào trước khi gọi.'],
+  semantic: ['semantic layer', 'Tầng trung gian giữa data warehouse và các ứng dụng tiêu thụ, nơi định nghĩa tập trung chỉ số, quan hệ giữa các bảng và quy tắc truy cập, từ đó sinh SQL nhất quán cho mọi truy vấn.', 'Tương tự người phiên dịch đứng giữa kho số liệu và người hỏi: bất kỳ ai hỏi "doanh thu tháng này" cũng nhận cùng một con số, được tính theo cùng một cách.'],
+  dw: ['data warehouse', 'Hệ cơ sở dữ liệu phân tích (Snowflake, BigQuery, Redshift, Postgres...) chứa dữ liệu nguồn; Cube gửi SQL đã biên dịch tới đây, nên chi phí và độ trễ của truy vấn trực tiếp phụ thuộc vào nó.', 'Tương tự kho lớn chứa toàn bộ dữ liệu gốc của công ty. Mỗi lần mở kho đều tốn thời gian và chi phí, nên Cube tìm cách mở kho ít nhất có thể.']},
+ alias: {public: ['public'], cdistinct: ['count_distinct'], granularity: ['granularity'], fanout: ['fanout'], semsql: ['Semantic SQL'],
+  filterparams: ['FILTER_PARAMS'], filtergroup: ['FILTER_GROUP'], pushdown: ['predicate pushdown'], compilectx: ['COMPILE_CONTEXT'], seccontext: ['securityContext'],
+  queryrewrite: ['query_rewrite', 'queryRewrite'], jwt: ['JWT'], rls: ['RLS', 'Row-Level Security'], preagg: ['pre-aggregations', 'pre-aggregation'], rollup: ['rollup'], cubestore: ['Cube Store'],
+  refreshkey: ['refresh_key'], resultcache: ['Query Result Cache'], metaapi: ['Meta API'], semantic: ['semantic layer'], dw: ['data warehouse']},
+ rel: {public: ['metaapi'], cdistinct: ['granularity'], granularity: ['cdistinct', 'preagg'], fanout: ['cdistinct'], semsql: ['semantic', 'metaapi'], filterparams: ['pushdown', 'filtergroup'],
+  filtergroup: ['filterparams'], pushdown: ['filterparams', 'dw'], compilectx: ['seccontext'], seccontext: ['jwt', 'queryrewrite'], queryrewrite: ['seccontext', 'rls'], jwt: ['seccontext'],
+  rls: ['queryrewrite'], preagg: ['rollup', 'cubestore', 'refreshkey'], rollup: ['preagg', 'granularity'], cubestore: ['preagg'], refreshkey: ['preagg'], resultcache: ['preagg'], metaapi: ['public'],
+  semantic: ['semsql', 'rls'], dw: ['pushdown', 'preagg']},
+ // ids starting with nb come from the Gemini Notebook quiz; ch04_q* are added to cover the other sections
+ quiz: [
+  {id: 'ch04_q1', s: 0, type: 'one', q: 'Khi đặt public: false cho cube internal_orders, điều gì xảy ra?', o: ['Cube bị xóa khỏi model khi deploy.', 'Cube ẩn khỏi API công khai nhưng vẫn hiển thị trong Developer Playground kèm biểu tượng khóa.', 'Chỉ measures bị ẩn, dimensions vẫn truy vấn được.', 'Chỉ tài khoản admin truy vấn được qua REST API.'], a: 1,
+   ex: 'public: false ẩn thành phần khỏi các API công khai; Playground vẫn hiển thị để nhà phát triển làm việc.', why: {0: 'Cube vẫn nằm trong model, chỉ không được công khai.', 2: 'public đặt trên cube thì ẩn cả cube.', 3: 'public không phải cơ chế phân quyền theo vai trò.'}},
+  {id: 'ch04_q2', s: 0, type: 'multi', q: 'Những quy ước nào được chuẩn hóa từ v0.33?', o: ['Tách thư mục model/cubes và model/views.', 'Dùng snake_case cho tên cube, view, measure, dimension.', 'Dùng camelCase cho tên measure.', 'Mặc định mọi thành phần là public: false.'], a: [0, 1],
+   ex: 'Hai thư mục riêng và snake_case cho mọi tên.', why: {2: 'snake_case áp dụng cho mọi tên, kể cả measure.', 3: 'Mặc định là public: true.'}},
+  {id: 'ch04_q3', s: 1, type: 'one', q: 'Để có DAU, WAU và MAU, cách khai báo gọn nhất trong Cube là gì?', o: ['Ba measure riêng cho ba chỉ số.', 'Một measure count_distinct trên user_id, đổi granularity trong truy vấn.', 'Một measure sum trên user_id.', 'Ba cube riêng cho ngày, tuần, tháng.'], a: 1,
+   ex: 'Cùng một measure, granularity day/week/month cho ra DAU/WAU/MAU.', why: {0: 'Cách này chạy được nhưng gây lặp lại, điều handbook khuyên tránh.', 2: 'Phép cộng trên user_id không có ý nghĩa.', 3: 'Không cần tách cube để đổi granularity.'}},
+  {id: 'ch04_q4', s: 1, type: 'one', q: 'Vì sao không lấy WAU bằng cách cộng bảy giá trị DAU?', o: ['Một người hoạt động nhiều ngày sẽ bị đếm nhiều lần, vì count_distinct không cộng dồn được.', 'Cube không cho phép cộng các measure với nhau.', 'DAU luôn được tính bằng HyperLogLog nên sai số lớn.', 'WAU phải đọc từ một bảng khác DAU.'], a: 0,
+   ex: 'Trong Hình 2, tổng DAU của tuần 1 lớn hơn số người khác nhau thực tế là 7.', why: {1: 'Vấn đề nằm ở tính chất phép đếm, không phải giới hạn của Cube.', 2: 'count_distinct đếm chính xác; HyperLogLog là count_distinct_approx.', 3: 'Cùng một bảng, chỉ khác granularity.'}},
+  {id: 'ch04_q5', s: 2, type: 'one', q: 'Đơn #1 (100) có ba dòng hàng, đơn #2 (200) có một dòng hàng. Nếu join line_items → orders khai báo sai thành one_to_one, tổng orders.amount trên phép join đó (không nhóm theo line_item) bằng bao nhiêu?', o: ['300', '400', '500', '600'], a: 2,
+   ex: 'Đơn #1 bị cộng ba lần: 100 × 3 + 200 = 500. Kết quả đúng là 300.', why: {0: '300 là kết quả khi relationship đúng.', 1: '400 nếu đơn #1 chỉ bị cộng hai lần.', 3: '600 là 200 × 3, không khớp dữ liệu.'}},
+  {id: 'ch04_q6', s: 2, type: 'one', q: 'Khi khai báo join từ cube line_items sang cube orders, relationship đúng là gì?', o: ['one_to_many', 'many_to_one', 'one_to_one', 'Không cần khai báo, Cube tự đoán.'], a: 1,
+   ex: 'Nhiều dòng hàng thuộc một đơn hàng, nên từ phía line_items là many_to_one.', why: {0: 'one_to_many đúng nếu khai báo từ phía orders.', 2: 'Một đơn có thể có nhiều dòng hàng.', 3: 'Cube cần relationship để chống fanout.'}},
+  {id: 'ch04_q7', s: 3, type: 'one', q: 'Cube xử lý MEASURE("orders".total_sales) trong Semantic SQL như thế nào?', o: ['Schema Compiler tra định nghĩa measure (sql: sales, type: sum), sau đó biên dịch thành SQL gốc cho data warehouse.', 'Gửi nguyên hàm MEASURE() xuống data warehouse để data warehouse tự xử lý.', 'Luôn trả kết quả từ cache, không sinh SQL.', 'MEASURE() chỉ chạy được khi data warehouse là Postgres.'], a: 0,
+   ex: 'MEASURE() là cú pháp của Cube; data warehouse chỉ nhận SQL gốc đã biên dịch.', why: {1: 'Data warehouse không biết hàm MEASURE().', 2: 'Cache là một cơ chế riêng; truy vấn không khớp cache vẫn cần SQL.', 3: 'Tương thích Postgres là về cú pháp phía client, không phải loại data warehouse.'}},
+  {id: 'nb3', s: 4, type: 'multi', q: 'Trường hợp nào cần bọc các FILTER_PARAMS trong FILTER_GROUP trong SQL của Cube?', o: ['Khi truy vấn từ client có bộ lọc boolean phức tạp, ví dụ có toán tử OR.', 'Để thay thế việc khai báo measures và dimensions trong YAML/JS.', 'Khi SQL của cube dùng FILTER_PARAMS nhiều lần, hoặc nối chúng bằng toán tử khác AND.', 'Để tránh kết quả sai do logic của inner WHERE lệch với outer WHERE.'], a: [0, 2, 3],
+   ex: 'FILTER_GROUP giữ đúng logic nhóm điều kiện giữa inner và outer query khi có nhiều FILTER_PARAMS hoặc OR.', why: {1: 'FILTER_GROUP không thay thế việc khai báo measures/dimensions.'}},
+  {id: 'nb6', s: 4, type: 'one', q: 'Khi dùng SQL_UTILS.convertTz() trong định nghĩa dimension, cần tuân thủ quy tắc nào?', o: ['Phải khai báo dimension đó thành measure kiểu countDistinct.', 'Chỉ chạy trên PostgreSQL, không chạy trên BigQuery hay Snowflake.', 'Nó vô hiệu hóa mọi chính sách Row-Level Security của Cube đó.', 'Dimension dùng convertTz() không được dùng làm timeDimensions trong truy vấn client, để tránh chuyển múi giờ hai lần.'], a: 3,
+   ex: 'Cube tự chuyển múi giờ cho timeDimensions; dùng thêm convertTz() thì múi giờ bị chuyển đổi hai lần và kết quả bị lệch.', why: {0: 'Không liên quan tới measure.', 1: 'convertTz() hoạt động trên nhiều loại cơ sở dữ liệu.', 2: 'Chuyển múi giờ không ảnh hưởng tới Row-Level Security.'}},
+  {id: 'ch04_q8', s: 4, type: 'one', q: 'Theo handbook, khi nào dùng FILTER_PARAMS là hợp lý?', o: ['Để predicate pushdown, ví dụ chỉ đọc các shard BigQuery trong khoảng ngày được hỏi.', 'Để chứa logic nghiệp vụ phức tạp phụ thuộc tham số từ giao diện.', 'Để thay cho segment.', 'Để phân quyền theo tenant.'], a: 0,
+   ex: 'FILTER_PARAMS nên giới hạn ở tối ưu hiệu năng. Logic nghiệp vụ phức tạp nên được chuyển về dbt hoặc data warehouse.', why: {1: 'Đây là anti-pattern mà handbook cảnh báo.', 2: 'Segment khai báo sẵn điều kiện lọc trong model, không cần FILTER_PARAMS.', 3: 'Phân quyền dùng query_rewrite và securityContext.'}},
+  {id: 'ch04_q9', s: 5, type: 'one', q: 'Tầng nào lưu các bảng rollup vật lý build sẵn và làm mới theo refresh_key?', o: ['Query Result Cache', 'Pre-aggregations trong Cube Store', 'Truy vấn trực tiếp data warehouse', 'Bộ nhớ trình duyệt của client'], a: 1,
+   ex: 'Tầng 2 là pre-aggregations trong Cube Store; tầng 1 chỉ lưu kết quả JSON theo TTL.', why: {0: 'Query Result Cache lưu kết quả JSON và hết hạn theo TTL.', 2: 'Truy vấn trực tiếp không lưu trữ kết quả.', 3: 'Không phải tầng cache của Cube.'}},
+  {id: 'nb4', s: 6, type: 'one', q: 'Pre-aggregations (external rollups) kết hợp Cube Store giải quyết vấn đề nào của dữ liệu lớn trên cloud data warehouse?', o: ['Tự mã hóa và che dữ liệu nhạy cảm trước khi trả về client.', 'Thay chỉ mục của cơ sở dữ liệu nguồn bằng cách quét lại toàn bộ dữ liệu thô theo thời gian thực.', 'Giảm độ trễ xuống dưới một giây và tối ưu chi phí data warehouse bằng cách định tuyến truy vấn tới bảng rollup tính sẵn trong Cube Store.', 'Bỏ nhu cầu dùng JWT khi xác thực.'], a: 2,
+   ex: 'Pre-aggregations tổng hợp sẵn dữ liệu và lưu trong Cube Store, nên truy vấn tương tác có độ trễ thấp mà không phải chạy lại các câu lệnh tốn kém trên data warehouse nguồn.', why: {0: 'Bảo mật và che dữ liệu thuộc tầng Access Control (access policies, data masking).', 1: 'Pre-aggregations dùng bảng tổng hợp sẵn, không quét lại dữ liệu thô mỗi lần.', 3: 'Không liên quan tới xác thực JWT.'}},
+  {id: 'ch04_q10', s: 6, type: 'one', q: 'Rollup sales_daily có refresh_key every: 1 hour. Hệ quả là gì?', o: ['Rollup được build lại mỗi giờ, nên số liệu có thể trễ tới khoảng một giờ so với data warehouse.', 'Truy vấn bị chặn trong một giờ sau mỗi lần build.', 'Rollup được chia partition theo giờ.', 'Mỗi giờ Cube xóa rollup và truy vấn trực tiếp data warehouse.'], a: 0,
+   ex: 'refresh_key quyết định độ tươi; đổi lại, data warehouse chỉ nhận truy vấn khi build.', why: {1: 'refresh_key không chặn truy vấn.', 2: 'Partition do partition_granularity quyết định, ở đây là month.', 3: 'Rollup được build lại, không bị xóa.'}},
+  {id: 'nb8', s: 7, type: 'multi', q: 'Trong môi trường multi-tenant, Cube thực thi Access Control như thế nào để dữ liệu an toàn?', o: ['Giải mã JWT trong header Authorization để lấy securityContext.', 'Dùng query_rewrite hoặc COMPILE_CONTEXT để điều chỉnh truy vấn theo ngữ cảnh người dùng.', 'Yêu cầu người dùng cuối gửi mật khẩu data warehouse trong mỗi request REST API.', 'Áp dụng Row-Level Security và data masking tại semantic layer trước khi SQL tới data warehouse.'], a: [0, 1, 3],
+   ex: 'JWT mang ngữ cảnh người dùng; query_rewrite/COMPILE_CONTEXT dùng ngữ cảnh đó để thêm bộ lọc; RLS và masking được áp tại Cube trước khi truy vấn tới data warehouse (data masking khai báo qua member_masking trong access policies, có ở Cube Core từ v1.6.23).', why: {2: 'Người dùng cuối không bao giờ nắm giữ thông tin đăng nhập data warehouse; Cube giữ kết nối tới data warehouse.'}},
+  {id: 'ch04_q11', s: 7, type: 'one', q: 'Với hàm queryRewrite trong handbook, điều gì xảy ra nếu JWT không có tenant_id?', o: ['Không bộ lọc nào được thêm, truy vấn thấy dữ liệu của mọi tenant; cần chặn trường hợp này.', 'Cube tự từ chối truy vấn.', 'Cube tự gán một tenant mặc định.', 'Truy vấn luôn trả về rỗng.'], a: 0,
+   ex: 'Điều kiện if không thỏa nên query được trả về nguyên vẹn. Nên ném lỗi khi thiếu tenant_id.', why: {1: 'Đoạn code chỉ return query, không ném lỗi.', 2: 'Không có tenant mặc định trong ví dụ.', 3: 'Không có bộ lọc thì kết quả gồm mọi dòng.'}},
+  {id: 'ch04_q12', s: 8, type: 'one', q: 'Meta API (/cubejs-api/v1/meta) có chức năng gì?', o: ['Xem cấu hình data model đang chạy, phục vụ kiểm tra và discovery.', 'Kích hoạt build lại pre-aggregation.', 'Xóa Query Result Cache.', 'Tạo JWT cho client.'], a: 0,
+   ex: 'Meta API trả về cubes, views, measures, dimensions mà người gọi được phép thấy.'},
+  {id: 'ch04_q13', s: 9, type: 'multi', q: 'Theo handbook, vì sao AI Agent trả lời chính xác hơn khi truy vấn qua semantic layer?', o: ['Không phải tự suy đoán phép join giữa các bảng.', 'Dùng certified metrics thay vì tự chọn cột.', 'Cube fine-tune lại mô hình ngôn ngữ.', 'Cube tăng context window của mô hình.'], a: [0, 1],
+   ex: 'Lỗi chính khi đọc bảng thô là suy đoán join, áp sai bộ lọc và chọn sai cột. Semantic layer loại bỏ đúng các nguyên nhân này.', why: {2: 'Cube không huấn luyện mô hình.', 3: 'Cube không thay đổi mô hình ngôn ngữ.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

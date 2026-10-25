@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · Fundamentals · Cube.dev Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* figures used only in this chapter */
+.stack{display:grid;gap:10px}
+.stack button{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;text-align:left;padding:14px 18px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;transition:border-color .2s,background .2s}
+.stack button b{font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stack button span{display:flex;flex-wrap:wrap;gap:6px;font-size:13px;color:var(--body)}
+.stack button span i{font-style:normal;padding:2px 8px;border:1px solid var(--line);border-radius:999px;background:var(--soft)}
+.stack button.mid{border-color:var(--acc)}
+.stack button.mid b{color:var(--acc)}
+.stack button.on{background:var(--acc-soft);border-color:var(--acc)}
+.arrow{height:14px;display:flex;justify-content:center}.arrow:before{content:"";width:1px;background:var(--muted);opacity:.4}
+.drift{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative}
+.drift div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:13px;color:var(--muted);text-align:center}
+.drift div b{display:block;font:400 26px/1.2 var(--serif);color:var(--fg);margin:6px 0 2px;transition:color .3s}
+.drift div small{font:400 11px var(--mono)}
+.drift.unified div b{color:var(--acc)}
+.hub{margin:14px auto 0;width:max-content;max-width:100%;padding:8px 14px;border:1px dashed var(--line);border-radius:999px;font:500 12px var(--mono);color:var(--muted);transition:.3s}
+.drift.unified+.hub{border-style:solid;border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.figbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;color:var(--muted)}
+.rows{display:grid;gap:10px;margin-top:4px}
+.rows div{display:grid;grid-template-columns:110px 1fr;gap:12px;font-size:15px}
+.rows div b{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.rows div.fix b{color:var(--acc)}
+.yx{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:start}
+.yx .panel{margin:0;position:sticky;top:90px}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.cmp div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.55}
+.cmp div b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cmp div:first-child{border-color:var(--acc)}.cmp div:first-child b{color:var(--acc)}
+@media(max-width:700px){.drift{grid-template-columns:repeat(2,1fr)}.yx,.cmp{grid-template-columns:1fr}.stack button{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 01 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 01</div>
+  <h1>Fundamentals: Cube.dev <i>là gì?</i></h1>
+  <p class="dek">Cube giải quyết vấn đề gì, gồm những khái niệm nào, và trong trường hợp nào nên chọn Cube thay cho các giải pháp khác.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 01 / 07</span><span>14 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Cube là semantic layer nằm giữa data warehouse và các ứng dụng truy vấn dữ liệu. Mỗi chỉ số được định nghĩa một lần và dùng chung ở mọi nơi.</div>
+
+  <section id="s1">
+    <span class="num">01.1</span>
+    <h2>Cube.dev là gì?</h2>
+    <p class="gist">Một lớp trung gian giữa data warehouse và các ứng dụng truy vấn dữ liệu.</p>
+    <p>Cube.dev là nền tảng phân tích xây trên một semantic layer mã nguồn mở. Cube không thay thế data warehouse, cũng không kèm sẵn công cụ vẽ biểu đồ. Cube nằm ở tầng giữa, tiếp nhận yêu cầu từ các ứng dụng phía trên và chuyển đổi thành truy vấn cho data warehouse phía dưới.</p>
+    <figure>
+      <div class="fig">
+        <div class="stack" id="stack">
+          <button data-l="0"><b>Consumption</b><span><i>BI nội bộ</i><i>Embedded analytics</i><i>AI Agent</i></span></button>
+          <div class="arrow"></div>
+          <button data-l="1" class="mid"><b>Cube</b><span><i>Data model</i><i>Access control</i><i>Caching</i><i>APIs</i></span></button>
+          <div class="arrow"></div>
+          <button data-l="2"><b>Data warehouse</b><span><i>Snowflake</i><i>BigQuery</i><i>Databricks</i><i>Redshift</i><i>ClickHouse</i><i>Postgres</i></span></button>
+        </div>
+        <div class="panel" id="stackP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Chọn từng tầng để xem chức năng của tầng đó.</figcaption>
+    </figure>
+    <p>Cube được phát hành dưới hai dạng. Cả hai dạng dùng chung một data model.</p>
+    <div class="figbar" style="margin-top:-4px"><div class="seg" id="ed"><button data-e="0" class="on">Cube Core</button><button data-e="1">Cube Cloud</button></div></div>
+    <div class="panel" id="edP" style="margin-top:0"></div>
+    <div class="take"><small>Ghi nhớ</small>File data model chuyển được nguyên vẹn giữa Cube Core và Cube Cloud mà không cần sửa dòng nào.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">01.2</span>
+    <h2>Semantic layer giải quyết vấn đề gì?</h2>
+    <p class="gist">Chỉ số được định nghĩa một lần và dùng chung ở mọi nơi.</p>
+    <p>Khi chưa có semantic layer, một chỉ số như “Doanh thu thuần” bị định nghĩa lại trong từng công cụ. Mỗi phòng ban nhận được một con số khác nhau, và dữ liệu mất độ tin cậy. Hình 2 cho phép chuyển qua lại giữa hai trạng thái.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Doanh thu thuần tháng này, số minh họa</span><div class="seg" id="sl"><button data-u="0" class="on">Chưa có semantic layer</button><button data-u="1">Có semantic layer</button></div></div>
+        <div class="drift" id="drift"></div>
+        <div class="hub" id="hubTxt"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Bốn bề mặt tiêu thụ, cùng một câu hỏi.</figcaption>
+    </figure>
+    <p>Semantic layer của Cube gồm bốn trụ cột. Chọn từng trụ cột để xem phạm vi đảm nhận.</p>
+    <div class="pills" id="pil"></div>
+    <div class="panel" id="pilP"></div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Vì sao Cube chọn code-first</span></summary><div>
+      <p>Data model của Cube là file YAML hoặc JavaScript nằm trong Git. Do đó data model tuân theo quy trình phát triển phần mềm: có lịch sử phiên bản, qua review trước khi deploy, có kiểm thử tự động trong CI/CD, và tách biệt các môi trường dev, staging, production.</p>
+      <p>Các công cụ BI đóng gói thường đặt logic trong calculated field trên giao diện, nên các thay đổi không thể review hay truy vết.</p>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">01.3</span>
+    <h2>Bốn dấu hiệu khi thiếu semantic layer</h2>
+    <p class="gist">Khi mỗi dashboard tự viết SQL, số liệu giữa các nơi sớm muộn sẽ sai lệch.</p>
+    <p>Chọn một dấu hiệu để xem hệ quả và cách Cube xử lý.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="sym"></div>
+        <div class="panel" id="symP"></div>
+      </div>
+      <figcaption><b>Hình 3</b>Vấn đề, hệ quả, và cách Cube giải quyết.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Khi AI Agent truy vấn qua Cube, agent gọi các chỉ số đã định nghĩa sẵn thay vì tự suy đoán phép join trên bảng thô.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">01.4</span>
+    <h2>Sáu khái niệm cốt lõi</h2>
+    <p class="gist">Cube, view, measure, dimension, segment, join. Nắm được sáu khái niệm này là đủ để đọc mọi data model.</p>
+    <p>Mỗi cube mô tả một đối tượng kinh doanh như đơn hàng hay khách hàng. Views nằm ở lớp phía trên, chọn lọc measures và dimensions từ nhiều cube thành một data mart gọn cho người dùng và AI Agent. Chọn từng dòng YAML để xem dòng đó khai báo gì.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="yt"><button data-y="0" class="on">model/cubes/orders.yml</button><button data-y="1">model/views/orders_view.yml</button></div>
+        <div class="yx"><div class="code"><pre id="yc"></pre></div><div class="panel" id="yp"></div></div>
+      </div>
+      <figcaption><b>Hình 4</b>Tương tác: mỗi dòng ứng với một khái niệm.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Measures có những kiểu nào?</span></summary><div>
+      <p>Các kiểu phổ biến: <code>count</code>, <code>sum</code>, <code>avg</code>, <code>count_distinct</code> và <code>count_distinct_approx</code>. Kiểu cuối cùng đếm xấp xỉ và nhanh hơn nhiều trên tập dữ liệu lớn. Chương 04 phân tích chi tiết cách chọn kiểu measure.</p>
+    </div></details>
+  </section>
+
+  <section id="s5">
+    <span class="num">01.5</span>
+    <h2>Ba kịch bản dùng Cube</h2>
+    <p class="gist">BI nội bộ, embedded analytics trong sản phẩm, và AI context layer.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="uc"></div>
+        <div class="rows" id="ucP"></div>
+      </div>
+      <figcaption><b>Hình 5</b>Cùng một data model, ba nhóm người dùng.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s6">
+    <span class="num">01.6</span>
+    <h2>Cube, dbt Semantic Layer hay LookML?</h2>
+    <p class="gist">Ba công cụ giải quyết cùng một bài toán theo ba cách khác nhau.</p>
+    <p>Chọn tiêu chí để so sánh. Bảng so sánh lấy từ handbook; trước khi chọn công cụ cho dự án thực tế, nên đối chiếu thêm tài liệu chính thức của từng công cụ.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="cr"></div>
+        <div class="cmp" id="crP"></div>
+      </div>
+      <figcaption><b>Hình 6</b>So sánh theo từng tiêu chí.</figcaption>
+    </figure>
+    <a class="next-ch" href="/blog/cube-handbook/02"><span><small>Chương tiếp theo</small><b>02 · Architecture &amp; Internals</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1
+const LAYER = [['Consumption layer', 'Dashboard nội bộ, biểu đồ nhúng trong sản phẩm SaaS, và AI Agent như Claude hay ChatGPT. Tất cả truy vấn qua Cube thay vì truy vấn trực tiếp data warehouse.'],
+ ['Cube', 'Lưu định nghĩa chỉ số (data model), kiểm soát quyền truy cập dữ liệu, cache kết quả để phản hồi nhanh, và cung cấp các API: SQL, REST, GraphQL, MCP.'],
+ ['Data warehouse', 'Nơi lưu dữ liệu gốc. Cube không sao chép dữ liệu ra ngoài mà sinh SQL và gửi xuống tầng này khi cần.']];
+one('#stack', 'l', i => stackP.innerHTML = `<h5>${LAYER[i][0]}</h5>${LAYER[i][1]}`).querySelector('[data-l="1"]').click();
+const ED = [['Cube Core', 'Mã nguồn mở theo giấy phép Apache 2.0, tự host miễn phí. Gồm data modeling, access control, caching với Cube Store và các API.'],
+ ['Cube Cloud', 'Dịch vụ do Cube Dev vận hành. Gồm toàn bộ tính năng của Core, cộng thêm Analytics Chat, Workbooks, Dashboards, hạ tầng quản lý sẵn và bảo mật nâng cao.']];
+one('#ed', 'e', i => edP.innerHTML = `<h5>${ED[i][0]}</h5>${ED[i][1]}`); edP.innerHTML = `<h5>${ED[0][0]}</h5>${ED[0][1]}`;
+// Hình 2
+const TEAMS = [['Marketing', 'Tableau', '4,2 tỷ'], ['Tài chính', 'Excel', '3,9 tỷ'], ['Sản phẩm', 'App SaaS', '4,6 tỷ'], ['AI Agent', 'SQL tự sinh', '3,1 tỷ']];
+function drift(u) {
+ document.getElementById('drift').className = 'drift' + (u ? ' unified' : '');
+ document.getElementById('drift').innerHTML = TEAMS.map(t => `<div>${t[0]}<b>${u ? '4,2 tỷ' : t[2]}</b><small>${u ? 'qua Cube' : t[1]}</small></div>`).join('');
+ hubTxt.textContent = u ? 'orders.net_revenue · định nghĩa một lần trong Cube' : 'Mỗi nơi tự viết công thức riêng'}
+one('#sl', 'u', drift); drift(0);
+const PIL = [['Data Modeling', 'Khai báo cubes, measures, dimensions, joins, và views dùng làm data mart.'],
+ ['Access Control', 'Row-Level Security, column-level security và data masking, quản lý tập trung tại một nơi.'],
+ ['Caching', 'Lưu pre-aggregations trong Cube Store để trả lời nhanh mà không làm tăng chi phí data warehouse.'],
+ ['APIs', 'SQL API tương thích Postgres, REST API, GraphQL API và MCP server cho ứng dụng và AI Agent.']];
+pil.innerHTML = PIL.map((p, i) => `<button data-p="${i}" class="${i ? '' : 'on'}">${p[0]}</button>`).join('');
+one('#pil', 'p', i => pilP.innerHTML = `<h5>${PIL[i][0]}</h5>${PIL[i][1]}`); pilP.innerHTML = `<h5>${PIL[0][0]}</h5>${PIL[0][1]}`;
+// Hình 3
+const SYM = [['Metric drift', 'Mỗi dashboard và ứng dụng tự viết SQL riêng.', 'Con số lệch giữa các báo cáo, ban quản trị mất niềm tin vào dữ liệu.', 'Khai báo chỉ số một lần trong mã nguồn; mọi giao diện truy vấn qua cùng định nghĩa.'],
+ ['Join viết lại liên tục', 'Chuỗi JOIN phức tạp bị viết lại ở nhiều nơi.', 'Dễ gây fanout, nhân đôi dòng và cộng sai.', 'Cube tự sinh phép join từ đồ thị quan hệ đã khai báo sẵn.'],
+ ['Bộ lọc rải rác', 'Quy tắc lọc, ví dụ loại bỏ email nội bộ, bị hardcode trên hàng chục dashboard.', 'Báo cáo tài chính lẫn dữ liệu test khi một nơi không được cập nhật.', 'Đặt điều kiện lọc thành segment dùng lại được, hoặc đặt trực tiếp trong measure.'],
+ ['AI viết SQL thô', 'AI Agent tự viết SQL truy vấn trực tiếp data warehouse.', 'Đoán sai join, sai cú pháp, lộ dữ liệu nhạy cảm.', 'Agent kết nối qua MCP hoặc Chat API và chỉ gọi chỉ số đã định nghĩa.']];
+sym.innerHTML = SYM.map((s, i) => `<button data-s="${i}" class="${i ? '' : 'on'}">${s[0]}</button>`).join('');
+const symShow = i => symP.innerHTML = `<div class="rows"><div><b>Vấn đề</b>${SYM[i][1]}</div><div><b>Hệ quả</b>${SYM[i][2]}</div><div class="fix"><b>Cube xử lý</b>${SYM[i][3]}</div></div>`;
+one('#sym', 's', symShow); symShow(0);
+// Hình 4: each YAML line carries the concept it declares
+const Y = [[['cubes:', 'cube'], ['  - name: orders', 'cube'], ['    sql_table: public.orders', 'sqltable'], ['', ''], ['    joins:', 'join'], ['      - name: customers', 'join'], ['        sql: "{CUBE}.customer_id = {customers.id}"', 'join'], ['        relationship: many_to_one', 'join'], ['', ''],
+  ['    measures:', 'measure'], ['      - name: count', 'measure'], ['        type: count', 'measure'], ['      - name: total_amount', 'measure'], ['        sql: amount', 'measure'], ['        type: sum', 'measure'], ['', ''],
+  ['    dimensions:', 'dimension'], ['      - name: status', 'dimension'], ['        type: string', 'dimension'], ['      - name: created_at', 'dimension'], ['        type: time', 'dimension'], ['', ''],
+  ['    segments:', 'segment'], ['      - name: completed_orders', 'segment'], ['        sql: "{CUBE}.status = \'completed\'"', 'segment']],
+ [['views:', 'view'], ['  - name: orders_view', 'view'], ['    description: "Data mart cho báo cáo bán hàng và AI Agent"', 'desc'], ['    cubes:', 'view'], ['      - join_path: orders', 'path'], ['        includes: [count, total_amount, status, created_at]', 'includes'], ['      - join_path: orders.customers', 'path'], ['        prefix: true', 'prefix'], ['        includes: [name, city]', 'includes']]];
+const YI = {cube: ['Cube', 'Mô tả một đối tượng kinh doanh, ở đây là đơn hàng. Cube trỏ tới bảng nguồn và chứa measures, dimensions, joins.'],
+ sqltable: ['sql_table', 'Trỏ Cube tới một bảng có sẵn, không cần viết SELECT * FROM thủ công.'],
+ join: ['Join', 'Quan hệ giữa hai cube. relationship cho Cube biết nhiều đơn hàng thuộc về một khách hàng, để không cộng trùng khi nối bảng.'],
+ measure: ['Measure', 'Chỉ số được tổng hợp: count đếm dòng, sum cộng cột amount.'],
+ dimension: ['Dimension', 'Thuộc tính để nhóm hoặc lọc. created_at có kiểu time nên dùng được làm trục thời gian.'],
+ segment: ['Segment', 'Một điều kiện WHERE được đặt tên để dùng lại khi phân tích. Ở đây là “đơn đã hoàn thành”.'],
+ view: ['View', 'Lớp phía trên cube, chọn ra đúng những gì người dùng và AI Agent cần thấy.'],
+ desc: ['description', 'Mô tả dành cho người đọc và AI. Mô tả càng rõ, AI càng chọn đúng chỉ số.'],
+ path: ['join_path', 'Đường đi từ cube gốc qua các phép nối để lấy trường.'],
+ includes: ['includes', 'Danh sách trường được công khai. Trường không có trong danh sách thì người dùng view không thấy.'],
+ prefix: ['prefix', 'Thêm tên cube vào trước tên trường, ví dụ customers_city, để không trùng tên.']};
+let yf = 0;
+function yaml(f, k) {yf = f; yc.innerHTML = Y[f].map(([t, c], i) => `<span class="ln${c && c === k ? ' on' : ''}" data-c="${c}" data-i="${i}">${t.replace(/^(\s*-?\s*)([a-z_]+):/, '$1<span class="k">$2</span>:') || ' '}</span>`).join('');
+ const c = k && YI[k]; yp.innerHTML = c ? `<h5>${c[0]}</h5>${c[1]}` : '<h5>Chọn một dòng</h5>Mỗi dòng YAML khai báo một khái niệm. Chọn một dòng để xem giải thích.'}
+yc.onclick = e => {const l = e.target.closest('.ln'); if (l && l.dataset.c) yaml(yf, l.dataset.c)};
+one('#yt', 'y', f => yaml(f, f ? 'view' : 'cube')); yaml(0, 'cube');
+// Hình 5
+const UC = [['BI nội bộ', 'Nhà phân tích, nhân viên kinh doanh.', 'Hỏi bằng ngôn ngữ tự nhiên hoặc kéo thả trong Analytics Chat, Workbooks, Dashboards.', 'Con số luôn khớp với định nghĩa của data team.'],
+ ['Embedded analytics', 'Khách hàng của một sản phẩm SaaS.', 'Xem biểu đồ trực tiếp trong sản phẩm, mỗi khách hàng chỉ thấy dữ liệu của mình.', 'Cách ly dữ liệu nhiều khách hàng (multi-tenancy, RLS), độ trễ thấp, REST và GraphQL API.'],
+ ['AI context layer', 'AI Agent như Claude, ChatGPT hoặc agent nội bộ.', 'Kết nối qua MCP Server hoặc Chat API để phân tích.', 'Agent gọi Semantic SQL trên các chỉ số đã chứng thực thay vì đọc bảng thô.']];
+uc.innerHTML = UC.map((u, i) => `<button data-c="${i}" class="${i ? '' : 'on'}">${u[0]}</button>`).join('');
+const ucShow = i => ucP.innerHTML = `<div><b>Người dùng</b>${UC[i][1]}</div><div><b>Cách sử dụng</b>${UC[i][2]}</div><div class="fix"><b>Cube đảm nhận</b>${UC[i][3]}</div>`;
+one('#uc', 'c', ucShow); ucShow(0);
+// Hình 6
+const CR = [['Mô hình dữ liệu', 'Độc lập, xoay quanh dataset (cubes, views), viết bằng YAML hoặc JS.', 'Gắn với dự án dbt (semantic_models, metrics), viết bằng YAML.', 'Độc lập (views, explores), viết bằng ngôn ngữ riêng LookML.'],
+ ['Kết nối & API', 'SQL API tương thích Postgres, REST, GraphQL, MCP.', 'Chủ yếu qua JDBC connector và dbt Cloud API.', 'Gắn chặt với giao diện Looker.'],
+ ['Caching', 'Có sẵn Cube Store với rollup pre-aggregations.', 'Dùng dbt Cloud Query Cache hoặc Saved Queries.', 'Persistent Derived Tables (PDT) trên data warehouse.'],
+ ['Embedded & AI', 'Có SDK React/Angular, MCP Server cho AI Agent.', 'Đang phát triển qua API của dbt Cloud.', 'Có signed embedding, Embed SDK và MCP server (bản preview); bản quyền theo người dùng đắt khi mở rộng.'],
+ ['Chi phí', 'Core miễn phí tự host; Cloud tính phí theo mức sử dụng hạ tầng.', 'Cần gói dbt Cloud Team/Enterprise cho server caching.', 'Bản quyền doanh nghiệp theo số người dùng.']];
+cr.innerHTML = CR.map((c, i) => `<button data-r="${i}" class="${i ? '' : 'on'}">${c[0]}</button>`).join('');
+const crShow = i => crP.innerHTML = ['Cube', 'dbt Semantic Layer', 'Looker LookML'].map((n, j) => `<div><b>${n}</b>${CR[i][j + 1]}</div>`).join('');
+one('#cr', 'r', crShow); crShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'ch01', minutes: 14,
+ next: {href: '/blog/cube-handbook/02', n: '02', t: 'Architecture & Internals'},
+ sections: [
+  {id: 's1', n: '01.1', t: 'Cube.dev là gì?', sum: ['Cube là semantic layer giữa data warehouse và các ứng dụng hỏi dữ liệu.', 'Có hai dạng: Cube Core (mã nguồn mở) và Cube Cloud (dịch vụ quản lý).', 'Data model chuyển nguyên vẹn giữa hai dạng.'], terms: ['semantic', 'dwh', 'core', 'cloud']},
+  {id: 's2', n: '01.2', t: 'Semantic layer', sum: ['Chỉ số được định nghĩa một lần và dùng chung cho mọi bề mặt.', 'Bốn trụ cột: data modeling, access control, caching, APIs.', 'Code-first: model lưu trong Git, qua review và CI/CD.'], terms: ['semantic', 'drift', 'preagg', 'codefirst']},
+  {id: 's3', n: '01.3', t: 'Bốn dấu hiệu', sum: ['Metric drift, join lặp lại, bộ lọc rải rác, AI viết SQL thô.', 'Cube gom định nghĩa, sinh join tự động, dùng segment cho bộ lọc.'], terms: ['drift', 'fanout', 'segment', 'mcp']},
+  {id: 's4', n: '01.4', t: 'Sáu khái niệm cốt lõi', sum: ['Cube mô tả một đối tượng kinh doanh, view là data mart phía trên.', 'Measure để tính, dimension để nhóm và lọc.', 'Segment đóng gói điều kiện WHERE dùng lại được, join khai báo quan hệ.'], terms: ['cube', 'view', 'measure', 'dimension', 'segment', 'join']},
+  {id: 's5', n: '01.5', t: 'Ba kịch bản', sum: ['BI nội bộ, embedded analytics, AI context layer.', 'Embedded cần multi-tenancy; AI cần chỉ số đã chứng thực.'], terms: ['rls', 'mcp', 'view']},
+  {id: 's6', n: '01.6', t: 'So sánh', sum: ['Cube: YAML/JS độc lập, nhiều API, có Cube Store.', 'dbt gắn với dự án dbt; LookML gắn với Looker.'], terms: ['preagg', 'cubestore', 'codefirst']}],
+ terms: {
+  semantic: ['semantic layer', 'Tầng trừu tượng nằm giữa data warehouse và các ứng dụng tiêu thụ, ánh xạ bảng vật lý thành khái niệm kinh doanh (measures, dimensions, joins) và giữ định nghĩa chỉ số tập trung, có quản trị, cho mọi API.', 'Giống một cuốn từ điển chung của công ty: “doanh thu thuần” được định nghĩa đúng một lần, mọi người tra cứu đều nhận cùng một nghĩa, dù truy vấn từ Excel, dashboard hay chatbot.'],
+  dwh: ['data warehouse', 'Hệ cơ sở dữ liệu phân tích lưu dữ liệu gốc của tổ chức (Snowflake, BigQuery, Databricks, Redshift, Postgres...). Cube không thay thế nó mà sinh SQL và gửi xuống khi cần.', 'Kho lớn chứa toàn bộ dữ liệu gốc của công ty. Cube không chuyển hàng ra khỏi kho, chỉ lập phiếu xuất kho cho đúng những thứ cần lấy.'],
+  core: ['Cube Core', 'Phiên bản mã nguồn mở của Cube theo giấy phép Apache 2.0, tự host, gồm data modeling, access control, caching với Cube Store và các API.', 'Bản miễn phí, người dùng tự cài đặt trên máy chủ riêng. Tương tự việc nấu ăn tại nhà: có đủ nguyên liệu chính nhưng phải tự lo khâu bếp núc.'],
+  cloud: ['Cube Cloud', 'Dịch vụ managed do Cube Dev vận hành: bao gồm toàn bộ Cube Core, thêm Analytics Chat, Workbooks, Dashboards, hạ tầng quản lý sẵn và bảo mật nâng cao.', 'Cùng món ăn đó nhưng dùng tại nhà hàng: có người nấu, dọn dẹp và bảo trì, đổi lại người dùng trả phí theo mức sử dụng.'],
+  drift: ['metric drift', 'Hiện tượng cùng một chỉ số cho ra giá trị khác nhau giữa các công cụ vì mỗi nơi tự cài đặt công thức và logic lọc, join riêng.', 'Bốn phòng ban cùng báo “doanh thu tháng này” nhưng đưa ra bốn con số khác nhau, và sau cuộc họp không ai biết nên tin con số nào.'],
+  preagg: ['pre-aggregation', 'Bảng kết quả đã gom nhóm sẵn theo một tổ hợp measures, dimensions và granularity thời gian, được Cube build định kỳ và lưu trong Cube Store để trả lời truy vấn khớp mà không quét dữ liệu thô.', 'Tương tự bảng cộng sổ cuối ngày của cửa hàng: để biết doanh thu tuần, chỉ cần cộng bảy tờ tổng, không phải xem lại từng hóa đơn.'],
+  cubestore: ['Cube Store', 'Engine lưu trữ và truy vấn dạng cột, phân tán, do Cube phát triển để chứa và phục vụ các bảng pre-aggregation.', 'Tủ lạnh riêng của Cube, nơi cất sẵn các món đã nấu để phục vụ tức thì khi có khách gọi.'],
+  codefirst: ['code-first', 'Cách tiếp cận trong đó data model được khai báo bằng mã nguồn (YAML hoặc JavaScript) lưu trong Git, nên đi qua version control, code review, kiểm thử và CI/CD như phần mềm.', 'Công thức tính số được viết thành văn bản và cất trong kho lưu trữ có lịch sử, mọi chỉnh sửa đều ghi rõ người sửa, dòng được sửa và phải qua phê duyệt, thay vì thao tác chuột trong một giao diện không theo dõi được.'],
+  fanout: ['fanout', 'Lỗi khi join theo quan hệ một-nhiều làm nhân bản các dòng phía “một”, khiến phép aggregate như sum hay count bị cộng trùng.', 'Khi ghép danh sách đơn hàng với danh sách món trong đơn, mỗi đơn bị lặp lại theo số món, nên tổng tiền ship tính ra gấp nhiều lần thực tế.'],
+  segment: ['segment', 'Điều kiện lọc SQL (mệnh đề WHERE) được đặt tên và khai báo sẵn trong cube để tái sử dụng trong truy vấn.', 'Một bộ lọc đặt tên sẵn, ví dụ “đơn đã hoàn thành”: chỉ cần chọn để áp dụng, không phải viết lại điều kiện ở mỗi lần truy vấn.'],
+  mcp: ['MCP', 'Model Context Protocol: giao thức mở chuẩn hóa cách LLM và AI Agent kết nối tới công cụ, nguồn dữ liệu bên ngoài; Cube cung cấp MCP Server để agent truy vấn chỉ số có quản trị.', 'Tương tự ổ cắm điện tiêu chuẩn: AI có phích cắm đúng chuẩn có thể kết nối với Cube để truy vấn số liệu mà không cần làm dây nối riêng.'],
+  cube: ['cube', 'Đơn vị mô hình hóa cơ bản trong data model của Cube, ánh xạ tới một bảng hoặc câu SQL nguồn và chứa measures, dimensions, joins, segments của một đối tượng kinh doanh.', 'Một bộ hồ sơ cho một đối tượng công ty quan tâm, ví dụ “đơn hàng”: ghi rõ nguồn dữ liệu, những con số tính được và những góc nhìn phân tích.'],
+  view: ['view', 'Lớp giao diện phía trên các cube, chọn lọc và gom measures, dimensions từ nhiều cube theo join_path thành một tập dữ liệu gọn cho người dùng và AI Agent.', 'Tương tự thực đơn in sẵn cho khách: bếp có hàng trăm nguyên liệu, nhưng khách chỉ thấy những món được chọn để phục vụ.'],
+  measure: ['measure', 'Trường định lượng được tính bằng hàm tổng hợp như count, sum, avg, count_distinct trên dữ liệu nguồn.', 'Con số cần đo, như tổng tiền, số đơn, số khách: những đại lượng cần cộng hoặc đếm.'],
+  dimension: ['dimension', 'Thuộc tính định tính hoặc thời gian dùng để nhóm (GROUP BY) và lọc kết quả; có kiểu như string, number, time.', 'Góc nhìn để chia con số: theo tháng, theo thành phố, theo trạng thái đơn.'],
+  join: ['join', 'Khai báo quan hệ giữa hai cube, gồm điều kiện nối và relationship (one_to_one, one_to_many, many_to_one), để Cube tự sinh JOIN và tránh fanout.', 'Sợi dây nối hai hồ sơ, ví dụ “mỗi đơn hàng thuộc về một khách hàng”, để khi ghép lại không bị đếm trùng.'],
+  rls: ['Row-Level Security', 'Cơ chế kiểm soát truy cập ở cấp dòng: tự động thêm điều kiện WHERE dựa trên thông tin người gọi (securityContext) để mỗi người dùng hoặc tenant chỉ nhận các dòng được phép. Thường viết tắt RLS.', 'Cùng một bảng tính, nhưng mỗi chi nhánh mở ra chỉ thấy dòng của chi nhánh mình, các dòng khác được ẩn đi.'],
+  datamart: ['data mart', 'Tập dữ liệu con đã được chọn lọc và tổ chức cho một nhóm người dùng hoặc mục đích phân tích cụ thể.', 'Một quầy hàng nhỏ chỉ bày đúng những gì phòng kinh doanh cần, thay vì buộc họ tìm kiếm trong cả siêu thị.']},
+ alias: {semantic: ['semantic layer'], dwh: ['data warehouse'], core: ['Cube Core'], cloud: ['Cube Cloud'], drift: ['metric drift'], preagg: ['pre-aggregations', 'pre-aggregation'], cubestore: ['Cube Store'],
+  codefirst: ['code-first'], fanout: ['fanout'], segment: ['segments', 'segment'], mcp: ['MCP'], cube: ['cubes'], view: ['views', 'view'], measure: ['measures', 'measure'],
+  dimension: ['dimensions', 'dimension'], join: ['joins', 'join'], rls: ['Row-Level Security', 'RLS'], datamart: ['data mart']},
+ rel: {semantic: ['drift', 'view', 'dwh'], dwh: ['semantic', 'preagg'], core: ['cloud'], cloud: ['core'], drift: ['semantic'], preagg: ['cubestore'], cubestore: ['preagg'], codefirst: ['semantic'], fanout: ['join'], segment: ['dimension'], mcp: ['semantic'],
+  cube: ['view', 'measure', 'dimension'], view: ['cube', 'datamart'], measure: ['dimension'], dimension: ['measure', 'segment'], join: ['fanout', 'cube'], rls: ['view'], datamart: ['view']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'nb1', s: 0, type: 'one', q: 'Cube.dev là một “headless semantic layer”. Điều này có ý nghĩa gì cho luồng dữ liệu giữa data warehouse và các ứng dụng?', o: ['Cube chỉ là tiện ích trực quan hóa nhúng bên trong Tableau hoặc Looker.', 'Cube đứng độc lập giữa data warehouse và ứng dụng, cung cấp định nghĩa chỉ số tập trung cho REST, SQL, GraphQL và AI Agent.', 'Cube tự biến dữ liệu thô thành báo cáo mà không cần khai báo mô hình.', 'Cube thay thế data warehouse bằng cách chép toàn bộ dữ liệu vào cơ sở dữ liệu riêng.'], a: 1,
+   ex: 'Kiến trúc headless tách semantic layer khỏi tầng hiển thị, nên mọi ứng dụng phía client dùng chung một logic kinh doanh có quản trị.',
+   why: {0: 'Cube là hạ tầng độc lập, không bị khóa trong giao diện của một công cụ BI.', 2: 'Cube theo nguyên tắc code-first: phải khai báo cubes, views, measures, dimensions bằng mã nguồn.', 3: 'Cube không thay thế data warehouse mà chạy trực tiếp trên Snowflake, BigQuery hay Postgres có sẵn.'}},
+  {id: 'my1', s: 0, type: 'one', q: 'Khi chuyển từ Cube Core sang Cube Cloud, file data model cần thay đổi như thế nào?', o: ['Viết lại bằng ngôn ngữ riêng của Cube Cloud', 'Giữ nguyên, không cần sửa dòng nào', 'Chuyển từ YAML sang JavaScript', 'Chỉ giữ được measures, mất dimensions'], a: 1,
+   ex: 'Data model di chuyển nguyên vẹn giữa Core và Cloud; biến môi trường thì phải khai báo lại trong phần Settings của Cube Cloud. Đây là điểm handbook nhấn mạnh nhất.'},
+  {id: 'nb5', s: 1, type: 'multi', q: 'Cube cung cấp những giao diện nào để ứng dụng, công cụ BI và AI Agent lấy dữ liệu từ semantic layer?', o: ['REST (JSON) API cho ứng dụng web, mobile hoặc yêu cầu HTTP chuẩn.', 'GraphQL API cho truy vấn linh hoạt theo mô hình strongly-typed.', 'MCP server để LLM/AI Agent như Claude, ChatGPT truy vấn dữ liệu có quản trị.', 'SQL API để công cụ BI kết nối trực tiếp qua giao thức chuẩn.'], a: [0, 1, 2, 3],
+   ex: 'Cả bốn đều đúng. Mọi bề mặt tiêu thụ đọc cùng một data model, chỉ khác cổng kết nối.'},
+  {id: 'nb11', s: 1, type: 'multi', q: 'Lợi ích nào đến từ nguyên lý code-first khi xây data model với Cube?', o: ['Triệt tiêu hoàn toàn nhu cầu viết SQL trong toàn hệ thống.', 'Giúp AI Agent đọc, đề xuất và chỉnh sửa mô hình qua quy trình Git chuẩn.', 'Tách rõ môi trường development và production.', 'Áp dụng được thực hành phần mềm: quản lý phiên bản, code review, CI/CD.'], a: [1, 2, 3],
+   ex: 'Model nằm trong Git nên đi theo đúng quy trình phần mềm: review, kiểm thử, tách môi trường.', why: {0: 'Code-first không loại bỏ SQL; người viết model vẫn viết sql trong cube, measure và dimension.'}},
+  {id: 'my2', s: 2, type: 'one', q: 'Cùng một chỉ số nhưng mỗi công cụ ra một con số khác nhau. Hiện tượng này gọi là gì?', o: ['Fanout', 'Metric drift', 'Cache miss', 'Data masking'], a: 1,
+   ex: 'Metric drift xảy ra khi mỗi nơi tự định nghĩa chỉ số. Semantic layer gom định nghĩa về một chỗ.', why: {0: 'Fanout là nhân dòng khi join sai quan hệ, một lỗi khác.', 2: 'Cache miss chỉ là truy vấn không trúng cache.', 3: 'Data masking là che dữ liệu nhạy cảm.'}},
+  {id: 'my3', s: 2, type: 'multi', q: 'Vì sao để AI Agent tự viết SQL thẳng vào bảng thô là rủi ro?', o: ['Dễ đoán sai phép join', 'Có thể làm lộ dữ liệu nhạy cảm', 'Dễ sinh sai cú pháp SQL', 'Data warehouse sẽ tự chuyển sang chế độ chỉ đọc'], a: [0, 1, 2],
+   ex: 'Ba rủi ro: đoán sai join, sai cú pháp, lộ dữ liệu. Qua Cube, agent chỉ gọi chỉ số đã định nghĩa sẵn.', why: {3: 'Không có cơ chế nào như vậy; đây là phương án gây nhiễu.'}},
+  {id: 'nb2', s: 3, type: 'one', q: 'Trong data model của Cube, khác biệt căn bản về mục đích giữa Cube và View là gì?', o: ['Cube dành cho AI Agent, View dành cho báo cáo BI truyền thống.', 'Cube đại diện cho một đối tượng kinh doanh, View tạo data mart tinh chỉnh cho người dùng hoặc ứng dụng.', 'Cube chỉ chứa dimensions, View chỉ chứa measures.', 'Cube dùng để phân quyền, View dùng để viết SQL thô.'], a: 1,
+   ex: 'Cubes định nghĩa cấu trúc cốt lõi và quan hệ giữa các cube; views là lớp giao diện tinh chỉnh cho từng mục đích truy vấn.',
+   why: {0: 'Cả AI Agent và ứng dụng BI đều dùng được view hoặc các thành phần được công khai.', 2: 'Cube chứa cả measures lẫn dimensions, và view có thể chọn lọc cả hai.', 3: 'Cả cube và view đều áp dụng được access control; SQL dùng để định nghĩa nguồn dữ liệu trong cube.'}},
+  {id: 'nb10', s: 3, type: 'one', q: 'Segment trong file định nghĩa Cube đại diện cho khái niệm nào?', o: ['Công thức chia tỷ lệ giữa hai measures.', 'Bộ lọc SQL định nghĩa sẵn để dùng lại các điều kiện lọc phổ biến.', 'Granularity thời gian như ngày, tuần, tháng.', 'Liên kết vật lý thể hiện quan hệ nhiều-nhiều giữa hai bảng.'], a: 1,
+   ex: 'Segment đóng gói điều kiện lọc như “khách hàng VIP” hay “đơn hàng thành công” thành một tên chuẩn để dùng lại.',
+   why: {0: 'Tỷ lệ giữa các chỉ số được tính bằng calculated measure.', 2: 'Granularity được đặt trong truy vấn, không phải trong segment.', 3: 'Quan hệ giữa các bảng khai báo bằng joins.'}},
+  {id: 'nb12', s: 3, type: 'one', q: 'Tham số sql_table trong định nghĩa một Cube dùng để làm gì?', o: ['Chỉ định bảng sẽ bị xóa sau khi Cube khởi chạy.', 'Khai báo ngắn gọn để liên kết Cube với một bảng có sẵn, không cần viết SELECT * FROM thủ công.', 'Tạo bảng tạm trong Redis để tăng tốc ghi.', 'Khai báo tên bảng pre-aggregation trong Cube Store.'], a: 1,
+   ex: 'sql_table là cách ngắn gọn để trỏ Cube tới một bảng nguồn.', why: {0: 'sql_table không xóa gì, chỉ trỏ tới bảng.', 2: 'Cube không tạo bảng tạm bằng sql_table.', 3: 'Pre-aggregation khai báo trong khối pre_aggregations.'}},
+  {id: 'my4', s: 4, type: 'one', q: 'Claude kết nối với Cube qua MCP Server để hỏi số liệu. Đây là kịch bản nào?', o: ['BI nội bộ', 'Embedded analytics', 'AI context layer', 'Pre-aggregation'], a: 2,
+   ex: 'Đây là kịch bản AI context layer: agent gọi Semantic SQL trên chỉ số đã chứng thực.'},
+  {id: 'my5', s: 4, type: 'one', q: 'Một công ty SaaS nhúng biểu đồ doanh thu cho từng khách hàng, mỗi khách chỉ được thấy dữ liệu của mình. Tính năng nào quan trọng nhất?', o: ['Multi-tenancy với RLS', 'Workbooks', 'count_distinct_approx', 'Developer Playground'], a: 0,
+   ex: 'Embedded analytics cần cách ly dữ liệu giữa các khách hàng, Cube thực hiện việc này bằng RLS theo tenant.'},
+  {id: 'my6', s: 5, type: 'multi', q: 'Theo bảng so sánh, Cube khác Looker LookML ở những điểm nào?', o: ['Model viết bằng YAML/JS thay vì ngôn ngữ riêng', 'Kết nối qua SQL, REST, GraphQL thay vì gắn chặt với một giao diện', 'Bắt buộc dùng dbt Cloud', 'Có sẵn Cube Store cho pre-aggregations'], a: [0, 1, 3],
+   ex: 'Cube độc lập về ngôn ngữ model và cổng kết nối, và có tầng cache riêng.', why: {2: 'Phụ thuộc dbt Cloud là đặc điểm của dbt Semantic Layer.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>
