@@ -17,7 +17,7 @@
 .arch{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .arch .full{grid-column:1/-1}
 .nd{display:block;width:100%;text-align:left;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;transition:border-color .2s,background .2s,opacity .2s}
-.nd b{display:block;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.nd b{display:block;font:500 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 .nd span{font-size:13px;color:var(--body)}
 .nd.ext{border-style:dashed}
 .arch.flow .nd:not(.path){opacity:.45}
@@ -39,7 +39,7 @@
 .chk{display:grid;gap:8px}
 .chk label{display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;font-size:15px;line-height:1.5}
 .chk input{margin:4px 0 0;accent-color:var(--acc)}
-.chk label b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chk label b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .chk label:has(input:checked){border-color:var(--acc);background:var(--acc-soft)}
 .bar{height:4px;border-radius:2px;background:var(--line);overflow:hidden;margin-top:6px;width:160px}.bar i{display:block;height:100%;background:var(--acc);transition:width .3s}
 @media(max-width:700px){.arch{grid-template-columns:1fr}.steps button{flex-basis:100%}}
@@ -66,17 +66,17 @@
     <span class="num">05.1</span>
     <h2>Kiến trúc triển khai</h2>
     <p class="gist">Cụm gồm ba nhóm node với chức năng riêng: tiếp nhận truy vấn, lưu cache và build nền.</p>
-    <p>Handbook mô tả một cụm High Availability chạy trên Kubernetes hoặc Cube Cloud. Router nodes tiếp nhận request từ client, kiểm tra RLS, biên dịch SQL và quản lý cache kết quả. Cube Store worker lưu trữ cache phân tán. Refresh worker chạy nền, build và refresh pre-aggregations theo lịch.</p>
+    <p>Handbook mô tả một cụm High Availability chạy trên Kubernetes hoặc Cube Cloud. Handbook gọi các node API là router nodes; theo tài liệu Cube, đó là các API instance, còn router là thành phần của Cube Store. API instance tiếp nhận request từ client, kiểm tra RLS, biên dịch SQL và quản lý cache kết quả. Cube Store gồm một router node điều phối và các worker lưu trữ, xử lý pre-aggregation. Refresh worker chạy nền, build và refresh pre-aggregations theo lịch.</p>
     <figure>
       <div class="fig">
         <div class="figbar"><span>Chọn một node hoặc một luồng xử lý</span><div class="seg" id="flow"><button data-f="0" class="on">Cả cụm</button><button data-f="1">Truy vấn từ client</button><button data-f="2">Build nền</button></div></div>
         <div class="arch" id="arch">
           <button class="nd full" data-n="0"><b>Load balancer / Ingress</b><span>Điểm truy cập duy nhất</span></button>
           <div class="vline"></div>
-          <button class="nd" data-n="1"><b>Router node 1</b><span>API · schema compile</span></button>
-          <button class="nd" data-n="1"><b>Router node 2</b><span>API · schema compile</span></button>
+          <button class="nd" data-n="1"><b>API instance 1</b><span>API · schema compile</span></button>
+          <button class="nd" data-n="1"><b>API instance 2</b><span>API · schema compile</span></button>
           <div class="vline"></div>
-          <button class="nd" data-n="2"><b>Cube Store worker</b><span>Cache phân tán</span></button>
+          <button class="nd" data-n="2"><b>Cube Store</b><span>Router + worker</span></button>
           <button class="nd" data-n="3"><b>Refresh worker</b><span>Build nền</span></button>
           <div class="vline"></div>
           <button class="nd ext full" data-n="4"><b>Data warehouse nguồn</b><span>Snowflake, BigQuery, Postgres…</span></button>
@@ -85,23 +85,23 @@
       </div>
       <figcaption><b>Hình 1</b>Sơ đồ cụm production theo handbook. Ô data warehouse được bổ sung để thể hiện điểm cuối của luồng build.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Cần ít nhất hai router node sau load balancer để API vẫn hoạt động khi một node gặp sự cố. Tác vụ build nặng được giao cho refresh worker nên không chiếm tài nguyên phục vụ truy vấn.</div>
+    <div class="take"><small>Ghi nhớ</small>Cần ít nhất hai API instance sau load balancer để API vẫn hoạt động khi một node gặp sự cố. Tác vụ build nặng được giao cho refresh worker nên không chiếm tài nguyên phục vụ truy vấn.</div>
   </section>
 
   <section id="s2">
     <span class="num">05.2</span>
     <h2>Biến môi trường và secrets</h2>
-    <p class="gist">Hành vi production của Cube chủ yếu do vài biến môi trường CUBEJS_ quyết định.</p>
-    <p>Handbook ghi rằng từ v0.28 mọi biến cấu hình của Cube dùng tiền tố <code>CUBEJS_</code>. Chọn từng biến để xem giá trị khuyến nghị trên production và tác dụng tương ứng. Hai biến bắt buộc phải cấu hình đúng: CUBEJS_DEV_MODE phải là false, CUBEJS_API_SECRET phải là chuỗi bí mật riêng của production.</p>
+    <p class="gist">Trên production, hành vi của Cube chủ yếu do một số biến môi trường CUBEJS_ quyết định.</p>
+    <p>Biến cấu hình của Cube dùng tiền tố <code>CUBEJS_</code> (từ v0.28, nhóm biến Redis cũng chuyển sang tiền tố này); riêng Cube Store dùng tiền tố <code>CUBESTORE_</code>. Chọn từng biến để xem giá trị khuyến nghị trên production và tác dụng tương ứng. Hai biến bắt buộc phải cấu hình đúng: CUBEJS_DEV_MODE phải là false, CUBEJS_API_SECRET phải là chuỗi bí mật riêng của production.</p>
     <figure>
       <div class="fig">
         <div class="pills" id="env"></div>
         <div class="panel" id="envP"></div>
       </div>
-      <figcaption><b>Hình 2</b>Năm biến quan trọng nhất khi lên production.</figcaption>
+      <figcaption><b>Hình 2</b>Năm biến quan trọng nhất khi triển khai lên production.</figcaption>
     </figure>
-    <p>Biến cần hiểu kỹ nhất là rollup-only mode. Khi bật, mọi truy vấn chỉ được trả lời từ pre-aggregations; truy vấn nào chưa có bảng rollup phù hợp sẽ không được gửi xuống data warehouse nguồn.</p>
-    <details class="deep"><summary><span><small>Đọc sâu</small>Một file .env mẫu cho router node</span></summary><div>
+    <p>Biến cần hiểu kỹ nhất là CUBEJS_ROLLUP_ONLY, tức rollup-only mode. Khi bật chế độ này, mọi truy vấn chỉ được trả lời từ pre-aggregations; truy vấn nào chưa có bảng rollup phù hợp sẽ không được gửi xuống data warehouse nguồn.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Một file .env mẫu cho API instance</span></summary><div>
       <div class="code"><div class="h"><span>.env</span><span>production</span></div><pre>CUBEJS_DB_TYPE=postgres
 CUBEJS_DB_PASS=&lt;DB_PASSWORD&gt;
 CUBEJS_API_SECRET=&lt;API_SECRET&gt;
@@ -114,14 +114,14 @@ CUBEJS_ROLLUP_ONLY=true</pre></div>
   <section id="s3">
     <span class="num">05.3</span>
     <h2>Xác thực và bảo mật</h2>
-    <p class="gist">Ba lớp: secret ký JWT đủ mạnh, TLS, và giới hạn ai được gọi vào.</p>
+    <p class="gist">Ba lớp bảo vệ: secret ký JWT đủ mạnh, TLS, và giới hạn nguồn được phép gọi API.</p>
     <p>Cube dùng CUBEJS_API_SECRET để kiểm tra chữ ký JWT trong mỗi request. Nếu secret yếu, bất kỳ ai cũng có thể tự ký token và mạo danh tenant khác. Hai lớp còn lại là TLS cho mọi API và giới hạn nguồn truy cập: CORS chỉ chấp nhận các domain trong whitelist, SQL API chỉ mở cho dải IP nội bộ.</p>
     <figure>
       <div class="fig">
         <div class="pills" id="sec"></div>
         <div class="panel" id="secP"></div>
       </div>
-      <figcaption><b>Hình 3</b>Ba cấu hình an ninh bắt buộc theo handbook.</figcaption>
+      <figcaption><b>Hình 3</b>Ba cấu hình bảo mật bắt buộc theo handbook.</figcaption>
     </figure>
   </section>
 
@@ -129,7 +129,7 @@ CUBEJS_ROLLUP_ONLY=true</pre></div>
     <span class="num">05.4</span>
     <h2>Logs, metrics và giám sát</h2>
     <p class="gist">Log dạng JSON, bốn chỉ số chính và cảnh báo tự động khi latency vượt ngưỡng.</p>
-    <p>Handbook đề xuất xuất log dạng JSON để Fluentd hoặc Logstash thu thập, đồng thời kết nối endpoint Prometheus <code>/metrics</code> với Grafana hoặc Datadog. Chọn từng chỉ số để xem ý nghĩa của chỉ số đó.</p>
+    <p>Handbook đề xuất xuất log dạng JSON để Fluentd hoặc Logstash thu thập, đồng thời kết nối endpoint Prometheus <code>/metrics</code> với Grafana hoặc Datadog. Chọn từng chỉ số để xem ý nghĩa.</p>
     <figure>
       <div class="fig">
         <div class="pills" id="met"></div>
@@ -159,7 +159,7 @@ CUBEJS_ROLLUP_ONLY=true</pre></div>
     <span class="num">05.6</span>
     <h2>Lỗi thường gặp trên production</h2>
     <p class="gist">Bốn lỗi thường gặp và cách xử lý nhanh cho từng lỗi.</p>
-    <p>Chọn lỗi để xem hiện tượng, nguyên nhân gốc và bước xử lý. Hai cách sửa phổ biến nhất là bọc điều kiện bằng FILTER_GROUP và cấu hình export bucket cho việc build rollup. Chương 06 trình bày cú pháp sửa cụ thể.</p>
+    <p>Chọn lỗi để xem hiện tượng, nguyên nhân gốc và bước xử lý. Hai cách sửa phổ biến nhất là bọc điều kiện bằng FILTER_GROUP và cấu hình export bucket khi build rollup. Chương 06 trình bày cú pháp sửa cụ thể.</p>
     <figure>
       <div class="fig">
         <div class="pills" id="err"></div>
@@ -172,7 +172,7 @@ CUBEJS_ROLLUP_ONLY=true</pre></div>
   <section id="s7">
     <span class="num">05.7</span>
     <h2>CI/CD và phát hành</h2>
-    <p class="gist">Data model là code, vì vậy cần đi qua PR, kiểm tra tự động, môi trường thử nghiệm và rolling update.</p>
+    <p class="gist">Data model là code, nên mỗi thay đổi cần đi qua PR, kiểm tra tự động, môi trường thử nghiệm và rolling update.</p>
     <p>Quy trình Git-first trong handbook có bốn bước, kết thúc bằng rolling update trên Kubernetes. Chọn từng bước để xem nội dung kiểm tra.</p>
     <figure>
       <div class="fig">
@@ -208,12 +208,12 @@ const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onc
 const pills = (box, list, attr) => box.innerHTML = list.map((p, i) => `<button data-${attr}="${i}" class="${i ? '' : 'on'}">${p[0]}</button>`).join('');
 const rows = r => `<div class="rows">${r.map(([k, v, f]) => `<div${f ? ' class="fix"' : ''}><b>${k}</b><span>${v}</span></div>`).join('')}</div>`;
 // Hình 1: node roles and two flows
-const ND = [['Load balancer / Ingress', 'Tiếp nhận mọi request từ client và phân phối đều cho các router node. Khi một router gặp sự cố, traffic được chuyển sang node còn lại.'],
- ['Router node (API / Schema Compiler)', 'Tiếp nhận request REST, GraphQL, SQL API. Kiểm tra JWT và RLS, biên dịch data model thành SQL, quản lý cache kết quả. Chạy nhiều bản sao để chịu tải và dự phòng.'],
- ['Cube Store worker', 'Cụm lưu và xử lý cache phân tán. Các bảng pre-aggregation được lưu tại đây, nên truy vấn trúng rollup không cần truy cập data warehouse.'],
+const ND = [['Load balancer / Ingress', 'Tiếp nhận mọi request từ client và phân phối đều cho các API instance. Khi một instance gặp sự cố, traffic được chuyển sang node còn lại.'],
+ ['API instance', 'Tiếp nhận request REST, GraphQL, SQL API. Kiểm tra JWT và RLS, biên dịch data model thành SQL, quản lý cache kết quả. Chạy nhiều bản sao để chịu tải và dự phòng.'],
+ ['Cube Store (router + worker)', 'Cụm lưu và xử lý cache phân tán. API instance chỉ giao tiếp với router node; router lập kế hoạch truy vấn và chia việc cho các worker. Các bảng pre-aggregation được lưu tại đây, nên truy vấn trúng rollup không cần truy cập data warehouse.'],
  ['Refresh worker', 'Node chạy nền. Theo lịch, node này gửi truy vấn xuống data warehouse để build hoặc refresh pre-aggregations, sau đó ghi kết quả vào Cube Store.'],
  ['Data warehouse nguồn', 'Nơi lưu trữ dữ liệu thô. Trong trường hợp lý tưởng, chỉ refresh worker truy cập thường xuyên vào đây; truy vấn của người dùng được phục vụ từ Cube Store.']];
-const FLOW = [null, [[0, 1, 2], 'Truy vấn từ client', 'Client → load balancer → một router node → Cube Store. Nếu có pre-aggregation phù hợp, kết quả được trả về trực tiếp. Nếu không (và rollup-only đang tắt), router gửi SQL xuống data warehouse.'],
+const FLOW = [null, [[0, 1, 2], 'Truy vấn từ client', 'Client → load balancer → một API instance → Cube Store. Nếu có pre-aggregation phù hợp, kết quả được trả về trực tiếp. Nếu không (và rollup-only đang tắt), API instance gửi SQL xuống data warehouse.'],
  [[3, 2, 4], 'Build nền', 'Refresh worker đọc data warehouse theo lịch, tổng hợp dữ liệu và ghi bảng rollup vào Cube Store. Luồng này không đi qua load balancer và không chặn truy vấn của người dùng.']];
 const arch = document.getElementById('arch');
 const archShow = (h, t) => archP.innerHTML = `<h5>${h}</h5>${t}`;
@@ -231,7 +231,7 @@ const envShow = i => envP.innerHTML = `<h5><code>${ENV[i][0]}</code></h5>` + row
 pills(env, ENV, 'e'); one('#env', 'e', envShow); envShow(0);
 // Hình 3
 const SEC3 = [['JWT secret', 'Tạo CUBEJS_API_SECRET mạnh, dài tối thiểu 32 ký tự.', 'Secret này ký mọi JWT. Bất kỳ ai nắm được secret đều có thể tự tạo securityContext tùy ý, kể cả của tenant khác.', 'Secret nằm trong secret manager, không có trong repo hay bundle frontend.'],
- ['HTTPS / TLS', 'Bật TLS cho mọi giao diện: REST, GraphQL, SQL API.', 'Nếu không có TLS, JWT và dữ liệu trả về được truyền dưới dạng rõ trên mạng.', 'Request gửi bằng http:// phải bị từ chối hoặc chuyển hướng.'],
+ ['HTTPS / TLS', 'Bật TLS cho mọi giao diện: REST, GraphQL, SQL API.', 'Nếu không có TLS, JWT và dữ liệu trả về được truyền qua mạng dưới dạng không mã hóa.', 'Request gửi bằng http:// phải bị từ chối hoặc chuyển hướng.'],
  ['CORS & IP whitelist', 'Whitelist các domain được gọi REST API; chặn SQL API từ ngoài dải IP nội bộ.', 'SQL API thường dành cho công cụ BI nội bộ, không cần mở ra internet.', 'Request thử từ một domain lạ và từ một IP bên ngoài đều phải bị chặn.']];
 const secShow = i => secP.innerHTML = `<h5>${SEC3[i][0]}</h5>` + rows([['Thực hiện', SEC3[i][1]], ['Lý do', SEC3[i][2]], ['Kiểm tra', SEC3[i][3], 1]]);
 pills(sec, SEC3, 's'); one('#sec', 's', secShow); secShow(0);
@@ -239,7 +239,7 @@ pills(sec, SEC3, 's'); one('#sec', 's', secShow); secShow(0);
 const MET = [['P95 / P99 latency', 'Latency mà 95% (hoặc 99%) request nhanh hơn. Tăng đột ngột thường là dấu hiệu pre-aggregation miss hoặc queue tích tụ.'],
  ['Cache hit ratio', 'Tỷ lệ truy vấn được trả lời từ cache. Tỷ lệ giảm dần cho thấy ngày càng nhiều truy vấn bị chuyển xuống data warehouse. Checklist 05.8 gợi ý mức trên 80%.'],
  ['CPU / Memory Cube Store', 'Mức tài nguyên của cụm cache. Nếu mức sử dụng cao kéo dài, cần mở rộng Cube Store trước khi latency tăng.'],
- ['Queue length', 'Số truy vấn đang chờ. Khi queue tích tụ, cần thêm refresh worker hoặc thêm CPU/RAM cho Cube Store.']];
+ ['Queue length', 'Số truy vấn đang chờ. Khi queue tích tụ, xem lại <code>CUBEJS_CONCURRENCY</code> (số truy vấn đồng thời tới data source) nếu data source còn chịu được tải, hoặc thêm CPU/RAM cho Cube Store. Refresh worker chỉ build pre-aggregation, không xử lý truy vấn của người dùng.']];
 const metShow = i => metP.innerHTML = `<h5>${MET[i][0]}</h5>${MET[i][1]}`;
 pills(met, MET, 'm'); one('#met', 'm', metShow); metShow(0);
 const p95In = document.getElementById('p95');
@@ -248,7 +248,7 @@ p95In.oninput = p95Show; p95Show();
 // Hình 5
 const TS = [['Xác định truy vấn chậm', 'Lọc trong JSON logs các truy vấn chạy lâu hơn 3 giây. Ghi lại measures, dimensions, granularity và khoảng thời gian của chúng.'],
  ['Nguyên nhân miss', 'Kiểm tra nguyên nhân truy vấn không trúng pre-aggregation. Ba nguyên nhân thường gặp:<ul><li>Granularity của truy vấn mịn hơn rollup (truy vấn theo ngày, rollup theo tháng).</li><li>Truy vấn dùng một dimension không có trong rollup.</li><li>Khoảng thời gian vượt ra ngoài <code>refresh_range</code> của rollup.</li></ul>'],
- ['Kiểm tra queue', 'Kiểm tra queue length. Nếu queue tích tụ, tăng số refresh worker hoặc thêm CPU/RAM cho Cube Store.']];
+ ['Kiểm tra queue', 'Kiểm tra queue length. Nếu queue tích tụ, tăng <code>CUBEJS_CONCURRENCY</code> khi data source còn chịu được tải, hoặc thêm CPU/RAM cho Cube Store.']];
 document.getElementById('ts').innerHTML = TS.map((s, i) => `<button data-t2="${i}" class="${i ? '' : 'on'}"><i>Bước ${i + 1}</i>${s[0]}</button>`).join('');
 const tsShow = i => tsP.innerHTML = `<h5>${TS[i][0]}</h5>${TS[i][1]}`;
 one('#ts', 't2', tsShow); tsShow(0);
@@ -261,9 +261,9 @@ const errShow = i => errP.innerHTML = `<h5>${ERR[i][0]}</h5>` + rows([['Hiện t
 pills(err, ERR, 'r'); one('#err', 'r', errShow); errShow(0);
 // Hình 7
 const CI = [['Pull Request', 'Kỹ sư sửa data model trên nhánh riêng và mở PR. Thay đổi được review như mọi thay đổi code khác.'],
- ['Kiểm tra tự động', 'CI chạy lệnh kiểm tra schema (handbook ghi là <code>cubejs-cli check</code>) để lint và bắt lỗi khai báo trước khi merge.'],
+ ['Kiểm tra tự động', 'CI chạy <code>npx cubejs-cli validate</code> để biên dịch data model và bắt lỗi khai báo trước khi merge. Handbook ghi <code>cubejs-cli check</code>, nhưng Cube CLI không có lệnh này.'],
  ['Môi trường tạm', 'CI khởi tạo một Cube tạm kết nối với database test và chạy truy vấn mẫu để kiểm tra SQL sinh ra có đúng không.'],
- ['Rolling update', 'Khi PR được merge vào main, Kubernetes thay lần lượt từng router node. Tại mọi thời điểm vẫn có node đang phục vụ, nên người dùng không bị gián đoạn.']];
+ ['Rolling update', 'Khi PR được merge vào main, Kubernetes thay lần lượt từng API instance. Tại mọi thời điểm vẫn có node đang phục vụ, nên người dùng không bị gián đoạn.']];
 document.getElementById('ci').innerHTML = CI.map((s, i) => `<button data-c="${i}" class="${i ? '' : 'on'}"><i>Bước ${i + 1}</i>${s[0]}</button>`).join('');
 const ciShow = i => ciP.innerHTML = `<h5>${CI[i][0]}</h5>${CI[i][1]}`;
 one('#ci', 'c', ciShow); ciShow(0);
@@ -284,16 +284,16 @@ ckShow();
 window.CH = {key: 'ch05', minutes: 12,
  next: {href: '/blog/cube-handbook/06', n: '06', t: 'Reference & Engineering Notes'},
  sections: [
-  {id: 's1', n: '05.1', t: 'Kiến trúc triển khai', sum: ['Ba nhóm node: router (API), Cube Store worker (cache), refresh worker (build nền).', 'Nhiều router sau load balancer để chịu tải và dự phòng.', 'Tác vụ build nặng được tách sang refresh worker.'], terms: ['router', 'cubestore', 'refresh', 'preagg', 'warehouse']},
-  {id: 's2', n: '05.2', t: 'Biến môi trường và secrets', sum: ['Biến cấu hình dùng tiền tố CUBEJS_.', 'Production: DEV_MODE=false, API_SECRET mạnh, REFRESH_WORKER trên node build.', 'ROLLUP_ONLY chỉ cho phép trả lời từ pre-aggregations.'], terms: ['rolluponly', 'devmode', 'apisecret', 'refresh']},
+  {id: 's1', n: '05.1', t: 'Kiến trúc triển khai', sum: ['Ba nhóm node: API instance, Cube Store (router + worker), refresh worker (build nền).', 'Nhiều API instance sau load balancer để chịu tải và dự phòng.', 'Tác vụ build nặng được tách sang refresh worker.'], terms: ['router', 'cubestore', 'refresh', 'preagg', 'warehouse']},
+  {id: 's2', n: '05.2', t: 'Biến môi trường và secrets', sum: ['Biến cấu hình của Cube dùng tiền tố CUBEJS_; Cube Store dùng CUBESTORE_.', 'Production: DEV_MODE=false, API_SECRET mạnh, REFRESH_WORKER trên node build.', 'ROLLUP_ONLY chỉ cho phép trả lời từ pre-aggregations.'], terms: ['rolluponly', 'devmode', 'apisecret', 'refresh']},
   {id: 's3', n: '05.3', t: 'Xác thực và bảo mật', sum: ['API secret tối thiểu 32 ký tự.', 'TLS cho REST, GraphQL, SQL API.', 'Whitelist domain cho CORS, chặn SQL API từ ngoài mạng nội bộ.'], terms: ['apisecret', 'jwt', 'tls', 'cors']},
   {id: 's4', n: '05.4', t: 'Logs, metrics, giám sát', sum: ['Log JSON để Fluentd/Logstash thu thập.', 'Bốn chỉ số: P95/P99, cache hit ratio, tài nguyên Cube Store, queue length.', 'Cảnh báo khi P95 vượt 2 giây (ngưỡng của handbook).'], terms: ['p95', 'hitratio', 'queue']},
-  {id: 's5', n: '05.5', t: 'Xử lý sự cố hiệu năng', sum: ['Lọc trong log các truy vấn chậm hơn 3 giây.', 'Pre-aggregation miss: sai granularity, thiếu dimension, ngoài refresh_range.', 'Queue tích tụ: thêm refresh worker hoặc tài nguyên Cube Store.'], terms: ['preagg', 'refreshrange', 'queue', 'refresh']},
+  {id: 's5', n: '05.5', t: 'Xử lý sự cố hiệu năng', sum: ['Lọc trong log các truy vấn chậm hơn 3 giây.', 'Pre-aggregation miss: sai granularity, thiếu dimension, ngoài refresh_range.', 'Queue tích tụ: tăng CUBEJS_CONCURRENCY hoặc tài nguyên Cube Store.'], terms: ['preagg', 'refreshrange', 'queue', 'refresh']},
   {id: 's6', n: '05.6', t: 'Lỗi thường gặp', sum: ['Filter group error: bọc bằng FILTER_GROUP.', 'Build lỗi do timeout: batching hoặc export bucket.', 'Unknown member: sai tên; warehouse quá tải: rollup-only.'], terms: ['filtergroup', 'exportbucket', 'rolluponly']},
   {id: 's7', n: '05.7', t: 'CI/CD và phát hành', sum: ['PR → kiểm tra schema → môi trường tạm với database test → rolling update.', 'Cần có kịch bản rollback về image trước.'], terms: ['rolling', 'router']},
   {id: 's8', n: '05.8', t: 'Checklist production', sum: ['Bảo mật, caching, an toàn data warehouse, sao lưu, giám sát, rollback.', 'Các ngưỡng là gợi ý, cần điều chỉnh theo hệ thống thực tế.'], terms: ['hitratio', 'rolluponly', 'devmode']}],
  terms: {
-  router: ['router node', 'Node API của cụm Cube: nhận request REST, GraphQL, SQL API, xác thực JWT, áp RLS, biên dịch data model thành SQL và quản lý cache kết quả. Chạy nhiều bản sau load balancer để chịu tải và dự phòng.', 'Giống quầy lễ tân khách sạn: mọi khách đến đều qua quầy trước, quầy kiểm tra giấy tờ rồi chuyển yêu cầu đến đúng bộ phận. Khi có hai quầy, một nhân viên vắng mặt thì khách vẫn được phục vụ.'],
+  router: ['router node', 'Node điều phối của cụm Cube Store: nhận truy vấn từ API instance, quản lý metadata của cụm, lập kế hoạch truy vấn và chia subquery cho các worker. Handbook gốc dùng tên này cho node API; theo tài liệu Cube, node API là API instance.', 'Giống tổ trưởng trong kho: nhận phiếu yêu cầu từ quầy, chia việc cho từng nhân viên kho rồi gom kết quả trả lại quầy.'],
   cubestore: ['Cube Store', 'Engine lưu trữ và xử lý phân tán do Cube viết riêng, chứa các bảng pre-aggregation và trả lời truy vấn trúng rollup thay cho data warehouse.', 'Như kho nhỏ ngay sau quầy bán hàng: các mặt hàng bán chạy được xếp sẵn tại đây để lấy ra ngay khi khách yêu cầu, không phải đến kho tổng ở ngoại thành.'],
   refresh: ['refresh worker', 'Tiến trình chạy nền (bật bằng CUBEJS_REFRESH_WORKER=true), theo lịch đọc data warehouse để build hoặc refresh pre-aggregations rồi ghi kết quả vào Cube Store.', 'Như nhân viên ca đêm: khi vắng khách, họ đóng gói sẵn hàng cho ngày hôm sau để nhân viên quầy không phải làm việc nặng vào giờ cao điểm.'],
   preagg: ['pre-aggregation', 'Bảng kết quả tổng hợp (rollup) mà Cube tính trước theo các measure, dimension và granularity đã khai báo, lưu trong Cube Store để trả lời truy vấn mà không quét lại dữ liệu thô.', 'Giống bảng điểm tổng kết cuối kỳ: thay vì cộng lại từng bài kiểm tra mỗi lần phụ huynh hỏi, nhà trường đã tính sẵn và chỉ cần đọc kết quả.'],
@@ -303,9 +303,9 @@ window.CH = {key: 'ch05', minutes: 12,
   jwt: ['JWT', 'JSON Web Token: chuỗi gồm header, payload và chữ ký. Với Cube, payload mang securityContext của người dùng, chữ ký được tạo bằng API secret.', 'Như thẻ ra vào in sẵn tên và quyền hạn của người dùng, có dấu chống giả. Mỗi request gửi tới Cube đều kèm thẻ này; Cube xác nhận dấu thật thì cho phép truy cập và biết người dùng được xem dữ liệu nào.'],
   tls: ['TLS', 'Transport Layer Security: giao thức mã hóa kênh truyền giữa client và server (HTTPS chạy trên TLS), chống nghe lén và sửa dữ liệu trên đường đi.', 'Như gửi thư trong phong bì dán kín thay vì bưu thiếp: người đưa thư vẫn chuyển được, nhưng không ai trên đường đi đọc được nội dung bên trong.'],
   cors: ['CORS', 'Cross-Origin Resource Sharing: cơ chế của trình duyệt quy định trang web từ domain nào được gọi API ở domain khác. Cube dùng whitelist domain để giới hạn nguồn gọi REST API.', 'Như danh sách khách mời ở cửa: chỉ trang web có tên trong danh sách mới được trình duyệt cho phép gọi Cube.'],
-  p95: ['P95 latency', 'Phân vị thứ 95 của thời gian phản hồi: 95% request hoàn thành nhanh hơn hoặc bằng mức này. Nó phản ánh phần đuôi chậm mà giá trị trung bình che mất.', 'Xếp 100 khách theo thời gian chờ và xét người thứ 95: con số đó cho biết gần như mọi khách được phục vụ trong bao lâu, kể cả những người kém may mắn.'],
+  p95: ['P95 latency', 'Phân vị thứ 95 của thời gian phản hồi: 95% request hoàn thành nhanh hơn hoặc bằng mức này. Chỉ số này phản ánh phần đuôi chậm mà giá trị trung bình che mất.', 'Xếp 100 khách theo thời gian chờ và xét người thứ 95: con số đó cho biết gần như mọi khách được phục vụ trong bao lâu, kể cả những người kém may mắn.'],
   hitratio: ['cache hit ratio', 'Tỷ lệ truy vấn được trả lời từ cache (kết quả đã lưu hoặc pre-aggregation) trên tổng số truy vấn. Handbook gợi ý giữ trên 80%.', 'Trong mười lần khách hỏi, số lần câu trả lời đã có sẵn trên bàn. Tỷ lệ này càng cao, khách càng ít phải chờ và kho tổng càng ít phải xử lý.'],
-  queue: ['queue length', 'Số truy vấn đang nằm trong queue chờ xử lý. Tăng liên tục nghĩa là tốc độ nhận việc vượt quá năng lực xử lý của worker hoặc Cube Store.', 'Độ dài hàng người xếp trước quầy. Khi hàng liên tục dài thêm, cần mở thêm quầy.'],
+  queue: ['queue length', 'Số truy vấn đang nằm trong queue chờ xử lý. Nếu chỉ số này tăng liên tục, tốc độ nhận truy vấn đang vượt quá năng lực xử lý của worker hoặc Cube Store.', 'Độ dài hàng người xếp trước quầy. Khi hàng liên tục dài thêm, cần mở thêm quầy.'],
   refreshrange: ['refresh_range', 'Khoảng thời gian mà một pre-aggregation được build và giữ dữ liệu. Truy vấn hỏi ra ngoài khoảng này sẽ miss và phải được xử lý theo đường khác.', 'Như cuốn sổ chỉ ghi chép từ đầu năm nay: số liệu năm trước không có trong sổ và phải tra cứu trong kho.'],
   filtergroup: ['FILTER_GROUP', 'Hàm trong SQL nguồn dùng để bọc nhiều FILTER_PARAMS, giúp Cube giữ đúng logic nhóm điều kiện (AND/OR) giữa inner query và outer query.', 'Như dấu ngoặc trong phép tính: nếu không có ngoặc, "a hoặc b và c" có thể bị hiểu sai thứ tự và cho kết quả khác hẳn.'],
   exportbucket: ['export bucket', 'Bucket lưu trữ trung gian (S3 hoặc GCS) mà data warehouse xuất dữ liệu ra trước khi Cube Store nạp vào, giúp build pre-aggregation lớn nhanh hơn và tránh timeout.', 'Thay vì chuyển từng thùng hàng qua cửa nhỏ, bên kho xếp toàn bộ lên xe tải đỗ ở bãi chung, sau đó bên nhận đến bãi lấy hàng một lần.'],
@@ -319,10 +319,10 @@ window.CH = {key: 'ch05', minutes: 12,
   refreshrange: ['preagg'], filtergroup: [], exportbucket: ['preagg', 'warehouse'], rolling: ['router'], warehouse: ['refresh', 'rolluponly']},
  // ids starting with nb come from the Gemini Notebook quiz; ch05_q* are written for this chapter
  quiz: [
-  {id: 'ch05_q1', s: 0, type: 'one', q: 'Trong cụm production, thành phần nào build và refresh pre-aggregations theo lịch?', o: ['Router node', 'Cube Store worker', 'Refresh worker', 'Load balancer'], a: 2,
-   ex: 'Refresh worker chạy nền, đọc data warehouse và ghi bảng rollup vào Cube Store.', why: {0: 'Router node phục vụ request API và biên dịch SQL.', 1: 'Cube Store worker lưu và phục vụ cache, không tự lên lịch build.', 3: 'Load balancer chỉ phân phối request cho các router.'}},
-  {id: 'ch05_q2', s: 0, type: 'one', q: 'Vì sao handbook đặt hai router node sau load balancer thay vì một?', o: ['Để mỗi node giữ một nửa data model', 'Để chịu tải và vẫn phục vụ được khi một node gặp sự cố', 'Để một node chạy REST, node kia chạy SQL API', 'Vì Cube Store yêu cầu đúng hai router'], a: 1,
-   ex: 'Đây là mô hình High Availability: nhiều bản sao giống nhau, load balancer phân phối đều và chuyển traffic khi có node gặp sự cố.', why: {0: 'Mỗi router chạy toàn bộ data model.', 2: 'Mỗi router cung cấp đầy đủ các API.'}},
+  {id: 'ch05_q1', s: 0, type: 'one', q: 'Trong cụm production, thành phần nào build và refresh pre-aggregations theo lịch?', o: ['API instance', 'Cube Store worker', 'Refresh worker', 'Load balancer'], a: 2,
+   ex: 'Refresh worker chạy nền, đọc data warehouse và ghi bảng rollup vào Cube Store.', why: {0: 'API instance phục vụ request API và biên dịch SQL.', 1: 'Cube Store worker lưu và phục vụ cache, không tự lên lịch build.', 3: 'Load balancer chỉ phân phối request cho các API instance.'}},
+  {id: 'ch05_q2', s: 0, type: 'one', q: 'Vì sao handbook đặt hai API instance sau load balancer thay vì một?', o: ['Để mỗi node giữ một nửa data model', 'Để chịu tải và vẫn phục vụ được khi một node gặp sự cố', 'Để một node chạy REST, node kia chạy SQL API', 'Vì Cube Store yêu cầu đúng hai router'], a: 1,
+   ex: 'Đây là mô hình High Availability: nhiều bản sao giống nhau, load balancer phân phối đều và chuyển traffic khi có node gặp sự cố.', why: {0: 'Mỗi API instance chạy toàn bộ data model.', 2: 'Mỗi API instance cung cấp đầy đủ các API.'}},
   {id: 'nb9', s: 1, type: 'one', q: 'Rollup-only mode (CUBEJS_ROLLUP_ONLY=true) có vai trò gì khi vận hành Cube?', o: ['Tự dọn dữ liệu tạm trên Cube Store sau mỗi 24 giờ.', 'Chuyển mọi truy vấn SQL API thành REST API.', 'Bắt mọi truy vấn chỉ được phục vụ từ pre-aggregation dạng rollup, không để truy vấn trực tiếp xuống data warehouse nguồn.', 'Tắt cache hai tầng và buộc tính lại mọi chỉ số theo thời gian thực.'], a: 2,
    ex: 'Chế độ này bảo vệ data warehouse nguồn khỏi các truy vấn tốn kém đột xuất bằng cách buộc mọi kết quả lấy từ tầng rollup.',
    why: {0: 'Đây không phải cơ chế dọn dữ liệu.', 1: 'Rollup-only kiểm soát định tuyến ở tầng dữ liệu, không đổi giao thức API.', 3: 'Ngược lại, chế độ này chỉ cho phép dùng bảng rollup đã lưu, không chạy truy vấn thô.'}},
@@ -332,18 +332,18 @@ window.CH = {key: 'ch05', minutes: 12,
    ex: 'Ba lớp: secret mạnh, TLS, giới hạn nguồn gọi vào.', why: {3: 'Nếu secret bị lộ ra frontend, bất kỳ ai cũng có thể tự ký token với securityContext tùy ý. JWT phải được ký ở backend.'}},
   {id: 'ch05_q5', s: 3, type: 'one', q: 'P95 latency là 1,8 giây nghĩa là gì?', o: ['Trung bình mỗi request mất 1,8 giây', '95% request hoàn thành trong 1,8 giây hoặc nhanh hơn', 'Request chậm nhất mất 1,8 giây', '95% request bị lỗi sau 1,8 giây'], a: 1,
    ex: 'P95 là phân vị 95: chỉ 5% request chậm hơn mức này.', why: {0: 'Đó là giá trị trung bình, thường thấp hơn P95.', 2: 'Request chậm nhất là giá trị max, có thể cao hơn nhiều.'}},
-  {id: 'ch05_q6', s: 3, type: 'one', q: 'Cache hit ratio giảm dần qua nhiều tuần. Điều gì đang xảy ra?', o: ['Ngày càng nhiều truy vấn bị chuyển xuống data warehouse thay vì được trả lời từ cache', 'JWT secret sắp hết hạn', 'Cube Store đang dùng ít CPU hơn', 'Số router node đã tăng gấp đôi'], a: 0,
+  {id: 'ch05_q6', s: 3, type: 'one', q: 'Cache hit ratio giảm dần qua nhiều tuần. Điều gì đang xảy ra?', o: ['Ngày càng nhiều truy vấn bị chuyển xuống data warehouse thay vì được trả lời từ cache', 'JWT secret sắp hết hạn', 'Cube Store đang dùng ít CPU hơn', 'Số API instance đã tăng gấp đôi'], a: 0,
    ex: 'Hit ratio thấp nghĩa là cache không còn khớp với truy vấn thực tế, thường vì có truy vấn mới chưa có pre-aggregation.'},
   {id: 'ch05_q7', s: 4, type: 'multi', q: 'Truy vấn không trúng pre-aggregation. Theo handbook, nguyên nhân có thể là gì?', o: ['Truy vấn hỏi theo ngày, rollup chỉ có theo tháng', 'Truy vấn dùng một dimension không có trong rollup', 'Khoảng thời gian vượt ra ngoài refresh_range', 'Truy vấn gửi qua REST API thay vì SQL API'], a: [0, 1, 2],
-   ex: 'Rollup chỉ trả lời được câu hỏi nằm trong phạm vi nó đã tổng hợp: cùng hoặc thô hơn granularity, đủ dimension, trong khoảng thời gian đã build.', why: {3: 'Pre-aggregations phục vụ chung cho mọi API; việc chọn API không quyết định hit hay miss.'}},
-  {id: 'ch05_q8', s: 4, type: 'one', q: 'Queue length tăng liên tục trong giờ cao điểm. Bước xử lý đúng theo handbook là gì?', o: ['Tắt pre-aggregations để giảm tải xử lý', 'Tăng số refresh worker hoặc thêm CPU/RAM cho Cube Store', 'Đổi CUBEJS_API_SECRET', 'Bật CUBEJS_DEV_MODE để xem chi tiết'], a: 1,
-   ex: 'Queue tích tụ cho thấy hệ thống thiếu năng lực xử lý; cần mở rộng worker hoặc tài nguyên Cube Store.', why: {0: 'Tắt pre-aggregations đẩy thêm tải xuống data warehouse.', 3: 'Dev mode không dùng trên production.'}},
+   ex: 'Rollup chỉ trả lời được câu hỏi nằm trong phạm vi đã được tổng hợp: cùng hoặc thô hơn granularity, đủ dimension, trong khoảng thời gian đã build.', why: {3: 'Pre-aggregations phục vụ chung cho mọi API; API được chọn không quyết định hit hay miss.'}},
+  {id: 'ch05_q8', s: 4, type: 'one', q: 'Queue length tăng liên tục trong giờ cao điểm. Bước xử lý đúng theo handbook là gì?', o: ['Tắt pre-aggregations để giảm tải xử lý', 'Tăng CUBEJS_CONCURRENCY nếu data source chịu được, hoặc thêm CPU/RAM cho Cube Store', 'Đổi CUBEJS_API_SECRET', 'Bật CUBEJS_DEV_MODE để xem chi tiết'], a: 1,
+   ex: 'Queue tích tụ cho thấy số truy vấn đồng thời tới data source không đủ; tăng CUBEJS_CONCURRENCY trong giới hạn data source chịu được, hoặc mở rộng tài nguyên Cube Store. Refresh worker chỉ build pre-aggregation nên không giải quyết queue truy vấn.', why: {0: 'Tắt pre-aggregations đẩy thêm tải xuống data warehouse.', 3: 'Dev mode không dùng trên production.'}},
   {id: 'ch05_q9', s: 5, type: 'one', q: 'Data warehouse nguồn bị out-of-memory vì nhiều truy vấn ad-hoc cùng lúc. Cách xử lý nhanh là gì?', o: ['Bọc FILTER_PARAMS bằng FILTER_GROUP', 'Bật CUBEJS_ROLLUP_ONLY=true', 'Đổi tên member sang snake_case', 'Thêm export bucket S3'], a: 1,
    ex: 'Rollup-only chặn truy vấn chưa có pre-aggregation, nên các truy vấn này không được gửi xuống data warehouse.', why: {0: 'Đó là cách sửa filter group error.', 3: 'Export bucket giúp build rollup nhanh hơn, không chặn truy vấn ad-hoc.'}},
   {id: 'ch05_q10', s: 5, type: 'one', q: 'Lỗi "Unknown member" thường do đâu?', o: ['Tên measure hoặc dimension viết sai, hoặc sai chữ hoa/thường', 'Data warehouse bị timeout', 'Thiếu FILTER_GROUP', 'Cube Store hết bộ nhớ'], a: 0,
    ex: 'Cube so tên member chính xác với khai báo. Thống nhất snake_case giúp tránh lỗi này.'},
   {id: 'ch05_q11', s: 6, type: 'one', q: 'Trong quy trình CI/CD, bước nào giúp phát hiện SQL sinh ra bị sai trước khi lên production?', o: ['Rolling update', 'Môi trường Cube tạm nối với database test', 'Load balancer', 'Bật rollup-only'], a: 1,
-   ex: 'Môi trường tạm chạy truy vấn thật trên database test, nhờ đó kiểm tra được SQL biên dịch ra có đúng không.', why: {0: 'Rolling update chỉ là cách thay node khi deploy, không kiểm tra tính đúng.'}},
+   ex: 'Môi trường tạm chạy truy vấn thật trên database test, nhờ đó kiểm tra được SQL biên dịch ra có đúng không.', why: {0: 'Rolling update chỉ là cách thay node khi deploy, không kiểm tra SQL có đúng hay không.'}},
   {id: 'ch05_q12', s: 7, type: 'one', q: 'Theo checklist của handbook, cảnh báo giám sát nên bật khi nào?', o: ['Khi lỗi 5xx trên 1% hoặc P95 trên 2 giây', 'Chỉ khi Cube Store ngừng chạy', 'Khi cache hit ratio trên 80%', 'Mỗi lần có PR mới'], a: 0,
    ex: 'Handbook gợi ý hai ngưỡng: tỷ lệ lỗi 5xx > 1% và P95 > 2 giây. Cần điều chỉnh theo SLA thực tế.', why: {2: 'Hit ratio trên 80% là mục tiêu tốt, không phải lý do cảnh báo.'}}]};
 </script>

@@ -21,11 +21,12 @@ export const SERIES = [
   {
     slug: "cube-handbook",
     title: "Cube.dev Engineering Handbook",
-    summary: "Từ tầng ngữ nghĩa tới vận hành thực tế, có câu hỏi ôn tập cuối mỗi chương.",
+    summary: "Từ Semantic Layer đến production, cùng khám phá cách Cube.dev hoạt động qua từng phần, kèm câu hỏi ôn tập cuối mỗi chương để hệ thống lại kiến thức.",
     href: "/blog/cube-handbook",
     createdAt: "2026-10-24T00:00:00.000Z",
     // `key` is the localStorage suffix the handbook stores quiz answers under (ans:<key>); answered = read.
     chapters: [
+      "How Cube Works",
       "Fundamentals",
       "Architecture & Internals",
       "Hands-on Implementation",
@@ -34,7 +35,7 @@ export const SERIES = [
       "Reference & Engineering Notes",
       "Applied Case Studies",
     ].map((title, i) => {
-      const n = String(i + 1).padStart(2, "0");
+      const n = String(i).padStart(2, "0");
       return { n, title, key: `ch${n}`, href: `/blog/cube-handbook/${n}` };
     }),
     // ids of the players on the handbook's index page

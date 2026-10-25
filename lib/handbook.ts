@@ -4,7 +4,7 @@ import path from "path";
 
 // The Cube handbook pages are authored as plain HTML (content/cube-handbook) and rendered inside the site layout.
 const DIR = path.join(process.cwd(), "content", "cube-handbook");
-export const CHAPTERS = ["01", "02", "03", "04", "05", "06", "07"];
+export const CHAPTERS = ["00", "01", "02", "03", "04", "05", "06", "07"];
 
 /** Prefix every selector with `.hb` so handbook styles never leak into the rest of the site. */
 export function scopeCss(css: string) {

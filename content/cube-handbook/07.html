@@ -92,7 +92,7 @@
     <span class="num">07.2</span>
     <h2>Bài toán và yêu cầu</h2>
     <p class="gist">Bốn yêu cầu bắt buộc, mỗi yêu cầu ứng với một tính năng của Cube.</p>
-    <p>Handbook đặt ra bốn yêu cầu: một định nghĩa duy nhất cho Weekly Active Users (WAU) và Net Revenue trên cả ba bề mặt; P95 dưới 0.25 giây trên dữ liệu hàng chục triệu dòng; multi-tenancy cho hơn 200 merchant; và AI Agent không được tự sinh SQL thô. Chọn một yêu cầu để xem tính năng Cube tương ứng.</p>
+    <p>Handbook đặt ra bốn yêu cầu: một định nghĩa duy nhất cho Weekly Active Users (WAU) và Net Revenue trên cả ba bề mặt; P95 dưới 0.25 giây trên các bảng dữ liệu từ hàng chục triệu dòng trở lên; multi-tenancy cho hơn 200 merchant; và AI Agent không được tự sinh SQL thô. Chọn một yêu cầu để xem tính năng Cube tương ứng.</p>
     <figure>
       <div class="fig">
         <div class="pills" id="req"></div>
@@ -117,7 +117,7 @@
       </div>
       <figcaption><b>Hình 3</b>Bốn file của data model. Dòng có nền nhạt là dòng có giải thích.</figcaption>
     </figure>
-    <p>Join từ orders sang customers được khai báo với relationship many_to_one. Nhờ đó Cube xác định được nhiều đơn hàng thuộc một khách hàng và không tính trùng khi nối bảng, tức là tránh được fanout. View sales_data_mart chỉ công khai các trường cần cho báo cáo doanh thu, do đó AI Agent không phải tự chọn bảng.</p>
+    <p>Join từ orders sang customers được khai báo với relationship many_to_one. Nhờ khai báo này, Cube biết nhiều đơn hàng thuộc về một khách hàng, nên không tính trùng khi nối bảng (tránh fanout). View sales_data_mart chỉ công khai các trường cần cho báo cáo doanh thu, do đó AI Agent không phải tự chọn bảng.</p>
     <details class="deep"><summary><span><small>Đọc sâu</small>Những điểm cần rà soát khi áp dụng thực tế</span></summary><div>
       <p>Model trong handbook đủ cho mục đích minh họa nhưng có một số điểm không nhất quán. Khi dùng model này làm điểm xuất phát cho dự án thực tế, cần kiểm tra:</p>
       <p>1. Measure net_revenue lấy <code>sql: profit</code>. Lợi nhuận và doanh thu thuần là hai chỉ số khác nhau; cần xác nhận cột nguồn đúng với định nghĩa kinh doanh.</p>
@@ -131,7 +131,7 @@
   <section id="s4">
     <span class="num">07.4</span>
     <h2>Kiến trúc đề xuất</h2>
-    <p class="gist">Ba bề mặt truy vấn qua Cube; Cube trả kết quả từ Cube Store nếu truy vấn khớp rollup, nếu không, truy vấn được chuyển xuống data warehouse.</p>
+    <p class="gist">Ba bề mặt truy vấn qua Cube. Truy vấn khớp rollup được trả lời từ Cube Store; truy vấn không khớp được chuyển xuống data warehouse.</p>
     <p>Mọi truy vấn đi qua view sales_data_mart và filter RLS theo tenant_id lấy từ JWT. Sau đó aggregate awareness xác định nguồn trả kết quả: nếu truy vấn khớp một pre-aggregation, Cube đọc bảng rollup trong Cube Store; nếu không khớp, Cube sinh SQL gửi xuống data warehouse (Postgres hoặc Snowflake). Dùng công tắc để xem đường đi của truy vấn, hoặc chọn từng tầng để xem chi tiết.</p>
     <figure>
       <div class="fig">
@@ -157,7 +157,7 @@
     <span class="num">07.5</span>
     <h2>Triển khai</h2>
     <p class="gist">Ba cấu hình chính: pre-aggregation, RLS theo tenant từ JWT, và kết nối cho AI.</p>
-    <p>Thứ nhất, pre-aggregation merchant_monthly_sales ở 07.3 partition theo tháng (partition_granularity) và làm mới mỗi 5 phút qua refresh_key. Theo handbook, cấu hình này giảm lượng dữ liệu cần quét từ hàng triệu dòng xuống vài nghìn dòng trong Cube Store.</p>
+    <p>Thứ nhất, pre-aggregation merchant_monthly_sales ở 07.3 được chia partition theo tháng (partition_granularity) và làm mới mỗi 5 phút qua refresh_key. Theo handbook, cấu hình này giảm lượng dữ liệu cần quét từ hàng triệu dòng xuống vài nghìn dòng trong Cube Store.</p>
     <p>Thứ hai, multi-tenancy dùng queryRewrite trong <code>cube.js</code>: hàm đọc tenant_id trong securityContext (giải mã từ JWT), sau đó thêm một filter vào mọi truy vấn. Chọn một JWT bên dưới để xem truy vấn sau khi được viết lại.</p>
     <figure>
       <div class="fig">
@@ -167,7 +167,7 @@
       </div>
       <figcaption><b>Hình 5</b>Mô phỏng queryRewrite theo code của handbook. Mã tenant là số minh họa.</figcaption>
     </figure>
-    <p>Thứ ba, AI Agent kết nối qua MCP. Agent dùng Meta API để khám phá view sales_data_mart trước khi gửi Semantic SQL hoặc GraphQL. Ba đoạn cấu hình liên quan được trình bày bên dưới; token đã được thay bằng placeholder.</p>
+    <p>Thứ ba, AI Agent kết nối qua MCP. Agent dùng Meta API để khám phá view sales_data_mart trước khi gửi Semantic SQL hoặc GraphQL. Ba đoạn cấu hình liên quan được trình bày bên dưới.</p>
     <figure>
       <div class="fig">
         <div class="tabs" id="ct"></div>
@@ -195,7 +195,7 @@
   <section id="s6">
     <span class="num">07.6</span>
     <h2>Thực nghiệm và đánh giá</h2>
-    <p class="gist">Bốn chỉ số trước và sau khi dùng Cube, đều là số của case study.</p>
+    <p class="gist">Bốn chỉ số trước và sau khi dùng Cube; mọi con số đều lấy từ case study.</p>
     <p>Handbook đưa ra bảng so sánh bốn chỉ số. Dùng công tắc để chuyển giữa trạng thái trước và sau. Thanh ngang so sánh mỗi giá trị với giá trị “trước” của cùng chỉ số.</p>
     <figure>
       <div class="fig">
@@ -259,7 +259,7 @@ const srfShow = i => srfP.innerHTML = `<h5>${SRF[i][0]}</h5>` + rows([['Người
 one('#srf', 'f', srfShow); srfShow(0);
 // Hình 2
 const REQ = [['Một định nghĩa chỉ số', 'WAU và Net Revenue tính giống nhau trên cả ba bề mặt.', 'Mức lệch số giữa các báo cáo.', 'Measure khai báo một lần trong cube, công khai qua view sales_data_mart.', '07.3'],
- ['Độ trễ thấp', 'P95 dưới 0.25 giây trên dữ liệu hàng chục triệu dòng.', 'Độ trễ P95.', 'Pre-aggregation trong Cube Store, partition theo tháng, làm mới mỗi 5 phút.', '07.5'],
+ ['Độ trễ thấp', 'P95 dưới 0.25 giây trên các bảng dữ liệu từ hàng chục triệu dòng trở lên.', 'Độ trễ P95.', 'Pre-aggregation trong Cube Store, partition theo tháng, làm mới mỗi 5 phút.', '07.5'],
  ['Multi-tenancy', 'Hơn 200 merchant chỉ xem được dữ liệu của mình (RLS theo tenant_id).', 'Không merchant nào đọc được dòng của merchant khác.', 'queryRewrite thêm filter tenant_id lấy từ JWT vào mọi truy vấn.', '07.5'],
  ['AI không suy đoán', 'AI Agent không tự sinh SQL thô, không sai join, không tính trùng.', 'Tỷ lệ câu trả lời đúng của AI.', 'Agent chỉ truy vấn qua view và MCP; join đã khai báo relationship nên Cube tự nối bảng chính xác.', '07.5']];
 pills('#req', REQ, 'r');
@@ -322,7 +322,7 @@ const JW = ['m_041', 'm_112', null];
 const jwShow = i => {const t = JW[i];
  sim.innerHTML = `<div><small>securityContext (từ JWT)</small>${esc(t ? `{ "tenant_id": "${t}" }` : '{ "role": "analyst" }')}</div>` +
   `<div${t ? '' : ' class="warn"'}><small>query.filters sau queryRewrite</small>${esc(t ? `[{\n  member: 'orders.tenant_id',\n  operator: 'equals',\n  values: ['${t}']\n}]` : '[]  // không có filter nào')}</div>`;
- simP.innerHTML = t ? `<h5>Chỉ thấy dữ liệu của ${t}</h5>Filter được thêm ở phía server, trước khi Cube sinh SQL. Client không sửa được, kể cả khi tự gửi filter khác.`
+ simP.innerHTML = t ? `<h5>Chỉ thấy dữ liệu của ${t}</h5>Filter được thêm ở phía server, trước khi Cube sinh SQL. Client không thể thay đổi filter này, kể cả khi tự gửi filter khác.`
   : '<h5>Không có filter: dữ liệu của mọi merchant bị lộ</h5>Code trong handbook chỉ thêm filter khi có tenant_id. Khi thiếu claim này, truy vấn chạy trên toàn bộ dữ liệu. Phần Đọc sâu bên dưới trình bày cách khắc phục.'};
 one('#jw', 'j', jwShow); jwShow(0);
 // Hình 6
@@ -340,22 +340,17 @@ const CF = [['cube.js · queryRewrite', `module.exports = {
 };`, 'RLS theo tenant', 'Chạy cho mọi truy vấn trước khi Cube sinh SQL. securityContext là payload của JWT trong header Authorization.'],
  ['mcp_config.json', `{
   "mcpServers": {
-    "cube_semantic_layer": {
+    "cube-mcp-server": {
       "command": "npx",
-      "args": ["-y", "@cubejs-backend/mcp-server"],
-      "env": {
-        "CUBEJS_API_URL": "http://localhost:4000/cubejs-api/v1",
-        "CUBEJS_API_TOKEN": "<JWT_TOKEN>"
-      }
+      "args": ["-y", "mcp-remote", "--transport", "http", "https://cubecloud.dev/mcp"]
     }
   }
-}`, 'Kết nối MCP', 'Khai báo MCP server để Claude hoặc ChatGPT gọi Cube qua REST API. Token nên là JWT mang đúng securityContext của người truy vấn; không đưa token thật vào Git. Tên package <code>@cubejs-backend/mcp-server</code> lấy nguyên từ handbook; nên đối chiếu tài liệu chính thức của Cube trước khi dùng.'],
- ['cube.js · graphqlSchema', `module.exports = {
-  graphqlSchema: {
-    enabled: true,
-    metaDiscovery: true
+}`, 'Kết nối MCP', 'Cấu hình theo ví dụ trong tài liệu Cube. MCP server của Cube chạy dạng hosted tại <code>https://cubecloud.dev/mcp</code> (hoặc <code>https://&lt;console-domain&gt;/mcp</code> với triển khai riêng) và xác thực người dùng bằng OAuth; <code>mcp-remote</code> là gói cầu nối của bên thứ ba cho client chưa kết nối trực tiếp qua HTTP. Handbook gốc ghi package <code>@cubejs-backend/mcp-server</code>, nhưng package này không có trên npm. Không đưa token hay credential thật vào Git.'],
+ ['cube.js · contextToApiScopes', `module.exports = {
+  contextToApiScopes: (securityContext, defaultScopes) => {
+    return ['meta', 'data', 'graphql', 'sql'];
   }
-};`, 'GraphQL và discovery', 'Theo handbook, cấu hình này bật GraphQL và cho agent khám phá cấu trúc view sales_data_mart qua Meta API. Tùy chọn <code>graphqlSchema</code> lấy nguyên từ handbook; nên đối chiếu tài liệu chính thức vì tên tùy chọn có thể khác theo phiên bản.']];
+};`, 'GraphQL và discovery', 'GraphQL API được bật sẵn tại endpoint <code>/graphql</code> của REST API (mặc định <code>/cubejs-api/graphql</code>). Quyền gọi GraphQL và Meta API được quản lý bằng API scopes (<code>graphql</code>, <code>meta</code>); cấu hình trên cấp các scope này để agent khám phá view sales_data_mart qua Meta API. Handbook gốc ghi tùy chọn <code>graphqlSchema</code> với <code>enabled</code> và <code>metaDiscovery</code>, nhưng tài liệu cấu hình của Cube không có tùy chọn này.']];
 let cfi = 0;
 ct.innerHTML = CF.map((c, i) => `<button data-x="${i}" class="${i ? '' : 'on'}">${c[0]}</button>`).join('');
 const cfShow = i => {cfi = i; cf.textContent = CF[i][0]; cc.innerHTML = esc(CF[i][1]); cp.innerHTML = `<h5>${CF[i][2]}</h5>${CF[i][3]}`};
@@ -408,13 +403,13 @@ window.CH = {key: 'ch07', minutes: 16,
  terms: {
   netrev: ['Net Revenue','Doanh thu sau khi trừ các khoản giảm trừ như hoàn tiền, chiết khấu, trả hàng. Trong case study là measure net_revenue (type sum) của cube orders, dùng chung cho cả ba bề mặt tiêu thụ.','Số tiền cửa hàng thực sự giữ lại sau khi trừ hàng bị trả và mã giảm giá: bán được 100 triệu, hoàn lại 8 triệu thì còn 92 triệu.'],
   wau: ['WAU','Weekly Active Users: số người dùng phân biệt (count_distinct theo user_id) có ít nhất một sự kiện trong một tuần. Trong model này là measure active_users truy vấn ở granularity week.','Số người đã sử dụng sản phẩm trong tuần; một người truy cập mười lần vẫn chỉ được tính là một.'],
-  p95: ['P95','Phân vị thứ 95 của phân phối độ trễ: 95% truy vấn hoàn tất nhanh hơn giá trị này. Dùng thay trung bình vì P95 cho thấy phần đuôi chậm mà người dùng vẫn gặp.','Sắp xếp 100 lần mở báo cáo từ nhanh đến chậm; thời gian của lần thứ 95 chính là P95, và chỉ 5 lần chậm hơn mức đó.'],
+  p95: ['P95','Phân vị thứ 95 của phân phối độ trễ: 95% truy vấn hoàn tất nhanh hơn giá trị này. Dùng thay cho giá trị trung bình vì P95 cho thấy phần đuôi chậm mà người dùng vẫn gặp.','Sắp xếp 100 lần mở báo cáo từ nhanh đến chậm; thời gian của lần thứ 95 chính là P95, và chỉ 5 lần chậm hơn mức đó.'],
   tenant: ['multi-tenancy','Mô hình kiến trúc trong đó nhiều tenant dùng chung một hệ thống và một data model nhưng dữ liệu được cách ly logic. Ở đây mỗi merchant là một tenant, cách ly bằng filter tenant_id.','Như một tòa chung cư: hơn 200 nhà bán hàng ở chung một tòa nhà, nhưng mỗi nhà chỉ mở được cửa căn hộ của mình.'],
   rls: ['RLS','Row-Level Security: cơ chế giới hạn những dòng dữ liệu một người dùng được đọc, dựa trên thuộc tính của họ. Trong Cube, RLS thường được cài đặt bằng queryRewrite thêm filter từ securityContext.','Cùng một bảng doanh thu, nhưng mỗi nhà bán hàng mở ra chỉ thấy những dòng của chính mình, các dòng khác bị che đi.'],
   jwt: ['JWT','JSON Web Token: chuỗi token có chữ ký, gửi trong header Authorization. Cube xác minh chữ ký, sau đó giải mã payload thành securityContext.','Giống thẻ ra vào có đóng dấu: mỗi lần yêu cầu số liệu, ứng dụng gửi kèm thẻ, và Cube dựa vào thẻ để biết ai đang truy vấn và được xem dữ liệu nào.'],
   secctx: ['securityContext','Đối tượng chứa payload đã giải mã của JWT (ví dụ tenant_id, role), được Cube truyền vào queryRewrite và các hàm cấu hình khác.','Bản thông tin Cube trích ra từ thẻ ra vào, ví dụ “người này thuộc merchant m_041”, để các bước sau dựa vào đó lọc dữ liệu.'],
   qrw: ['queryRewrite','Hàm cấu hình trong cube.js, chạy phía server với mọi truy vấn trước khi Cube sinh SQL; nhận query và securityContext, trả về query đã sửa, thường để thêm filter.','Giống một người kiểm duyệt ở cửa: mọi câu hỏi đi qua đều được gắn thêm điều kiện “chỉ lấy dữ liệu của cửa hàng này” trước khi được trả lời.'],
-  preagg: ['pre-aggregation','Định nghĩa rollup trong cube: Cube tính trước kết quả tổng hợp theo các measure, dimension và granularity đã chọn, lưu trong Cube Store và dùng lại khi truy vấn khớp.','Giống việc lập sẵn bảng tổng doanh thu theo ngày; khi có yêu cầu, chỉ cần tra bảng nhỏ đó thay vì cộng lại hàng triệu hóa đơn.'],
+  preagg: ['pre-aggregation','Định nghĩa rollup trong cube: Cube tính trước kết quả tổng hợp theo các measure, dimension và granularity đã chọn, lưu trong Cube Store và dùng lại khi truy vấn khớp.','Giống như lập sẵn bảng tổng doanh thu theo ngày; khi có yêu cầu, chỉ cần tra bảng nhỏ đó thay vì cộng lại hàng triệu hóa đơn.'],
   cubestore: ['Cube Store','Engine lưu trữ và truy vấn của Cube dành cho pre-aggregation, lưu rollup dạng Parquet và chạy trên cụm router và worker node.','Kho riêng của Cube để lưu các bảng đã cộng sẵn, đặt gần nơi truy vấn nên truy xuất nhanh hơn nhiều so với tìm lại trong kho chính.'],
   partition: ['partition_granularity','Thuộc tính của pre-aggregation chia rollup thành nhiều partition theo khoảng thời gian (ví dụ month), để Cube chỉ build lại các partition cần thiết khi refresh.','Chia sổ sách thành từng tập theo tháng; khi có số liệu mới, chỉ cần cập nhật tập của tháng hiện tại, không phải chép lại toàn bộ sổ.'],
   refreshkey: ['refresh_key','Thuộc tính quy định khi nào pre-aggregation được build lại, theo chu kỳ (every) hoặc theo kết quả một câu SQL kiểm tra thay đổi.','Lịch cập nhật bảng cộng sẵn, ví dụ 5 phút làm mới một lần, nên số liệu trên dashboard có thể trễ tối đa khoảng thời gian đó.'],
@@ -441,7 +436,7 @@ window.CH = {key: 'ch07', minutes: 16,
   {id: 'ch07_q4', s: 1, type: 'one', q: 'Mục tiêu “P95 dưới 0.25 giây” nghĩa là gì?', o: ['Độ trễ trung bình là 0.25 giây', 'Mọi truy vấn đều dưới 0.25 giây', '95% truy vấn hoàn tất nhanh hơn 0.25 giây', '95% dữ liệu nằm sẵn trong cache'], a: 2,
    ex: 'P95 là phân vị 95: 95% truy vấn nhanh hơn ngưỡng, 5% còn lại có thể chậm hơn.', why: {0: 'Trung bình khác phân vị; trung bình có thể thấp trong khi P95 vẫn cao.', 1: 'Đó là mức tối đa (P100), chặt hơn P95.', 3: 'P95 nói về độ trễ truy vấn, không về tỷ lệ dữ liệu trong cache.'}},
   {id: 'ch07_q5', s: 2, type: 'one', q: 'Join orders → customers khai báo relationship many_to_one. Nếu khai báo sai, hệ quả dễ gặp nhất là gì?', o: ['View không hiện trường city', 'Doanh thu bị cộng trùng khi nhóm theo khách hàng (fanout)', 'Pre-aggregation không làm mới được', 'JWT bị từ chối'], a: 1,
-   ex: 'relationship cho Cube biết chiều của quan hệ để tránh nhân dòng. Sai quan hệ thì phép sum có thể cộng trùng.', why: {0: 'Các trường được công khai do includes quyết định.', 2: 'Lịch làm mới do refresh_key quyết định.', 3: 'Xác thực JWT không liên quan tới khai báo join.'}},
+   ex: 'relationship cho Cube biết chiều của quan hệ để tránh nhân dòng. Nếu khai báo sai quan hệ, phép sum có thể cộng trùng.', why: {0: 'Các trường được công khai do includes quyết định.', 2: 'Lịch làm mới do refresh_key quyết định.', 3: 'Xác thực JWT không liên quan tới khai báo join.'}},
   {id: 'ch07_q6', s: 2, type: 'one', q: 'Trong model của case study, WAU được tính bằng cách nào?', o: ['Truy vấn events.active_users theo event_time ở granularity week', 'Dùng orders.unique_orders theo tuần', 'Dùng events.count theo tuần', 'Dùng customers.count'], a: 0,
    ex: 'active_users đếm user_id không trùng. Đặt granularity week trên event_time sẽ cho số người hoạt động mỗi tuần.', why: {1: 'unique_orders đếm đơn hàng, không đếm người dùng.', 2: 'events.count đếm sự kiện; một người có nhiều sự kiện.', 3: 'customers.count đếm khách hàng trong bảng, không xét hoạt động.'}},
   {id: 'ch07_q7', s: 2, type: 'one', q: 'View sales_data_mart dùng prefix: true cho join_path orders.customers. Trường city sẽ xuất hiện với tên gì?', o: ['city', 'customers_city', 'orders_city', 'sales_data_mart_city'], a: 1,
@@ -458,7 +453,7 @@ window.CH = {key: 'ch07', minutes: 16,
    ex: 'Handbook không nêu bộ câu hỏi, cách chấm hay quy mô thử. Số này minh họa lập luận, không dùng để trích dẫn.', why: {0: 'Kết quả phụ thuộc model, dữ liệu và bộ câu hỏi; không có bảo đảm chung.', 2: 'Handbook không nói con số đến từ Cube Dev.', 3: '83–85% nghĩa là vẫn còn khoảng 15% câu trả lời sai.'}},
   {id: 'ch07_q13', s: 5, type: 'one', q: 'Theo case study, chi phí data warehouse giảm từ $12,000 xuống $800/tháng chủ yếu nhờ gì?', o: ['Chuyển data model sang snake_case', 'Pre-aggregations trả lời truy vấn lặp lại từ Cube Store thay vì quét lại data warehouse', 'Bật GraphQL API', 'Xác thực bằng JWT'], a: 1,
    ex: 'Truy vấn trùng lặp được trả lời từ rollup nhỏ, nên data warehouse ít phải tính toán lại.', why: {0: 'Quy ước tên giúp bảo trì, không giảm chi phí quét.', 2: 'GraphQL chỉ là thêm một cổng truy vấn.', 3: 'JWT phục vụ xác thực và RLS, không giảm tải tính toán.'}},
-  {id: 'ch07_q14', s: 6, type: 'multi', q: 'Khi dùng Cube Store, case study phải chịu thêm những chi phí nào?', o: ['Dung lượng ổ đĩa cho các file Parquet', 'RAM cho các worker node', 'Bản quyền theo số người dùng như LookML', 'Phải bỏ data warehouse nguồn'], a: [0, 1],
+  {id: 'ch07_q14', s: 6, type: 'multi', q: 'Khi dùng Cube Store, case study phải chịu thêm những chi phí nào?', o: ['Dung lượng ổ đĩa cho các file Parquet', 'RAM cho các worker node', 'Phí bản quyền theo số người dùng như Looker', 'Phải bỏ data warehouse nguồn'], a: [0, 1],
    ex: 'Chi phí phát sinh là hạ tầng cho cache; đổi lại, chi phí quét trên data warehouse giảm.', why: {2: 'Cube Core là mã nguồn mở, không tính bản quyền theo người dùng.', 3: 'Data warehouse vẫn là nguồn; Cube Store chỉ giữ các rollup của pre-aggregation.'}},
   {id: 'ch07_q15', s: 6, type: 'one', q: 'Rủi ro chính khi bật rollup-only mà khai báo thiếu pre-aggregation là gì?', o: ['Data warehouse bị quá tải', 'Người dùng gặp lỗi với các câu hỏi không có rollup phù hợp', 'Dữ liệu giữa các merchant bị lộ', 'JWT hết hạn sớm hơn'], a: 1,
    ex: 'Rollup-only chặn truy vấn xuống data warehouse, nên câu hỏi không khớp rollup nào sẽ không có kết quả.', why: {0: 'Rollup-only bảo vệ data warehouse khỏi quá tải, không gây ra nó.', 2: 'Multi-tenancy do queryRewrite đảm nhận.', 3: 'Không liên quan tới thời hạn token.'}},

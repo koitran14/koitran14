@@ -40,7 +40,9 @@ figcaption{margin:12px 80px 0;font-size:14px;color:var(--muted)}figcaption b{fon
 .tabs button.on{color:var(--fg);border-color:var(--fg)}
 .code{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
 .code .h{display:flex;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--line);font:400 12px var(--mono);color:var(--muted)}
-.code pre{margin:0;padding:14px 0;font:13px/1.75 var(--mono);color:var(--fg);white-space:pre;overflow-x:auto}
+.code pre{margin:0;padding:14px 16px;font:13px/1.75 var(--mono);color:var(--fg);white-space:pre;overflow-x:auto}
+/* interactive blocks pad each clickable line (span.ln) instead, so the highlight runs edge to edge */
+.code pre:has(> span.ln){padding-inline:0}
 .code pre span.ln{display:block;padding:0 16px;border-left:2px solid transparent;cursor:pointer;transition:background .2s}
 .code pre span.ln.on{background:var(--acc-soft);border-color:var(--acc)}
 .code pre span.ln:hover{background:var(--soft)}
@@ -221,3 +223,7 @@ body.kw-off .kw{background:none!important;text-decoration:none!important;color:i
 .fig *{overflow-wrap:anywhere}
 @media(max-width:600px){.fig table{display:block;overflow-x:auto}}
 @media(max-width:1000px){.num{position:static;display:block;margin-bottom:6px}figure{margin:32px 0}figcaption{margin:12px 0 0}h1{font-size:42px}}
+/* scroll reveal, same feel as the site's Reveal component; the page wrapper adds .rv and then .in */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.33,1,.68,1),transform .8s cubic-bezier(.33,1,.68,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Be_Vietnam_Pro, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
 import { SERIES, getPosts, isAdmin } from "@/lib/blog";
-import { Notes, type Entry } from "./notes";
+import { Reveal } from "@/components/reveal";
+import { Notes, ReadingNotice, type Entry } from "./notes";
 
 export const dynamic = "force-dynamic";
 
@@ -34,22 +35,30 @@ export default async function BlogPage() {
 
   return (
     <div className={`${serif.variable} ${sans.variable} ${mono.variable} py-8 pb-24`} style={{ fontFamily: "var(--font-notes-sans)" }}>
-      <div className="flex items-baseline justify-between">
-        <span className="text-xs text-zinc-600 dark:text-zinc-500" style={{ fontFamily: "var(--font-notes-mono)" }}>
-          VOL. 01 — {new Date().getFullYear()}
-        </span>
-        {admin && (
-          <Link href="/blog/admin" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
-            + New post
-          </Link>
-        )}
-      </div>
-      <h1 className="mt-3 text-4xl sm:text-5xl tracking-tight text-zinc-900 dark:text-zinc-100" style={{ fontFamily: "var(--font-notes-serif)", lineHeight: 1.1 }}>
-        Notes <span className="text-zinc-400 dark:text-zinc-600">—</span> <span className="italic text-orange-600 dark:text-orange-400">sổ tay</span>
-      </h1>
-      <p className="mt-3 max-w-md leading-relaxed text-zinc-700 dark:text-zinc-400">
-        Những gì mình đọc, học và nghĩ: bài viết, ghi chú ngắn và các bộ tài liệu học.
-      </p>
+      <Reveal>
+        <div className="flex items-baseline justify-between">
+          <span className="text-xs text-zinc-600 dark:text-zinc-500" style={{ fontFamily: "var(--font-notes-mono)" }}>
+            VOL. 01 — {new Date().getFullYear()}
+          </span>
+          {admin && (
+            <Link href="/blog/admin" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+              + New post
+            </Link>
+          )}
+        </div>
+        <h1
+          className="mt-3 text-4xl sm:text-5xl tracking-tight text-zinc-900 dark:text-zinc-100"
+          style={{ fontFamily: "var(--font-notes-serif)", lineHeight: 1.1 }}
+        >
+          Notes <span className="text-zinc-400 dark:text-zinc-600">—</span> <span className="italic text-orange-600 dark:text-orange-400">sổ tay</span>
+        </h1>
+        <p className="mt-3 max-w-md leading-relaxed text-zinc-700 dark:text-zinc-400">
+          Góc nhỏ lưu giữ những điều mình học được, những thứ mình tò mò và những ý tưởng mình muốn ghi lại trên hành trình khám phá thế giới công nghệ.
+        </p>
+      </Reveal>
+      <Reveal delay={0.08}>
+        <ReadingNotice />
+      </Reveal>
 
       <Notes entries={entries} series={SERIES} admin={admin} />
     </div>

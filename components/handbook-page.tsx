@@ -30,6 +30,28 @@ export function HandbookPage({ page, engine }: { page: Page; engine: boolean }) 
     return () => { ctl.abort(); added.forEach((s) => s.remove()); };
   }, [page, engine]);
 
+  // Fade and lift each block in as it scrolls into view, like the rest of the site; blocks entering together stagger.
+  useEffect(() => {
+    const art = document.querySelector(".hb article");
+    if (!art || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const blocks = Array.from(art.querySelectorAll<HTMLElement>(":scope > :not(section), :scope > section > *"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.filter((e) => e.isIntersecting).forEach((e, i) => {
+          const el = e.target as HTMLElement;
+          el.style.transitionDelay = `${Math.min(i, 5) * 60}ms`;
+          el.classList.add("in");
+          io.unobserve(el);
+          // hand the element back its own transitions (hover etc.) once it has arrived
+          el.addEventListener("transitionend", () => { el.classList.remove("rv", "in"); el.style.transitionDelay = ""; }, { once: true });
+        });
+      },
+      { rootMargin: "0px 0px -8% 0px" },
+    );
+    blocks.forEach((el) => { el.classList.add("rv"); io.observe(el); });
+    return () => io.disconnect();
+  }, [page]);
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: page.css }} />

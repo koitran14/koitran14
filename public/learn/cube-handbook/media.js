@@ -5,11 +5,15 @@ window.MEDIA = {
  yt: {id: '7ZQGGepDjUQ', title: 'Building Agentic Analytics with Cube (workshop, 39 phút)'},
  audio: {src: '/learn/cube-handbook/media/overview.m4a', title: 'Kiến trúc tầng ngữ nghĩa Cube', marks: {
   // from a Whisper transcript of the overview; the audio is a discussion, so it covers the conceptual sections and skips the hands-on ones
+  '00.1': [92, 210], '00.2': [638, 721], '00.4': [436, 594],
   '01.1': [63, 92], '01.2': [42, 92], '01.3': [0, 42], '01.5': [770, 860],
   '02.1': [92, 177], '02.2': [177, 210], '02.3': [638, 690],
   '04.1': [210, 233], '04.4': [177, 210], '04.5': [233, 383], '04.6': [383, 436], '04.7': [436, 594], '04.8': [594, 721], '04.10': [770, 830],
   '05.3': [600, 628], '07.7': [721, 770]}},
  demo: {
+  '00.1': [[482, 600, 'Semantic SQL: AI không viết SQL cuối cùng cho data warehouse']],
+  '00.2': [[443, 600, 'Hỏi “orders monthly” và xem SQL Cube sinh ra']],
+  '00.3': [[241, 362, 'Cubes, views, measures, dimensions và joins']],
   '01.1': [[0, 82, 'Cube là gì: nền tảng phân tích xây trên semantic layer']],
   '01.2': [[41, 82, 'Semantic layer là xương sống của mọi trải nghiệm'], [482, 560, 'Semantic SQL: cân bằng quản trị và linh hoạt']],
   '01.4': [[241, 362, 'Cubes, views, measures, dimensions và joins']],

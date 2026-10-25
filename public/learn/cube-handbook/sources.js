@@ -30,6 +30,7 @@ window.SOURCES = [
  {id: 'ai-nb', g: 'Nội dung do AI tạo', title: 'Audio tổng quan, video “Sổ tay kỹ thuật Cube” và bộ trắc nghiệm', by: 'Gemini Notebook, tạo từ các nguồn trên'}];
 // which sources each chapter leans on (keys are chapter numbers)
 window.CH_SOURCES = {
+ '00': ['d-intro', 'd-model', 'd-queries', 'd-rest', 'd-sec', 'd-client'],
  '01': ['w-home', 'w-sl', 'd-intro', 'd-model', 'c-pipe', 'gh', 'v-ws'],
  '02': ['d-intro', 'd-queries', 'd-preagg', 'b-v28', 'b-ext', 'v-ws'],
  '03': ['d-syntax', 'd-model', 'd-rest', 'd-client', 'b-v33', 'b-angular', 'b-vue', 'b-bubble', 'v-ws'],

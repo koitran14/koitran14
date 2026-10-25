@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { PostType, SERIES } from "@/lib/blog";
+import { Reveal } from "@/components/reveal";
 import { togglePublished } from "./actions";
 
 /** Notes tabs, in display order. "workbook" is only used by SERIES. */
@@ -23,6 +24,7 @@ const SPINES = [
   ["bg-sky-400", "bg-sky-200 dark:bg-sky-950"],
   ["bg-indigo-400", "bg-indigo-200 dark:bg-indigo-950"],
   ["bg-violet-400", "bg-violet-200 dark:bg-violet-950"],
+  ["bg-fuchsia-400", "bg-fuchsia-200 dark:bg-fuchsia-950"],
 ];
 
 export type Entry = {
@@ -69,6 +71,84 @@ const PlayIcon = () => (
   </svg>
 );
 
+/** Reading notice shared by every note: opens on hover or focus on desktop, on tap on touch screens. */
+export function ReadingNotice() {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: Event) => {
+      if (e instanceof KeyboardEvent ? e.key === "Escape" : !(e.target as Element).closest("[data-notice]")) setOpen(false);
+    };
+    document.addEventListener("keydown", close);
+    document.addEventListener("pointerdown", close);
+    return () => {
+      document.removeEventListener("keydown", close);
+      document.removeEventListener("pointerdown", close);
+    };
+  }, [open]);
+
+  return (
+    // hover and focus open it only for mouse and keyboard; a tap fires those too and would undo its own click
+    <div
+      data-notice
+      className="relative mt-4 inline-block"
+      onPointerEnter={(e) => e.pointerType === "mouse" && setOpen(true)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && setOpen(false)}
+    >
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls="reading-notice"
+        // a mouse click lands on an already-open panel (hover opened it), so it only keeps it open
+        onClick={(e) => ((e.nativeEvent as PointerEvent).pointerType === "mouse" ? setOpen(true) : setOpen((o) => !o))}
+        onFocus={(e) => e.currentTarget.matches(":focus-visible") && setOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900/60 py-1 pl-1.5 pr-3 text-[13px] text-zinc-700 dark:text-zinc-300 hover:border-zinc-500 transition-colors"
+      >
+        <span aria-hidden className="grid h-4 w-4 place-items-center rounded-full border-[1.5px] border-current text-[10px] leading-none" style={mono}>
+          i
+        </span>
+        Lưu ý khi đọc
+      </button>
+      <div
+        id="reading-notice"
+        role="note"
+        hidden={!open}
+        // pt-2 bridges the gap so the pointer can move from the chip into the panel
+        className="absolute left-0 top-full z-20 w-[min(23rem,calc(100vw-4rem))] pt-2"
+      >
+        <div className="rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 text-[13.5px] leading-relaxed text-zinc-700 dark:text-zinc-400 shadow-[0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none">
+          <p className="font-medium text-zinc-900 dark:text-zinc-100">Lưu ý về tài liệu</p>
+          <p className="mt-2">
+            Đây là sổ tay kỹ thuật cá nhân, được tổng hợp và biên soạn từ các nguồn tài liệu tham khảo trong quá trình học tập và nghiên cứu. Nội dung không đại
+            diện cho quan điểm hoặc tài liệu chính thức của bất kỳ tổ chức nào.
+          </p>
+          <ul className="mt-2 list-disc space-y-1.5 pl-4">
+            <li>
+              <span className="font-medium text-zinc-900 dark:text-zinc-100">Nguồn nội dung:</span> Một số nội dung được hỗ trợ soạn thảo bởi các công cụ AI như
+              Gemini và Claude, sau đó được biên tập lại. Tuy nhiên, thông tin vẫn có thể tồn tại sai sót hoặc chưa đầy đủ.
+            </li>
+            <li>
+              <span className="font-medium text-zinc-900 dark:text-zinc-100">Tính cập nhật:</span> Các thông tin và hướng dẫn kỹ thuật có thể phụ thuộc vào
+              phiên bản phần mềm, thư viện hoặc công nghệ tại thời điểm biên soạn. Vui lòng đối chiếu với tài liệu chính thức trước khi áp dụng.
+            </li>
+            <li>
+              <span className="font-medium text-zinc-900 dark:text-zinc-100">Dữ liệu minh họa và bảo mật:</span> Các số liệu trong tài liệu chỉ mang tính minh
+              họa. Những thông tin nhạy cảm trong mã nguồn mẫu, bao gồm token và secret, đã được thay thế bằng placeholder.
+            </li>
+          </ul>
+          <p className="mt-2.5">
+            Mọi feedback hoặc trao đổi liên quan đến nội dung trong sổ tay đều được hoan nghênh. Bạn có thể liên hệ qua email{" "}
+            <a href="mailto:tndkhoi.work@gmail.com" className="text-blue-600 dark:text-blue-400 hover:underline">
+              tndkhoi.work@gmail.com
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Workbook({ s }: { s: Series }) {
   const read = useReadChapters(s);
   const done = read.filter(Boolean).length;
@@ -78,7 +158,7 @@ function Workbook({ s }: { s: Series }) {
 
   return (
     <div className="mt-7 grid grid-cols-[minmax(0,1fr)_22px] sm:grid-cols-[minmax(0,1fr)_30px]">
-      <div className="relative z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 shadow-[0_1px_2px_rgba(24,24,27,0.06),0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none px-5 py-5 sm:px-6">
+      <div className="relative z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#131315] shadow-[0_1px_2px_rgba(24,24,27,0.06),0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none px-5 py-5 sm:px-6">
         <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
           <span className={TINT.workbook.text}>WORKBOOK</span> · {s.chapters.length} CHƯƠNG
         </div>
@@ -117,7 +197,8 @@ function Workbook({ s }: { s: Series }) {
         </div>
       </div>
       {/* chapter tabs on the book's edge: read, current, not yet */}
-      <nav aria-label={`Chương của ${s.title}`} className="flex flex-col gap-[3px] pt-4">
+      {/* -ml tucks the tabs under the cover so they read as attached to it, not floating beside it */}
+      <nav aria-label={`Chương của ${s.title}`} className="-ml-3 flex flex-col gap-[3px] pt-4">
         {s.chapters.map((c, i) => (
           <Link
             key={c.n}
@@ -125,7 +206,7 @@ function Workbook({ s }: { s: Series }) {
             title={`${c.n} · ${c.title}`}
             aria-label={`Chương ${c.n}: ${c.title}${read[i] ? " (đã đọc)" : ""}`}
             // the chapter to read next sticks out a little further
-            className={`h-6 rounded-r-md shadow-[0_1px_2px_rgba(24,24,27,0.12)] dark:shadow-none transition-transform hover:translate-x-1 ${read[i] || i === current ? SPINES[i % 7][0] : SPINES[i % 7][1]} ${
+            className={`h-6 rounded-r-md shadow-[0_1px_2px_rgba(24,24,27,0.12)] dark:shadow-none transition-transform hover:translate-x-1 ${read[i] || i === current ? SPINES[i % SPINES.length][0] : SPINES[i % SPINES.length][1]} ${
               i === current && next !== -1 ? "translate-x-1.5" : ""
             }`}
           />
@@ -144,38 +225,53 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
 
   return (
     <>
-      <div role="tablist" aria-label="Loại" className="mt-8 flex gap-x-6 overflow-x-auto overflow-y-hidden border-b border-zinc-300 dark:border-zinc-800">
-        {tabs.map((t) => (
-          <button
-            key={t}
-            role="tab"
-            aria-selected={tab === t}
-            onClick={() => setTab(t)}
-            className={`shrink-0 border-b pb-2.5 text-sm transition-colors ${
-              tab === t
-                ? "border-zinc-900 dark:border-zinc-100 text-zinc-900 dark:text-zinc-100"
-                : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
-            }`}
-          >
-            {t !== "all" && <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-sm align-middle ${TINT[t].dot}`} />}
-            {t === "all" ? "Tất cả" : TYPES[t]}{" "}
-            <span className="text-xs text-zinc-500" style={mono}>
-              {String(count(t)).padStart(2, "0")}
-            </span>
-          </button>
-        ))}
-      </div>
+      <Reveal delay={0.14}>
+        <div role="tablist" aria-label="Loại" className="mt-8 flex gap-x-6 overflow-x-auto overflow-y-hidden border-b border-zinc-300 dark:border-zinc-800">
+          {tabs.map((t) => (
+            <button
+              key={t}
+              role="tab"
+              aria-selected={tab === t}
+              onClick={() => setTab(t)}
+              className={`shrink-0 border-b pb-2.5 text-sm transition-colors ${
+                tab === t
+                  ? "border-zinc-900 dark:border-zinc-100 text-zinc-900 dark:text-zinc-100"
+                  : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
+              }`}
+            >
+              {t !== "all" && <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-sm align-middle ${TINT[t].dot}`} />}
+              {t === "all" ? "Tất cả" : TYPES[t]}{" "}
+              <span className="text-xs text-zinc-500" style={mono}>
+                {String(count(t)).padStart(2, "0")}
+              </span>
+            </button>
+          ))}
+        </div>
+      </Reveal>
 
-      {(tab === "all" || tab === "workbook") && series.map((s) => <Workbook key={s.slug} s={s} />)}
+      {(tab === "all" || tab === "workbook") &&
+        series.map((s) => (
+          <Reveal key={s.slug} delay={0.2}>
+            <Workbook s={s} />
+          </Reveal>
+        ))}
 
       {shown.length > 0 && (
         <ul className="mt-9 border-b border-zinc-300 dark:border-zinc-800">
-          {shown.map((e) => (
-            <li key={e.slug} className="grid grid-cols-[56px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)] border-t border-zinc-300 dark:border-zinc-800">
+          {shown.map((e, i) => (
+            // stagger only the first few rows; later ones reveal as they scroll in
+            <Reveal
+              as="li"
+              key={e.slug}
+              delay={Math.min(i, 5) * 0.06}
+              className="grid grid-cols-[56px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)] border-t border-zinc-300 dark:border-zinc-800"
+            >
               {/* margin column: entry number and date, ruled off in red like a notebook */}
               <div className="border-r border-red-400 dark:border-red-900/80 py-5 pr-3 text-right text-xs leading-5" style={mono}>
                 <div className="text-zinc-700 dark:text-zinc-400">N° {String(e.n).padStart(2, "0")}</div>
-                <time dateTime={e.createdAt} className="text-zinc-500">{e.date}</time>
+                <time dateTime={e.createdAt} className="text-zinc-500">
+                  {e.date}
+                </time>
               </div>
               <div className="py-5 pl-4 sm:pl-5">
                 <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
@@ -193,12 +289,18 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
                 </div>
                 <Link href={`/blog/${e.slug}`} className="group block mt-1.5">
                   {e.type === "note" ? (
-                    <p className="text-lg italic leading-relaxed text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style={serif}>
+                    <p
+                      className="text-lg italic leading-relaxed text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                      style={serif}
+                    >
                       “{e.excerpt}”
                     </p>
                   ) : (
                     <>
-                      <span className="block text-xl leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" style={serif}>
+                      <span
+                        className="block text-xl leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                        style={serif}
+                      >
                         {e.title}
                       </span>
                       <span className="mt-1.5 block text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-400">{e.excerpt}</span>
@@ -206,7 +308,7 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
                   )}
                 </Link>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       )}
