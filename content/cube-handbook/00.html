@@ -171,7 +171,7 @@ table.x-map td code{white-space:normal}
     <h2>LLM tham gia ở bước nào?</h2>
     <p class="gist">LLM đứng ở hai đầu của chuỗi xử lý. Cube và database ở giữa không dùng LLM.</p>
     <p>Toàn bộ chương dùng chung một ví dụ: bảng <code>orders</code> gồm 10 đơn hàng của hai shop A và B, ngày hiện tại là 23/10/2026, người hỏi là nhân viên shop A.</p>
-    <p>Cube tiếp nhận một yêu cầu có dạng “cho số X, chia theo Y” dưới dạng query JSON, tự viết SQL, chạy SQL trên database rồi trả kết quả. Khi người dùng hỏi bằng tiếng Việt, cần thêm một LLM ở phía trước để chuyển câu hỏi thành query JSON đó. Mỗi trường trong query JSON là tên một member do Cube cung cấp, ví dụ <code>orders.revenue</code>.</p>
+    <p>Cube nhận yêu cầu kiểu “cho số X, chia theo Y” dưới dạng query JSON, tự viết SQL, chạy SQL trên database rồi trả kết quả. Khi người dùng hỏi bằng tiếng Việt, cần thêm một LLM ở phía trước để chuyển câu hỏi thành query JSON đó. Mỗi trường trong query JSON là tên một member do Cube cung cấp, ví dụ <code>orders.revenue</code>.</p>
     <figure>
       <div class="fig x-fig x-cq">
         <ol class="x-rail" aria-label="Chuỗi xử lý từ câu hỏi đến câu trả lời">
@@ -185,14 +185,14 @@ table.x-map td code{white-space:normal}
       <figcaption><b>Hình 1</b>Năm bước của chuỗi xử lý, đọc từ trái sang phải. Hai điểm tô đặc là hai vị trí duy nhất có LLM.</figcaption>
     </figure>
     <div class="take"><small>Điểm mấu chốt</small>LLM chỉ làm hai việc: hiểu câu hỏi và diễn đạt câu trả lời. LLM không viết SQL mà chỉ chọn tên từ một danh sách do Cube cung cấp. Phần giữa là code chạy cố định: cùng một JSON của cùng một người hỏi luôn cho cùng một câu SQL và cùng một con số.</div>
-    <p>Bản thân Cube (bản open source) không chứa LLM. LLM nằm trong ứng dụng hoặc agent đặt phía trước, ví dụ một chatbot dùng Claude, hoặc trong tính năng AI của Cube Cloud. Cách làm trong cả hai trường hợp giống nhau: đọc danh sách member của Cube, sau đó sinh query JSON.</p>
+    <p>Bản thân Cube (bản open source) không chứa LLM. LLM nằm trong ứng dụng hoặc agent đặt phía trước, ví dụ một chatbot dùng Claude, hoặc trong tính năng AI của Cube Cloud. Hai trường hợp làm giống nhau: đọc danh sách member của Cube rồi sinh query JSON.</p>
   </section>
 
   <section id="s2">
     <span class="num">00.2</span>
     <h2>Một câu hỏi qua bảy bước</h2>
     <p class="gist">Từ câu hỏi tiếng Việt đến query JSON, từ query JSON đến SQL, rồi từ số liệu trở lại câu trả lời.</p>
-    <p>Hình 2 cho phép chọn một trong ba câu hỏi và đi qua từng bước. Mỗi bước ghi rõ thành phần thực hiện, công việc, đoạn code chạy ở bước đó và output của đoạn code.</p>
+    <p>Ở Hình 2, chọn một trong ba câu hỏi rồi đi qua từng bước. Mỗi bước ghi rõ ai làm, làm gì, đoạn code chạy ở bước đó và output tương ứng.</p>
     <figure>
       <div class="fig x-fig x-cq">
         <span class="x-lbl">Câu hỏi (người hỏi: nhân viên shop A, ngày 23/10/2026)</span>
@@ -206,7 +206,7 @@ table.x-map td code{white-space:normal}
       </div>
       <figcaption><b>Hình 2</b>Bảy bước của một câu hỏi. Chọn câu hỏi phía trên, chọn bước bằng các chấm số hoặc hai nút Trước, Tiếp.</figcaption>
     </figure>
-    <p>Hai bước cần chú ý nhất là bước 3 và bước 4. Ở bước 3, đầu ra duy nhất của LLM là một query JSON. Ở bước 4, Cube xác thực token, đưa payload của token vào securityContext, sau đó hàm queryRewrite trong file <code>cube.js</code> thêm filter <code>shop_id</code> vào query. LLM không thấy điều kiện này và không thể gỡ bỏ điều kiện đó.</p>
+    <p>Hai bước cần chú ý nhất là bước 3 và bước 4. Ở bước 3, đầu ra duy nhất của LLM là một query JSON. Ở bước 4, Cube xác thực token, đưa payload của token vào securityContext, sau đó hàm queryRewrite trong file <code>cube.js</code> thêm filter <code>shop_id</code> vào query. LLM không thấy và cũng không gỡ được điều kiện này.</p>
     <div class="take"><small>Ghi nhớ</small>Từ bước 4 trở đi không còn LLM. Nếu LLM bịa ra một member không tồn tại, Cube trả lỗi thay vì âm thầm trả về số sai.</div>
     <details class="deep"><summary><span><small>Đọc sâu</small>Toàn bộ code server ghép lại (bước 2 → 7 trong một file)</span></summary><div>
       <p>Đoạn code dưới đây gộp các bước 2 đến 7 vào một route <code>/api/ask</code>. Model và tên biến giữ nguyên như trong các bước ở Hình 2.</p>
@@ -218,7 +218,7 @@ table.x-map td code{white-space:normal}
     <span class="num">00.3</span>
     <h2>File YAML là từ điển</h2>
     <p class="gist">File YAML nối tên dễ hiểu với cột thật trong database. Cả LLM lẫn SQL compiler của Cube đều đọc từ file này.</p>
-    <p>File YAML (data model) do developer viết tay. File này có vai trò như một cuốn từ điển: nối <b>tên dễ hiểu</b> như doanh thu, thành phố với <b>cột thật trong database</b>. Đây là phần cốt lõi của semantic layer. Mỗi measure là một con số cần tính; mỗi dimension là một góc nhìn để chia nhóm hoặc lọc. Khối measures và dimensions trong file liệt kê đầy đủ các member mà cube cung cấp.</p>
+    <p>File YAML (data model) do developer viết tay và dùng như một cuốn từ điển: nối <b>tên dễ hiểu</b> như doanh thu, thành phố với <b>cột thật trong database</b>. Đây là phần cốt lõi của semantic layer. Mỗi measure là một con số cần tính; mỗi dimension là một góc nhìn để chia nhóm hoặc lọc. Khối measures và dimensions trong file liệt kê đầy đủ các member mà cube cung cấp.</p>
     <p>Cube đọc YAML theo năm bước, khi khởi động hoặc mỗi khi file được lưu ở dev mode.</p>
     <figure>
       <div class="fig x-fig">
@@ -240,7 +240,7 @@ table.x-map td code{white-space:normal}
           <div class="x-yinfo" id="x-yinfo"></div>
         </div>
       </div>
-      <figcaption><b>Hình 4</b>File <code>model/cubes/orders.yml</code>. Chọn một dòng để xem ý nghĩa của dòng đó, cách Cube sử dụng và kết quả chuyển đổi tương ứng.</figcaption>
+      <figcaption><b>Hình 4</b>File <code>model/cubes/orders.yml</code>. Chọn một dòng để xem ý nghĩa, cách Cube dùng và kết quả sau khi chuyển đổi.</figcaption>
     </figure>
     <div class="take"><small>Ghi nhớ</small>Title và description không ảnh hưởng SQL, nhưng quyết định LLM chọn đúng member và điền đúng giá trị filter, ví dụ “đã huỷ” thành <code>cancelled</code>.</div>
   </section>
@@ -287,14 +287,14 @@ table.x-map td code{white-space:normal}
         </div>
         <div class="x-pan">
           <div class="x-ph">Cube lưu kết quả (cache)</div>
-          <p class="x-cap">Khi một câu hỏi đã gửi trước đó được gửi lại, Cube trả kết quả đã lưu mà không truy vấn database.</p>
+          <p class="x-cap">Khi một câu hỏi cũ được gửi lại, Cube trả kết quả đã lưu, không truy vấn database.</p>
           <div class="x-log" id="x-log"></div>
           <div><button class="x-btn" id="x-clear">Xoá cache</button></div>
         </div>
       </div>
       <figcaption><b>Hình 5</b>Mô phỏng gồm bốn ô: query JSON → YAML và SQL → database → kết quả, kèm nhật ký cache.</figcaption>
     </figure>
-    <p>Ô 3 cho thấy tác dụng của filter <code>shop_id</code>: các dòng gạch mờ thuộc shop còn lại bị loại trước khi tính, các dòng giữ lại được gom theo màu rồi tính trong từng nhóm. Nhật ký cache cho thấy khi cùng một câu hỏi được gửi lại, Cube trả kết quả đã lưu mà không chạy SQL. Theo đoạn code ở bước 6 của mục 00.2, trước khi dùng cache Cube so sánh refresh key đã lưu với refresh key hiện tại để xác định dữ liệu nguồn đã thay đổi hay chưa.</p>
+    <p>Ô 3 cho thấy tác dụng của filter <code>shop_id</code>: các dòng gạch mờ thuộc shop còn lại bị loại trước khi tính, các dòng giữ lại được gom theo màu rồi tính trong từng nhóm. Nhật ký cache cho thấy khi cùng một câu hỏi được gửi lại, Cube trả kết quả đã lưu mà không chạy SQL. Theo đoạn code ở bước 6 của mục 00.2, trước khi dùng cache Cube so sánh refresh key đã lưu với refresh key hiện tại để biết dữ liệu nguồn đã đổi hay chưa.</p>
     <div class="take"><small>Ghi nhớ</small>Cùng query JSON và cùng người hỏi thì cùng một câu SQL. Cache chỉ bỏ qua bước chạy database, không làm thay đổi kết quả.</div>
     <a class="next-ch" href="/blog/cube-handbook/01"><span><small>Chương tiếp theo</small><b>01 · Fundamentals</b></span><span>→</span></a>
   </section>
@@ -748,7 +748,7 @@ function stageHtml() {
   const p = PROMPTS[pi], s = STAGES[si];
   let body = '';
   if (si === 0) body = `<div class="x-prompt">${esc(p.q)}</div>
-    <div class="x-exp"><p>Người dùng nhập câu hỏi bằng ngôn ngữ tự nhiên. Cube <b>không hiểu được</b> câu này: Cube chỉ nhận JSON gồm measures, dimensions, filters. Cần một bước chuyển đổi ở giữa, và đó là nhiệm vụ của LLM.</p></div>`;
+    <div class="x-exp"><p>Người dùng nhập câu hỏi bằng ngôn ngữ tự nhiên. Cube <b>không hiểu được</b> câu này: Cube chỉ nhận JSON gồm measures, dimensions, filters. Cần một bước chuyển đổi ở giữa, và LLM làm bước đó.</p></div>`;
   if (si === 1) body = `<div class="x-exp"><p>Trước khi gọi LLM, code ứng dụng (không phải LLM) gom ba thành phần vào một prompt:</p>
     <ol><li><b>Danh sách member</b> lấy từ <code>GET /cubejs-api/v1/meta</code>. Cube sinh danh sách này từ file YAML (mục 00.3), gồm tên, title và description.</li><li><b>Ngày hiện tại</b>, để LLM hiểu các cụm như “tháng trước”, “tháng 10”.</li><li><b>Câu hỏi</b> của người dùng.</li></ol>
     <p>LLM chỉ biết những gì có trong prompt này. Description trong YAML càng rõ thì LLM chọn member càng đúng.</p></div>
@@ -763,13 +763,13 @@ ${esc(META)}
 [USER]
 ${esc(p.q)}</pre>`;
   if (si === 2) body = `<div class="x-prompt">${promptHtml(p)}</div>
-    <div class="x-exp"><p>LLM đọc câu hỏi, tách thành từng cụm từ, sau đó tìm cho mỗi cụm member phù hợp nhất trong danh sách ở bước 2. LLM <b>không viết SQL</b>; LLM chỉ <b>chọn</b> tên có sẵn và điền giá trị cho filter.</p></div>
+    <div class="x-exp"><p>LLM đọc câu hỏi, tách thành từng cụm từ, rồi với mỗi cụm tìm member phù hợp nhất trong danh sách ở bước 2. LLM <b>không viết SQL</b>, chỉ <b>chọn</b> tên có sẵn và điền giá trị cho filter.</p></div>
     <div class="x-tbl"><table class="x-map"><thead><tr><th>Cụm từ</th><th>Loại</th><th>Chọn</th><th>Lý do</th></tr></thead><tbody>
       ${p.map.map((m, i) => `<tr><td><span class="x-sw" style="background:${G[p.spans[i] ? p.spans[i][1] : 0]}"></span><b>${esc(m[0])}</b></td><td>${esc(m[1])}</td><td><code>${esc(m[2])}</code></td><td class="x-cap">${esc(m[3])}</td></tr>`).join('')}
     </tbody></table></div>
     <span class="x-lbl">LLM trả về (đầu ra duy nhất của LLM ở bước này)</span>
     <pre class="x-pre">${esc(p.json)}</pre>`;
-  if (si === 3) body = `<div class="x-exp"><p>Từ bước này trở đi <b>không còn LLM</b>. Ứng dụng gửi JSON ở bước 3 tới Cube kèm token đăng nhập. Cube thực hiện hai việc:</p>
+  if (si === 3) body = `<div class="x-exp"><p>Từ bước này trở đi <b>không còn LLM</b>. Ứng dụng gửi JSON ở bước 3 tới Cube kèm token đăng nhập. Cube làm hai việc:</p>
     <ol><li><b>Kiểm tra</b> mọi member có tồn tại trong YAML hay không.</li><li><b>Thêm điều kiện phân quyền</b> từ token: người hỏi thuộc shop A nên Cube tự thêm <code>shop_id = 'A'</code>. LLM không biết và không cần biết điều kiện này, nên dù LLM chọn sai, dữ liệu của shop khác vẫn không bị lộ.</li></ol></div>
     <div class="x-two">
       <div><span class="x-lbl">Kiểm tra</span><pre class="x-pre">${p.checks.map(esc).join('\n')}\n\ntoken → { "shop_id": "A" }\n→ thêm filter orders.shop_id = 'A'</pre></div>
@@ -815,7 +815,7 @@ const YINFO = {
   file: {t: 'Vị trí file', what: 'Mọi file YAML đặt trong thư mục <code>model/</code> của project Cube. Một file có thể chứa một hoặc nhiều cube; thông thường mỗi bảng một file.', use: 'Cube quét thư mục này khi khởi động. Ở dev mode, mỗi khi file được lưu, Cube tự đọc lại.', becomes: 'Danh sách cube trong bộ nhớ.'},
   cube: {t: 'name: orders', what: 'Tên của cube. Thường đặt theo tên bảng, nhưng có thể đặt khác.', use: 'Là phần đầu của mọi tên member: <code>orders.revenue</code>, <code>orders.city</code>. LLM và frontend gọi member theo tên này.', becomes: `Tiền tố "orders." và alias bảng trong SQL:\nFROM public.orders AS "orders"`},
   table: {t: 'sql_table', what: 'Bảng thật trong database mà cube này đọc. Có thể thay bằng <code>sql: SELECT … </code> nếu cần lọc hoặc ghép bảng trước.', use: 'Đặt vào mệnh đề FROM.', becomes: `FROM public.orders AS "orders"`},
-  desc: {t: 'title / description', what: 'Tên hiển thị và mô tả bằng lời cho người (và LLM) đọc.', use: 'Không ảnh hưởng SQL. Hai trường này được trả ra ở <code>/v1/meta</code>, nên LLM đọc chúng ở bước 2 của mục 00.2 để hiểu cube chứa gì.', becomes: `Trong /v1/meta:\n{ "name": "orders", "title": "Đơn hàng",\n  "description": "Mỗi dòng là một đơn hàng" }`},
+  desc: {t: 'title / description', what: 'Tên hiển thị và mô tả bằng lời cho người (và LLM) đọc.', use: 'Không ảnh hưởng SQL. Hai trường này có trong <code>/v1/meta</code>, nên LLM đọc chúng ở bước 2 của mục 00.2 để hiểu cube chứa gì.', becomes: `Trong /v1/meta:\n{ "name": "orders", "title": "Đơn hàng",\n  "description": "Mỗi dòng là một đơn hàng" }`},
   join: {t: 'joins', what: 'Khai báo cách cube này nối với cube <code>shops</code>. <code>{CUBE}</code> là cube hiện tại, <code>{shops}</code> là cube kia. <code>many_to_one</code>: nhiều đơn thuộc một shop.', use: 'Chỉ dùng khi query có member của cả hai cube, ví dụ “doanh thu theo tên shop”. Cube tự tìm đường join; người hỏi và LLM không cần viết JOIN.', becomes: `LEFT JOIN public.shops AS "shops"\n  ON "orders".shop_id = "shops".id`},
   measures: {t: 'measures:', what: 'Danh sách <b>con số</b>: các đại lượng được cộng, đếm hoặc tính trung bình.', use: 'Mỗi measure trở thành một biểu thức tổng hợp trong SELECT.', becomes: 'SUM(...), COUNT(...), AVG(...)'},
   m_rev: {t: 'measure: revenue', what: '<code>sql: amount</code> là cột cần tính, <code>type: sum</code> là cách tính. Title và description giúp người và LLM hiểu đây là “doanh thu”.', use: 'Khi query có <code>orders.revenue</code>, Cube ghép <code>type</code> và <code>sql</code>. LLM tìm thấy member này nhờ title “Doanh thu”.', becomes: `sum("orders".amount) "orders__revenue"`},
@@ -893,7 +893,7 @@ function renderD() {
   $('x-dbwrap').hidden = hit; $('x-skip').hidden = !hit;
   const other = st.s === 'A' ? 'B' : 'A';
   $('x-p3cap').innerHTML = hit ? 'Kết quả giống lần trước và không cần chạy lại SQL.'
-    : `Dòng gạch mờ là đơn của <b>shop ${other}</b>, bị loại bởi <code>WHERE shop_id = '${st.s}'</code>. Các dòng còn lại được gom theo màu, rồi tính ${M[st.m].sql} trong từng nhóm.`;
+    : `Dòng gạch mờ là đơn của <b>shop ${other}</b>, bị <code>WHERE shop_id = '${st.s}'</code> loại ra. Các dòng còn lại được gom theo màu, rồi tính ${M[st.m].sql} trong từng nhóm.`;
   const max = Math.max(...gs.map(g => g.v), 1);
   $('x-bars').innerHTML = gs.map(g => `<div class="x-bar"><span><span class="x-sw" style="background:${g.color}"></span>${esc(g.k)}</span><span class="x-track"><span class="x-fill" style="width:${(g.v / max * 100).toFixed(1)}%;background:${g.color}"></span></span><span class="x-v">${M[st.m].fmt(g.v)}</span></div>`).join('');
   const dimName = st.d === 'month' ? 'orders.created_at.month' : D[st.d].member;
@@ -932,13 +932,13 @@ window.CH = {key: 'ch00', minutes: 15,
   member: ['member', 'Tên đầy đủ của một measure hoặc dimension theo dạng cube.tên, ví dụ orders.revenue. Query JSON tham chiếu dữ liệu thông qua các member.', 'Một món trong thực đơn: khi gọi món phải ghi đúng tên trong thực đơn, không tự đặt tên mới.'],
   measure: ['measure', 'Trường định lượng được tính bằng hàm tổng hợp như sum hay count trên dữ liệu nguồn.', 'Con số cần đo: tổng tiền, số đơn.'],
   dimension: ['dimension', 'Thuộc tính dùng để nhóm (GROUP BY) hoặc lọc (WHERE); có các kiểu như string, number, time.', 'Góc nhìn để chia con số: theo thành phố, theo trạng thái, theo tháng.'],
-  qjson: ['query JSON', 'Đối tượng JSON mô tả truy vấn bằng member: measures, dimensions, timeDimensions, filters, order. Ứng dụng gửi đối tượng này tới REST API của Cube (/v1/load).', 'Phiếu yêu cầu có sẵn các ô: cần số gì, chia theo gì, lọc theo điều kiện nào.'],
+  qjson: ['query JSON', 'Đối tượng JSON mô tả query bằng member: measures, dimensions, timeDimensions, filters, order. Ứng dụng gửi đối tượng này tới REST API của Cube (/v1/load).', 'Phiếu yêu cầu có sẵn các ô: cần số gì, chia theo gì, lọc theo điều kiện nào.'],
   meta: ['/v1/meta', 'Endpoint của REST API trả danh sách cubes và members kèm title, description, type, sinh ra từ data model. Member khai báo public: false không có trong kết quả.', 'Tờ thực đơn Cube đưa cho LLM: chỉ ghi những món được phép gọi.'],
   hidden: ['public: false', 'Thuộc tính ẩn một member khỏi /v1/meta, nên LLM và frontend không thấy member đó. Member vẫn tồn tại trong data model và được dùng nội bộ, ví dụ trong queryRewrite.', 'Món có trong bếp nhưng không in trên thực đơn: khách không gọi được, đầu bếp vẫn dùng.'],
   secctx: ['securityContext', 'Đối tượng chứa thông tin về người gọi, lấy từ payload của JWT sau khi Cube xác thực token bằng CUBEJS_API_SECRET; ví dụ { shop_id: "A" }.', 'Thẻ nhân viên đi kèm mỗi yêu cầu, cho Cube biết người hỏi thuộc shop nào.'],
   rewrite: ['queryRewrite', 'Hàm cấu hình trong cube.js nhận query và securityContext, trả về query đã sửa. Hàm này thường dùng để thêm filter phân quyền trước khi Cube sinh SQL.', 'Người kiểm duyệt phiếu: đóng thêm dấu “chỉ shop A” lên mọi phiếu của nhân viên shop A trước khi chuyển xuống kho.'],
   compiler: ['SQL compiler', 'Thành phần của Cube tra từng member trong data model và ghép thành câu SQL: measure thành hàm tổng hợp, dimension thành GROUP BY, filter thành WHERE. Cùng một query của cùng một người hỏi luôn cho cùng một câu SQL.', 'Thợ ghép câu theo khuôn: cùng một phiếu yêu cầu thì luôn ra cùng một câu SQL.'],
-  cache: ['cache', 'Bộ nhớ lưu kết quả theo khoá băm của SQL và params. Khi khoá trùng và refresh key chưa đổi, Cube trả kết quả đã lưu mà không truy vấn database.', 'Sổ ghi lại các câu trả lời vừa tra: câu hỏi cũ được trả lời lập tức, không cần xuống kho lần nữa.'],
+  cache: ['cache', 'Nơi lưu kết quả theo hash của SQL và params. Khi khoá trùng và refresh key chưa đổi, Cube trả kết quả đã lưu mà không truy vấn database.', 'Sổ ghi lại các câu trả lời vừa tra: câu hỏi cũ được trả lời lập tức, không cần xuống kho lần nữa.'],
   refresh: ['refresh key', 'Giá trị Cube dùng để biết dữ liệu nguồn đã thay đổi hay chưa. Kết quả trong cache chỉ được dùng khi refresh key lúc lưu trùng với refresh key hiện tại.', 'Dấu ngày trên tờ ghi chú: khi dữ liệu đã đổi, ghi chú cũ hết hiệu lực.']},
  alias: {llm: ['LLM'], semantic: ['semantic layer'], datamodel: ['data model'], member: ['member'], measure: ['measures', 'measure'], dimension: ['dimensions', 'dimension'],
   qjson: ['query JSON'], meta: ['/v1/meta'], hidden: ['public: false'], secctx: ['securityContext'], rewrite: ['queryRewrite'], compiler: ['SQL compiler'], cache: ['cache'], refresh: ['refresh key']},
@@ -951,21 +951,21 @@ window.CH = {key: 'ch00', minutes: 15,
   {id: 'ch00_q2', s: 0, type: 'multi', q: 'LLM đảm nhận những việc nào trong chuỗi xử lý?', o: ['Hiểu câu hỏi và chuyển thành query JSON', 'Thêm điều kiện phân quyền shop_id', 'Diễn đạt số liệu thành câu trả lời (tuỳ chọn)', 'Chạy SQL trên database'], a: [0, 2],
    ex: 'LLM chỉ đứng ở hai đầu: hiểu câu hỏi và diễn đạt câu trả lời.',
    why: {1: 'Cube thêm điều kiện này từ token đăng nhập thông qua queryRewrite.', 3: 'Database chạy SQL; LLM không tham gia bước này.'}},
-  {id: 'ch00_q3', s: 1, type: 'one', q: 'Điều kiện shop_id = \'A\' trong câu SQL ở bước 5 đến từ đâu?', o: ['LLM tự thêm vì đọc được rằng người hỏi thuộc shop A', 'Token đăng nhập: Cube đưa payload vào securityContext, queryRewrite thêm filter', 'Người dùng ghi rõ tên shop trong câu hỏi', 'File YAML cố định giá trị A cho mọi truy vấn'], a: 1,
+  {id: 'ch00_q3', s: 1, type: 'one', q: 'Điều kiện shop_id = \'A\' trong câu SQL ở bước 5 đến từ đâu?', o: ['LLM tự thêm vì đọc được rằng người hỏi thuộc shop A', 'Token đăng nhập: Cube đưa payload vào securityContext, queryRewrite thêm filter', 'Người dùng ghi rõ tên shop trong câu hỏi', 'File YAML cố định giá trị A cho mọi query'], a: 1,
    ex: 'Server ứng dụng ký token với shop_id của người dùng; Cube xác thực token, đưa payload vào securityContext, và queryRewrite thêm filter shop_id.',
    why: {0: 'LLM không thấy shop_id: member này khai báo public: false nên không có trong /v1/meta.', 2: 'Cả ba câu hỏi mẫu đều không nhắc tới shop.', 3: 'YAML chỉ khai báo dimension shop_id; giá trị lấy từ token của từng người hỏi.'}},
   {id: 'ch00_q4', s: 1, type: 'one', q: 'LLM trả về một member không tồn tại, ví dụ orders.profit. Điều gì xảy ra?', o: ['Cube vẫn chạy và trả về 0', 'Cube trả lỗi; ứng dụng có thể gửi lỗi đó lại cho LLM để chọn lại', 'Database tự tạo cột profit', 'Cube tự thay bằng orders.revenue'], a: 1,
    ex: 'Cube kiểm tra mọi member trước khi viết SQL. Lỗi bị chặn ngay thay vì âm thầm sinh ra số sai.',
    why: {0: 'Cube không chạy query có member không tồn tại; Cube trả HTTP 400.', 2: 'Database không nhận được câu SQL nào trong trường hợp này.', 3: 'Cube không tự đoán member thay thế.'}},
   {id: 'ch00_q5', s: 2, type: 'one', q: 'Vì sao description của dimension status cần liệt kê “cancelled (đã huỷ)”?', o: ['Để Cube sinh SQL nhanh hơn', 'Để LLM chuyển “bị huỷ” thành đúng giá trị cancelled trong filter', 'Để database tạo index cho cột status', 'Để ẩn status khỏi /v1/meta'], a: 1,
-   ex: 'Description được trả ra ở /v1/meta và đưa vào prompt. Thiếu dòng này, LLM có thể điền sai giá trị filter và nhận kết quả bằng 0.',
+   ex: 'Description có trong /v1/meta và được đưa vào prompt. Thiếu dòng này, LLM có thể điền sai giá trị filter và nhận kết quả bằng 0.',
    why: {0: 'Description không ảnh hưởng SQL.', 2: 'Description không tác động tới database.', 3: 'Ẩn member dùng public: false, không dùng description.'}},
   {id: 'ch00_q6', s: 2, type: 'one', q: 'Khai báo public: false trên dimension shop_id có tác dụng gì?', o: ['Xoá cột shop_id khỏi database', 'Ẩn member khỏi /v1/meta; queryRewrite vẫn dùng được member này để phân quyền', 'Cho phép LLM đọc shop_id để tự lọc', 'Bỏ qua filter shop_id khi viết SQL'], a: 1,
    ex: 'LLM và frontend không thấy shop_id, nhưng Cube vẫn dùng member này để thêm điều kiện phân quyền.',
    why: {0: 'YAML không thay đổi dữ liệu trong database.', 2: 'Ngược lại: member bị ẩn khỏi LLM.', 3: 'Filter shop_id vẫn xuất hiện trong SQL, như dòng tô xanh lục ở Hình 5.'}},
   {id: 'ch00_q7', s: 3, type: 'one', q: 'Một câu hỏi giống hệt vừa được gửi lại và refresh key chưa đổi. Cube làm gì?', o: ['Chạy lại SQL trên database', 'Trả kết quả đã lưu trong cache, không chạy database', 'Gọi LLM để kiểm tra lại kết quả', 'Trả lỗi vì câu hỏi bị trùng'], a: 1,
-   ex: 'Cùng SQL và params cho cùng khoá cache; khi refresh key chưa đổi, Cube trả kết quả đã lưu.',
-   why: {0: 'Đây là trường hợp cache miss hoặc dữ liệu đã thay đổi.', 2: 'Cube không gọi LLM ở bước nào.', 3: 'Câu hỏi trùng là trường hợp bình thường; cache tồn tại để phục vụ trường hợp này.'}},
+   ex: 'Cùng SQL và params cho cùng cache key; khi refresh key chưa đổi, Cube trả kết quả đã lưu.',
+   why: {0: 'Đây là trường hợp cache miss hoặc dữ liệu đã thay đổi.', 2: 'Cube không gọi LLM ở bước nào.', 3: 'Câu hỏi trùng là chuyện bình thường; cache sinh ra để phục vụ đúng trường hợp này.'}},
   {id: 'ch00_q8', s: 3, type: 'one', q: 'Ở Hình 5, nhân viên shop B chọn “Số đơn” chia theo “Thành phố”. Kết quả là gì?', o: ['Hà Nội 6 đơn, HCM 4 đơn', 'Hà Nội 2 đơn, HCM 1 đơn', 'Hà Nội 4 đơn, HCM 3 đơn', 'Database trả lỗi vì thiếu quyền'], a: 1,
    ex: 'WHERE shop_id = \'B\' giữ lại đơn #3, #5, #8: Hà Nội có #3 và #8, HCM có #5.',
    why: {0: 'Đây là kết quả khi đếm cả 10 đơn, tức là bỏ qua filter shop_id.', 2: 'Đây là kết quả của shop A.', 3: 'Shop B có quyền với dữ liệu của shop B; filter chỉ loại các đơn của shop A.'}}]};

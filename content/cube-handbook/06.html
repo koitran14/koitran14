@@ -75,7 +75,7 @@ section{scroll-margin-top:176px}
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Chương này dùng để tra cứu, không cần đọc tuần tự. Có thể mở chương song song với editor để tìm và sao chép mục cần thiết.</div>
+  <div class="idea"><small>Ý chính của chương</small>Chương này để tra cứu, không cần đọc theo thứ tự. Có thể mở song song với editor, cần mục nào thì tìm và sao chép mục đó.</div>
 
   <div class="find" role="search">
     <label><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
@@ -87,7 +87,7 @@ section{scroll-margin-top:176px}
     <span class="num">06.1</span>
     <h2>Cấu hình hệ thống</h2>
     <p class="gist">Cấu hình nằm trong cube.js, hoặc cube.py từ v0.34.</p>
-    <p>Ví dụ dưới đây thực hiện hai chức năng. Hàm queryRewrite tự động thêm filter tenant từ securityContext vào mọi truy vấn, nên mỗi tenant chỉ thấy dữ liệu của mình (RLS). Hàm scheduledRefreshContexts liệt kê các tenant để refresh worker build pre-aggregations riêng cho từng tenant.</p>
+    <p>Ví dụ dưới đây làm hai việc. Hàm queryRewrite tự thêm filter tenant từ securityContext vào mọi truy vấn, nên mỗi tenant chỉ thấy dữ liệu của mình (RLS). Hàm scheduledRefreshContexts liệt kê các tenant để refresh worker build pre-aggregations riêng cho từng tenant.</p>
     <figure>
       <div class="fig">
         <div class="tabs" data-pbar><button data-pane="0" class="on">cube.js</button><button data-pane="1">cube.py</button></div>
@@ -117,7 +117,7 @@ section{scroll-margin-top:176px}
             'values': [security_context['tenant_id']]
         })
     return query</pre></div>
-          <p class="note">Bản Python trong handbook chỉ có thân hàm. Cách đăng ký hàm với Cube trong cube.py nên đối chiếu tài liệu chính thức của phiên bản đang dùng.</p></div>
+          <p class="note">Bản Python trong handbook chỉ có thân hàm. Cách đăng ký hàm với Cube trong cube.py thì nên đối chiếu tài liệu chính thức của phiên bản đang dùng.</p></div>
       </div>
       <figcaption><b>Hình 1</b>Cùng một query_rewrite, viết bằng JavaScript và Python.</figcaption>
     </figure>
@@ -127,7 +127,7 @@ section{scroll-margin-top:176px}
     <span class="num">06.2</span>
     <h2>Ví dụ API và truy vấn</h2>
     <p class="gist">Cùng một truy vấn “doanh thu theo vùng”, viết cho ba API.</p>
-    <p>SQL API dùng một dialect SQL (biến thể SQL) tương thích Postgres, gọi là Semantic SQL; measure được lấy qua hàm MEASURE(). REST API nhận JSON tại <code>POST /cubejs-api/v1/load</code>, trục thời gian được khai báo trong timeDimensions. GraphQL API dùng tên camelCase và lọc thời gian bằng <code>inDateRange</code>.</p>
+    <p>SQL API dùng một dialect SQL (biến thể SQL) tương thích Postgres, gọi là Semantic SQL; measure được lấy qua hàm MEASURE(). REST API nhận JSON tại <code>POST /cubejs-api/v1/load</code>, trục thời gian khai báo trong timeDimensions. GraphQL API dùng tên camelCase và lọc thời gian bằng <code>inDateRange</code>.</p>
     <figure>
       <div class="fig">
         <div class="tabs" data-pbar><button data-pane="0" class="on">SQL API</button><button data-pane="1">REST API</button><button data-pane="2">GraphQL API</button></div>
@@ -162,7 +162,7 @@ ORDER BY 2 DESC;</pre></div></div>
   }
 }</pre></div></div>
       </div>
-      <figcaption><b>Hình 2</b>Chuyển tab để so sánh. Ví dụ REST và GraphQL chia theo tháng, còn ví dụ SQL không chia theo tháng.</figcaption>
+      <figcaption><b>Hình 2</b>Chuyển tab để so sánh. Ví dụ REST và GraphQL chia theo tháng, còn ví dụ SQL thì không.</figcaption>
     </figure>
   </section>
 
@@ -170,7 +170,7 @@ ORDER BY 2 DESC;</pre></div></div>
     <span class="num">06.3</span>
     <h2>Mẫu code thường dùng</h2>
     <p class="gist">Cấu trúc thư mục chuẩn, phép chia an toàn với NULLIF, và segment nhiều điều kiện.</p>
-    <p>Từ v0.33, Cube đưa ra cấu trúc thư mục theo quy ước: <code>model/cubes</code> cho cube và <code>model/views</code> cho view. Đây là khuyến nghị, không bắt buộc. Hai mẫu YAML dưới đây thường được tái sử dụng.</p>
+    <p>Từ v0.33, Cube đưa ra cấu trúc thư mục theo quy ước: <code>model/cubes</code> cho cube và <code>model/views</code> cho view. Đây là khuyến nghị, không bắt buộc. Hai mẫu YAML dưới đây hay được dùng lại.</p>
     <figure>
       <div class="fig">
         <div class="ref"><span class="pt">Cấu trúc thư mục</span><pre class="tree">model/
@@ -199,16 +199,16 @@ ORDER BY 2 DESC;</pre></div></div>
   - name: high_value_completed
     sql: "{CUBE}.status = 'completed' AND {CUBE}.amount &gt; 1000"</pre></div></div>
       </div>
-      <figcaption><b>Hình 3</b>Đặt số đơn bằng 0 và bỏ NULLIF để thấy vai trò của hàm này. Số liệu minh họa.</figcaption>
+      <figcaption><b>Hình 3</b>Đặt số đơn bằng 0 và bỏ NULLIF để thấy NULLIF có tác dụng gì. Số liệu minh họa.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>NULLIF(x, 0) trả về NULL khi x bằng 0. Phép chia cho NULL trả về NULL thay vì báo lỗi, nên truy vấn vẫn thực thi bình thường.</div>
+    <div class="take"><small>Ghi nhớ</small>NULLIF(x, 0) trả về NULL khi x bằng 0. Phép chia cho NULL trả về NULL thay vì báo lỗi, nên truy vấn vẫn chạy bình thường.</div>
   </section>
 
   <section id="s4">
     <span class="num">06.4</span>
     <h2>Thông báo lỗi và cách sửa</h2>
     <p class="gist">Ba lỗi thường gặp nhất và cú pháp sửa tương ứng.</p>
-    <p>Chọn lỗi để xem nguyên nhân và cách sửa: thiếu FILTER_GROUP, build pre-aggregation bị timeout (cần export bucket), hoặc sai tên member. Khi tìm kiếm, cả ba lỗi được hiển thị đồng thời.</p>
+    <p>Chọn lỗi để xem nguyên nhân và cách sửa: thiếu FILTER_GROUP, build pre-aggregation bị timeout (cần export bucket), hoặc sai tên member. Khi tìm kiếm, cả ba lỗi hiện cùng lúc.</p>
     <figure>
       <div class="fig">
         <div class="pills" data-pbar><button data-pane="0" class="on">Filter group error</button><button data-pane="1">Pre-aggregation building error</button><button data-pane="2">Unknown member</button></div>
@@ -230,18 +230,18 @@ ORDER BY 2 DESC;</pre></div></div>
       <div class="fig chk" style="display:grid;gap:8px">
         <label class="ref"><input type="checkbox"><span><b>1 · SQL sinh ra</b>Ở môi trường dev, mở Playground và xem tab SQL Query; trên production, nơi Playground đã tắt, gửi cùng truy vấn tới endpoint <code>/cubejs-api/v1/sql</code>. Kiểm tra câu lệnh biên dịch có đúng điều kiện JOIN và WHERE không.</span></label>
         <label class="ref"><input type="checkbox"><span><b>2 · Trạng thái pre-aggregation</b>Xem log: truy vấn là cache hit hay cache miss. Nếu miss, đối chiếu measures, dimensions, granularity và khoảng thời gian của truy vấn với định nghĩa pre-aggregation (mục 05.5). refresh_key chỉ quyết định khi nào build lại, không quyết định truy vấn có khớp hay không.</span></label>
-        <label class="ref"><input type="checkbox"><span><b>3 · Múi giờ</b>Nếu chỉ số theo thời gian lệch 1–2 giờ, kiểm tra có dimension nào dùng SQL_UTILS.convertTz() đồng thời được đưa vào timeDimensions hay không. Cube đã tự chuyển múi giờ cho timeDimensions, nên trong trường hợp đó múi giờ bị chuyển đổi hai lần.</span></label>
+        <label class="ref"><input type="checkbox"><span><b>3 · Múi giờ</b>Nếu chỉ số theo thời gian lệch 1–2 giờ, kiểm tra có dimension nào dùng SQL_UTILS.convertTz() đồng thời được đưa vào timeDimensions hay không. Cube đã tự chuyển múi giờ cho timeDimensions, nên khi đó múi giờ bị chuyển hai lần.</span></label>
       </div>
-      <figcaption><b>Hình 5</b>Ba bước, sắp theo chi phí kiểm tra tăng dần. Trạng thái không được lưu.</figcaption>
+      <figcaption><b>Hình 5</b>Ba bước, sắp theo chi phí kiểm tra tăng dần. Trang không lưu các ô đã đánh dấu.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Khi cache miss, đối chiếu truy vấn với định nghĩa pre-aggregation; refresh_key không quyết định việc khớp. Khi lệch múi giờ, tìm convertTz() trên dimension đang dùng trong timeDimensions.</div>
+    <div class="take"><small>Ghi nhớ</small>Khi cache miss, đối chiếu truy vấn với định nghĩa pre-aggregation; refresh_key không quyết định truy vấn có khớp hay không. Khi lệch múi giờ, tìm convertTz() trên dimension đang dùng trong timeDimensions.</div>
   </section>
 
   <section id="s6">
     <span class="num">06.6</span>
     <h2>Thuật ngữ</h2>
     <p class="gist">Tám thuật ngữ xuất hiện nhiều nhất trong handbook.</p>
-    <p>Người đọc có thể tự đoán nghĩa trước, sau đó chọn thẻ để xem định nghĩa. Ba thuật ngữ liên quan chặt chẽ với nhau: pre-aggregations được lưu trong Cube Store, và aggregate awareness là cơ chế Cube dùng để tự chọn đúng bảng pre-aggregation khi trả lời truy vấn.</p>
+    <p>Thử tự đoán nghĩa trước rồi chọn thẻ để xem định nghĩa. Ba thuật ngữ đi liền với nhau: pre-aggregations nằm trong Cube Store, còn aggregate awareness là cơ chế Cube dùng để tự chọn đúng bảng pre-aggregation khi trả lời truy vấn.</p>
     <figure>
       <div class="fig">
         <div class="figbar"><span>Chọn thẻ để lật</span><button class="cp" id="glAll">Mở tất cả</button></div>
@@ -283,7 +283,7 @@ ORDER BY 2 DESC;</pre></div></div>
     <a class="next-ch" href="/blog/cube-handbook/07"><span><small>Chương tiếp theo</small><b>07 · Applied Case Studies</b></span><span>→</span></a>
   </section>
 
-  <div class="empty" id="qEmpty">Không tìm thấy mục nào khớp. Có thể dùng từ khóa ngắn hơn, ví dụ “lỗi”, “jwt”, “readyz”.</div>
+  <div class="empty" id="qEmpty">Không tìm thấy mục nào khớp. Thử từ khóa ngắn hơn, ví dụ “lỗi”, “jwt”, “readyz”.</div>
 
   <div class="end"></div>
 </article>
@@ -305,17 +305,17 @@ let dO = 0, dF = 1;
 function div() {const n = dO ? 0 : 120, rev = 12000000;
  dOut.classList.toggle('bad', !!dO && !dF);
  dOut.innerHTML = `total_revenue = 12.000.000 · total_orders = ${n}<br>average_order_value = ` +
-  (n ? '100.000' : dF ? 'NULL <span style="color:var(--muted)">· truy vấn vẫn thực thi, ô kết quả để trống</span>' : 'ERROR: division by zero <span style="color:var(--muted)">· toàn bộ truy vấn thất bại</span>')}
+  (n ? '100.000' : dF ? 'NULL <span style="color:var(--muted)">· truy vấn vẫn chạy, ô kết quả để trống</span>' : 'ERROR: division by zero <span style="color:var(--muted)">· toàn bộ truy vấn thất bại</span>')}
 one('#dOrd', 'o', i => {dO = i; div()}); one('#dFn', 'd', i => {dF = i; div()}); div();
 // Hình 6: glossary
 // each card: [term, academic definition, plain-language version]
-const GL = [['Aggregate Awareness', 'Khả năng của Cube phân tích truy vấn, so với các pre-aggregation hiện có và tự viết lại truy vấn để đọc từ bảng rollup phù hợp thay vì data warehouse.', 'Người dùng chỉ cần đặt câu hỏi; Cube tự xác định câu trả lời đã có sẵn ở ngăn nào và lấy ra.'],
- ['Context Variables', 'Các biến CUBE, FILTER_PARAMS, SQL_UTILS, COMPILE_CONTEXT dùng trong data model để sinh SQL động theo truy vấn và người gọi.', 'Những chỗ trống trong mẫu câu SQL, được Cube điền vào lúc chạy tùy theo người hỏi và nội dung câu hỏi.'],
+const GL = [['Aggregate Awareness', 'Khả năng Cube phân tích truy vấn, so với các pre-aggregation hiện có rồi tự viết lại truy vấn để đọc từ bảng rollup phù hợp thay vì từ data warehouse.', 'Người dùng chỉ cần đặt câu hỏi; Cube tự xác định câu trả lời đã có sẵn ở ngăn nào và lấy ra.'],
+ ['Context Variables', 'Các biến CUBE, FILTER_PARAMS, SQL_UTILS, COMPILE_CONTEXT dùng trong data model để sinh SQL động theo truy vấn và người gọi.', 'Những chỗ trống trong mẫu câu SQL; lúc chạy, Cube điền vào tùy theo người hỏi và nội dung câu hỏi.'],
  ['Cube Store', 'Engine lưu trữ và xử lý phân tán do Cube viết riêng, chứa các bảng pre-aggregation.', 'Kho nhỏ ngay sau quầy: các mặt hàng bán chạy được xếp sẵn để lấy ra ngay khi khách yêu cầu.'],
  ['Semantic SQL', 'Dialect SQL tương thích giao thức Postgres của SQL API, mở rộng thêm hàm MEASURE().', 'Công cụ nào kết nối được với Postgres thì cũng kết nối được với Cube.'],
  ['Pre-aggregations', 'Bảng kết quả tổng hợp (rollup) tính trước theo measure, dimension và granularity, lưu trong Cube Store.', 'Bảng điểm tổng kết đã tính sẵn: khi cần chỉ việc đọc kết quả, không phải cộng lại từng bài.'],
  ['MCP Server', 'Server theo Model Context Protocol, cho phép AI Agent khám phá và truy vấn các metric đã định nghĩa trong Cube.', 'Ổ cắm chuẩn để trợ lý AI kết nối với Cube và truy vấn số liệu, thay vì tự dò tìm trong bảng thô.'],
- ['PDT', 'Persistent Derived Table: bảng dẫn xuất được Looker build và lưu lại trong data warehouse, vai trò tương tự pre-aggregation bên Cube.', 'Cách Looker chuẩn bị sẵn bảng tổng hợp; điểm khác là bảng nằm trong kho chính.'],
+ ['PDT', 'Persistent Derived Table: bảng dẫn xuất do Looker build và lưu trong data warehouse, tương tự pre-aggregation bên Cube.', 'Cách Looker chuẩn bị sẵn bảng tổng hợp; điểm khác là bảng nằm trong kho chính.'],
  ['Fanout', 'Hiện tượng số dòng bị nhân lên khi join theo quan hệ khai báo sai (ví dụ one-to-many), khiến measure dạng sum bị đếm trùng.', 'Một đơn hàng bị nhân thành ba dòng do join sai, nên tổng doanh thu bị cộng gấp ba.']];
 gl.innerHTML = GL.map(g => `<div class="ref"><button><b>${g[0]}</b><span>${g[1]}</span><span><i>Dễ hiểu:</i> ${g[2]}</span></button></div>`).join('');
 gl.onclick = e => {const b = e.target.closest('button'); if (b) b.classList.toggle('open')};
@@ -351,21 +351,21 @@ window.CH = {key: 'ch06', minutes: 10,
   {id: 's8', n: '06.8', t: 'Tài liệu tham khảo', sum: ['Docs, GitHub, Slack, style guide.', 'Tài liệu chính thức là nguồn nên tin hơn khi có khác biệt.'], terms: []}],
  terms: {
   queryrewrite: ['queryRewrite', 'Hook cấu hình trong cube.js (query_rewrite trong cube.py) nhận query JSON cùng securityContext và trả về query đã sửa trước khi Cube biên dịch thành SQL. Thường dùng để chèn filter bắt buộc như tenant_id.', 'Như người kiểm duyệt trung gian: mọi phiếu yêu cầu đều qua tay người này, và người này luôn ghi thêm dòng "chỉ lấy dữ liệu của công ty A" trước khi chuyển xuống kho.'],
-  secctx: ['securityContext', 'Object chứa các claim giải mã từ payload của JWT (ví dụ tenant_id, role), được Cube truyền vào queryRewrite, data model và cấu hình để áp quyền truy cập.', 'Phần thông tin in trên thẻ ra vào của người dùng: là ai, thuộc công ty nào, được xem gì. Cube đọc phần này để xác định dữ liệu được phép hiển thị.'],
+  secctx: ['securityContext', 'Object chứa các claim giải mã từ payload của JWT (ví dụ tenant_id, role), Cube truyền object này vào queryRewrite, data model và cấu hình để áp quyền truy cập.', 'Phần thông tin in trên thẻ ra vào của người dùng: là ai, thuộc công ty nào, được xem gì. Cube đọc phần này để xác định dữ liệu được phép hiển thị.'],
   refreshctx: ['scheduledRefreshContexts', 'Hàm cấu hình trả về danh sách securityContext mà refresh worker lần lượt dùng để build pre-aggregation riêng cho từng tenant.', 'Danh sách khách hàng giao cho nhân viên ca đêm: với mỗi tên trong danh sách, nhân viên chuẩn bị sẵn một phần riêng, không trộn lẫn giữa các khách hàng.'],
   rls: ['RLS', 'Row-Level Security: cơ chế giới hạn quyền truy cập ở mức từng dòng dữ liệu dựa trên danh tính người gọi. Trong Cube thường làm bằng queryRewrite kèm securityContext.', 'Cùng một bảng lương, nhưng mỗi nhân viên mở ra chỉ thấy dòng của chính mình, dòng của người khác bị che đi.'],
-  semsql: ['Semantic SQL', 'Dialect SQL tương thích giao thức Postgres mà SQL API của Cube nhận, mở rộng thêm hàm MEASURE() để gọi measure đã khai báo trong data model.', 'Công cụ nào giao tiếp được với Postgres thì cũng giao tiếp được với Cube, chỉ cần bổ sung một từ khóa mới là MEASURE.'],
+  semsql: ['Semantic SQL', 'Dialect SQL tương thích giao thức Postgres mà SQL API của Cube nhận, mở rộng thêm hàm MEASURE() để gọi measure đã khai báo trong data model.', 'Công cụ nào giao tiếp được với Postgres thì cũng giao tiếp được với Cube, chỉ thêm một từ khóa mới là MEASURE.'],
   measurefn: ['MEASURE()', 'Hàm tổng hợp của Semantic SQL, trả về giá trị của một measure theo đúng công thức trong data model thay vì để client tự viết SUM, COUNT.', 'Như gọi món theo tên trong thực đơn: người gọi chỉ cần yêu cầu "doanh thu", bếp tự chế biến theo công thức chuẩn, không ai tự pha chế theo cách riêng.'],
   rest: ['REST API', 'Giao diện HTTP của Cube nhận query JSON tại POST /cubejs-api/v1/load, kèm JWT trong header Authorization, và trả kết quả dạng JSON.', 'Như phiếu đặt hàng có sẵn các ô cần điền: yêu cầu gì, theo vùng nào, trong khoảng thời gian nào. Sau khi gửi phiếu, hệ thống trả về bảng kết quả.'],
-  timedim: ['timeDimensions', 'Trường trong query JSON khai báo dimension thời gian, dateRange và granularity. Cube tự xử lý chuyển múi giờ cho các trường này.', 'Phần "theo thời gian" của câu hỏi: lấy từ ngày nào đến ngày nào, và chia theo ngày, tuần hay tháng.'],
-  nullif: ['NULLIF', 'Hàm SQL chuẩn NULLIF(a, b) trả về NULL khi a bằng b, ngược lại trả về a. Dùng ở mẫu số để biến phép chia cho 0 thành NULL thay vì lỗi.', 'Như quy ước đặt trước "nếu không có đơn nào thì để trống ô này": thay vì toàn bộ bảng báo lỗi, chỉ ô đó để trống.'],
+  timedim: ['timeDimensions', 'Trường trong query JSON khai báo dimension thời gian, dateRange và granularity. Cube tự chuyển múi giờ cho các trường này.', 'Phần "theo thời gian" của câu hỏi: lấy từ ngày nào đến ngày nào, và chia theo ngày, tuần hay tháng.'],
+  nullif: ['NULLIF', 'Hàm SQL chuẩn NULLIF(a, b) trả về NULL khi a bằng b, ngược lại trả về a. Dùng ở mẫu số để biến phép chia cho 0 thành NULL thay vì lỗi.', 'Như quy ước đặt trước "nếu không có đơn nào thì để trống ô này": chỉ ô đó để trống, cả bảng không bị báo lỗi.'],
   segment: ['segment', 'Điều kiện lọc (biểu thức WHERE) được đặt tên và khai báo trong cube, dùng lại được trong mọi truy vấn chỉ bằng tên.', 'Như một bộ lọc được lưu sẵn trong Excel với tên "đơn lớn đã hoàn tất": lần sau chỉ cần chọn tên, không phải thiết lập lại từng điều kiện.'],
   filtergroup: ['FILTER_GROUP', 'Hàm trong SQL nguồn dùng để bọc nhiều FILTER_PARAMS, giúp Cube giữ đúng logic nhóm điều kiện (AND/OR) giữa inner query và outer query.', 'Như dấu ngoặc trong phép tính: nếu không có ngoặc, "a hoặc b và c" có thể bị hiểu sai thứ tự và cho kết quả khác hẳn.'],
   exportbucket: ['export bucket', 'Bucket lưu trữ trung gian (S3 hoặc GCS) mà data warehouse xuất dữ liệu ra trước khi Cube Store nạp vào, giúp build pre-aggregation lớn nhanh hơn và tránh timeout.', 'Thay vì chuyển từng thùng hàng qua cửa nhỏ, bên kho xếp toàn bộ lên xe tải đỗ ở bãi chung, sau đó bên nhận đến bãi lấy hàng một lần.'],
   preagg: ['pre-aggregation', 'Bảng kết quả tổng hợp (rollup) mà Cube tính trước theo các measure, dimension và granularity đã khai báo, lưu trong Cube Store để trả lời truy vấn mà không quét lại dữ liệu thô.', 'Giống bảng điểm tổng kết cuối kỳ: thay vì cộng lại từng bài kiểm tra mỗi lần phụ huynh hỏi, nhà trường đã tính sẵn và chỉ cần đọc kết quả.'],
   refreshkey: ['refresh_key', 'Thuộc tính của pre-aggregation (hoặc cube) quy định khi nào dữ liệu được coi là cũ và cần build lại: theo chu kỳ (every) hoặc theo kết quả một câu SQL kiểm tra.', 'Như lịch thay nước bể cá: thay định kỳ mỗi tuần một lần, hoặc chỉ thay khi kiểm tra thấy nước đã đục.'],
   converttz: ['SQL_UTILS.convertTz()', 'Hàm tiện ích trong context variables, sinh SQL chuyển một cột thời gian sang múi giờ của truy vấn. Không dùng cho dimension đã đưa vào timeDimensions vì Cube đã tự chuyển.', 'Như đổi giờ Hà Nội sang giờ Tokyo: đổi một lần cho kết quả đúng, đổi thêm lần nữa sẽ lệch hai tiếng.'],
-  aggaware: ['aggregate awareness', 'Khả năng của Cube phân tích truy vấn, so với danh sách pre-aggregation hiện có và tự viết lại truy vấn để đọc từ bảng rollup phù hợp trong Cube Store thay vì data warehouse.', 'Người dùng chỉ cần đặt câu hỏi; Cube tự xác định câu trả lời đã có sẵn ở ngăn nào và lấy ra, người dùng không cần biết các ngăn đó tồn tại.'],
+  aggaware: ['aggregate awareness', 'Khả năng Cube phân tích truy vấn, so với danh sách pre-aggregation hiện có rồi tự viết lại truy vấn để đọc từ bảng rollup phù hợp trong Cube Store thay vì data warehouse.', 'Người dùng chỉ cần đặt câu hỏi; Cube tự xác định câu trả lời đã có sẵn ở ngăn nào và lấy ra, người dùng không cần biết các ngăn đó tồn tại.'],
   cubestore: ['Cube Store', 'Engine lưu trữ và xử lý phân tán do Cube viết riêng, chứa các bảng pre-aggregation và trả lời truy vấn trúng rollup thay cho data warehouse.', 'Như kho nhỏ ngay sau quầy bán hàng: các mặt hàng bán chạy được xếp sẵn tại đây để lấy ra ngay khi khách yêu cầu, không phải đến kho tổng ở ngoại thành.'],
   readyz: ['/readyz', 'Endpoint readiness probe: trả về thành công khi instance Cube đã khởi động xong và sẵn sàng nhận request. Load balancer và Kubernetes dùng endpoint này để quyết định có chuyển traffic tới node hay không.', 'Như tấm biển "Đang mở cửa" treo trước cửa hàng: người dẫn khách kiểm tra biển trước khi đưa khách vào.']},
  alias: {queryrewrite: ['queryRewrite', 'query_rewrite'], secctx: ['securityContext'], refreshctx: ['scheduledRefreshContexts'], rls: ['RLS'], semsql: ['Semantic SQL'], measurefn: ['MEASURE()'],
@@ -376,8 +376,8 @@ window.CH = {key: 'ch06', minutes: 10,
   refreshkey: ['preagg'], converttz: ['timedim'], aggaware: ['preagg'], cubestore: ['preagg'], readyz: []},
  quiz: [
   {id: 'ch06_q1', s: 0, type: 'one', q: 'Trong ví dụ cube.js, queryRewrite đảm bảo điều gì?', o: ['Mọi truy vấn được thêm filter orders.tenant_id theo securityContext, nên tenant chỉ thấy dữ liệu của mình', 'Mọi truy vấn được chuyển sang SQL API', 'Pre-aggregations được build lại sau mỗi truy vấn', 'JWT được ký lại với secret mới'], a: 0,
-   ex: 'queryRewrite đọc tenant_id trong securityContext và bổ sung một filter vào truy vấn: đây là RLS theo tenant.', why: {2: 'Lịch build do refresh worker và scheduledRefreshContexts đảm nhiệm, không phải queryRewrite.'}},
-  {id: 'ch06_q2', s: 1, type: 'one', q: 'Trong SQL API, cách gọi measure total_sales đã định nghĩa trong model là gì?', o: ['SUM("orders".total_sales)', 'MEASURE("orders".total_sales)', 'COUNT(*) với GROUP BY', 'Gửi JSON tới /cubejs-api/v1/load'], a: 1,
+   ex: 'queryRewrite đọc tenant_id trong securityContext và thêm một filter vào truy vấn. Đây là RLS theo tenant.', why: {2: 'Lịch build là việc của refresh worker và scheduledRefreshContexts, không phải queryRewrite.'}},
+  {id: 'ch06_q2', s: 1, type: 'one', q: 'Trong SQL API, gọi measure total_sales đã định nghĩa trong model bằng cách nào?', o: ['SUM("orders".total_sales)', 'MEASURE("orders".total_sales)', 'COUNT(*) với GROUP BY', 'Gửi JSON tới /cubejs-api/v1/load'], a: 1,
    ex: 'Semantic SQL dùng MEASURE() để lấy đúng công thức đã khai báo, không tự viết lại phép tổng hợp.', why: {0: 'Tự viết SUM là định nghĩa lại công thức ở phía client, dễ gây metric drift.', 3: 'Đó là cách gọi REST API.'}},
   {id: 'ch06_q3', s: 2, type: 'one', q: 'Nếu bỏ NULLIF khỏi average_order_value và một nhóm có 0 đơn hàng, điều gì có thể xảy ra?', o: ['Kết quả bằng 0', 'Truy vấn lỗi chia cho 0', 'Cube tự bỏ qua nhóm đó', 'Kết quả bằng total_revenue'], a: 1,
    ex: 'Trên nhiều data warehouse, phép chia cho 0 làm toàn bộ truy vấn báo lỗi. NULLIF đổi 0 thành NULL nên kết quả là NULL thay vì lỗi.'},

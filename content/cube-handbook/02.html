@@ -114,8 +114,8 @@
       <figcaption><b>Hình 2</b>Chức năng và tác động của từng thành phần.</figcaption>
     </figure>
     <details class="deep"><summary><span><small>Đọc sâu</small>Cube Store được dựng từ gì</span></summary><div>
-      <p>Cube Store dùng Apache Arrow DataFusion làm engine truy vấn SQL dạng cột, RocksDB để lưu metadata và index dạng key-value, và định dạng Parquet để lưu dữ liệu theo cột. Vì dữ liệu được tổ chức theo cột, phép gom nhóm thực hiện trực tiếp trên các cột cần dùng mà không phải giải mã từng dòng.</p>
-      <p>Handbook nêu mục tiêu P95 dưới 250ms cho truy vấn vào Cube Store trên hạ tầng quy mô vừa. Đây là số liệu từ handbook, không phải cam kết chung; độ trễ thực tế phụ thuộc kích thước rollup và cấu hình cụm.</p>
+      <p>Cube Store dùng Apache Arrow DataFusion làm engine truy vấn SQL dạng cột, RocksDB để lưu metadata và index dạng key-value, và định dạng Parquet để lưu dữ liệu theo cột. Vì dữ liệu xếp theo cột, phép gom nhóm chạy thẳng trên các cột cần dùng mà không phải giải mã từng dòng.</p>
+      <p>Handbook nêu mục tiêu P95 dưới 250ms cho truy vấn vào Cube Store trên hạ tầng quy mô vừa. Con số này không phải cam kết chung; độ trễ thực tế phụ thuộc kích thước rollup và cấu hình cụm.</p>
     </div></details>
   </section>
 
@@ -134,7 +134,7 @@
       <figcaption><b>Hình 3</b>Chọn từng bước hoặc dùng nút điều hướng để xem lần lượt.</figcaption>
     </figure>
     <p>Bước 2 và bước 3 quan trọng nhất. Ở bước 2, Cube giải mã JWT thành securityContext, sau đó áp Row-Level Security để thêm điều kiện lọc, qua access policy trong data model hoặc hàm query_rewrite. Ở bước 3, Schema Compiler chuyển các measure và dimension được truy vấn thành Semantic SQL.</p>
-    <div class="take"><small>Ghi nhớ</small>Phân quyền xảy ra ở bước 2, trước khi biên dịch. Điều kiện WHERE của RLS vì vậy nằm sẵn trong SQL, dù truy vấn sau đó đi vào Cube Store hay data warehouse.</div>
+    <div class="take"><small>Ghi nhớ</small>Phân quyền xảy ra ở bước 2, trước khi biên dịch. Vì vậy điều kiện WHERE của RLS đã nằm sẵn trong SQL, dù truy vấn sau đó đi vào Cube Store hay data warehouse.</div>
   </section>
 
   <section id="s4">
@@ -151,7 +151,7 @@
       <figcaption><b>Hình 4</b>Mỗi ô là một thông điệp giữa các thành phần. Ô viền đứt là xử lý nội bộ của Cube.</figcaption>
     </figure>
     <details class="deep"><summary><span><small>Đọc sâu</small>Thay đổi từ v0.28: đánh giá partition</span></summary><div>
-      <p>Từ v0.28, Query Orchestrator đảm nhận phần đánh giá partition thay cho Schema Compiler. Theo handbook, nhờ thay đổi này Cube xử lý được truy vấn thời gian trên partitioned rollup nằm ngoài build range ban đầu mà không báo lỗi, và giúp dùng được rolling window rollup.</p>
+      <p>Từ v0.28, Query Orchestrator đảm nhận phần đánh giá partition thay cho Schema Compiler. Theo handbook, nhờ thay đổi này Cube xử lý được truy vấn thời gian trên partitioned rollup nằm ngoài build range ban đầu mà không báo lỗi, và dùng được rolling window rollup.</p>
     </div></details>
   </section>
 
@@ -226,7 +226,7 @@ one('#arch', 'a', i => E('archP').innerHTML = `<h5>${ARCH[i][0]}</h5>${ARCH[i][1
 const COMP = [['Schema Compiler', 'Đọc file YAML/JS trong model/, phân tích cú pháp, dựng entities graph và sinh SQL cho từng loại data warehouse.', 'Bảo đảm logic tính toán chính xác: tránh trùng lặp dữ liệu khi join và lệch múi giờ.'],
  ['Query Orchestrator', 'Quản lý query queue, điều phối thời điểm thực thi và refresh cache.', 'Khi nhiều người dùng truy vấn cùng lúc, query queue ngăn các truy vấn dồn dập gây quá tải data warehouse.'],
  ['Aggregate Awareness', 'Phân tích truy vấn để xác định có khớp với một pre-aggregation có sẵn hay không. Nếu khớp, viết lại SQL để trỏ vào Cube Store.', 'Theo handbook, thời gian phản hồi giảm từ hàng chục giây xuống mức mili giây, chi phí tính toán trên data warehouse cũng giảm.'],
- ['Cube Store', 'Lưu phân tán các bảng rollup, dựng trên DataFusion, RocksDB và Parquet.', 'Mở rộng theo chiều ngang. Handbook nêu mục tiêu P95 dưới 250ms (số liệu từ handbook).']];
+ ['Cube Store', 'Lưu phân tán các bảng rollup, dựng trên DataFusion, RocksDB và Parquet.', 'Mở rộng theo chiều ngang. Handbook nêu mục tiêu P95 dưới 250ms.']];
 pills('comp', COMP, 'p');
 const compShow = i => E('compP').innerHTML = `<h5>${COMP[i][0]}</h5><div class="rows"><div><b>Chức năng</b>${COMP[i][1]}</div><div class="fix"><b>Tác động</b>${COMP[i][2]}</div></div>`;
 one('#comp', 'p', compShow); compShow(0);
@@ -237,8 +237,8 @@ const LC = [['Nhận yêu cầu', 'API reception', 'Client (Tableau, ứng dụn
  ['Kiểm tra rollup', 'Aggregate awareness', 'Đối chiếu truy vấn với danh sách pre-aggregation hiện có.'],
  null,
  ['Trả kết quả', 'Response', 'Định dạng kết quả thành bảng hoặc JSON kèm metadata, gửi về client.']];
-const LC5 = [['Cube Store', 'Execution · hit', 'Có pre-aggregation khớp. Truy vấn được định tuyến trực tiếp tới Cube Store; data warehouse không nhận câu lệnh nào.'],
- ['Data warehouse', 'Execution · miss', 'Không có pre-aggregation khớp. SQL đã biên dịch được gửi tới data warehouse gốc (Snowflake, BigQuery, Postgres...).']];
+const LC5 = [['Cube Store', 'Execution · hit', 'Có pre-aggregation khớp. Cube định tuyến truy vấn thẳng tới Cube Store; data warehouse không nhận câu lệnh nào.'],
+ ['Data warehouse', 'Execution · miss', 'Không có pre-aggregation khớp. Cube gửi SQL đã biên dịch tới data warehouse gốc (Snowflake, BigQuery, Postgres...).']];
 const AA = ['Kết quả: tìm thấy bảng khớp → đi tiếp tới Cube Store.', 'Kết quả: không có bảng khớp → cần truy vấn data warehouse.'];
 let lcM = 0, lcI = 0;
 function lc(i) {lcI = i; const L = LC.map((s, j) => j === 4 ? LC5[lcM] : s);
@@ -297,16 +297,16 @@ window.CH = {key: 'ch02', minutes: 12,
   dwh: ['data warehouse', 'Hệ cơ sở dữ liệu phân tích giữ dữ liệu gốc (Snowflake, BigQuery, Databricks, Redshift, Postgres...). Trong kiến trúc Cube, data warehouse chỉ nhận truy vấn khi cache miss hoặc khi build pre-aggregation.', 'Kho lớn chứa hàng gốc. Cube hạn chế vào kho, chỉ vào khi trong tủ chưa có sẵn thứ khách cần.'],
   compiler: ['Schema Compiler', 'Thành phần đọc các file model YAML/JS, phân tích cú pháp, dựng entities graph và sinh SQL tương thích với từng loại data warehouse.', 'Người phiên dịch đọc bản mô tả dữ liệu do người dùng viết, sau đó chuyển câu hỏi “doanh thu theo tháng” thành câu lệnh mà kho dữ liệu hiểu được.'],
   orchestrator: ['Query Orchestrator', 'Thành phần điều phối thực thi: quản lý query queue, quyết định thời điểm chạy, refresh cache và định tuyến truy vấn tới Cube Store hoặc data warehouse.', 'Người điều phối tại quầy: xếp lượt khách, sau đó quyết định lấy đồ từ tủ có sẵn hay phải vào kho.'],
-  aa: ['Aggregate Awareness', 'Cơ chế phân tích truy vấn để tự động khớp truy vấn với một pre-aggregation phù hợp; nếu khớp, SQL được viết lại để đọc từ Cube Store thay vì data warehouse.', 'Tương tự một nhân viên nắm rõ trong tủ đã có món gì: khách gọi đúng món đã làm sẵn thì phục vụ tức thì, không cần nấu lại từ đầu.'],
+  aa: ['Aggregate Awareness', 'Cơ chế phân tích truy vấn để tự động khớp truy vấn với một pre-aggregation phù hợp; nếu khớp, Cube viết lại SQL để đọc từ Cube Store thay vì data warehouse.', 'Giống một nhân viên biết rõ trong tủ đã có món gì: khách gọi đúng món đã làm sẵn thì phục vụ tức thì, không cần nấu lại từ đầu.'],
   cubestore: ['Cube Store', 'Engine lưu trữ và truy vấn dạng cột, phân tán, dựng trên Apache Arrow DataFusion, RocksDB và Parquet, dùng để chứa và phục vụ các bảng pre-aggregation.', 'Tủ lạnh riêng của Cube, xếp đồ theo từng ngăn cùng loại nên lấy ra rất nhanh.'],
   preagg: ['pre-aggregation', 'Bảng kết quả đã gom nhóm sẵn theo tổ hợp measures, dimensions và granularity thời gian, được build định kỳ và lưu trong Cube Store để phục vụ truy vấn khớp.', 'Bảng cộng sổ cuối ngày: để biết doanh thu tuần, chỉ cần cộng bảy con số tổng, không phải xem lại từng hóa đơn.'],
   rollup: ['rollup', 'Loại pre-aggregation phổ biến nhất: bảng gom nhóm theo một tập measures, dimensions và mốc thời gian (time dimension + granularity) đã chọn.', 'Bản tóm tắt đã cộng sẵn, ví dụ doanh thu từng tháng theo từng thành phố, để không phải tính lại từ hàng triệu dòng.'],
-  queue: ['query queue', 'Hàng đợi truy vấn do Query Orchestrator quản lý, giới hạn số truy vấn chạy đồng thời xuống data warehouse khi tải tăng cao.', 'Tương tự hàng chờ ở quầy giao dịch: khi hàng trăm người đến cùng lúc, mỗi người được xếp lượt để quầy không bị quá tải.'],
+  queue: ['query queue', 'Hàng đợi truy vấn do Query Orchestrator quản lý, giới hạn số truy vấn chạy đồng thời xuống data warehouse khi tải tăng cao.', 'Giống hàng chờ ở quầy giao dịch: khi hàng trăm người đến cùng lúc, mỗi người được xếp lượt để quầy không bị quá tải.'],
   hit: ['cache hit', 'Trường hợp truy vấn được phục vụ từ dữ liệu đã có sẵn (query result cache hoặc pre-aggregation trong Cube Store), không gửi SQL xuống data warehouse.', 'Khách gọi món đã có sẵn trong tủ: món được phục vụ tức thì và bếp không phải chế biến.'],
-  miss: ['cache miss', 'Trường hợp không có kết quả sẵn hay pre-aggregation khớp, nên SQL đã biên dịch phải được gửi xuống data warehouse để tính.', 'Món khách gọi chưa có trong tủ, phải vào bếp nấu từ nguyên liệu, nên mất nhiều thời gian và chi phí hơn.'],
+  miss: ['cache miss', 'Trường hợp không có kết quả sẵn hay pre-aggregation khớp, nên Cube phải gửi SQL đã biên dịch xuống data warehouse để tính.', 'Món khách gọi chưa có trong tủ, phải vào bếp nấu từ nguyên liệu, nên mất nhiều thời gian và chi phí hơn.'],
   jwt: ['JWT', 'JSON Web Token: chuỗi token có chữ ký số, mang các claims về người gọi; Cube xác minh chữ ký, sau đó giải mã để lấy securityContext.', 'Tấm thẻ ra vào có dấu mộc: dựa vào thẻ, Cube xác định người gọi là ai, thuộc công ty nào, và xác nhận thẻ không bị làm giả.'],
   secctx: ['securityContext', 'Đối tượng chứa thông tin người gọi (ví dụ tenant_id, vai trò) được giải mã từ JWT, dùng để áp RLS (qua access policy hoặc query_rewrite), quyết định dữ liệu được phép trả về.', 'Phần thông tin đọc được từ tấm thẻ: “nhân viên chi nhánh A, quyền xem”. Cube dựa vào đó để quyết định người gọi được xem những dữ liệu nào.'],
-  rewrite: ['query_rewrite', 'Hook cấu hình (queryRewrite trong cube.js, query_rewrite trong cube.py) cho phép sửa truy vấn trước khi biên dịch, thường để chèn bộ lọc dựa trên securityContext.', 'Một người gác cổng chỉnh sửa yêu cầu trước khi chuyển đi, ví dụ tự thêm điều kiện “chỉ của chi nhánh A” dù người gửi không ghi.'],
+  rewrite: ['query_rewrite', 'Hook cấu hình (queryRewrite trong cube.js, query_rewrite trong cube.py) để sửa truy vấn trước khi biên dịch, thường để chèn bộ lọc dựa trên securityContext.', 'Một người gác cổng chỉnh sửa yêu cầu trước khi chuyển đi, ví dụ tự thêm điều kiện “chỉ của chi nhánh A” dù người gửi không ghi.'],
   rls: ['Row-Level Security', 'Cơ chế kiểm soát truy cập ở cấp dòng: thêm điều kiện WHERE dựa trên securityContext vào SQL để mỗi người dùng hoặc tenant chỉ nhận các dòng được phép. Thường viết tắt RLS.', 'Cùng một bảng tính, nhưng mỗi chi nhánh mở ra chỉ thấy dòng của chi nhánh mình.'],
   semsql: ['Semantic SQL', 'Câu SQL do Schema Compiler sinh ra từ các measures, dimensions và joins được truy vấn, đã áp sẵn điều kiện bảo mật, sẵn sàng thực thi trên Cube Store hoặc data warehouse.', 'Câu lệnh hoàn chỉnh do Cube tự sinh từ câu hỏi theo ngôn ngữ kinh doanh, người dùng không cần tự viết SQL.'],
   partition: ['partitioned rollup', 'Rollup được chia thành nhiều partition theo khoảng thời gian (ví dụ theo tháng), mỗi partition được build và refresh độc lập.', 'Thay vì một cuốn sổ cái khổng lồ, mỗi tháng ghi một quyển riêng: khi dữ liệu của một tháng thay đổi, chỉ cần viết lại quyển của tháng đó.'],
@@ -336,11 +336,11 @@ window.CH = {key: 'ch02', minutes: 12,
   {id: 'ch02_q8', s: 3, type: 'one', q: 'Ở kịch bản cache hit với orders_monthly_rollup, data warehouse nhận bao nhiêu câu SQL?', o: ['0', '1', '2', 'Tùy số measure trong truy vấn'], a: 0,
    ex: 'Cube Store trả kết quả mà không gửi câu lệnh nào xuống data warehouse gốc.'},
   {id: 'ch02_q9', s: 3, type: 'one', q: 'Ở kịch bản cache miss, sau khi data warehouse trả về, Cube làm gì trước khi gửi kết quả cho client?', o: ['Lưu vào query result cache', 'Gửi ngược kết quả cho data warehouse để kiểm tra', 'Xóa pre-aggregation cũ', 'Chuyển kết quả sang GraphQL'], a: 0,
-   ex: 'Kết quả được lưu vào query result cache để lần sau trả nhanh hơn. Ở production, cache này mặc định nằm trong Cube Store; chỉ ở development mới nằm trong bộ nhớ.'},
+   ex: 'Cube lưu kết quả vào query result cache để lần sau trả nhanh hơn. Ở production, cache này mặc định nằm trong Cube Store; chỉ ở development mới nằm trong bộ nhớ.'},
   {id: 'ch02_q10', s: 3, type: 'one', q: 'Từ v0.28, việc đánh giá partition chuyển sang thành phần nào?', o: ['Query Orchestrator', 'Schema Compiler', 'Cube Store', 'Data warehouse nguồn'], a: 0,
-   ex: 'Chuyển từ Schema Compiler sang Query Orchestrator, nhờ đó truy vấn nằm ngoài build range ban đầu không báo lỗi và giúp dùng được rolling window rollup.', why: {1: 'Đánh giá partition được chuyển khỏi Schema Compiler, không phải chuyển tới.'}},
+   ex: 'Chuyển từ Schema Compiler sang Query Orchestrator, nhờ đó truy vấn nằm ngoài build range ban đầu không báo lỗi, và dùng được rolling window rollup.', why: {1: 'Đánh giá partition được chuyển khỏi Schema Compiler, không phải chuyển tới.'}},
   {id: 'ch02_q11', s: 4, type: 'multi', q: 'Với read-only driver, Cube không làm những việc nào trên CSDL nguồn?', o: ['CREATE TEMP TABLE', 'Ghi dữ liệu đệm', 'Thay đổi schema', 'Chạy SELECT để tính toán'], a: [0, 1, 2],
-   ex: 'Read-only chặn mọi thao tác ghi; pre-aggregation chuyển sang Cube Store.', why: {3: 'Cube vẫn cần đọc dữ liệu, nên SELECT vẫn được thực thi.'}},
+   ex: 'Read-only chặn mọi thao tác ghi; pre-aggregation chuyển sang Cube Store.', why: {3: 'Cube vẫn cần đọc dữ liệu, nên vẫn chạy SELECT.'}},
   {id: 'ch02_q12', s: 4, type: 'one', q: 'Trước v0.28, refresh_key gây vấn đề gì cho CSDL nguồn?', o: ['Câu kiểm tra refresh_key bị gửi xuống nguồn liên tục, làm đầy log và tốn tài nguyên', 'refresh_key xóa dữ liệu nguồn mỗi đêm', 'refresh_key khóa bảng nguồn khi đang ghi', 'refresh_key buộc mọi truy vấn đi qua GraphQL'], a: 0,
    ex: 'Từ v0.28, Cube Store tự chạy bộ đếm thời gian cho refresh key nên nguồn không còn nhận các câu kiểm tra lặp lại.'},
   {id: 'ch02_q13', s: 5, type: 'one', q: 'Trong sơ đồ local, khi cache hit thì khối nào không nhận câu lệnh nào?', o: ['Postgres', 'Cube Store', 'Query Orchestrator', 'API endpoint'], a: 0,

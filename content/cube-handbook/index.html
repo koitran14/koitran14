@@ -81,7 +81,7 @@
   <div class="media">
     <div class="aud" id="aud">
       <button class="pp" id="pp" aria-label="Phát"></button>
-      <div style="min-width:0"><div class="aud-t">Nghe tổng quan · Kiến trúc tầng ngữ nghĩa <span id="atime">0:00</span></div><div class="scrub" id="scrub"></div></div>
+      <div style="min-width:0"><div class="aud-t">Nghe tổng quan · Kiến trúc semantic layer <span id="atime">0:00</span></div><div class="scrub" id="scrub"></div></div>
       <button class="chip" id="rate">1×</button>
       <span class="note" style="grid-column:1/-1;font-size:12px;margin:0">Audio do Gemini Notebook tạo bằng AI từ bộ nguồn của handbook.</span>
       <audio id="au" src="/learn/cube-handbook/media/overview.m4a" preload="metadata"></audio>
@@ -95,7 +95,7 @@
   <div class="demo">
     <span class="label">Video demo gốc · Cube workshop · 39 phút</span>
     <div class="vid"><iframe id="yt" src="https://www.youtube-nocookie.com/embed/7ZQGGepDjUQ?rel=0" title="Building Agentic Analytics with Cube" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
-    <p class="note">Các nhà sáng lập Cube trình bày quy trình từ kho dữ liệu Snowflake đến dashboard, embedded và MCP trên Cube Cloud. Mỗi đoạn demo được liên kết với mục tương ứng trong các chương; chọn một mốc thời gian để mở mục đó. Người trình bày: Artyom (CEO) và Pavel (CTO), đồng sáng lập Cube. Video thuộc Cube Dev, Inc.</p>
+    <p class="note">Các nhà sáng lập Cube trình bày quy trình từ data warehouse Snowflake đến dashboard, embedded và MCP trên Cube Cloud. Mỗi đoạn demo gắn với mục tương ứng trong các chương; chọn một mốc thời gian để mở mục đó. Người trình bày: Artyom (CEO) và Pavel (CTO), đồng sáng lập Cube. Video thuộc Cube Dev, Inc.</p>
     <ol class="moments" id="moments"></ol>
   </div>
 
@@ -110,13 +110,13 @@
   <section class="end" id="sources">
     <h2 style="font-size:28px">Nguồn và lưu ý khi đọc</h2>
     <dl class="notes">
-      <dt>Tính chất tài liệu</dt><dd>Đây là handbook cá nhân về Cube.dev, được tổng hợp từ các nguồn tham khảo liệt kê bên dưới. Tài liệu được biên soạn với mục đích học tập và chia sẻ kiến thức, không phải tài liệu chính thức của Cube Dev, Inc. Cube Dev, Inc. không liên kết, tài trợ hoặc xác nhận nội dung này. Cube và các tên sản phẩm được đề cập là thương hiệu của chủ sở hữu tương ứng.</dd>
-      <dt>Cách biên soạn</dt><dd>Các nguồn tham khảo được tập hợp và tổ chức trong Gemini Notebook. Nội dung được draft với sự hỗ trợ của các công cụ AI như Gemini và Claude, sau đó được biên tập và rà soát lại. Những điểm chưa chính xác hoặc cần kiểm chứng từ nguồn gốc được ghi chú tại chương tương ứng.</dd>
-      <dt>Version và tính cập nhật</dt><dd>Một số nội dung gắn với các version cụ thể như v0.28, v0.33 và v0.34. Do Cube.dev liên tục phát triển, một số API, configuration hoặc hướng dẫn có thể không còn phù hợp với version hiện tại. Hãy đối chiếu với <a href="https://docs.cube.dev/" target="_blank" rel="noopener">official documentation</a> trước khi áp dụng vào dự án thực tế.</dd>
-      <dt>Số liệu và case study</dt><dd>Các số liệu về AI accuracy, cost và latency tại chương 04 và 07 được tổng hợp từ tài liệu tham khảo và case study, chủ yếu nhằm minh họa cho các khái niệm được trình bày. Những số liệu này chưa được kiểm chứng hoặc đo lường lại một cách độc lập, vì vậy không nên xem là benchmark chính thức.</dd>
-      <dt>Code mẫu</dt><dd>Token, password và secret trong các đoạn code mẫu đã được thay bằng placeholder. Code cần được kiểm tra và chạy thử trong môi trường development trước khi áp dụng vào production. Hãy rà soát configuration, security và compatibility với version đang sử dụng.</dd>
-      <dt>Audio, video và câu hỏi ôn tập</dt><dd><p>Audio tổng quan, video <i>Sổ tay kỹ thuật Cube</i> và một phần câu hỏi ôn tập được tạo bằng AI thông qua Gemini Notebook. Những nội dung này có thể còn lỗi phát âm, diễn đạt hoặc sai sót về mặt kỹ thuật.</p><p>Video workshop thuộc Cube Dev, Inc. được nhúng từ YouTube để phục vụ việc học tập và tham khảo; video không được tải xuống hoặc đăng tải lại trong handbook này.</p></dd>
-      <dt>Góp ý và phản hồi</dt><dd>Nếu phát hiện nội dung chưa chính xác, thiếu nguồn tham khảo hoặc cần bổ sung, bạn có thể gửi feedback qua email <a href="mailto:tndkhoi.work@gmail.com"><b>tndkhoi.work@gmail.com</b></a>. Mình sẽ xem xét và cập nhật handbook khi cần thiết.</dd>
+      <dt>Tính chất tài liệu</dt><dd>Đây là handbook cá nhân về Cube.dev, tổng hợp từ các nguồn tham khảo liệt kê bên dưới. Tài liệu viết ra để học tập và chia sẻ kiến thức, không phải tài liệu chính thức của Cube Dev, Inc. Cube Dev, Inc. không liên kết, tài trợ hoặc xác nhận nội dung này. Cube và các tên sản phẩm được đề cập là thương hiệu của chủ sở hữu tương ứng.</dd>
+      <dt>Cách biên soạn</dt><dd>Các nguồn tham khảo được gom và sắp xếp trong Gemini Notebook. Bản draft viết với sự hỗ trợ của các công cụ AI như Gemini và Claude, sau đó được biên tập và rà soát lại. Những điểm chưa chính xác hoặc cần đối chiếu với nguồn gốc được ghi chú ở chương tương ứng.</dd>
+      <dt>Version và tính cập nhật</dt><dd>Một số nội dung gắn với các version cụ thể như v0.28, v0.33 và v0.34. Cube.dev thay đổi liên tục nên một số API, configuration hoặc hướng dẫn có thể không còn phù hợp với version hiện tại. Hãy đối chiếu với <a href="https://docs.cube.dev/" target="_blank" rel="noopener">official documentation</a> trước khi áp dụng vào dự án thực tế.</dd>
+      <dt>Số liệu và case study</dt><dd>Các số liệu về AI accuracy, cost và latency ở chương 04 và 07 lấy từ tài liệu tham khảo và case study, chủ yếu để minh họa khái niệm. Các số liệu này chưa được kiểm chứng hay đo lại độc lập nên không nên xem là benchmark chính thức.</dd>
+      <dt>Code mẫu</dt><dd>Token, password và secret trong các đoạn code mẫu đã được thay bằng placeholder. Hãy kiểm tra và chạy thử code trong môi trường development trước khi đưa lên production, đồng thời rà soát configuration, security và compatibility với version đang dùng.</dd>
+      <dt>Audio, video và câu hỏi ôn tập</dt><dd><p>Audio tổng quan, video <i>Sổ tay kỹ thuật Cube</i> và một phần câu hỏi ôn tập do AI tạo qua Gemini Notebook, nên có thể còn lỗi phát âm, lỗi diễn đạt hoặc sai sót kỹ thuật.</p><p>Video workshop thuộc Cube Dev, Inc. được nhúng từ YouTube để học tập và tham khảo; handbook không tải xuống hay đăng lại video này.</p></dd>
+      <dt>Góp ý và phản hồi</dt><dd>Nếu phát hiện nội dung chưa chính xác, thiếu nguồn tham khảo hoặc cần bổ sung, bạn có thể gửi feedback qua email <a href="mailto:tndkhoi.work@gmail.com"><b>tndkhoi.work@gmail.com</b></a>. Mình sẽ xem xét và cập nhật handbook khi cần.</dd>
     </dl>
     <div id="srcList"></div>
   </section>
@@ -134,26 +134,26 @@ srcList.innerHTML = [...new Set(SOURCES.map(x => x.g))].map(g => `<h3>${g}</h3><
 </script>
 <script>
 const CHS = [
- {n: '00', t: 'How Cube Works', vi: 'Theo dõi một câu hỏi cụ thể từ người dùng, qua LLM và Cube, xuống database và trở lại, để xác định vai trò của từng thành phần.', lvl: 'Bắt đầu ở đây', min: 15, href: '/blog/cube-handbook/00', key: 'ch00', q: 8,
+ {n: '00', t: 'How Cube Works', vi: 'Đi theo một câu hỏi của người dùng qua LLM, qua Cube, xuống database rồi quay lại, để thấy mỗi thành phần làm gì.', lvl: 'Bắt đầu ở đây', min: 15, href: '/blog/cube-handbook/00', key: 'ch00', q: 8,
   s: ['LLM tham gia ở bước nào', 'Một câu hỏi qua bảy bước', 'File YAML là từ điển', 'Thực hành: Cube xử lý một query JSON']},
- {n: '01', t: 'Fundamentals', vi: 'Định nghĩa Cube.dev, các vấn đề Cube.dev giải quyết và những trường hợp nên sử dụng.', lvl: 'Nền tảng', min: 14, href: '/blog/cube-handbook/01', key: 'ch01', q: 12,
+ {n: '01', t: 'Fundamentals', vi: 'Cube.dev là gì, giải quyết vấn đề gì và nên dùng trong trường hợp nào.', lvl: 'Nền tảng', min: 14, href: '/blog/cube-handbook/01', key: 'ch01', q: 12,
   s: ['What Is Cube.dev?', 'The Semantic Layer Concept', 'Problems Cube.dev Solves', 'Core Concepts and Terminology', 'Cube.dev Use Cases', 'Benefits, Limitations & Alternatives']},
- {n: '02', href: '/blog/cube-handbook/02', key: 'ch02', t: 'Architecture & Internals', vi: 'Các thành phần của Cube và cách hệ thống xử lý một truy vấn.', lvl: 'Nền tảng', min: 12, q: 13,
+ {n: '02', href: '/blog/cube-handbook/02', key: 'ch02', t: 'Architecture & Internals', vi: 'Cube gồm những thành phần nào và xử lý một query ra sao.', lvl: 'Nền tảng', min: 12, q: 13,
   s: ['High-Level Architecture', 'Core Components and Responsibilities', 'Query Lifecycle', 'Request-to-Response Flow', 'Data Sources and Query Execution', 'Architecture Diagrams']},
- {n: '03', href: '/blog/cube-handbook/03', key: 'ch03', t: 'Hands-on Implementation', vi: 'Xây dựng một ứng dụng Cube hoạt động được, từ khâu cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
+ {n: '03', href: '/blog/cube-handbook/03', key: 'ch03', t: 'Hands-on Implementation', vi: 'Dựng một ứng dụng Cube chạy được, từ cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
   s: ['Environment Setup', 'Connect a Data Source', 'Create Your First Data Model', 'Query Data Through Cube.dev', 'Integrate with a Frontend App', 'Build a Basic Analytics Dashboard', 'Validate Query Results', 'Implementation Labs']},
- {n: '04', href: '/blog/cube-handbook/04', key: 'ch04', t: 'Engineering Deep Dives', vi: 'Cơ chế hoạt động bên trong của Cube, kèm các thực nghiệm kiểm chứng.', lvl: 'Nâng cao', min: 24, q: 17,
+ {n: '04', href: '/blog/cube-handbook/04', key: 'ch04', t: 'Engineering Deep Dives', vi: 'Bên trong Cube chạy thế nào, kèm thực nghiệm để kiểm chứng.', lvl: 'Nâng cao', min: 24, q: 17,
   s: ['Data Modeling', 'Measures, Dimensions & Granularity', 'Joins, Fanout & Double Counting', 'SQL Generation and Inspection', 'Query Execution and Optimization', 'Caching Mechanisms', 'Pre-aggregations', 'Authentication, Authorization & Multi-tenancy', 'Source Code Investigation', 'Experiments & Performance Analysis']},
- {n: '05', href: '/blog/cube-handbook/05', key: 'ch05', t: 'Production Engineering', vi: 'Triển khai Cube lên production, vận hành và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
+ {n: '05', href: '/blog/cube-handbook/05', key: 'ch05', t: 'Production Engineering', vi: 'Deploy Cube lên production, vận hành và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
   s: ['Deployment Architecture', 'Environment Configuration & Secrets', 'Authentication and Security Configuration', 'Observability, Logs & Monitoring', 'Performance Troubleshooting', 'Common Production Issues', 'CI/CD and Release Management', 'Production Readiness Checklist']},
- {n: '06', href: '/blog/cube-handbook/06', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tài liệu tra cứu khi viết code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
+ {n: '06', href: '/blog/cube-handbook/06', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tra nhanh khi viết code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
   s: ['Configuration Reference', 'API & Query Examples', 'Common Patterns and Code Snippets', 'Error Messages & Solutions', 'Troubleshooting Checklist', 'Glossary', 'Useful Commands & Tools', 'External References']},
- {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Applied Case Studies', vi: 'Áp dụng Cube vào một bài toán cụ thể và ghi lại kết quả kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
+ {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Applied Case Studies', vi: 'Dùng Cube cho một bài toán cụ thể và ghi lại kết quả kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
   s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']}];
-const ROUTES = [['Người mới tìm hiểu', ['00', '01', '02', '03'], 'Bắt đầu với chương 00 để nắm cách Cube xử lý một câu hỏi cụ thể; sau đó đọc 01 → 02 → 03 để nắm khái niệm, kiến trúc và xây dựng một bản chạy được.'],
- ['Bắt đầu thực hành', ['03', '06'], 'Bắt đầu từ chương 03 để cài đặt và viết model đầu tiên; dùng chương 06 song song để tra cứu cú pháp.'],
- ['Chuẩn bị production', ['04', '05', '07'], 'Chương 04 trình bày cache, join và phân quyền; chương 05 trình bày vận hành; chương 07 là một ví dụ đầy đủ.'],
- ['Tra cứu', ['06'], 'Chương 06 tập hợp cấu hình, ví dụ API, thông báo lỗi và các lệnh thường dùng.']];
+const ROUTES = [['Người mới tìm hiểu', ['00', '01', '02', '03'], 'Đọc chương 00 trước để thấy Cube xử lý một câu hỏi cụ thể ra sao; sau đó đọc 01 → 02 → 03 để nắm khái niệm, kiến trúc và dựng một bản chạy được.'],
+ ['Bắt đầu thực hành', ['03', '06'], 'Vào thẳng chương 03 để cài đặt và viết model đầu tiên; mở chương 06 bên cạnh để tra cú pháp.'],
+ ['Chuẩn bị production', ['04', '05', '07'], 'Chương 04 nói về cache, join và phân quyền; chương 05 về vận hành; chương 07 là một ví dụ đầy đủ.'],
+ ['Tra cứu', ['06'], 'Chương 06 gom cấu hình, ví dụ API, thông báo lỗi và các lệnh hay dùng.']];
 const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
 function renderPath(hot) {
  path.className = 'path' + (hot ? ' filtered' : '');
