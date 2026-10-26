@@ -59,8 +59,8 @@ export default async function BlogPage() {
           className="mt-3 max-w-md border-l-2 border-orange-500/60 pl-3 italic leading-relaxed text-zinc-600 dark:text-zinc-400"
           style={{ fontFamily: "var(--font-notes-serif)" }}
         >
-          Mình không phải người học giỏi, chỉ là một đứa học chưa tốt nhưng luôn muốn học được như các bạn giỏi mà thôi. Và
-          đó là lý do cái note này ra đời.
+          Note này không đến từ một đứa học giỏi. Mình chỉ là một đứa học chưa tốt, nhưng luôn muốn học được tốt như các bạn
+          giỏi mà thôi. Và đó là lý do mình có cái note này.
         </p>
       </Reveal>
       <Reveal delay={0.08}>
