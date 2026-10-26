@@ -36,7 +36,7 @@
     <h2>Handbook này dành cho ai</h2>
     <p class="gist">Cho người đã biết viết phần mềm và muốn chịu trách nhiệm cho cả kết quả, không chỉ cho phần code.</p>
 <p>Nếu bạn là Software Engineer và đã từng tham gia làm ứng dụng AI, có lẽ bạn quen với việc nhận task: có ticket, có mô tả, làm xong thì đóng. Làm sản phẩm AI đòi hỏi thêm một số việc nằm trước và sau đoạn code đó: hỏi xem vấn đề có đáng giải không, có cần tới AI không, làm sao biết AI trả lời “đủ tốt”, và sau khi ra mắt thì người dùng có thật sự dùng không.</p>
-    <p>Handbook gom các việc đó lại thành 21 chương, chia làm bảy phần. Nội dung dựa trên ba báo cáo tổng hợp về AI Product Engineering & Management (Phần I, II–III, IV–VII), được biên tập lại; mỗi chương kèm danh sách video YouTube liên quan để học tiếp. Ba vai trò hay được nhắc tới trong sách là <b>AI Product Engineer</b>, <b>AI Product Builder</b> và <b>AI Product Manager</b>. Ranh giới giữa chúng không cứng, và chương 14, 18 sẽ nói kỹ hơn.</p>
+    <p>Handbook gom các việc đó lại thành 21 chương, chia làm bảy phần. Nội dung dựa trên ba báo cáo tổng hợp về AI Product Engineering & Management (Phần I, II–III, IV–VII), được biên tập lại; mỗi chương kèm một đến hai video YouTube để học tiếp. Ba vai trò hay được nhắc tới trong sách là <b>AI Product Engineer</b>, <b>AI Product Builder</b> và <b>AI Product Manager</b>. Ranh giới giữa chúng không cứng, và chương 14, 18 sẽ nói kỹ hơn.</p>
     <div class="take"><small>Ghi nhớ</small>Mục tiêu của handbook là giúp bạn chuyển từ “làm đúng task” sang “chọn đúng task và chứng minh nó có giá trị”.</div>
   </section>
 
@@ -73,15 +73,11 @@
   <section id="s4">
     <span class="num">00.4</span>
     <h2>Cách dùng video và audio</h2>
-    <p class="gist">Video để học sâu thêm sau khi đọc; chọn một đến ba video mỗi chương là đủ.</p>
-<p>Cuối mỗi chương có khối “Video liên quan”. Phần lớn video bằng tiếng Anh; bạn có thể bật phụ đề tự động và dịch sang tiếng Việt trên YouTube. Có hai loại liên kết:</p>
-    <ul>
-      <li><b>Video cụ thể</b>: bấm để phát ngay trong trang. Tiêu đề hiển thị là tiêu đề thật của video trên YouTube.</li>
-      <li><b>Tìm trên YouTube</b>: mở trang kết quả tìm kiếm với từ khóa đã chọn sẵn. Kết quả sẽ có nhiều video; hãy chọn một video hợp trình độ và thời lượng, ưu tiên bài giảng sâu hoặc workshop có ví dụ thật thay vì video giải thích thuật ngữ ngắn.</li>
-    </ul>
+    <p class="gist">Video và audio để học thêm sau khi đọc, không thay cho phần đọc.</p>
+<p>Chương 01 đến 21 đều có khối “Video liên quan” ở cuối chương, mỗi chương một đến hai video. Bấm vào thumbnail để phát ngay trong trang; tiêu đề hiển thị là tiêu đề thật của video trên YouTube. Video bằng tiếng Anh; bạn có thể bật phụ đề tự động và dịch sang tiếng Việt.</p>
     <p>Trang mục lục có thêm tám audio tổng quan do AI tạo từ cùng chủ đề. Nghe khi đi đường thì tiện, nhưng đừng coi đó là nguồn chính xác tuyệt đối.</p>
     <details class="deep"><summary><span><small>Đọc sâu</small>Với chương 21, đừng chỉ xem rồi làm theo</span></summary><div>
-      <p>Chương capstone có video hướng dẫn dựng sản phẩm AI từ đầu. Chúng hữu ích để thấy toàn cảnh, nhưng giá trị thật nằm ở việc tự làm: chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</p>
+      <p>Chương capstone có video về đánh giá và đưa AI agent lên production. Video hữu ích để thấy toàn cảnh, nhưng giá trị thật nằm ở việc tự làm: chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</p>
     </div></details>
   </section>
 
@@ -90,6 +86,7 @@
   <div class="end"><p>Thứ tự ưu tiên P1–P3 là gợi ý cho người có nền tảng Software Engineering, không phải lộ trình bắt buộc.</p></div>
 </article>
 
+<script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
 const MAP = [['01', 'Product Thinking & Lifecycle', 'Phần I'], ['02', 'Problem Discovery & User Research', 'Phần I'], ['03', 'Market Research & Opportunity', 'Phần I'],
@@ -118,7 +115,7 @@ window.CH = {
    "sum": [
     "Dành cho Software Engineer muốn làm sản phẩm AI.",
     "21 chương, bảy phần, dựa trên ba báo cáo tổng hợp.",
-    "Mỗi chương có video liên quan để học tiếp."
+    "Mỗi chương kèm một đến hai video để học tiếp."
    ],
    "terms": [
     "pm",
@@ -155,8 +152,8 @@ window.CH = {
    "n": "00.4",
    "t": "Cách dùng video và audio",
    "sum": [
-    "Video cụ thể phát được ngay trong trang.",
-    "Link tìm kiếm cần tự chọn video phù hợp.",
+    "Mỗi chương có video, bấm thumbnail để phát ngay.",
+    "Video tiếng Anh, có thể bật phụ đề dịch.",
     "Audio tổng quan do AI tạo, chỉ để tham khảo."
    ],
    "terms": []
@@ -255,15 +252,15 @@ window.CH = {
    "id": "my4",
    "s": 3,
    "type": "one",
-   "q": "Khi một link là trang tìm kiếm YouTube, nên làm gì?",
+   "q": "Nên dùng tám audio tổng quan ở trang mục lục thế nào?",
    "o": [
-    "Xem hết mọi video trong kết quả",
-    "Chọn một video hợp trình độ, ưu tiên bài giảng sâu hoặc workshop có ví dụ thật",
-    "Bỏ qua vì không có video cụ thể",
-    "Chỉ xem video ngắn nhất"
+    "Thay hoàn toàn cho việc đọc chương",
+    "Nghe để có bức tranh chung, nhưng không coi là nguồn chính xác tuyệt đối",
+    "Trích dẫn nguyên văn khi viết PRD",
+    "Bỏ qua vì do AI tạo"
    ],
    "a": 1,
-   "ex": "Một đến ba video chất lượng mỗi chương là đủ; ưu tiên nội dung có ví dụ thực tế."
+   "ex": "Audio do AI tạo, tiện để nghe khi đi đường, nhưng có thể còn lỗi phát âm hoặc diễn đạt chưa chính xác."
   }
  ]
 };

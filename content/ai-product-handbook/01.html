@@ -6,9 +6,6 @@
 <title>01 · Product Thinking &amp; Product Development Lifecycle · AI Product Handbook</title>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>
-.flow button small{display:block;font:400 11px var(--mono);color:var(--muted)}
-</style>
 </head>
 <body>
 <div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
@@ -70,8 +67,8 @@
     <p class="gist">Năm giai đoạn lặp lại, và một đội nhiều vai trò, với AI PM đứng giữa nối kỹ thuật với mục tiêu kinh doanh.</p>
 <p>Vòng đời sản phẩm AI có năm giai đoạn lặp lại: Ideation (tìm điểm đau và cơ hội dùng AI), Discovery (khảo sát dữ liệu, đánh giá tính khả thi, đóng khung bài toán), Evaluation (tinh chỉnh prompt, chấm model trên eval set, cân đối chi phí, latency và độ chính xác), Deployment (tích hợp vào quy trình thật, làm giao diện phù hợp) và Monitoring (theo dõi hiệu năng, phát hiện drift, thu phản hồi để cải tiến). Monitoring đưa dữ liệu ngược về Ideation, nên vòng này không có điểm kết thúc.</p>
     <figure>
-      <div class="fig"><div class="figbar"><span>Chọn một giai đoạn</span></div><div class="flow" id="lc"></div><div class="panel" id="lcP"></div></div>
-      <figcaption><b>Hình 2</b>Năm giai đoạn của vòng đời sản phẩm AI.</figcaption>
+      <div class="fig"><div id="lc"></div></div>
+      <figcaption><b>Hình 2</b>Năm giai đoạn của vòng đời sản phẩm AI. Sau Monitoring, vòng lặp quay lại Ideation.</figcaption>
     </figure>
     <p>Đội làm sản phẩm AI thường gồm: AI PM (định hướng, đóng khung vấn đề, đặt tiêu chuẩn thành công); AI/ML Engineer và Data Scientist (xây, tinh chỉnh, tích hợp model); Data Engineer (thu thập, làm sạch, gán nhãn dữ liệu); UX Designer (thiết kế giao diện cho đầu ra không chắc chắn); và nhóm pháp lý, bảo mật (PII, tuân thủ). AI PM là người dịch kỳ vọng kinh doanh thành tiêu chí đánh giá đo được, và giữ cho cả đội hướng về một sản phẩm an toàn, hữu ích.</p>
     <div class="take"><small>Ghi nhớ</small>Vòng đời AI là vòng tròn: Monitoring cấp dữ liệu cho lần Ideation tiếp theo.</div>
@@ -83,6 +80,7 @@
   <div class="end"><p></p></div>
 </article>
 
+<script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
 // a statement sorter: data = [[statement, right layer index, why]], labels = layer names
@@ -108,10 +106,7 @@ sorter(document.getElementById('ooi'), [
 const LC = [['Ideation', 'Phát hiện điểm đau chuyên biệt và định hình cơ hội dùng AI.'], ['Discovery', 'Khảo sát dữ liệu, đánh giá tính khả thi kỹ thuật, đóng khung bài toán.'],
  ['Evaluation', 'Tinh chỉnh prompt, chấm model trên eval set, cân đối chi phí suy luận, latency và độ chính xác.'], ['Deployment', 'Tích hợp model vào quy trình thật và làm giao diện phù hợp.'],
  ['Monitoring', 'Theo dõi hiệu năng thực tế, phát hiện drift, thu phản hồi rồi quay lại Ideation.']];
-const lc = document.getElementById('lc'), lcP = document.getElementById('lcP');
-lc.innerHTML = LC.map((s, i) => `<button data-i="${i}"><small>${i + 1}</small>${s[0]}</button>${i < 4 ? '<i>→</i>' : '<i>↺</i>'}`).join('');
-lc.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; lc.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); lcP.innerHTML = `<h5>${LC[+b.dataset.i][0]}</h5>${LC[+b.dataset.i][1]}`};
-lc.querySelector('button').click();
+stepper(document.getElementById('lc'), LC.map(([t, d], i) => [t, `<p>${d}${i === LC.length - 1 ? ' Dữ liệu này đưa vòng đời quay lại Ideation.' : ''}</p>`]));
 
 // ---- chapter data for kit.js ----
 window.CH = {

@@ -37,8 +37,8 @@
     <h2>Giai đoạn 2: Kiến trúc</h2>
     <p class="gist">Luồng end-to-end từ tài liệu scan tới giao diện CSKH, có điểm chuyển cho người khi confidence thấp.</p>
 <figure>
-      <div class="fig"><div class="flow" id="cap"></div><div class="panel" id="capP"></div></div>
-      <figcaption><b>Hình 1</b>Luồng dữ liệu trong dự án mẫu. Chọn một bước.</figcaption>
+      <div class="fig"><div id="cap"></div></div>
+      <figcaption><b>Hình 1</b>Luồng dữ liệu trong dự án mẫu, đi qua từng bước.</figcaption>
     </figure>
     <p>Báo cáo nguồn dùng Claude 3.5 Sonnet trên Amazon Bedrock làm model sinh câu trả lời. Khi bạn làm dự án của mình, chọn model theo eval set và ngân sách, không theo tên trong ví dụ.</p>
   </section>
@@ -75,15 +75,14 @@
   <div class="end"><p>Các con số mục tiêu (85%, 60%, 40%), KPI và mức giảm 35% chi phí token trong dự án mẫu lấy từ báo cáo nguồn, là ví dụ minh họa chứ không phải kết quả đã kiểm chứng.</p></div>
 </article>
 
+<script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
 const CAP = [['Tài liệu scan', 'Hóa đơn, hợp đồng, chứng từ được tải lên.'], ['Amazon Textract', 'Trích văn bản và cấu trúc bảng (IDP); kết quả lưu vào S3 data lake.'],
  ['Macie + Lambda', 'Phát hiện và che PII (số thẻ, CCCD) trước khi lưu và index.'], ['Bedrock Knowledge Bases', 'Tạo embedding, lưu và tìm kiếm cho RAG.'],
  ['Model + Guardrails', 'Model trên Amazon Bedrock sinh câu trả lời kèm trích nguồn; Guardrails chặn câu ngoài phạm vi. Lưu lượng đi qua PrivateLink, phân quyền bằng IAM.'],
  ['Giao diện CSKH', 'Nhân viên và khách xem câu trả lời; nếu confidence < 75%, luồng tự đẩy sang chuyên gia rà soát (human-in-the-loop).']];
-cap.innerHTML = CAP.map((c, i) => `<button data-i="${i}">${c[0]}</button>${i < CAP.length - 1 ? '<i>→</i>' : ''}`).join('');
-cap.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; cap.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); capP.innerHTML = `<h5>${CAP[+b.dataset.i][0]}</h5>${CAP[+b.dataset.i][1]}`};
-cap.querySelector('button').click();
+stepper(document.getElementById('cap'), CAP.map(([t, d]) => [t, `<p>${d}</p>`]));
 const STEPS = [['02', 'Viết problem statement cho một vấn đề thật, chưa nhắc giải pháp'], ['02', 'Phỏng vấn ít nhất năm người dùng mục tiêu'], ['03', 'Trả lời desirability, feasibility, viability'],
  ['06', 'Viết PRD có acceptance criteria định lượng'], ['09', 'Dựng golden dataset, có edge case'], ['04', 'Prototype luồng có fallback và human-in-the-loop'],
  ['07', 'Chọn RAG hay fine-tuning, ghi lý do vào decision log'], ['08', 'Đưa lên production với gateway, log và trace'], ['10', 'Đo outcome và cost per successful task'], ['20', 'Tổ chức product review: tiếp tục, điều chỉnh hay dừng']];

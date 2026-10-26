@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="style.css">
 <style>
 .prd{display:grid;gap:10px;margin:18px 0}
-.prd div{padding:12px 16px;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;background:var(--bg)}
-.prd b{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
-.prd p{margin:6px 0 0;font-size:15.5px}
+.prd div{padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.prd b{display:inline-block;font:500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:6px;color:var(--acc);background:var(--acc-soft)}
+.prd p{margin:8px 0 0;font-size:15.5px}
 </style>
 </head>
 <body>
@@ -49,10 +49,9 @@
     <p class="gist">Bốn giai đoạn kiểm hai loại rủi ro khác nhau: làm được không, và có ai cần không.</p>
 <figure>
       <div class="fig">
-        <div class="seg" id="stg"><button data-i="0" class="on">POC</button><button data-i="1">Prototype</button><button data-i="2">MVP</button><button data-i="3">Pilot</button></div>
-        <div class="rows" id="stgR" style="margin-top:14px"></div>
+        <div id="stg"></div>
       </div>
-      <figcaption><b>Hình 1</b>Chọn một giai đoạn để xem mục tiêu, phạm vi kỹ thuật và cách đo.</figcaption>
+      <figcaption><b>Hình 1</b>Đi qua bốn giai đoạn để xem mục tiêu, phạm vi kỹ thuật và cách đo.</figcaption>
     </figure>
     <p>POC và prototype hay bị gộp làm một. POC trả lời câu hỏi kỹ thuật (model có giải được bài toán lõi không), còn prototype trả lời câu hỏi trải nghiệm (người dùng có hiểu và thao tác được không). Một POC thành công chưa nói gì về việc người dùng có muốn sản phẩm.</p>
   </section>
@@ -85,15 +84,14 @@
   <div class="end"><p>Các ngưỡng 85%, 2 giây, 5% trong mục 06.1 là ví dụ trong báo cáo nguồn; ngưỡng phù hợp tùy bài toán và mức rủi ro của bạn.</p></div>
 </article>
 
+<script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
 const STG = [['Thử tính khả thi kỹ thuật của thuật toán hoặc model.', 'Dữ liệu mẫu nhỏ; gọi API model có sẵn hoặc chạy kịch bản thử cơ bản.', 'Model giải được bài toán lõi trong điều kiện thí nghiệm.'],
  ['Thử giao diện tương tác và luồng trải nghiệm.', 'Công cụ no-code/low-code nối API; dữ liệu giả hoặc tĩnh.', 'Phản hồi định tính của người dùng về luồng thao tác và độ dễ dùng.'],
  ['Kiểm chứng giá trị trên thị trường với chi phí tối thiểu.', 'Luồng dữ liệu thật, có guardrails cơ bản.', 'Tỷ lệ người dùng quay lại, mức sẵn sàng dùng tính năng trong thực tế.'],
  ['Vận hành thử ở quy mô giới hạn với người dùng thật.', 'Hệ thống RAG/API hoàn chỉnh, giám sát và log đầy đủ.', 'Đạt KPI về độ chính xác, CSAT và vận hành ổn định.']];
-function stg(i) {stgR.innerHTML = `<div><b>Mục tiêu</b>${STG[i][0]}</div><div><b>Phạm vi kỹ thuật</b>${STG[i][1]}</div><div class="fix"><b>Đo thành công</b>${STG[i][2]}</div>`}
-document.getElementById('stg').onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; stg.call(null, +b.dataset.i); document.querySelectorAll('#stg button').forEach(x => x.classList.toggle('on', x === b))};
-stg(0);
+stepper(document.getElementById('stg'), ['POC', 'Prototype', 'MVP', 'Pilot'].map((t, i) => [t, `<div class="rows"><div><b>Mục tiêu</b>${STG[i][0]}</div><div><b>Phạm vi kỹ thuật</b>${STG[i][1]}</div><div class="fix"><b>Đo thành công</b>${STG[i][2]}</div></div>`]));
 
 // ---- chapter data for kit.js ----
 window.CH = {
