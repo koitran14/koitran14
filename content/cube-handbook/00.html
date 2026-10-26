@@ -159,19 +159,19 @@ table.x-map td code{white-space:normal}
 <article>
   <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 00</div>
   <h1>Cube hoạt động <i>như thế nào?</i></h1>
-  <p class="dek">Theo dõi một câu hỏi cụ thể từ người dùng, qua LLM và Cube, xuống database và trở lại, để xác định việc mà từng thành phần đảm nhận.</p>
+  <p class="dek">Theo dõi một câu hỏi cụ thể từ người dùng, qua LLM và Cube, xuống database và trở lại, để thấy mỗi thành phần làm việc gì.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương mở đầu</span><span>15 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>LLM chỉ làm hai việc: hiểu câu hỏi và diễn đạt câu trả lời. LLM không viết SQL. Toàn bộ phần ở giữa do Cube thực hiện bằng code tất định: cùng một query JSON của cùng một người hỏi luôn cho cùng một câu SQL và cùng một con số.</div>
+  <div class="idea"><small>Ý chính của chương</small>LLM chỉ làm hai việc: hiểu câu hỏi và diễn đạt câu trả lời. LLM không viết SQL. Toàn bộ phần ở giữa do Cube thực hiện bằng code chạy cố định: cùng một query JSON của cùng một người hỏi luôn cho cùng một câu SQL và cùng một con số.</div>
 
   <section id="s1">
     <span class="num">00.1</span>
     <h2>LLM tham gia ở bước nào?</h2>
     <p class="gist">LLM đứng ở hai đầu của chuỗi xử lý. Cube và database ở giữa không dùng LLM.</p>
     <p>Toàn bộ chương dùng chung một ví dụ: bảng <code>orders</code> gồm 10 đơn hàng của hai shop A và B, ngày hiện tại là 23/10/2026, người hỏi là nhân viên shop A.</p>
-    <p>Cube tiếp nhận một yêu cầu có dạng “cho số X, chia theo Y” dưới dạng query JSON, tự viết SQL, chạy SQL trên database rồi trả kết quả. Khi người dùng hỏi bằng tiếng Việt, cần thêm một LLM ở phía trước để chuyển câu hỏi thành query JSON đó. Mỗi trường trong query JSON là tên một member do Cube công bố, ví dụ <code>orders.revenue</code>.</p>
+    <p>Cube tiếp nhận một yêu cầu có dạng “cho số X, chia theo Y” dưới dạng query JSON, tự viết SQL, chạy SQL trên database rồi trả kết quả. Khi người dùng hỏi bằng tiếng Việt, cần thêm một LLM ở phía trước để chuyển câu hỏi thành query JSON đó. Mỗi trường trong query JSON là tên một member do Cube cung cấp, ví dụ <code>orders.revenue</code>.</p>
     <figure>
       <div class="fig x-fig x-cq">
         <ol class="x-rail" aria-label="Chuỗi xử lý từ câu hỏi đến câu trả lời">
@@ -946,7 +946,7 @@ window.CH = {key: 'ch00', minutes: 15,
   qjson: ['member', 'compiler'], meta: ['member', 'hidden', 'llm'], hidden: ['meta', 'rewrite'], secctx: ['rewrite'], rewrite: ['secctx', 'hidden'], compiler: ['qjson', 'datamodel'], cache: ['refresh'], refresh: ['cache']},
  quiz: [
   {id: 'ch00_q1', s: 0, type: 'one', q: 'Trong chuỗi xử lý ở Hình 1, thành phần nào viết câu SQL chạy trên database?', o: ['LLM, dựa trên câu hỏi tiếng Việt', 'Cube, từ query JSON và file YAML', 'Frontend, trước khi gửi request', 'Database, tự sinh SQL từ JSON'], a: 1,
-   ex: 'LLM chỉ chọn member và trả về query JSON. Cube tra YAML và viết SQL bằng code tất định.',
+   ex: 'LLM chỉ chọn member và trả về query JSON. Cube tra YAML và viết SQL bằng code chạy cố định.',
    why: {0: 'LLM không viết SQL; LLM chỉ chọn tên member có sẵn và điền giá trị filter.', 2: 'Frontend chỉ gửi câu hỏi hoặc query JSON.', 3: 'Database chỉ chạy câu SQL mà Cube gửi xuống.'}},
   {id: 'ch00_q2', s: 0, type: 'multi', q: 'LLM đảm nhận những việc nào trong chuỗi xử lý?', o: ['Hiểu câu hỏi và chuyển thành query JSON', 'Thêm điều kiện phân quyền shop_id', 'Diễn đạt số liệu thành câu trả lời (tuỳ chọn)', 'Chạy SQL trên database'], a: [0, 2],
    ex: 'LLM chỉ đứng ở hai đầu: hiểu câu hỏi và diễn đạt câu trả lời.',

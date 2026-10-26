@@ -151,7 +151,7 @@
       <figcaption><b>Hình 4</b>Mỗi ô là một thông điệp giữa các thành phần. Ô viền đứt là xử lý nội bộ của Cube.</figcaption>
     </figure>
     <details class="deep"><summary><span><small>Đọc sâu</small>Thay đổi từ v0.28: đánh giá partition</span></summary><div>
-      <p>Từ v0.28, Query Orchestrator đảm nhận phần đánh giá partition thay cho Schema Compiler. Theo handbook, nhờ thay đổi này Cube xử lý được truy vấn thời gian trên partitioned rollup nằm ngoài build range ban đầu mà không báo lỗi, và mở đường cho rolling window rollup.</p>
+      <p>Từ v0.28, Query Orchestrator đảm nhận phần đánh giá partition thay cho Schema Compiler. Theo handbook, nhờ thay đổi này Cube xử lý được truy vấn thời gian trên partitioned rollup nằm ngoài build range ban đầu mà không báo lỗi, và giúp dùng được rolling window rollup.</p>
     </div></details>
   </section>
 
@@ -338,7 +338,7 @@ window.CH = {key: 'ch02', minutes: 12,
   {id: 'ch02_q9', s: 3, type: 'one', q: 'Ở kịch bản cache miss, sau khi data warehouse trả về, Cube làm gì trước khi gửi kết quả cho client?', o: ['Lưu vào query result cache', 'Gửi ngược kết quả cho data warehouse để kiểm tra', 'Xóa pre-aggregation cũ', 'Chuyển kết quả sang GraphQL'], a: 0,
    ex: 'Kết quả được lưu vào query result cache để lần sau trả nhanh hơn. Ở production, cache này mặc định nằm trong Cube Store; chỉ ở development mới nằm trong bộ nhớ.'},
   {id: 'ch02_q10', s: 3, type: 'one', q: 'Từ v0.28, việc đánh giá partition chuyển sang thành phần nào?', o: ['Query Orchestrator', 'Schema Compiler', 'Cube Store', 'Data warehouse nguồn'], a: 0,
-   ex: 'Chuyển từ Schema Compiler sang Query Orchestrator, nhờ đó truy vấn nằm ngoài build range ban đầu không báo lỗi và mở đường cho rolling window rollup.', why: {1: 'Đánh giá partition được chuyển khỏi Schema Compiler, không phải chuyển tới.'}},
+   ex: 'Chuyển từ Schema Compiler sang Query Orchestrator, nhờ đó truy vấn nằm ngoài build range ban đầu không báo lỗi và giúp dùng được rolling window rollup.', why: {1: 'Đánh giá partition được chuyển khỏi Schema Compiler, không phải chuyển tới.'}},
   {id: 'ch02_q11', s: 4, type: 'multi', q: 'Với read-only driver, Cube không làm những việc nào trên CSDL nguồn?', o: ['CREATE TEMP TABLE', 'Ghi dữ liệu đệm', 'Thay đổi schema', 'Chạy SELECT để tính toán'], a: [0, 1, 2],
    ex: 'Read-only chặn mọi thao tác ghi; pre-aggregation chuyển sang Cube Store.', why: {3: 'Cube vẫn cần đọc dữ liệu, nên SELECT vẫn được thực thi.'}},
   {id: 'ch02_q12', s: 4, type: 'one', q: 'Trước v0.28, refresh_key gây vấn đề gì cho CSDL nguồn?', o: ['Câu kiểm tra refresh_key bị gửi xuống nguồn liên tục, làm đầy log và tốn tài nguyên', 'refresh_key xóa dữ liệu nguồn mỗi đêm', 'refresh_key khóa bảng nguồn khi đang ghi', 'refresh_key buộc mọi truy vấn đi qua GraphQL'], a: 0,
