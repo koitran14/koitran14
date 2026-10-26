@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>00 · Tổng quan nhanh · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* chapter map at the end */
+.map{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:1fr;gap:8px}
+.map a{display:grid;grid-template-columns:34px 1fr;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.45;color:var(--body);text-decoration:none}
+.map a:hover{border-color:var(--acc)}
+.map b{font:500 12px/1.7 var(--mono);color:var(--acc);font-weight:500}
+@media(max-width:700px){.map{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 00 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 00</div>
+  <h1>REA <i>trong mười phút</i></h1>
+  <p class="dek">REA là gì, dùng vào việc gì, và những điều nó không làm được. Đọc chương này trước nếu chỉ có ít thời gian.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 00 / 10</span><span>8 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>REA không phải decompiler thần kỳ. Nó là lớp điều phối nối AI agent với các công cụ phân tích phần mềm có sẵn, biến một câu hỏi bằng lời thường thành một cuộc điều tra có bằng chứng.</div>
+
+  <section id="s1">
+    <span class="num">00.1</span>
+    <h2>REA trong một đoạn</h2>
+    <p class="gist">Một CLI và một MCP server cho phép AI agent dùng các công cụ dịch ngược qua cùng một cổng.</p>
+    <p>Reverse engineering là phân tích một hệ thống có sẵn để suy ra cấu trúc, hành vi hoặc cách nó được viết. Với phần mềm, đầu vào có thể là tệp thực thi, gói ứng dụng, mã JavaScript đã đóng gói, ứng dụng Android hay một chương trình đang chạy. Mục tiêu thường không phải khôi phục nguyên trạng mã nguồn, mà là trả lời một câu hỏi cụ thể: tính năng này chạy thế nào, định dạng này ra sao, lỗi nằm ở đâu.</p>
+    <p>REA (Reverse Engineer Anything) là dự án mã nguồn mở cung cấp một CLI và một MCP server, phát hành trên npm với tên gói <code>rea-agents</code>. AI coding agent như Claude Code, Codex hay Cursor gọi REA, và REA gọi tiếp các engine chuyên dụng như Ghidra, Hopper, IDA Pro hay JADX. Phần mã do dự án viết dùng giấy phép MIT; công cụ bên thứ ba, nhất là phần mềm thương mại, vẫn theo giấy phép riêng.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Ba câu hỏi đầu tiên về REA</span></div>
+        <div class="pills" id="what"></div>
+        <div class="panel" id="whatP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Chọn một câu hỏi để xem câu trả lời ngắn.</figcaption>
+    </figure>
+    <div class="take"><small>Cần nhớ</small>AI giúp điều phối và diễn giải bằng chứng nhanh hơn, nhưng không bảo đảm kết luận luôn đúng, không tự tạo ra quyền pháp lý để phân tích phần mềm, và không biến máy đang chạy công cụ thành môi trường cách ly.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">00.2</span>
+    <h2>Khi nào nên dùng REA</h2>
+    <p class="gist">Khi cần hiểu hành vi của một phần mềm không có mã nguồn, và bạn có quyền phân tích nó.</p>
+    <p>REA phù hợp với bốn nhóm nhu cầu dưới đây. Điểm chung: có một câu hỏi rõ ràng về phần mềm, có quyền hợp pháp để phân tích nó, và cần bằng chứng chứ không chỉ một câu trả lời nghe có vẻ hợp lý.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="fit"></div>
+        <div class="rows" id="fitP"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Bốn trường hợp nên dùng REA và điều kiện của từng trường hợp.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Có cần REA thì agent mới dịch ngược được không?</span></summary><div>
+      <p>Không hẳn. Trong video thử nghiệm, Nick Saraev cho rằng một agent thông thường cũng có thể tự chụp màn hình, quan sát và viết lại khá nhiều tính năng. Thứ REA thêm vào là đường đi ngắn hơn tới các công cụ chuyên dụng và kết quả có bằng chứng kỹ thuật đi kèm. Chương 05 và 08 bàn kỹ hơn về điểm này.</p>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">00.3</span>
+    <h2>Bốn hiểu lầm thường gặp</h2>
+    <p class="gist">REA không khôi phục hoàn hảo mã nguồn, không phải sandbox, không phải giấy phép, và không bảo đảm AI luôn đúng.</p>
+    <p>Tên gọi “Reverse Engineer Anything” dễ khiến người đọc kỳ vọng quá mức. Chọn từng hiểu lầm để xem cách nhìn đúng.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="myth"></div>
+        <div class="panel" id="mythP"></div>
+      </div>
+      <figcaption><b>Hình 3</b>Hiểu lầm và thực tế.</figcaption>
+    </figure>
+    <p>Phần còn lại của handbook đi theo thứ tự sau. Người mới nên đọc 01 đến 04; người chuẩn bị dùng REA trong công việc nên đọc kỹ 06, 07 và 09.</p>
+    <nav class="map" id="map" aria-label="Các chương"></nav>
+    <a class="next-ch" href="/blog/rea-handbook/01"><span><small>Chương tiếp theo</small><b>01 · REA thực chất là gì?</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+const pills = (id, list, attr) => document.getElementById(id).innerHTML = list.map((x, i) => `<button data-${attr}="${i}" class="${i ? '' : 'on'}">${x[0]}</button>`).join('');
+// Hình 1
+const WHAT = [['REA là gì?', 'Một CLI và MCP server mã nguồn mở. AI agent gọi REA qua MCP, REA chọn engine phù hợp với loại tệp, chạy phân tích và trả kết quả có bằng chứng về cho agent.'],
+ ['REA không phải là gì?', 'REA không tự là một decompiler mới. Phần phân tích nặng do Ghidra, Hopper, IDA Pro, JADX và các bộ đọc tĩnh có sẵn đảm nhận; REA gom chúng lại sau một giao diện chung.'],
+ ['Ai dùng REA?', 'Software engineer, AI engineer và security researcher cần hiểu cách một phần mềm hoạt động khi không có mã nguồn, trong phạm vi họ được phép phân tích.']];
+const whatP = document.getElementById('whatP');
+pills('what', WHAT, 'w'); one('#what', 'w', i => whatP.innerHTML = `<h5>${WHAT[i][0]}</h5>${WHAT[i][1]}`); whatP.innerHTML = `<h5>${WHAT[0][0]}</h5>${WHAT[0][1]}`;
+// Hình 2
+const FIT = [['Điều tra hành vi', 'Cần biết một tính năng hoạt động ra sao khi không có mã nguồn.', 'Bạn có quyền hợp pháp để phân tích phần mềm đó.'],
+ ['Bảo mật và tương thích', 'Kiểm thử bảo mật, phân tích mã độc, nghiên cứu khả năng tương thích hoặc bảo tồn phần mềm cũ.', 'Mã độc phải được mở trong môi trường cô lập, không phải máy làm việc chính.'],
+ ['Điều phối nhiều công cụ', 'Muốn AI dùng nhiều công cụ phân tích mà không phải tự học giao diện và giao thức của từng công cụ.', 'Engine cần thiết đã được cài và có giấy phép hợp lệ.'],
+ ['Lưu bằng chứng', 'Cần ghi lại phần nào đã xác minh, phần nào chưa kết luận được.', 'Người có chuyên môn vẫn phải rà lại bằng chứng.']];
+const fit = document.getElementById('fit'), fitP = document.getElementById('fitP');
+fit.innerHTML = FIT.map((f, i) => `<button data-f="${i}" class="${i ? '' : 'on'}">${f[0]}</button>`).join('');
+const fitShow = i => fitP.innerHTML = `<div><b>Nhu cầu</b>${FIT[i][1]}</div><div class="fix"><b>Điều kiện</b>${FIT[i][2]}</div>`;
+one('#fit', 'f', fitShow); fitShow(0);
+// Hình 3
+const MYTH = [['Khôi phục mã nguồn gốc', 'Một công cụ tự động khôi phục hoàn hảo mã nguồn gốc, tên biến, kiến trúc và ý đồ thiết kế.', 'Trình biên dịch đã xóa tên biến cục bộ, comment và nhiều cấu trúc. Kết quả là pseudocode do công cụ suy diễn, dùng làm bằng chứng để lập luận, không phải bản sao mã gốc.'],
+ ['Một sandbox', 'Một môi trường có thể mở tệp đáng ngờ an toàn ngay trên máy làm việc chính.', 'REA chạy công cụ bằng quyền của tài khoản hiện tại. Hãy mở tệp lạ trong máy ảo dùng một lần hoặc môi trường cách ly riêng (chương 06).'],
+ ['Một giấy phép', 'Một tấm vé cho phép phá DRM, bỏ qua kiểm tra bản quyền hoặc sao chép sản phẩm thương mại.', 'Giấy phép MIT chỉ áp dụng cho mã của REA. Quyền phân tích phần mềm mục tiêu phụ thuộc vào luật, hợp đồng và điều khoản sử dụng (chương 07).'],
+ ['AI luôn đúng', 'Một hệ thống bảo đảm mọi kết quả của AI đều đúng vì đã có trích dẫn kỹ thuật.', 'Có bằng chứng không có nghĩa là diễn giải đúng. Bằng chứng có thể thiếu ngữ cảnh, bị cắt cụt hoặc phụ thuộc phiên bản; cần kiểm chứng độc lập (chương 05).']];
+const mythP = document.getElementById('mythP');
+pills('myth', MYTH, 'm');
+const mythShow = i => mythP.innerHTML = `<div class="rows"><div><b>Hiểu lầm</b>${MYTH[i][1]}</div><div class="fix"><b>Thực tế</b>${MYTH[i][2]}</div></div>`;
+one('#myth', 'm', mythShow); mythShow(0);
+// chapter map
+const MAP = [['01', 'REA thực chất là gì?'], ['02', 'Kiến trúc: AI agent, MCP và các engine'], ['03', 'Quy trình: từ bằng chứng đến tái tạo'], ['04', 'REA dùng được vào việc gì?'], ['05', 'Lợi ích và giới hạn'], ['06', 'Rủi ro an ninh'], ['07', 'Pháp lý: được phép đến đâu?'], ['08', 'REA và làn sóng AI agent'], ['09', 'Dùng REA có trách nhiệm'], ['10', 'Kết luận và thuật ngữ']];
+document.getElementById('map').innerHTML = MAP.map(m => `<a href="/blog/rea-handbook/${m[0]}"><b>${m[0]}</b><span>${m[1]}</span></a>`).join('');
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea00', minutes: 8,
+ next: {href: '/blog/rea-handbook/01', n: '01', t: 'REA thực chất là gì?'},
+ sections: [
+  {id: 's1', n: '00.1', t: 'REA trong một đoạn', sum: ['Reverse engineering trả lời câu hỏi về hành vi, không nhất thiết khôi phục mã gốc.', 'REA là CLI và MCP server (gói rea-agents) nối AI agent với các engine có sẵn.', 'MIT chỉ áp dụng cho mã của REA; engine bên thứ ba giữ giấy phép riêng.'], terms: ['re', 'rea', 'mcp', 'agent', 'mit', 'ida', 'jadx', 'cli']},
+  {id: 's2', n: '00.2', t: 'Khi nào nên dùng REA', sum: ['Điều tra hành vi khi không có mã nguồn nhưng có quyền phân tích.', 'Bảo mật, tương thích, bảo tồn phần mềm, điều phối nhiều công cụ.', 'Cần lưu bằng chứng và tách phần đã xác minh khỏi phần chưa rõ.'], terms: ['rea', 'interop', 'evidence']},
+  {id: 's3', n: '00.3', t: 'Bốn hiểu lầm', sum: ['Pseudocode không phải mã nguồn gốc.', 'REA không phải sandbox, cũng không phải giấy phép.', 'Có trích dẫn kỹ thuật chưa có nghĩa là kết luận đúng.'], terms: ['pseudo', 'sandbox', 'drm', 'evidence']}],
+ terms: {
+  cli: ['CLI', 'Command-line interface: giao diện dòng lệnh, nơi người dùng hoặc agent gõ lệnh dạng văn bản để chạy chương trình. REA có một CLI bên cạnh MCP server.', 'Điều khiển chương trình bằng cách gõ lệnh thay vì bấm nút.'],
+  jadx: ['JADX', 'Công cụ dịch ngược bytecode Android (DEX) sang mã Java dễ đọc; REA chạy nó ở chế độ headless.', 'Máy phiên dịch chuyển ứng dụng Android về dạng mã gần với Java để người đọc hiểu được.'],
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  re: ['reverse engineering', 'Quá trình phân tích một hệ thống có sẵn để suy ra cấu trúc, hành vi hoặc cách triển khai của nó, thường khi không có tài liệu thiết kế hay mã nguồn.', 'Giống như tháo một chiếc đồng hồ ra để hiểu các bánh răng ăn khớp với nhau thế nào, trong khi không có bản vẽ của nhà sản xuất.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  mcp: ['MCP', 'Model Context Protocol: giao thức mở chuẩn hóa cách ứng dụng AI khám phá và gọi công cụ, nguồn dữ liệu bên ngoài.', 'Ổ cắm điện tiêu chuẩn: thiết bị nào có phích đúng chuẩn thì cắm vào là dùng được, không cần đi dây riêng.'],
+  agent: ['AI coding agent', 'Ứng dụng dựa trên mô hình ngôn ngữ có khả năng lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại để hoàn thành một nhiệm vụ lập trình (Claude Code, Codex, Cursor, Gemini CLI…).', 'Một trợ lý biết tự cầm dụng cụ: được giao việc là tự mở tệp, chạy lệnh, xem kết quả rồi làm tiếp.'],
+  mit: ['giấy phép MIT', 'Giấy phép mã nguồn mở dễ dãi, cho phép dùng, sửa và phân phối lại mã với điều kiện giữ thông báo bản quyền; chỉ áp dụng cho phần mã mà tác giả phát hành theo giấy phép đó.', 'Tấm biển “cứ tự nhiên dùng” dán trên đồ của REA, không dán lên đồ của người khác mà REA mượn.'],
+  interop: ['interoperability', 'Khả năng các chương trình độc lập trao đổi dữ liệu hoặc hoạt động cùng nhau, ví dụ đọc đúng một định dạng tệp hay nói đúng một giao thức.', 'Hai thiết bị của hai hãng khác nhau vẫn nói chuyện được với nhau vì hiểu cùng một “ngôn ngữ”.'],
+  evidence: ['bằng chứng kỹ thuật', 'Dữ liệu cụ thể lấy từ mục tiêu, làm căn cứ cho một kết luận: địa chỉ bộ nhớ, chuỗi ký tự, pseudocode, assembly, tham chiếu chéo, log hoặc phép đo.', 'Biên lai đính kèm mỗi khoản chi: có biên lai thì người khác kiểm tra lại được, không chỉ nghe kể.'],
+  pseudo: ['pseudocode', 'Mã giả do decompiler suy diễn từ mã máy hoặc bytecode, gần với ngôn ngữ bậc cao để con người dễ đọc, nhưng không phải mã nguồn gốc.', 'Bản dịch lại một cuốn sách đã mất bản gốc: đọc hiểu được nội dung, nhưng câu chữ và tên nhân vật không còn như tác giả viết.'],
+  sandbox: ['sandbox', 'Môi trường thực thi cách ly, giới hạn quyền truy cập của chương trình vào hệ thống thật để hành vi nguy hiểm không lan ra ngoài.', 'Phòng thí nghiệm có kính chắn: lỡ có nổ thì cũng chỉ nổ trong phòng.'],
+  drm: ['DRM', 'Digital Rights Management: các biện pháp kỹ thuật kiểm soát việc sao chép và sử dụng nội dung hoặc phần mềm số.', 'Ổ khóa gắn trên sản phẩm số; phá khóa thường là hành vi bị pháp luật hạn chế, dù bạn đã mua sản phẩm.']},
+ alias: {cli: ['CLI'], jadx: ['JADX'], ida: ['IDA Pro', 'IDA'], re: ['reverse engineering', 'Reverse engineering'], rea: ['REA'], mcp: ['MCP server', 'MCP'], agent: ['AI coding agent', 'AI agent', 'agent'], mit: ['giấy phép MIT', 'MIT'],
+  interop: ['khả năng tương thích', 'tương thích'], evidence: ['bằng chứng kỹ thuật', 'bằng chứng'], pseudo: ['pseudocode'], sandbox: ['sandbox'], drm: ['DRM']},
+ rel: {re: ['pseudo', 'rea'], rea: ['mcp', 'agent'], mcp: ['agent', 'rea'], agent: ['mcp'], mit: ['drm'], interop: ['re'], evidence: ['pseudo'], pseudo: ['re', 'evidence'], sandbox: ['rea'], drm: ['mit']},
+ // my* questions cover this chapter; the Gemini Notebook questions sit in the chapters they belong to
+ quiz: [
+  {id: 'my1', s: 0, type: 'one', q: 'Mục tiêu thường gặp nhất của reverse engineering phần mềm là gì?', o: ['Khôi phục nguyên trạng toàn bộ mã nguồn gốc', 'Trả lời một câu hỏi cụ thể về hành vi, tương thích, lỗi hoặc lỗ hổng', 'Gỡ giấy phép của phần mềm để dùng miễn phí', 'Chuyển phần mềm sang ngôn ngữ lập trình khác'], a: 1,
+   ex: 'Reverse engineering thường nhắm vào một câu hỏi cụ thể. Khôi phục nguyên trạng mã nguồn gần như không thể, vì trình biên dịch đã làm mất thông tin.', why: {0: 'Tên biến, comment và nhiều cấu trúc đã mất khi biên dịch.', 2: 'Đây là hành vi vi phạm, không phải mục tiêu của kỹ thuật.', 3: 'Chuyển ngôn ngữ là việc khác; REA chỉ có thể hỗ trợ tái tạo hành vi.'}},
+  {id: 'my2', s: 0, type: 'one', q: 'Giấy phép MIT của REA áp dụng cho phần nào?', o: ['Toàn bộ engine mà REA gọi, kể cả IDA Pro và Hopper', 'Phần mã do dự án REA phát triển', 'Mọi phần mềm được phân tích bằng REA', 'Kết quả phân tích do AI tạo ra'], a: 1,
+   ex: 'MIT chỉ áp dụng cho mã của REA. Công cụ bên thứ ba, nhất là phần mềm thương mại, giữ giấy phép và điều khoản riêng.', why: {0: 'IDA Pro, Hopper, JEB cần giấy phép riêng.', 2: 'Phần mềm mục tiêu thuộc về chủ sở hữu của nó.', 3: 'Giấy phép của REA không nói gì về quyền sở hữu kết quả phân tích.'}},
+  {id: 'my3', s: 0, type: 'multi', q: 'Câu “Cần nhớ” của chương nhắc rằng AI qua REA KHÔNG làm được những điều nào?', o: ['Bảo đảm kết luận luôn đúng', 'Tự tạo quyền pháp lý để phân tích phần mềm', 'Biến máy đang chạy công cụ thành môi trường cách ly', 'Điều phối và diễn giải bằng chứng nhanh hơn'], a: [0, 1, 2],
+   ex: 'REA giúp điều phối nhanh hơn, nhưng không bảo đảm tính đúng, không cấp quyền pháp lý và không phải sandbox.', why: {3: 'Đây chính là việc REA làm được.'}},
+  {id: 'my4', s: 1, type: 'multi', q: 'Tình huống nào phù hợp để dùng REA?', o: ['Điều tra hành vi một ứng dụng nội bộ không còn mã nguồn mà công ty sở hữu', 'Phân tích mẫu mã độc trong máy ảo dùng một lần', 'Tìm cách bỏ qua bước kiểm tra bản quyền của một phần mềm thương mại', 'Cần báo cáo ghi rõ phần đã xác minh và phần chưa kết luận'], a: [0, 1, 3],
+   ex: 'Ba tình huống đều có câu hỏi rõ, có quyền phân tích và cần bằng chứng.', why: {2: 'Bỏ qua kiểm tra bản quyền nằm ngoài phạm vi sử dụng hợp pháp mà REA hỗ trợ.'}},
+  {id: 'my5', s: 1, type: 'one', q: 'Khi dùng REA để phân tích mã độc, điều kiện quan trọng nhất là gì?', o: ['Chạy bằng tài khoản quản trị để công cụ đủ quyền', 'Mở trong môi trường cô lập như máy ảo dùng một lần', 'Tắt phần mềm diệt virus để không bị chặn', 'Dùng bản IDA Pro mới nhất'], a: 1,
+   ex: 'REA không phải sandbox; mã độc phải được mở trong môi trường cách ly.', why: {0: 'Ngược lại, nên dùng quyền tối thiểu.', 2: 'Tắt lớp bảo vệ trên máy chính làm rủi ro tăng lên.', 3: 'Phiên bản engine không giải quyết được vấn đề cách ly.'}},
+  {id: 'my6', s: 2, type: 'one', q: 'Vì sao pseudocode do decompiler tạo ra không phải mã nguồn gốc?', o: ['Vì REA cố tình làm rối kết quả', 'Vì quá trình biên dịch đã xóa hoặc biến đổi tên biến, comment và nhiều cấu trúc', 'Vì pseudocode luôn viết bằng ngôn ngữ khác', 'Vì decompiler chỉ đọc được chuỗi ký tự'], a: 1,
+   ex: 'Pseudocode là kết quả suy diễn từ mã máy; nhiều thông tin gốc không còn tồn tại trong binary.', why: {0: 'REA không làm rối kết quả.', 2: 'Ngôn ngữ không phải lý do chính.', 3: 'Decompiler đọc được mã máy, hàm, luồng điều khiển.'}},
+  {id: 'my7', s: 2, type: 'multi', q: 'Những phát biểu nào là hiểu lầm về REA?', o: ['REA là sandbox an toàn để mở tệp đáng ngờ', 'Có trích dẫn kỹ thuật thì kết luận của AI chắc chắn đúng', 'REA điều phối các engine có sẵn như Ghidra, Hopper, IDA', 'Giấy phép MIT của REA cho phép phá DRM'], a: [0, 1, 3],
+   ex: 'Ba phát biểu A, B, D đều sai. C mô tả đúng vai trò của REA.', why: {2: 'Đây là mô tả đúng, không phải hiểu lầm.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09 · Dùng REA có trách nhiệm · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 09 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 09</div>
+  <h1>Dùng REA <i>có trách nhiệm</i></h1>
+  <p class="dek">Từ câu hỏi ban đầu đến lúc dọn môi trường: quy trình tám bước, cách cài REA, các lệnh hay dùng, checklist trước khi bắt đầu và tiêu chí để coi một báo cáo là xong.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 09 / 10</span><span>14 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Cài REA chỉ mất một lệnh. Phần tốn công hơn là những việc xung quanh: xác minh quyền, cô lập môi trường, kiểm tra giấy phép và chính sách dữ liệu, rồi kiểm chứng kết quả trước khi tin.</div>
+
+  <section id="s1">
+    <span class="num">09.1</span>
+    <h2>Quy trình tám bước</h2>
+    <p class="gist">Bắt đầu bằng một câu hỏi hẹp và kết thúc bằng việc dọn sạch môi trường.</p>
+    <p>Tài liệu chủ đề đề xuất tám bước. Bốn bước đầu diễn ra trước khi agent mở tệp đầu tiên; bốn bước sau là phân tích, kiểm chứng, tái tạo và đóng phiên. Chọn từng bước để xem cần làm gì và thường bị bỏ qua ở đâu.</p>
+    <figure>
+      <div class="fig">
+        <div id="st"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Tám bước triển khai REA có trách nhiệm.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Tránh yêu cầu agent “sao chép toàn bộ ứng dụng”. Một câu hỏi hẹp cho bằng chứng gọn, dễ kiểm chứng và ít rủi ro pháp lý hơn.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">09.2</span>
+    <h2>Chuẩn bị môi trường và cài đặt</h2>
+    <p class="gist">Node.js đúng phiên bản, npm, và một lệnh <code>npx rea-agents setup</code>.</p>
+    <p>Báo cáo nguồn liệt kê các hệ điều hành được hỗ trợ: macOS 12 trở lên, Ubuntu 24.04+, Fedora 41+, Arch Linux 64-bit và Windows. Về Node.js, README hiện tại (kiểm tra ngày 26/10/2026, rea-agents 6.8.0) yêu cầu Node.js 22.x từ 22.23.4, 24.x từ 24.22.1, hoặc 26.12.1 trở lên. Báo cáo nguồn ghi mốc cũ hơn (22.19+, 24.11+, 26+), nên hãy theo README của phiên bản đang dùng. Trên Linux, REA cần một lệnh <code>ps</code> tương thích procps trong <code>PATH</code> để kiểm tra quyền sở hữu tiến trình.</p>
+    <p>Lệnh cài đặt chính là <code>npx rea-agents setup</code>. Chọn từng giai đoạn để xem lệnh này làm gì trên máy.</p>
+    <figure>
+      <div class="fig">
+        <div id="su"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Những gì <code>npx rea-agents setup</code> làm, theo README và báo cáo nguồn.</figcaption>
+    </figure>
+    <p>Sau khi cài, chạy <code>npx -y rea-agents doctor</code> (hoặc <code>rea doctor</code> nếu đã cài toàn cục) để kiểm tra môi trường. Nếu muốn dùng lệnh <code>rea</code> thường xuyên, cài gói toàn cục bằng <code>npm install --global rea-agents</code>; gói này cung cấp hai lệnh là <code>rea</code> và <code>rea-agents</code>.</p>
+    <p>Trong video của Nick Saraev, cách cài còn đơn giản hơn: anh chỉ bảo agent tự tải REA về và báo lại khi xong, rồi mở một phiên Claude mới để agent nhận MCP server. Cách này tiện, nhưng vẫn nên đọc kế hoạch thay đổi mà setup đưa ra trước khi đồng ý.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Cập nhật REA</span></summary><div>
+      <p>README nhắc REA thay đổi nhanh và các bản mới sửa lỗi thường xuyên. Với bản cài toàn cục, chạy <code>rea update</code>. Nếu dùng <code>npx</code>, chạy lại <code>npx rea-agents@latest setup</code> để làm mới đăng ký MCP và skill, rồi khởi động lại agent.</p>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">09.3</span>
+    <h2>Các lệnh thường dùng</h2>
+    <p class="gist">Một nhóm lệnh để cài, một nhóm để kiểm tra, một nhóm để phân tích.</p>
+    <p>Các lệnh dưới đây lấy từ tài liệu chủ đề và README. Chọn từng dòng để xem lệnh làm gì. Trước khi chạy, hãy đối chiếu README của phiên bản hiện tại vì tên lệnh và tham số có thể đổi.</p>
+    <figure>
+      <div class="fig">
+        <div class="cols"><div class="code"><div class="h"><span>terminal</span><span>chọn một dòng</span></div><pre id="cm"></pre></div><div class="panel" id="cmP"></div></div>
+      </div>
+      <figcaption><b>Hình 3</b>Lệnh cài đặt, chẩn đoán và phân tích.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Phân tích tĩnh JavaScript/Electron không cần engine native, nên <code>analyze-javascript-application</code> là lệnh an toàn để thử REA lần đầu, trên một ứng dụng bạn có quyền phân tích.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">09.4</span>
+    <h2>Checklist trước khi dùng thật</h2>
+    <p class="gist">Sáu hạng mục cần đạt trước khi giao việc thật cho agent.</p>
+    <p>Báo cáo nguồn gom việc triển khai thành sáu hạng mục. Đánh dấu những mục đã đạt; mỗi mục ghi kèm cách khắc phục khi chưa đạt.</p>
+    <figure>
+      <div class="fig">
+        <ul class="chk" id="ck"></ul>
+        <div class="meter"><b id="ckM"></b></div>
+        <p class="note" id="ckT" style="margin-bottom:0"></p>
+      </div>
+      <figcaption><b>Hình 4</b>Checklist triển khai, theo báo cáo nguồn, với yêu cầu Node.js cập nhật theo README.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s5">
+    <span class="num">09.5</span>
+    <h2>Definition of Done cho một báo cáo</h2>
+    <p class="gist">Một báo cáo reverse engineering chỉ xong khi người khác kiểm tra lại được.</p>
+    <p>Tài liệu chủ đề đặt sáu điều kiện để coi một báo cáo là hoàn thành:</p>
+    <ul>
+      <li>Mô tả rõ mục tiêu, phạm vi, phiên bản và môi trường.</li>
+      <li>Các kết luận quan trọng đều có bằng chứng truy xuất được: tệp, địa chỉ, hàm, chuỗi hoặc log.</li>
+      <li>Tách riêng giả thuyết, dữ kiện và phần chưa xác minh.</li>
+      <li>Có test hoặc một phương pháp độc lập để xác nhận hành vi đã tái tạo.</li>
+      <li>Ghi lại rủi ro bảo mật, quyền dữ liệu và căn cứ ủy quyền.</li>
+      <li>Đã xem xét điều khoản công cụ, giấy phép và khả năng phát hành kết quả.</li>
+    </ul>
+    <div class="take"><small>Ghi nhớ</small>Nếu báo cáo không nói được phần nào chưa biết, đó là dấu hiệu nó đang che khoảng trống chứ không phải đã hiểu hết.</div>
+    <a class="next-ch" href="/blog/rea-handbook/10"><span><small>Chương tiếp theo</small><b>10 · Kết luận và thuật ngữ</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Danh sách hệ điều hành, cơ chế sao lưu .rea.backup và checklist sáu hạng mục lấy từ báo cáo nguồn; yêu cầu Node.js và các lệnh cài đặt được đối chiếu với README của rea-agents 6.8.0 ngày 26/10/2026.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+const flow = (id, steps, groups, unit) => DG.steps(document.getElementById(id), {unit, steps: steps.map((s, i) => ({t: s[0], group: groups[i] || '', body: s[1]}))});
+// Hình 1
+flow('st', [['Xác định câu hỏi', 'Viết rõ điều cần biết, tiêu chí thành công và phạm vi không được vượt qua. Ví dụ: “nút % xử lý thế nào khi đứng sau phép cộng”, thay vì “dịch ngược cả ứng dụng”.'],
+ ['Xác minh quyền', 'Xác nhận bạn sở hữu phần mềm hoặc được ủy quyền, đọc điều khoản sử dụng và các yêu cầu pháp lý. Chương 07 có bộ sáu câu hỏi cho bước này.'],
+ ['Chuẩn bị môi trường', 'Kiểm tra phiên bản Node.js và các phụ thuộc theo tài liệu hiện hành. Với tệp không tin cậy, dùng máy ảo hoặc máy phân tích riêng, vì REA không phải sandbox.'],
+ ['Cấu hình công cụ', 'Cài REA từ kênh chính thức (npm, GitHub). Kiểm tra engine đã có, giấy phép thương mại của Hopper hay IDA, và cấu hình MCP trong agent.'],
+ ['Phân tích theo giả thuyết', 'Bắt đầu với câu hỏi hẹp, chỉ lấy lượng bằng chứng tối thiểu cần thiết. Tránh bảo agent “sao chép toàn bộ ứng dụng”.'],
+ ['Kiểm chứng', 'Đối chiếu kết quả bằng test, quan sát runtime hoặc một công cụ độc lập. Ghi rõ giới hạn và danh sách unknowns.'],
+ ['Tái tạo có kiểm soát', 'Viết bản triển khai độc lập, dùng test tương thích, rồi rà soát bảo mật và sở hữu trí tuệ trước khi phát hành.'],
+ ['Lưu trữ và kết thúc', 'Giữ báo cáo cần thiết, xóa dữ liệu nhạy cảm không cần giữ, khôi phục môi trường và thu hồi các quyền tạm thời.']], {0: 'Trước khi mở tệp', 4: 'Phân tích và tái tạo', 7: 'Đóng phiên'}, 'Bước');
+// Hình 2
+flow('su', [['Phát hiện agent', 'Quét máy để tìm các agent đã cài. README liệt kê Claude Code, Codex, Cursor, Gemini CLI, Grok Build và một số agent khác.'],
+ ['Hiện kế hoạch', 'Trình bày danh sách thay đổi sẽ ghi vào cấu hình để người dùng xem trước. Có thể chạy thử với <code>--dry-run</code> theo tài liệu chủ đề.'],
+ ['Sao lưu', 'Lưu bản sao cấu hình hiện có trước khi ghi. Báo cáo nguồn nói bản sao nằm trong thư mục <code>.rea.backup</code>.'],
+ ['Xin duyệt', 'Chỉ ghi thay đổi sau khi người dùng đồng ý.'],
+ ['Đăng ký MCP và skill', 'Thêm MCP server của REA vào cấu hình agent và cài file hướng dẫn quy trình (skill) tương ứng, ví dụ trong <code>~/.claude/skills</code> hoặc <code>~/.agents/skills</code>.'],
+ ['Khởi động lại agent', 'Agent chỉ nhận MCP server mới sau khi khởi động lại. Sau đó chạy <code>doctor</code> để kiểm tra.']], {}, 'Giai đoạn');
+// Hình 3: each command line carries its explanation
+const CM = [['# cài đặt', ''], ['npx rea-agents setup', 'Đăng ký MCP server của REA với các agent đã chọn, cài skill tương ứng, có sao lưu và xin duyệt trước khi ghi.'],
+ ['npx rea-agents setup --dry-run', 'Xem trước các thay đổi mà setup sẽ làm, không ghi gì. Lệnh có trong tài liệu chủ đề; kiểm tra lại với README phiên bản đang dùng.'],
+ ['npm install --global rea-agents', 'Cài gói toàn cục để dùng lệnh rea thường xuyên. Gói cung cấp hai lệnh: rea và rea-agents.'],
+ ['rea update', 'Cập nhật bản cài toàn cục. Sau đó chạy lệnh setup mà bản cập nhật in ra để làm mới đăng ký MCP.'],
+ ['', ''], ['# chẩn đoán', ''], ['rea --help', 'Liệt kê các lệnh con của CLI.'],
+ ['rea doctor', 'Kiểm tra môi trường: Node.js, engine, đường dẫn, quyền. Với npx: npx -y rea-agents doctor.'],
+ ['rea doctor --json', 'Cùng kết quả chẩn đoán nhưng ở dạng JSON, tiện cho script hoặc để agent đọc.'],
+ ['', ''], ['# phân tích', ''], ['npx -y rea-agents@latest analyze-javascript-application /path/to/app --json', 'Phân tích tĩnh một ứng dụng JavaScript/Electron đã giải nén hoặc file ASAR. Trả về module, import, ranh giới Electron và bằng chứng. Không cần engine native.'],
+ ['rea analyze /path/to/application', 'Lệnh phân tích tổng quát được nêu trong tài liệu chủ đề. README hiện tại hướng dẫn chọn provider trước khi phân tích native, nên hãy xem phần CLI trong README.']];
+function cmd(k) {cm.innerHTML = CM.map(([t, d], i) => `<span class="ln${i === k ? ' on' : ''}" data-l="${d ? i : ''}">${t.startsWith('#') ? `<span style="color:var(--muted)">${t}</span>` : t || ' '}</span>`).join('');
+ cmP.innerHTML = CM[k]?.[1] ? `<h5>${CM[k][0].split(' ').slice(0, 3).join(' ')}</h5>${CM[k][1]}` : '<h5>Chọn một lệnh</h5>Mỗi dòng là một lệnh. Chọn một dòng để xem lệnh làm gì.'}
+cm.onclick = e => {const l = e.target.closest('.ln'); if (l && l.dataset.l) cmd(+l.dataset.l)};
+cmd(1);
+// Hình 4
+const CK = [['Môi trường Node.js', 'Node.js 22.x ≥ 22.23.4, 24.x ≥ 24.22.1 hoặc ≥ 26.12.1, theo README hiện tại.', 'Cài hoặc chuyển sang phiên bản phù hợp. Không dùng các nhánh lẻ như 23.x, 25.x.'],
+ ['Đăng ký MCP server', 'Cấu hình MCP của REA xuất hiện trong agent.', 'Chạy lại npx rea-agents setup hoặc kiểm tra quyền ghi tệp cấu hình.'],
+ ['Kiểm tra chẩn đoán', 'npx -y rea-agents doctor báo trạng thái tốt.', 'Kiểm tra đường dẫn engine (ví dụ HOPPER_LAUNCHER_PATH) hoặc cài gói procps trên Linux.'],
+ ['Cách ly an ninh', 'Chỉ mở tệp lạ hoặc nghi có mã độc trong máy ảo hoặc tài khoản dùng một lần.', 'Không mở binary không rõ nguồn gốc trên máy làm việc chính.'],
+ ['Giấy phép', 'Có giấy phép hợp lệ cho Hopper hoặc IDA Pro nếu cần dịch ngược native sâu.', 'Dùng chế độ demo của Hopper, hoặc chuyển sang phân tích tĩnh JavaScript/.NET vốn không cần engine thương mại.'],
+ ['Bảo mật dữ liệu', 'Đã đọc chính sách dữ liệu của nhà cung cấp mô hình trước khi gửi pseudocode, chuỗi ký tự.', 'Dùng mô hình chạy cục bộ hoặc nhà cung cấp cam kết không lưu, không huấn luyện trên dữ liệu doanh nghiệp.']];
+ck.innerHTML = CK.map((c, i) => `<li><label><input type="checkbox" data-c="${i}"><span><b>${c[0]}</b>${c[1]}<br><span style="color:var(--muted);font-size:14px">Nếu chưa đạt: ${c[2]}</span></span></label></li>`).join('');
+const ckUI = () => {const n = ck.querySelectorAll('input:checked').length; ckM.style.width = n / CK.length * 100 + '%'; ckT.textContent = n === CK.length ? 'Đủ sáu hạng mục. Có thể bắt đầu phân tích.' : `Đã đạt ${n}/${CK.length} hạng mục.`};
+ck.onchange = ckUI; ckUI();
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea09', minutes: 14,
+ next: {href: '/blog/rea-handbook/10', n: '10', t: 'Kết luận và thuật ngữ'},
+ sections: [
+  {id: 's1', n: '09.1', t: 'Quy trình tám bước', sum: ['Bốn bước chuẩn bị trước khi mở tệp đầu tiên.', 'Phân tích theo giả thuyết hẹp, rồi kiểm chứng.', 'Kết thúc bằng dọn dữ liệu và thu hồi quyền.'], terms: ['hypo', 'unknowns', 'sandbox', 'rea']},
+  {id: 's2', n: '09.2', t: 'Môi trường và cài đặt', sum: ['Node.js theo README: 22.23.4+, 24.22.1+ hoặc 26.12.1+.', 'npx rea-agents setup: phát hiện agent, sao lưu, xin duyệt, đăng ký MCP và skill.', 'Khởi động lại agent rồi chạy doctor.'], terms: ['npx', 'mcp', 'skill', 'procps', 'ida', 'cli']},
+  {id: 's3', n: '09.3', t: 'Các lệnh thường dùng', sum: ['Cài: setup, --dry-run, install --global, update.', 'Chẩn đoán: rea --help, rea doctor, --json.', 'Phân tích: analyze-javascript-application không cần engine native.'], terms: ['npx', 'asar']},
+  {id: 's4', n: '09.4', t: 'Checklist trước khi dùng thật', sum: ['Sáu hạng mục: Node.js, MCP, doctor, cách ly, giấy phép, dữ liệu.', 'Mỗi hạng mục có cách khắc phục khi chưa đạt.'], terms: ['sandbox', 'mcp']},
+  {id: 's5', n: '09.5', t: 'Definition of Done', sum: ['Báo cáo xong khi người khác kiểm tra lại được.', 'Tách dữ kiện, giả thuyết, phần chưa xác minh.', 'Ghi rủi ro, quyền dữ liệu, giấy phép.'], terms: ['dod', 'unknowns', 'hypo']}],
+ terms: {
+  cli: ['CLI', 'Command-line interface: giao diện dòng lệnh, nơi người dùng hoặc agent gõ lệnh dạng văn bản để chạy chương trình. REA có một CLI bên cạnh MCP server.', 'Điều khiển chương trình bằng cách gõ lệnh thay vì bấm nút.'],
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  hypo: ['giả thuyết', 'Phát biểu tạm thời về hành vi của phần mềm, cần xác nhận hoặc bác bỏ bằng bằng chứng như mã, log hay test.', 'Một phỏng đoán có thể kiểm tra, chưa phải kết luận.'],
+  unknowns: ['unknowns', 'Danh sách những điểm phân tích chưa giải đáp được, kèm lý do và bước kiểm tra tiếp theo, do REA và agent ghi lại thay vì đoán.', 'Sổ ghi “chỗ này chưa rõ”, để không ai lầm tưởng là đã hiểu hết.'],
+  sandbox: ['sandbox', 'Môi trường cách ly giới hạn quyền truy cập của chương trình vào hệ thống, mạng và dữ liệu. REA không phải sandbox.', 'Phòng kín để thử thứ đáng ngờ; REA thì làm việc ngay trong nhà bạn.'],
+  npx: ['npx', 'Công cụ đi kèm npm dùng để tải và chạy một gói Node.js mà không cần cài toàn cục; ví dụ npx rea-agents setup.', 'Mượn dùng một lần thay vì mua về cất trong nhà.'],
+  mcp: ['MCP server', 'Tiến trình cung cấp công cụ theo Model Context Protocol để agent khám phá và gọi; setup của REA đăng ký server này vào cấu hình agent.', 'Quầy dịch vụ mà agent biết cách gọi món.'],
+  skill: ['skill', 'Tệp hướng dẫn quy trình được cài cho agent (ví dụ trong ~/.claude/skills) để agent biết cách dùng công cụ của REA theo đúng trình tự.', 'Sổ tay thao tác đặt cạnh công cụ, để agent biết nên làm bước nào trước.'],
+  procps: ['procps', 'Bộ tiện ích Linux cung cấp các lệnh xem tiến trình như ps; REA cần ps tương thích procps để kiểm tra quyền sở hữu tiến trình.', 'Công cụ để REA xem tiến trình nào thuộc về ai trên Linux.'],
+  asar: ['ASAR', 'Định dạng lưu trữ Electron dùng để đóng gói mã và tài nguyên của ứng dụng vào một tệp .asar.', 'Một kiểu “file nén” chứa toàn bộ mã JavaScript của ứng dụng Electron.'],
+  dod: ['Definition of Done', 'Tập tiêu chí rõ ràng mà một sản phẩm công việc phải đạt mới tính là hoàn thành.', 'Danh sách “đủ chưa” để không ai tự cho là xong khi còn thiếu.']},
+ alias: {cli: ['CLI'], ida: ['IDA Pro', 'IDA'], rea: ['REA'], hypo: ['giả thuyết'], unknowns: ['unknowns'], sandbox: ['sandbox'], npx: ['npx'], mcp: ['MCP server', 'MCP'], skill: ['skill'], procps: ['procps'], asar: ['ASAR'], dod: ['Definition of Done']},
+ rel: {hypo: ['unknowns'], unknowns: ['hypo', 'dod'], sandbox: ['procps'], npx: ['mcp'], mcp: ['skill', 'npx'], skill: ['mcp'], procps: ['sandbox'], asar: ['npx'], dod: ['unknowns']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'my1', s: 0, type: 'one', q: 'Theo quy trình tám bước, việc gì phải làm trước khi cấu hình công cụ?', o: ['Viết bản tái tạo đầu tiên', 'Xác minh quyền và chuẩn bị môi trường', 'Gửi binary cho nhà cung cấp mô hình', 'Phát hành báo cáo'], a: 1,
+   ex: 'Bốn bước đầu là xác định câu hỏi, xác minh quyền, chuẩn bị môi trường rồi mới cấu hình công cụ.'},
+  {id: 'my2', s: 0, type: 'one', q: 'Yêu cầu nào phù hợp nhất với bước “phân tích theo giả thuyết”?', o: ['“Sao chép toàn bộ ứng dụng này.”', '“Giải thích nút % khi đứng sau phép cộng, kèm bằng chứng.”', '“Xóa mọi giới hạn bản quyền.”', '“Cho tôi mã nguồn gốc kèm comment.”'], a: 1,
+   ex: 'Câu hỏi hẹp cho bằng chứng gọn và dễ kiểm chứng.', why: {0: 'Đây đúng là kiểu yêu cầu tài liệu khuyên tránh.', 2: 'Phá giới hạn bản quyền là hành vi không được hỗ trợ.', 3: 'Comment và mã nguồn gốc đã mất khi biên dịch.'}},
+  {id: 'nb9', s: 1, type: 'multi', q: 'Lệnh nào khởi chạy quá trình thiết lập và đăng ký MCP server của REA với các AI agent?', o: ['npm run decompile-all', 'rea setup', 'git clone --force-install', 'npx rea-agents setup'], a: [1, 3],
+   ex: 'npx rea-agents setup chạy setup không cần cài trước; rea setup dùng lệnh rea có sẵn sau khi cài npm install --global rea-agents (gói cung cấp hai lệnh rea và rea-agents).',
+   why: {0: 'Không có script decompile-all nào như vậy.', 2: 'git clone không có tham số --force-install và không đăng ký MCP.'}},
+  {id: 'my3', s: 1, type: 'one', q: 'Theo README hiện tại, phiên bản Node.js nào đáp ứng yêu cầu của REA?', o: ['Node.js 22.19', 'Node.js 23.5', 'Node.js 24.22.1', 'Node.js 25.0'], a: 2,
+   ex: 'README yêu cầu 22.x ≥ 22.23.4, 24.x ≥ 24.22.1 hoặc ≥ 26.12.1.', why: {0: 'Đây là mốc cũ trong báo cáo nguồn, thấp hơn 22.23.4.', 1: 'Nhánh 23.x không được hỗ trợ.', 3: 'Nhánh 25.x không được hỗ trợ.'}},
+  {id: 'my4', s: 1, type: 'multi', q: 'npx rea-agents setup làm những việc nào?', o: ['Phát hiện các agent đã cài', 'Sao lưu cấu hình trước khi ghi', 'Tự cài IDA Pro bản quyền', 'Đăng ký MCP server và cài skill'], a: [0, 1, 3],
+   ex: 'Setup phát hiện agent, hiện kế hoạch, sao lưu, xin duyệt rồi đăng ký MCP và skill.', why: {2: 'REA không đi kèm giấy phép IDA Pro; chỉ có thể cài Hopper khi người dùng đồng ý.'}},
+  {id: 'my5', s: 2, type: 'one', q: 'Muốn xem trước setup sẽ thay đổi gì mà chưa ghi gì, dùng lệnh nào?', o: ['rea doctor', 'npx rea-agents setup --dry-run', 'rea update', 'npm install --global rea-agents'], a: 1,
+   ex: '--dry-run chỉ cho xem kế hoạch, không ghi thay đổi.'},
+  {id: 'my6', s: 2, type: 'one', q: 'Lệnh nào phân tích được một ứng dụng Electron mà không cần Ghidra, Hopper hay IDA?', o: ['rea doctor --json', 'analyze-javascript-application', 'rea update', 'rea --help'], a: 1,
+   ex: 'Phân tích tĩnh JavaScript/Electron không cần engine native.'},
+  {id: 'my7', s: 3, type: 'one', q: 'Lệnh doctor báo lỗi không tìm thấy engine Hopper. Cách khắc phục nào phù hợp với checklist?', o: ['Tắt MCP server', 'Kiểm tra đường dẫn engine như HOPPER_LAUNCHER_PATH', 'Hạ Node.js xuống 23.x', 'Mở binary trên máy chính để thử'], a: 1,
+   ex: 'Checklist gợi ý kiểm tra đường dẫn engine hoặc cài procps trên Linux.'},
+  {id: 'my8', s: 3, type: 'multi', q: 'Những hạng mục nào nằm trong checklist hoàn thành triển khai?', o: ['Cách ly an ninh khi mở tệp lạ', 'Giấy phép hợp lệ cho Hopper/IDA khi cần', 'Đạt 1.000 GitHub stars', 'Kiểm tra chính sách dữ liệu của nhà cung cấp mô hình'], a: [0, 1, 3],
+   ex: 'Sáu hạng mục: Node.js, MCP, doctor, cách ly, giấy phép, dữ liệu.', why: {2: 'Số sao không liên quan đến việc triển khai an toàn.'}},
+  {id: 'my9', s: 4, type: 'multi', q: 'Một báo cáo reverse engineering chỉ tính là xong khi nào?', o: ['Kết luận quan trọng có bằng chứng truy xuất được', 'Giả thuyết và dữ kiện được tách riêng', 'Agent tự tin với mọi kết luận', 'Có test hoặc phương pháp độc lập xác nhận hành vi tái tạo'], a: [0, 1, 3],
+   ex: 'Definition of Done dựa trên khả năng kiểm tra lại, không dựa trên mức tự tin.', why: {2: 'Sự tự tin của agent không phải bằng chứng.'}},
+  {id: 'my10', s: 4, type: 'one', q: 'Báo cáo không liệt kê điểm nào chưa biết. Nên hiểu thế nào?', o: ['Phân tích đã bao phủ toàn bộ ứng dụng', 'Có thể báo cáo đang che khoảng trống', 'Không cần test nữa', 'Agent đã khôi phục mã nguồn gốc'], a: 1,
+   ex: 'Hầu như mọi phân tích đều có phần chưa rõ; thiếu danh sách unknowns là dấu hiệu cần xem lại.'}]};
+</script>
+<script src="diagram.js"></script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

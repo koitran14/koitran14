@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Lợi ích và giới hạn · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 05 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 05</div>
+  <h1>Lợi ích, giới hạn <i>và cách kiểm chứng</i></h1>
+  <p class="dek">REA giúp được gì, không giúp được gì, và làm sao biết một kết quả phân tích đáng tin. Chương này tách lời quảng bá khỏi những gì có thể kiểm tra.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 05 / 10</span><span>12 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>REA rút ngắn phần việc điều phối công cụ, nhưng không thay được bước kiểm chứng: một kết quả chỉ đáng tin khi người khác lặp lại được và có test xác nhận.</div>
+
+  <section id="s1">
+    <span class="num">05.1</span>
+    <h2>Lợi ích thực tế</h2>
+    <p class="gist">Bớt công chuyển qua lại giữa các công cụ, hỏi được ở mức hành vi.</p>
+    <p>Tài liệu nguồn nêu bốn lợi ích. Báo cáo nguồn mạnh tay hơn khi nói thời gian điều tra một tính năng giảm từ hàng tuần xuống vài phút; đó là nhận định của báo cáo, chưa có số đo độc lập đi kèm. Chọn từng lợi ích để xem lợi ích đó đến từ đâu.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="bn"></div>
+        <div class="panel" id="bnP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Bốn lợi ích và cơ chế tạo ra chúng.</figcaption>
+    </figure>
+    <p>Video của Nick Saraev cho một góc nhìn tỉnh táo. Nick cho hai agent chạy đua dựng lại ứng dụng Preview của macOS: một bản dùng REA, một bản Claude tự làm. Bản không dùng REA xong trước nhưng chậm và giật. Bản REA mất thêm vài phút, giống bản gốc hơn và vẽ nhanh hơn. Kết luận của Nick: Ghidra hay IDA giúp tăng tốc và tăng độ sát, nhưng agent thông thường đã đi được phần lớn chặng đường.</p>
+    <div class="take"><small>Ghi nhớ</small>Lợi ích lớn nhất của REA là giảm chi phí điều phối, không phải làm được điều trước đây không ai làm được.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">05.2</span>
+    <h2>Giới hạn cần chủ động kiểm tra</h2>
+    <p class="gist">Mã giả không phải mã nguồn, và AI có thể đọc sai.</p>
+    <p>Mỗi giới hạn dưới đây đều có cách kiểm tra. Chọn một giới hạn để xem giới hạn đó gây sai lệch gì và nên kiểm tra thế nào.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="lm"></div>
+        <div class="rows" id="lmP"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Giới hạn, hệ quả và cách kiểm tra.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Khi agent rơi vào vòng lặp</span></summary><div>
+      <p>Theo báo cáo nguồn, với mã bị làm rối hoặc ảo hóa, agent dễ thất bại, sinh lỗi hoặc lặp vô tận: gọi công cụ, nhận kết quả khó hiểu, đổi giả thuyết, gọi lại. Đặt giới hạn số bước và yêu cầu agent ghi unknowns khi bế tắc giúp dừng vòng lặp sớm.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>Chưa phân tích một nhánh không có nghĩa là nhánh đó không tồn tại.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">05.3</span>
+    <h2>Tiêu chí đánh giá một kết quả</h2>
+    <p class="gist">Năm câu hỏi trước khi tin một báo cáo phân tích.</p>
+    <p>Tài liệu nguồn đưa ra năm tiêu chí. Hãy dùng chúng như một bảng tự đánh giá: lấy một báo cáo bất kỳ do agent viết và đánh dấu những tiêu chí báo cáo đó đạt.</p>
+    <figure>
+      <div class="fig">
+        <ul class="chk" id="cr"></ul>
+        <div class="meter"><b id="crM"></b></div>
+        <p class="note" id="crT" style="margin-bottom:0"></p>
+      </div>
+      <figcaption><b>Hình 3</b>Tự đánh giá một báo cáo. Kết quả chỉ nằm trên trang, không được lưu.</figcaption>
+    </figure>
+    <p>Báo cáo nguồn đặt thêm một quy tắc cho bước tái tạo: không tin mù quáng vào mô hình ngôn ngữ. Sau khi viết lại, agent phải dựng bộ test và chạy bản mới song song với phần mềm gốc trên nhiều đầu vào. Các con số như 3.205 test của DX-Ball hay 2.139 bytes khớp của Touhou 4 (chương 03) là ví dụ cho mức kiểm chứng này.</p>
+    <div class="take"><small>Ghi nhớ</small>Tách ba lớp trong báo cáo: dữ liệu công cụ trả về, diễn giải của AI, và giả thuyết chưa kiểm chứng.</div>
+    <a class="next-ch" href="/blog/rea-handbook/06"><span><small>Chương tiếp theo</small><b>06 · Rủi ro an ninh</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Mốc “từ hàng tuần xuống vài phút” là nhận định của báo cáo nguồn. Phần so sánh REA với agent thông thường dựa trên một lần thử của Nick Saraev trong video, không phải benchmark.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1
+const BN = [['Một giao diện chung', 'Agent gọi Ghidra, Hopper, JADX hay CDP qua cùng một kết nối MCP, thay vì người phải mở từng công cụ, học từng giao diện và tự nối kết quả.'],
+ ['Hỏi ở mức hành vi', 'Có thể hỏi “tính năng tìm kiếm hoạt động thế nào” thay vì phải biết trước lệnh nào của engine nào cần chạy.'],
+ ['Báo cáo có dấu vết', 'Kết quả đi kèm địa chỉ, mã thô và danh sách unknowns, nên người đọc kiểm tra lại được kết luận thay vì phải tin.'],
+ ['Tăng tốc việc lặp lại', 'Trích chuỗi ký tự, đi theo đồ thị gọi hàm, so sánh phát hiện giữa các bản build: những việc tốn thời gian nhưng ít đòi hỏi phán đoán.']];
+bn.innerHTML = BN.map((b, i) => `<button data-b="${i}" class="${i ? '' : 'on'}">${b[0]}</button>`).join('');
+const bnShow = i => bnP.innerHTML = `<h5>${BN[i][0]}</h5>${BN[i][1]}`;
+one('#bn', 'b', bnShow); bnShow(0);
+// Hình 2
+const LM = [['Mã giả', 'Pseudocode là kết quả suy diễn của decompiler, không phải mã nguồn gốc. Tên biến, comment và cấu trúc hướng đối tượng đã mất khi biên dịch.', 'Đối chiếu với assembly và hành vi chạy thật trước khi dựa vào một dòng pseudocode.'],
+ ['Làm rối mã', 'Obfuscation, packing, mã tự sửa đổi, ảo hóa mã máy hoặc anti-debugging làm kết quả kém đi; agent dễ sai hoặc lặp vô tận.', 'Ghi rõ dấu hiệu làm rối vào unknowns; dùng dynamic analysis để đối chiếu.'],
+ ['AI đọc sai', 'Agent có thể gán ý nghĩa sai cho hằng số, tên hàm hoặc luồng điều khiển.', 'Người có chuyên môn rà soát các kết luận quan trọng.'],
+ ['Độ bao phủ', 'Coverage chỉ phản ánh phạm vi đã khảo sát.', 'Nêu rõ phần đã và chưa phân tích trong báo cáo.'],
+ ['Phiên bản', 'Khả năng và lệnh cụ thể thay đổi theo phiên bản REA, engine, hệ điều hành và giấy phép.', 'Ghi phiên bản của mọi công cụ đã dùng.'],
+ ['Engine thương mại', 'Với mã máy phức tạp, REA dựa vào Hopper hoặc IDA Pro; REA không đi kèm bản quyền của các công cụ này.', 'Kiểm tra giấy phép trước khi phân tích; cân nhắc Ghidra hoặc chế độ demo.']];
+lm.innerHTML = LM.map((l, i) => `<button data-l="${i}" class="${i ? '' : 'on'}">${l[0]}</button>`).join('');
+const lmShow = i => lmP.innerHTML = `<div><b>Giới hạn</b>${LM[i][1]}</div><div class="fix"><b>Kiểm tra</b>${LM[i][2]}</div>`;
+one('#lm', 'l', lmShow); lmShow(0);
+// Hình 3: self-assessment, kept on the page only
+const CR = [['Khả năng tái lập', 'Người khác lặp lại quy trình trên cùng phiên bản và thu được kết quả tương tự.'],
+ ['Truy xuất nguồn gốc', 'Mỗi kết luận liên kết được với tệp, địa chỉ, hàm, chuỗi, log hoặc phép đo cụ thể.'],
+ ['Kiểm chứng độc lập', 'Kết quả được đối chiếu bằng test, quan sát runtime hoặc một công cụ khác.'],
+ ['Phạm vi rõ ràng', 'Nêu phiên bản, môi trường, phần đã khảo sát và các giả định.'],
+ ['Quản lý bất định', 'Ghi rõ điều chưa biết thay vì biến giả thuyết thành sự thật.']];
+cr.innerHTML = CR.map(c => `<li><label><input type="checkbox"><span><b>${c[0]}</b>${c[1]}</span></label></li>`).join('');
+function crShow() {const n = cr.querySelectorAll('input:checked').length; crM.style.width = n / CR.length * 100 + '%';
+ crT.textContent = n === CR.length ? 'Đạt cả năm tiêu chí: báo cáo đủ điều kiện để người khác kiểm tra lại.' : `Đạt ${n}/${CR.length}. Những tiêu chí chưa đánh dấu là chỗ báo cáo cần bổ sung trước khi dùng để ra quyết định.`}
+cr.onchange = crShow; crShow();
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea05', minutes: 12,
+ next: {href: '/blog/rea-handbook/06', n: '06', t: 'Rủi ro an ninh'},
+ sections: [
+  {id: 's1', n: '05.1', t: 'Lợi ích thực tế', sum: ['Một giao diện MCP cho nhiều công cụ.', 'Hỏi ở mức hành vi; báo cáo có dấu vết.', 'Theo video, agent thường đã đi được phần lớn; REA thêm tốc độ và độ sát.'], terms: ['mcp', 'orchestrator', 'rea', 'ida', 'jadx']},
+  {id: 's2', n: '05.2', t: 'Giới hạn', sum: ['Pseudocode không phải mã nguồn gốc.', 'Làm rối mã, AI đọc sai, coverage, phiên bản.', 'Mã máy phức tạp phụ thuộc engine thương mại.'], terms: ['pseudocode', 'obfuscation', 'packing', 'coverage']},
+  {id: 's3', n: '05.3', t: 'Tiêu chí đánh giá', sum: ['Tái lập, truy xuất, kiểm chứng độc lập, phạm vi, quản lý bất định.', 'Bản tái tạo phải chạy test song song với bản gốc.'], terms: ['repro', 'testsuite', 'coverage']}],
+ terms: {
+  jadx: ['JADX', 'Công cụ dịch ngược bytecode Android (DEX) sang mã Java dễ đọc; REA chạy nó ở chế độ headless.', 'Máy phiên dịch chuyển ứng dụng Android về dạng mã gần với Java để người đọc hiểu được.'],
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  mcp: ['MCP', 'Model Context Protocol: giao thức mở chuẩn hóa cách ứng dụng AI khám phá và gọi công cụ, nguồn dữ liệu bên ngoài.', 'Ổ cắm tiêu chuẩn: công cụ nào có phích đúng chuẩn thì agent cắm vào dùng được.'],
+  orchestrator: ['orchestrator', 'Lớp điều phối nhận yêu cầu, chọn công cụ phù hợp, gọi và cấu trúc hóa kết quả; REA là lớp này, nằm giữa agent và các engine.', 'Người điều phối ở công trường: không tự xây, nhưng biết gọi đúng thợ cho từng việc.'],
+  pseudocode: ['pseudocode', 'Mã giả do decompiler suy diễn từ mã máy để con người dễ đọc; không phải mã nguồn gốc.', 'Bản dịch phỏng đoán của một văn bản đã mất bản gốc.'],
+  obfuscation: ['obfuscation', 'Kỹ thuật làm rối mã để khó đọc và khó phân tích mà vẫn giữ hành vi.', 'Viết tắt và đảo chữ cố ý để người ngoài khó đọc thư.'],
+  packing: ['packing', 'Nén hoặc mã hóa tệp thực thi, chỉ giải nén khi chạy, khiến phân tích tĩnh chỉ thấy lớp vỏ.', 'Món đồ được bọc nhiều lớp hộp; mở hộp ngoài vẫn chưa thấy món đồ.'],
+  coverage: ['coverage', 'Trạng thái bao phủ của phạm vi đã khảo sát; không mô tả mức hiểu toàn bộ ứng dụng.', 'Đánh dấu “đã đọc hết chương này”, không phải “đã đọc hết cả cuốn sách”.'],
+  repro: ['tái lập', 'Khả năng người khác lặp lại quy trình phân tích trên cùng phiên bản và thu được kết quả tương tự.', 'Công thức nấu ăn ghi đủ để người khác nấu ra cùng món.'],
+  testsuite: ['test suite', 'Bộ ca kiểm thử chạy trên cả bản gốc và bản viết lại để so sánh đầu ra.', 'Cùng một bộ đề cho hai người làm, rồi so đáp án.']},
+ alias: {jadx: ['JADX'], ida: ['IDA Pro', 'IDA'], rea: ['REA'], mcp: ['MCP'], orchestrator: ['điều phối'], pseudocode: ['Pseudocode', 'pseudocode', 'mã giả'], obfuscation: ['Obfuscation', 'làm rối mã'], packing: ['packing'], coverage: ['Coverage', 'coverage'], repro: ['tái lập'], testsuite: ['bộ test']},
+ rel: {mcp: ['orchestrator'], orchestrator: ['mcp'], pseudocode: ['obfuscation'], obfuscation: ['packing', 'pseudocode'], packing: ['obfuscation'], coverage: ['repro'], repro: ['testsuite'], testsuite: ['repro']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'my1', s: 0, type: 'multi', q: 'Theo tài liệu nguồn, REA mang lại những lợi ích nào?', o: ['Giảm chi phí điều phối nhiều công cụ', 'Cho phép hỏi ở mức hành vi', 'Hỗ trợ báo cáo có dấu vết kỹ thuật', 'Tự khôi phục 100% mã nguồn gốc'], a: [0, 1, 2],
+   ex: 'Ba lợi ích đầu đúng; lợi ích thứ tư trong tài liệu là tăng tốc các tác vụ lặp lại.', why: {3: 'Mã nguồn gốc không thể khôi phục hoàn toàn vì biên dịch đã xóa nhiều thông tin.'}},
+  {id: 'my2', s: 0, type: 'one', q: 'Trong cuộc đua dựng lại app Preview trong video của Nick Saraev, kết quả là gì?', o: ['Bản REA xong trước và kém hơn', 'Bản không dùng REA xong trước nhưng giật; bản REA giống bản gốc hơn', 'Cả hai đều thất bại', 'Chỉ bản REA chạy được'], a: 1,
+   ex: 'Bản Claude không dùng REA hoàn thành trước nhưng giật; bản REA mất thêm vài phút, giống bản gốc hơn và vẽ nhanh hơn.'},
+  {id: 'my3', s: 0, type: 'one', q: 'Nhận định “từ hàng tuần xuống vài phút” nên hiểu thế nào?', o: ['Là kết quả benchmark độc lập', 'Là nhận định của báo cáo nguồn, chưa có số đo độc lập', 'Là cam kết trong README', 'Là quy định pháp lý'], a: 1,
+   ex: 'Handbook ghi rõ đây là nhận định của báo cáo nguồn.'},
+  {id: 'my4', s: 1, type: 'one', q: 'Vì sao pseudocode không thể coi là mã nguồn gốc?', o: ['Vì nó viết bằng ngôn ngữ khác', 'Vì biên dịch đã xóa tên biến, comment và cấu trúc ban đầu; decompiler chỉ suy diễn', 'Vì REA cố tình làm sai', 'Vì pseudocode luôn bị mã hóa'], a: 1,
+   ex: 'Pseudocode là bằng chứng để suy luận, không phải bản sao có thể mặc nhiên tin cậy.'},
+  {id: 'my5', s: 1, type: 'multi', q: 'Những yếu tố nào có thể làm giảm chất lượng phân tích?', o: ['Obfuscation', 'Packing', 'Mã tự sửa đổi', 'Ghi phiên bản công cụ trong báo cáo'], a: [0, 1, 2],
+   ex: 'Làm rối, nén và mã tự sửa đổi đều che hành vi thật; ghi phiên bản là một thói quen tốt.', why: {3: 'Ghi phiên bản giúp tái lập, không làm giảm chất lượng.'}},
+  {id: 'my6', s: 1, type: 'one', q: 'Agent không phân tích một nhánh mã. Kết luận nào đúng?', o: ['Nhánh đó không tồn tại', 'Nhánh đó chưa được khảo sát, cần ghi vào phạm vi hoặc unknowns', 'Nhánh đó chắc chắn an toàn', 'Coverage tự động là complete'], a: 1,
+   ex: 'Độ bao phủ phụ thuộc vào phạm vi đã khảo sát.'},
+  {id: 'my7', s: 1, type: 'one', q: 'Với mã máy phức tạp, REA phụ thuộc vào gì?', o: ['Một engine riêng viết bằng C++', 'Engine như Hopper hoặc IDA Pro, người dùng tự lo giấy phép', 'Dịch vụ đám mây của REA', 'Không phụ thuộc gì'], a: 1,
+   ex: 'REA là lớp điều phối, không kèm bản quyền Hopper hay IDA.'},
+  {id: 'my8', s: 2, type: 'one', q: 'Tiêu chí “truy xuất nguồn gốc” đòi hỏi gì?', o: ['Ghi tên người viết báo cáo', 'Mỗi kết luận liên kết được với tệp, địa chỉ, hàm, chuỗi, log hoặc phép đo', 'Dẫn link GitHub của REA', 'Báo cáo dài trên mười trang'], a: 1,
+   ex: 'Truy xuất nguồn gốc nghĩa là có thể lần từ kết luận về bằng chứng cụ thể.'},
+  {id: 'my9', s: 2, type: 'one', q: 'Theo báo cáo nguồn, bản tái tạo được chứng minh tương đương bằng cách nào?', o: ['Agent tự đánh giá', 'Chạy test song song với phần mềm gốc trên nhiều trường hợp', 'Đếm số dòng mã', 'So sánh ảnh chụp màn hình một lần'], a: 1,
+   ex: 'Quy tắc là không tin mù quáng vào mô hình; bộ test đối chứng mới là bằng chứng.'},
+  {id: 'my10', s: 2, type: 'multi', q: 'Báo cáo phân tích nên tách riêng những lớp nào?', o: ['Dữ liệu công cụ trả về', 'Diễn giải của AI', 'Giả thuyết chưa kiểm chứng', 'Quảng cáo sản phẩm'], a: [0, 1, 2],
+   ex: 'Gộp ba lớp thành một kết luận làm người đọc không biết đâu là dữ kiện, đâu là suy đoán.'}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

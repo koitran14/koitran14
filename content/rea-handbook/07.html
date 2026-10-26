@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · Pháp lý: được phép đến đâu? · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Hình 5: one row per scenario, the reader picks a verdict */
+.sort{display:grid;gap:8px}
+.sort>div{display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:15px;line-height:1.5}
+.sort p{grid-column:1/-1;margin:0;font-size:14px;color:var(--muted)}
+.sort p b.ok{color:var(--acc)}.sort p b.no{color:var(--bad)}
+.sort-st{margin-top:10px;font:400 12px var(--mono);color:var(--muted)}
+@media(max-width:700px){.sort>div{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 07 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 07</div>
+  <h1>Pháp lý: <i>được phép đến đâu?</i></h1>
+  <p class="dek">Giấy phép của REA, giấy phép của các engine, quyền tác giả với phần mềm mục tiêu và luật của từng quốc gia là bốn lớp khác nhau. Chương này tách từng lớp và đưa ra một bộ câu hỏi nên trả lời trước khi bắt đầu phân tích.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 07 / 10</span><span>16 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Giấy phép MIT của REA chỉ nói về mã của REA. Quyền phân tích một phần mềm cụ thể đến từ chỗ khác: bạn là ai với phần mềm đó, hợp đồng nói gì, và luật nơi bạn làm việc cho phép gì.</div>
+  <div class="take"><small>Lưu ý</small>Chương này là khung phân tích kỹ thuật–pháp lý ở mức thông tin chung, không phải ý kiến tư vấn pháp lý. Tính hợp pháp phụ thuộc quốc gia, loại phần mềm, quyền truy cập, hợp đồng và điều khoản sử dụng, mục tiêu và hành vi cụ thể.</div>
+
+  <section id="s1">
+    <span class="num">07.1</span>
+    <h2>MIT của REA và giấy phép engine</h2>
+    <p class="gist">Giấy phép MIT chỉ áp dụng cho phần mã do dự án REA viết.</p>
+    <p>Gói rea-agents trên npm phát hành theo MIT. Dự án cũng nói rõ các thành phần bên thứ ba giữ nguyên giấy phép và thông báo bản quyền của chúng. IDA Pro của Hex-Rays, Hopper và JEB là phần mềm thương mại, cần giấy phép riêng. Theo báo cáo nguồn, REA không đi kèm bản quyền, key hay crack cho bất kỳ phần mềm nào.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="lic"></div>
+        <div class="panel" id="licP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Mỗi thành phần trong bộ công cụ có giấy phép riêng.</figcaption>
+    </figure>
+    <p>Nếu chưa có giấy phép engine thương mại, vẫn có lựa chọn hợp lệ: chế độ demo của Hopper, engine mã nguồn mở như Ghidra, hoặc phân tích tĩnh JavaScript và .NET, vốn không cần engine native nào.</p>
+    <div class="take"><small>Ghi nhớ</small>MIT của lớp điều phối không cấp quyền dùng miễn phí phần mềm thương mại, không hợp pháp hóa key không được phép và không xóa điều khoản của nhà cung cấp.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">07.2</span>
+    <h2>Quyền truy cập, quyền phân tích, quyền phát hành</h2>
+    <p class="gist">Ba quyền khác nhau; có quyền này không suy ra được quyền kia.</p>
+    <p>Hiểu lầm hay gặp nhất: lấy được tệp thì nghĩ mình được làm mọi thứ với nó. Tài liệu chủ đề tách thành ba bậc. Chọn từng bậc để xem điều cần kiểm tra.</p>
+    <figure>
+      <div class="fig">
+        <div id="lad"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Mỗi bậc cần một căn cứ riêng.</figcaption>
+    </figure>
+    <p>Trong video, Nick Saraev nhận xét rằng dịch ngược một ứng dụng yêu thích rồi đem bán có thể mang lại chút lợi ngắn hạn, nhưng sẽ vướng ngay rào cản sở hữu trí tuệ. Theo anh, thứ thật sự giảm đi là rào cản để phối lại những ý tưởng có sẵn thành thứ mới, chứ không phải rào cản để kinh doanh bản sao.</p>
+    <div class="take"><small>Ghi nhớ</small>Tái tạo an toàn hơn khi nhắm vào hành vi: viết đặc tả, kiểm thử black-box, triển khai độc lập. Không chép mã, hình ảnh, âm thanh hay dữ liệu của bản gốc.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">07.3</span>
+    <h2>Góc nhìn Việt Nam</h2>
+    <p class="gist">Chương trình máy tính được bảo hộ quyền tác giả, kể cả khi ở dạng mã máy.</p>
+    <p>Tại Việt Nam, chương trình máy tính được bảo hộ quyền tác giả theo pháp luật sở hữu trí tuệ, và phạm vi bảo hộ có thể áp dụng cho chương trình ở dạng mã nguồn lẫn mã máy. Vì vậy đừng coi dịch ngược là vùng tự do chỉ vì đầu vào là binary. Cần rà soát Luật Sở hữu trí tuệ hiện hành, gồm các sửa đổi của Luật số 07/2022/QH15 (văn bản hợp nhất 155/VBHN-VPQH năm 2025), cùng các sửa đổi có hiệu lực tại thời điểm thực hiện.</p>
+    <p>Quyền tác giả cũng không phải lớp duy nhất. Chọn từng mục để xem những gì cần xét thêm.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="vn"></div>
+        <div class="panel" id="vnP"></div>
+      </div>
+      <figcaption><b>Hình 3</b>Ngoài quyền tác giả, còn bốn lớp ràng buộc khác.</figcaption>
+    </figure>
+    <p>Không nên nhập nguyên xi ngoại lệ của Hoa Kỳ, Nhật Bản hay Liên minh châu Âu vào bối cảnh Việt Nam. Mỗi hệ thống pháp luật thiết kế ngoại lệ, điều kiện và giới hạn theo cách riêng. Handbook này không khẳng định mọi hoạt động reverse engineering vì mục đích tương thích đều tự động được phép tại Việt Nam.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Câu hỏi nên mang tới bộ phận pháp chế</span></summary><div>
+      <p>Phần mềm mục tiêu thuộc sở hữu của ai, và chúng ta có văn bản nào chứng minh quyền phân tích? EULA hoặc hợp đồng có điều khoản cấm dịch ngược không? Kết quả phân tích có chứa bí mật kinh doanh hoặc dữ liệu cá nhân không, và sẽ lưu ở đâu? Có định công bố hay phát hành gì từ kết quả không?</p>
+      <p>Năm 2025, Quốc hội cũng thông qua Luật Trí tuệ nhân tạo (Luật số 134/2025/QH15, hiệu lực 01/03/2026) và Luật Công nghiệp công nghệ số (Luật số 71/2025/QH15, hiệu lực 01/01/2026). Handbook không tóm tắt nội dung hai luật này; nếu tổ chức dùng AI để phân tích phần mềm ở quy mô lớn, nên đưa cả hai vào danh sách rà soát cùng pháp chế.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>Binary không phải là “không có chủ”. Trước khi phân tích, hỏi: ai là chủ sở hữu, mình có quyền gì, và hợp đồng nói gì.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">07.4</span>
+    <h2>So sánh quốc tế</h2>
+    <p class="gist">Ba ví dụ tham chiếu, không phải quy tắc toàn cầu.</p>
+    <p>Báo cáo nguồn và tài liệu chủ đề nhắc tới ba hệ thống pháp luật. Mỗi nơi có một điểm tham chiếu và một cách đọc thận trọng đi kèm; chọn từng nơi để so sánh.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="law"></div>
+        <div class="rows" id="lawP"></div>
+      </div>
+      <figcaption><b>Hình 4</b>Điểm tham chiếu và cách đọc thận trọng ở ba hệ thống pháp luật.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Mỗi ngoại lệ đều có điều kiện về mục đích, phạm vi cần thiết và người thực hiện, và chỉ có hiệu lực trong hệ thống pháp luật của nó.</div>
+  </section>
+
+  <section id="s5">
+    <span class="num">07.5</span>
+    <h2>Hợp pháp hay vi phạm</h2>
+    <p class="gist">REA được làm cho nghiên cứu hợp pháp, không phải để phá bảo vệ hay làm hàng nhái.</p>
+    <p>DISCLAIMER.md của dự án nói REA dành cho nghiên cứu hợp pháp, giáo dục, bảo tồn phần mềm và phân tích ứng dụng do người dùng sở hữu hoặc được ủy quyền. Báo cáo nguồn tóm thành một bảng hai cột. Thử phân loại tám tình huống dưới đây trước khi xem đáp án.</p>
+    <figure>
+      <div class="fig">
+        <div class="sort" id="srt"></div>
+        <div class="sort-st" id="srtS"></div>
+      </div>
+      <figcaption><b>Hình 5</b>Phân loại theo DISCLAIMER.md và bảng của báo cáo nguồn, không phải phán quyết pháp lý cho từng quốc gia.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Cùng một công cụ, khác nhau ở mục đích và căn cứ: phần mềm của mình hay được ủy quyền thì được; vượt DRM, license check, anti-cheat hay sao chép để bán thì không.</div>
+  </section>
+
+  <section id="s6">
+    <span class="num">07.6</span>
+    <h2>Sáu câu hỏi trước khi phân tích</h2>
+    <p class="gist">Sáu câu hỏi trả lời trước khi mở tệp đầu tiên.</p>
+    <p>Tài liệu chủ đề đề xuất sáu câu hỏi. Chọn từng câu để xem cần kiểm tra gì và dấu hiệu nào nên khiến bạn dừng lại.</p>
+    <figure>
+      <div class="fig">
+        <div id="mtx"></div>
+      </div>
+      <figcaption><b>Hình 6</b>Sáu câu hỏi, đi theo thứ tự từ mục tiêu đến phát hành.</figcaption>
+    </figure>
+    <div class="take"><small>Thực hành an toàn</small>Khi kiểm thử sản phẩm của khách hàng hoặc doanh nghiệp, cần có văn bản ủy quyền, xác định phạm vi kiểm thử, cách xử lý dữ liệu và quy trình công bố lỗ hổng trước khi bắt đầu.</div>
+    <a class="next-ch" href="/blog/rea-handbook/08"><span><small>Chương tiếp theo</small><b>08 · REA và làn sóng AI agent</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Chương này không phải tư vấn pháp lý. Phần về Nhật Bản (Điều 30-4) chỉ dựa trên việc báo cáo nguồn nhắc tới, chưa đối chiếu văn bản luật; các văn bản Việt Nam cần kiểm tra lại phiên bản và ngày hiệu lực trước khi dựa vào.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+const pills = (box, list, attr) => box.innerHTML = list.map((x, i) => `<button data-${attr}="${i}" class="${i ? '' : 'on'}">${x[0]}</button>`).join('');
+// Hình 1
+const LIC = [['REA (rea-agents)', 'MIT, cho phần mã do dự án viết.', 'Dùng, sửa, phân phối lại tự do theo MIT. Giấy phép này không nói gì về các engine REA gọi tới.'],
+ ['IDA Pro / Hex-Rays', 'Phần mềm thương mại.', 'Cần giấy phép hợp lệ của Hex-Rays. REA không kèm key hay bản quyền.'],
+ ['Hopper', 'Phần mềm thương mại.', 'Cần giấy phép riêng; có chế độ demo để thử. REA có thể cài Hopper khi bạn đồng ý, nhưng không cấp giấy phép.'],
+ ['JEB', 'Phần mềm thương mại.', 'Cần giấy phép riêng. REA chỉ kết nối tới một JEB client do bạn tự chạy.'],
+ ['Ghidra, JADX', 'Mã nguồn mở, mỗi dự án có giấy phép riêng.', 'Dùng miễn phí, nhưng vẫn đọc điều khoản trước khi đóng gói hoặc phân phối lại.']];
+pills(lic, LIC, 'c');
+const licShow = i => licP.innerHTML = `<h5>${LIC[i][0]}</h5><div class="rows"><div><b>Giấy phép</b>${LIC[i][1]}</div><div class="fix"><b>Bạn cần</b>${LIC[i][2]}</div></div>`;
+one('#lic', 'c', licShow); licShow(0);
+// Hình 2
+const LAD = [['Truy cập', 'Tải được tệp không đồng nghĩa có quyền phân tích nó cho mọi mục đích.', 'Tệp đến từ đâu, và điều khoản tải về cho phép dùng vào việc gì?'],
+ ['Phân tích', 'Có quyền sử dụng phần mềm không nhất thiết có quyền phá biện pháp bảo vệ kỹ thuật hay bỏ qua điều khoản hợp đồng. Một ngoại lệ về tương thích, nếu có, thường kèm điều kiện về mục đích, phạm vi cần thiết, người thực hiện và cách dùng thông tin thu được.', 'Mình có sở hữu hoặc được ủy quyền không? Phạm vi phân tích tối thiểu là gì?'],
+ ['Phát hành', 'Được nghiên cứu một hành vi không tự động cho phép sao chép mã, hình ảnh, âm thanh, dữ liệu hay tài sản trí tuệ khác sang sản phẩm của mình.', 'Bản tái tạo có độc lập về biểu đạt và cách triển khai không? Đã rà soát sở hữu trí tuệ chưa?']];
+DG.steps(document.getElementById('lad'), {unit: 'Bậc',
+ steps: LAD.map(l => ({t: l[0], body: `<p style="margin:0 0 8px">${l[1]}</p><div class="rows"><div class="fix"><b>Câu hỏi</b>${l[2]}</div></div>`}))});
+// Hình 3
+const VN = [['Hợp đồng, EULA', 'Điều khoản sử dụng có thể cấm hoặc giới hạn dịch ngược. Vi phạm hợp đồng là một rủi ro riêng, kể cả khi luật quyền tác giả có ngoại lệ.'],
+ ['Bí mật kinh doanh', 'Thuật toán, cấu hình hay dữ liệu tìm thấy trong binary có thể là bí mật kinh doanh của chủ sở hữu. Cách lưu và chia sẻ kết quả cần thận trọng.'],
+ ['Dữ liệu cá nhân', 'Chuỗi ký tự, cơ sở dữ liệu nhúng hay log có thể chứa thông tin cá nhân. Xử lý chúng chịu quy định về bảo vệ dữ liệu cá nhân.'],
+ ['Quy định liên quan khác', 'Tùy lĩnh vực và quy mô, có thể cần xét thêm các luật chuyên ngành, gồm cả các luật mới về AI và công nghệ số.']];
+pills(vn, VN, 'v');
+one('#vn', 'v', i => vnP.innerHTML = `<h5>${VN[i][0]}</h5>${VN[i][1]}`); vnP.innerHTML = `<h5>${VN[0][0]}</h5>${VN[0][1]}`;
+// Hình 4
+const LAW = [['Hoa Kỳ', '17 U.S.C. §1201(f) có một ngoại lệ reverse engineering nhất định, để xác định các yếu tố cần thiết cho khả năng tương thích của một chương trình độc lập. Các điều kiện pháp lý khác vẫn quan trọng.', 'Không phải quyền chung để phá DRM hay sao chép phần mềm. Cần đánh giá điều kiện cụ thể và các quy định liên quan.'],
+ ['Liên minh châu Âu', 'Directive 2009/24/EC, Điều 6 đặt điều kiện cho decompilation cần thiết để đạt interoperability: người thực hiện có quyền sử dụng hợp pháp, thông tin cần thiết chưa sẵn có, và chỉ giới hạn ở phần cần thiết.', 'Đây là chỉ thị, được triển khai qua luật của từng quốc gia thành viên; không áp dụng tự động ở nơi khác.'],
+ ['Nhật Bản', 'Báo cáo nguồn nhắc tới Điều 30-4 Luật Bản quyền, về một số trường hợp sử dụng tác phẩm không nhằm thưởng thức, như phân tích thông tin.', 'Phạm vi cần kiểm tra trực tiếp theo luật và hướng dẫn hiện hành. Không suy rộng thành quyền tự do dịch ngược hay phát hành bản sao.']];
+law.innerHTML = LAW.map((l, i) => `<button data-w="${i}" class="${i ? '' : 'on'}">${l[0]}</button>`).join('');
+const lawShow = i => lawP.innerHTML = `<div><b>Tham chiếu</b>${LAW[i][1]}</div><div class="fix"><b>Đọc thận trọng</b>${LAW[i][2]}</div>`;
+one('#law', 'w', lawShow); lawShow(0);
+// Hình 5: [scenario, lawful?, reason]
+const SRT = [['Phân tích ứng dụng do chính công ty mình phát triển để tìm nguyên nhân lỗi.', 1, 'Phần mềm của mình, mục đích khắc phục lỗi.'],
+ ['Bẻ khóa DRM của một trò chơi để chơi không cần tài khoản.', 0, 'Vượt biện pháp bảo vệ kỹ thuật là hành vi DISCLAIMER loại trừ.'],
+ ['Nghiên cứu lỗ hổng trong sản phẩm của khách hàng có văn bản ủy quyền, rồi công bố theo quy trình coordinated disclosure.', 1, 'Có ủy quyền, có phạm vi, công bố có phối hợp.'],
+ ['Viết công cụ bỏ qua bước kiểm tra giấy phép của một phần mềm thương mại.', 0, 'Vượt license check thuộc nhóm vi phạm.'],
+ ['Tìm hiểu định dạng tệp chưa được tài liệu hóa để phần mềm của mình đọc được, trong phạm vi cần thiết.', 1, 'Mục đích interoperability, với điều kiện tùy luật từng nơi.'],
+ ['Can thiệp hệ thống anti-cheat để làm hack cho game online.', 0, 'Can thiệp anti-cheat và làm cheat thuộc nhóm vi phạm.'],
+ ['Tái cấu trúc logic của một trò chơi DOS cũ mình sở hữu để bảo tồn, hoặc làm bài CTF.', 1, 'Bảo tồn phần mềm và CTF nằm trong nhóm sử dụng hợp pháp.'],
+ ['Chép nguyên mã nguồn và đồ họa của một ứng dụng để bán bản nhái.', 0, 'Sao chép mã và tài sản độc quyền để thương mại hóa là vi phạm.']];
+const PICK = {};
+function srtUI() {
+ srt.innerHTML = SRT.map((s, i) => {const p = PICK[i];
+  return `<div><span>${s[0]}</span><span class="seg"><button data-p="${i}:1" class="${p === 1 ? 'on' : ''}">Được</button><button data-p="${i}:0" class="${p === 0 ? 'on' : ''}">Không được</button></span>` +
+   (p == null ? '' : `<p><b class="${s[1] ? 'ok' : 'no'}">${p === s[1] ? 'Đúng' : 'Chưa đúng'}: ${s[1] ? 'sử dụng hợp pháp' : 'vi phạm'}.</b> ${s[2]}</p>`) + '</div>'}).join('');
+ const done = Object.keys(PICK).length, ok = Object.entries(PICK).filter(([i, p]) => SRT[i][1] === p).length;
+ srtS.textContent = `${done}/${SRT.length} tình huống đã phân loại · ${ok} đúng`}
+srt.onclick = e => {const b = e.target.closest('[data-p]'); if (!b) return; const [i, p] = b.dataset.p.split(':'); PICK[i] = +p; srtUI()};
+srtUI();
+// Hình 6: [label, question, what to check, stop sign]
+const MTX = [['Mục tiêu', 'Nghiên cứu bảo mật, khắc phục lỗi, tương thích hay sao chép tính năng để kinh doanh?', 'Viết mục tiêu thành một câu hỏi hẹp, có tiêu chí thành công.', 'Mục tiêu thật sự là có một bản sao để bán.'],
+ ['Thẩm quyền', 'Bạn sở hữu phần mềm, được chủ sở hữu ủy quyền, hay chỉ có quyền sử dụng thông thường?', 'Văn bản chứng minh quyền sở hữu hoặc ủy quyền.', 'Chỉ có quyền dùng thông thường, không có ủy quyền nào.'],
+ ['Điều khoản', 'EULA, hợp đồng, NDA, điều khoản dịch vụ hay chính sách nội bộ quy định gì?', 'Điều khoản về dịch ngược, sửa đổi, công bố kết quả.', 'Hợp đồng cấm rõ việc dịch ngược.'],
+ ['Phạm vi', 'Có giới hạn phân tích phần nào, dùng công cụ nào, chia sẻ kết quả ra sao?', 'Phạm vi tối thiểu cần thiết và danh sách công cụ được dùng.', 'Không ai xác định được ranh giới phân tích.'],
+ ['Kết quả', 'Kết quả có chứa mã hoặc asset được bảo hộ, bí mật kinh doanh, thông tin cá nhân hay thông tin xác thực không?', 'Cách lưu, ai được xem, khi nào xóa.', 'Kết quả chứa key hoặc dữ liệu cá nhân mà chưa có quy trình xử lý.'],
+ ['Phát hành', 'Bản tái tạo có độc lập về biểu đạt và cách triển khai không; đã rà soát IP và pháp lý chưa?', 'Đặc tả hành vi, test black-box, rà soát sở hữu trí tuệ.', 'Bản tái tạo chứa mã hoặc tài nguyên chép từ bản gốc.']];
+DG.steps(document.getElementById('mtx'), {unit: 'Câu',
+ steps: MTX.map((m, i) => ({t: m[0], group: ['Trước khi bắt đầu', '', '', 'Trong và sau phiên', '', ''][i],
+  body: `<p style="margin:0 0 8px;color:var(--fg)">${m[1]}</p><div class="rows"><div><b>Kiểm tra</b>${m[2]}</div><div class="fix"><b>Dừng lại nếu</b>${m[3]}</div></div>`}))});
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea07', minutes: 16,
+ next: {href: '/blog/rea-handbook/08', n: '08', t: 'REA và làn sóng AI agent'},
+ sections: [
+  {id: 's1', n: '07.1', t: 'MIT và giấy phép engine', sum: ['MIT chỉ áp dụng cho mã của REA.', 'IDA Pro, Hopper, JEB cần giấy phép thương mại riêng; REA không kèm key.', 'Thay thế hợp lệ: Hopper demo, Ghidra, phân tích tĩnh JS và .NET.'], terms: ['mit', 'eula', 'rea', 'ida', 'jadx']},
+  {id: 's2', n: '07.2', t: 'Ba bậc quyền', sum: ['Truy cập, phân tích, phát hành là ba quyền khác nhau.', 'Ngoại lệ tương thích luôn có điều kiện.', 'Tái tạo theo hành vi, không chép mã và asset.'], terms: ['interop', 'drm', 'cleanroom']},
+  {id: 's3', n: '07.3', t: 'Góc nhìn Việt Nam', sum: ['Chương trình máy tính được bảo hộ ở cả dạng mã nguồn và mã máy.', 'Xét thêm hợp đồng, bí mật kinh doanh, dữ liệu cá nhân.', 'Không nhập nguyên xi ngoại lệ của nước khác.'], terms: ['copyright', 'eula', 'tradesecret']},
+  {id: 's4', n: '07.4', t: 'So sánh quốc tế', sum: ['Hoa Kỳ: §1201(f), ngoại lệ hẹp cho tương thích.', 'EU: Directive 2009/24/EC Điều 6, ba điều kiện.', 'Nhật Bản: Điều 30-4, cần kiểm tra trực tiếp.'], terms: ['interop', 'drm']},
+  {id: 's5', n: '07.5', t: 'Hợp pháp hay vi phạm', sum: ['Hợp pháp: phần mềm của mình hoặc được ủy quyền, nghiên cứu bảo mật, tương thích, bảo tồn, CTF.', 'Vi phạm: vượt DRM, license check, anti-cheat, sao chép để bán.'], terms: ['disclosure', 'drm', 'anticheat']},
+  {id: 's6', n: '07.6', t: 'Sáu câu hỏi trước khi phân tích', sum: ['Sáu câu hỏi: mục tiêu, thẩm quyền, điều khoản, phạm vi, kết quả, phát hành.', 'Kiểm thử cho khách hàng cần văn bản ủy quyền và quy trình công bố.'], terms: ['eula', 'tradesecret', 'disclosure']}],
+ terms: {
+  jadx: ['JADX', 'Công cụ dịch ngược bytecode Android (DEX) sang mã Java dễ đọc; REA chạy nó ở chế độ headless.', 'Máy phiên dịch chuyển ứng dụng Android về dạng mã gần với Java để người đọc hiểu được.'],
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  mit: ['MIT License', 'Giấy phép mã nguồn mở dễ dãi, cho phép dùng, sửa, phân phối lại kể cả cho mục đích thương mại, miễn giữ thông báo bản quyền; chỉ áp dụng cho phần mã mà tác giả phát hành.', 'Tờ giấy “cứ lấy mà dùng, nhớ ghi tên tôi” dán lên phần mã của REA. Nó không dán được lên phần mềm của người khác.'],
+  eula: ['EULA', 'End User License Agreement: thỏa thuận cấp phép giữa nhà phát hành và người dùng cuối, thường quy định cả việc có được dịch ngược hay sửa đổi phần mềm không.', 'Bản điều khoản bạn bấm “Đồng ý” lúc cài phần mềm. Nó có thể cấm đúng việc bạn định làm.'],
+  interop: ['interoperability', 'Khả năng các chương trình độc lập trao đổi dữ liệu hoặc hoạt động cùng nhau; là mục đích được nhiều hệ thống pháp luật xét tới khi đặt ngoại lệ cho dịch ngược.', 'Làm một cái phích chuyển để thiết bị của mình cắm vừa ổ điện của người khác.'],
+  drm: ['DRM', 'Digital Rights Management: cơ chế kỹ thuật quản lý và giới hạn quyền sử dụng nội dung số; vượt qua DRM thường bị luật và điều khoản cấm riêng.', 'Ổ khóa trên nội dung số. Có chìa để dùng hợp lệ, không có nghĩa được phá khóa.'],
+  cleanroom: ['triển khai độc lập', 'Cách tái tạo trong đó tính năng được viết lại từ đặc tả hành vi và kiểm thử black-box, không chép mã hay tài nguyên của bản gốc.', 'Nấu lại món ăn từ việc nếm và ghi chép, không lấy trộm công thức viết tay của bếp trưởng.'],
+  copyright: ['quyền tác giả', 'Quyền của tác giả và chủ sở hữu đối với tác phẩm; tại Việt Nam, chương trình máy tính được bảo hộ như tác phẩm, ở cả dạng mã nguồn và mã máy.', 'Phần mềm có chủ, dù bạn chỉ nhìn thấy nó dưới dạng một tệp .exe.'],
+  tradesecret: ['bí mật kinh doanh', 'Thông tin có giá trị thương mại, không phổ biến và được chủ sở hữu bảo mật, như thuật toán, cấu hình, dữ liệu nội bộ.', 'Công thức riêng của một quán. Tình cờ biết được không có nghĩa được mang đi dùng.'],
+  disclosure: ['coordinated disclosure', 'Quy trình công bố lỗ hổng có phối hợp: báo cho bên sở hữu trước, cho thời gian khắc phục, rồi mới công bố công khai.', 'Thấy cửa nhà hàng xóm hỏng khóa thì báo họ sửa trước, không đăng lên mạng ngay.'],
+  anticheat: ['anti-cheat', 'Hệ thống phát hiện và ngăn gian lận trong trò chơi trực tuyến; can thiệp nó để tạo cheat là hành vi REA không hỗ trợ.', 'Trọng tài của trận đấu online. Làm mù trọng tài để ăn gian là phạm luật chơi.']},
+ alias: {jadx: ['JADX'], ida: ['IDA Pro', 'IDA'], rea: ['REA'], mit: ['MIT'], eula: ['EULA'], interop: ['interoperability', 'tương thích'], drm: ['DRM'], cleanroom: ['triển khai độc lập'], copyright: ['quyền tác giả'], tradesecret: ['bí mật kinh doanh'], disclosure: ['coordinated disclosure'], anticheat: ['anti-cheat']},
+ rel: {mit: ['eula'], eula: ['mit', 'tradesecret'], interop: ['cleanroom', 'drm'], drm: ['anticheat', 'interop'], cleanroom: ['interop', 'copyright'], copyright: ['cleanroom', 'tradesecret'], tradesecret: ['copyright'], disclosure: ['eula'], anticheat: ['drm']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'my1', s: 0, type: 'one', q: 'Bạn dùng REA cùng IDA Pro. Giấy phép MIT của REA có ý nghĩa gì với IDA Pro?', o: ['Cho phép dùng IDA Pro miễn phí qua REA', 'Không có ý nghĩa gì; IDA Pro vẫn cần giấy phép riêng của Hex-Rays', 'Chuyển IDA Pro sang giấy phép MIT', 'Cho phép dùng key IDA Pro chia sẻ trên mạng'], a: 1,
+   ex: 'MIT chỉ áp dụng cho mã do dự án REA viết. Engine thương mại giữ nguyên giấy phép và điều khoản của nhà cung cấp.', why: {0: 'Lớp điều phối không cấp quyền dùng phần mềm khác.', 2: 'Giấy phép của một dự án không thay đổi được giấy phép của phần mềm khác.', 3: 'Key không được phép vẫn là không được phép, dù dùng qua REA.'}},
+  {id: 'my2', s: 0, type: 'one', q: 'Bạn muốn phân tích mã native nhưng chưa có giấy phép IDA Pro hay Hopper. Phương án nào hợp lệ?', o: ['Dùng key chia sẻ trên diễn đàn', 'Dùng chế độ demo của Hopper, engine mã nguồn mở như Ghidra, hoặc chuyển sang phân tích tĩnh nếu mục tiêu là JS hay .NET', 'Crack IDA Pro vì REA là mã nguồn mở', 'Yêu cầu REA cấp key dùng thử'], a: 1,
+   ex: 'Có nhiều cách hợp lệ không cần giấy phép thương mại; phân tích tĩnh JavaScript và .NET không cần engine native.', why: {0: 'Key không được phép là vi phạm điều khoản của nhà cung cấp.', 2: 'REA là mã nguồn mở không liên quan tới bản quyền của IDA.', 3: 'REA không kèm bất kỳ key hay giấy phép nào.'}},
+  {id: 'my3', s: 1, type: 'one', q: 'Bạn tải được bản cài của một phần mềm thương mại từ trang chính thức. Điều này cho bạn quyền gì?', o: ['Quyền phân tích và phát hành mọi thứ tìm thấy', 'Chỉ là quyền truy cập; quyền phân tích và quyền phát hành phải xét riêng', 'Quyền vượt cơ chế bảo vệ để kiểm tra', 'Quyền sao chép giao diện sang sản phẩm khác'], a: 1,
+   ex: 'Truy cập, phân tích và phát hành là ba bậc khác nhau, mỗi bậc cần căn cứ riêng.', why: {0: 'Có tệp không suy ra được quyền phân tích, càng không suy ra quyền phát hành.', 2: 'Quyền sử dụng không bao gồm quyền phá biện pháp bảo vệ kỹ thuật.', 3: 'Nghiên cứu hành vi không cho phép sao chép biểu đạt hay tài nguyên.'}},
+  {id: 'my4', s: 1, type: 'one', q: 'Sau khi hiểu cách một tính năng hoạt động, cách tái tạo nào ít rủi ro pháp lý hơn?', o: ['Chép pseudocode rồi đổi tên biến', 'Viết đặc tả hành vi, kiểm thử black-box và triển khai độc lập', 'Dùng lại hình ảnh và âm thanh của bản gốc cho giống', 'Đóng gói lại binary gốc trong ứng dụng mới'], a: 1,
+   ex: 'Triển khai độc lập từ đặc tả hành vi tránh việc mang theo biểu đạt được bảo hộ của bản gốc.', why: {0: 'Đổi tên biến không làm mã trở thành độc lập.', 2: 'Hình ảnh và âm thanh là tài sản được bảo hộ.', 3: 'Đây là phân phối lại phần mềm của người khác.'}},
+  {id: 'my5', s: 2, type: 'one', q: 'Theo pháp luật Việt Nam, chương trình máy tính chỉ có ở dạng mã máy (binary) có thể được bảo hộ quyền tác giả không?', o: ['Không, chỉ mã nguồn mới được bảo hộ', 'Có, phạm vi bảo hộ có thể áp dụng cho cả dạng mã nguồn và mã máy', 'Chỉ khi có đăng ký bản quyền tại Việt Nam', 'Chỉ với phần mềm của doanh nghiệp nhà nước'], a: 1,
+   ex: 'Binary không phải vùng tự do; chương trình máy tính được bảo hộ ở cả hai dạng.', why: {0: 'Mã máy cũng nằm trong phạm vi bảo hộ.', 2: 'Quyền tác giả phát sinh không phụ thuộc vào việc đăng ký.', 3: 'Không có giới hạn nào như vậy.'}},
+  {id: 'my6', s: 2, type: 'one', q: 'Một ngoại lệ dịch ngược của Hoa Kỳ có tự động áp dụng cho dự án thực hiện tại Việt Nam không?', o: ['Có, vì phần mềm dùng chung trên toàn cầu', 'Không nên mặc định; mỗi hệ thống pháp luật có ngoại lệ và điều kiện riêng', 'Có, nếu phần mềm viết bằng tiếng Anh', 'Có, nếu dùng REA phiên bản mới nhất'], a: 1,
+   ex: 'Tài liệu chủ đề nhấn mạnh: không nhập nguyên xi ngoại lệ của Hoa Kỳ, Nhật Bản hay EU vào bối cảnh Việt Nam.', why: {0: 'Phần mềm dùng toàn cầu, nhưng luật áp dụng theo nơi thực hiện và các yếu tố khác.', 2: 'Ngôn ngữ của phần mềm không quyết định luật áp dụng.', 3: 'Phiên bản công cụ không liên quan tới luật.'}},
+  {id: 'my7', s: 3, type: 'multi', q: 'Directive 2009/24/EC, Điều 6 đặt những điều kiện nào cho decompilation?', o: ['Người thực hiện có quyền sử dụng hợp pháp chương trình', 'Thông tin cần cho tương thích chưa sẵn có', 'Chỉ giới hạn ở phần cần thiết', 'Được phát hành bản sao để thương mại hóa'], a: [0, 1, 2],
+   ex: 'Ba điều kiện: quyền sử dụng hợp pháp, thông tin chưa sẵn có, giới hạn ở phần cần thiết để đạt interoperability.', why: {3: 'Chỉ thị không cho phép phát hành bản sao; mục đích là tương thích.'}},
+  {id: 'my8', s: 3, type: 'one', q: 'Nên hiểu 17 U.S.C. §1201(f) thế nào?', o: ['Quyền chung để phá DRM của mọi phần mềm', 'Một ngoại lệ hẹp để xác định yếu tố cần cho tương thích của một chương trình độc lập, kèm điều kiện', 'Quy định cấm mọi hình thức dịch ngược', 'Luật áp dụng cho mọi quốc gia'], a: 1,
+   ex: 'Đây là ngoại lệ có điều kiện, phục vụ tương thích, không phải giấy phép chung.', why: {0: 'Cách đọc thận trọng nói rõ đây không phải quyền chung để phá DRM.', 2: 'Ngược lại, đây là một ngoại lệ cho phép trong phạm vi hẹp.', 3: 'Luật Hoa Kỳ chỉ áp dụng trong hệ thống pháp luật Hoa Kỳ.'}},
+  {id: 'nb7', s: 4, type: 'multi', q: 'Theo tuyên bố miễn trừ trách nhiệm (DISCLAIMER.md) của dự án, những hành vi nào sau đây KHÔNG được REA hỗ trợ hoặc cho phép?', o: ['Sao chép nguyên bản phần mềm thương mại có bản quyền để bán lại.', 'Phát triển công cụ gian lận game (game cheats) hoặc can thiệp dịch vụ trực tuyến.', 'Nghiên cứu an toàn thông tin, giáo dục và phục hồi phần mềm cũ do mình sở hữu.', 'Vượt qua các biện pháp bảo vệ kỹ thuật như DRM, kiểm tra bản quyền hoặc hệ thống anti-cheat.'], a: [0, 1, 3],
+   ex: 'Sao chép để bán, làm cheat và vượt biện pháp bảo vệ đều nằm ngoài phạm vi REA hỗ trợ.', why: {2: 'Nghiên cứu bảo mật, giáo dục và bảo tồn phần mềm của mình là đúng mục đích DISCLAIMER mô tả.'}},
+  {id: 'my9', s: 4, type: 'one', q: 'Nhóm của bạn tìm thấy lỗ hổng trong sản phẩm của khách hàng, có văn bản ủy quyền. Nên công bố thế nào?', o: ['Đăng ngay lên mạng xã hội để cảnh báo người dùng', 'Theo quy trình coordinated disclosure: báo cho khách hàng trước, cho thời gian khắc phục, rồi mới công bố', 'Bán thông tin lỗ hổng cho bên trả giá cao nhất', 'Giữ kín và không báo cho ai'], a: 1,
+   ex: 'Công bố có phối hợp là cách báo cáo đúng cho nghiên cứu bảo mật được ủy quyền.', why: {0: 'Công bố trước khi có bản vá đặt người dùng vào rủi ro.', 2: 'Đây là hành vi gây hại và thường vi phạm hợp đồng.', 3: 'Không báo lỗi làm mất mục đích của việc kiểm thử.'}},
+  {id: 'my10', s: 5, type: 'one', q: 'Câu hỏi nào trong bộ sáu câu hỏi nhắm tới rủi ro kết quả chứa thông tin xác thực hoặc dữ liệu cá nhân?', o: ['Mục tiêu', 'Thẩm quyền', 'Kết quả', 'Phát hành'], a: 2,
+   ex: 'Câu “Kết quả” hỏi kết quả có chứa mã được bảo hộ, bí mật kinh doanh, thông tin cá nhân hay thông tin xác thực không.', why: {0: 'Mục tiêu hỏi về lý do phân tích.', 1: 'Thẩm quyền hỏi về quyền sở hữu và ủy quyền.', 3: 'Phát hành hỏi về tính độc lập của bản tái tạo.'}},
+  {id: 'my11', s: 5, type: 'multi', q: 'Trước khi kiểm thử sản phẩm của khách hàng, cần chuẩn bị những gì?', o: ['Văn bản ủy quyền', 'Phạm vi kiểm thử', 'Cách xử lý dữ liệu và quy trình công bố lỗ hổng', 'Bản crack của engine phân tích để tiết kiệm chi phí'], a: [0, 1, 2],
+   ex: 'Ba thứ đầu là phần “Thực hành an toàn” của tài liệu chủ đề.', why: {3: 'Dùng phần mềm crack là vi phạm giấy phép, đi ngược mục đích kiểm thử hợp pháp.'}}]};
+</script>
+<script src="diagram.js"></script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

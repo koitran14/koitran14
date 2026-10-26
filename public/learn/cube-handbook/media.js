@@ -2,7 +2,9 @@
 // demo: clips of Cube's own workshop video; the workshop runs on Cube Cloud, so some steps differ from the self-hosted path in the handbook.
 // audio: start/end (seconds) inside the overview audio; filled in with the mapping tool (add ?map=1 to a chapter URL).
 window.MEDIA = {
- yt: {id: '7ZQGGepDjUQ', title: 'Building Agentic Analytics with Cube (workshop, 39 phút)'},
+ yt: {id: '7ZQGGepDjUQ', title: 'Building Agentic Analytics with Cube (workshop, 39 phút)',
+  note: 'trong buổi workshop của Cube. Bản demo chạy trên Cube Cloud, do đó một số bước khác với cách self-host được mô tả trong tài liệu. Video thuộc Cube Dev, Inc., nhúng từ kênh YouTube chính thức của Cube.',
+  credit: 'Các đoạn demo trích từ buổi workshop chính thức của Cube trên YouTube; bản quyền video thuộc Cube Dev, Inc.'},
  audio: {src: '/learn/cube-handbook/media/overview.m4a', title: 'Kiến trúc tầng ngữ nghĩa Cube', marks: {
   // from a Whisper transcript of the overview; the audio is a discussion, so it covers the conceptual sections and skips the hands-on ones
   '00.1': [92, 210], '00.2': [638, 721], '00.4': [436, 594],

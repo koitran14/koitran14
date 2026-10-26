@@ -1,0 +1,41 @@
+// Sources behind the REA handbook. Project links checked 2026-10-26 (rea-agents 6.8.0 on npm).
+window.NOTICE = 'Tài liệu này tổng hợp về REA từ tài liệu của dự án, các bài viết cộng đồng và hai báo cáo do AI hỗ trợ soạn; bản nháp được viết với sự hỗ trợ của công cụ AI. Đây không phải tài liệu chính thức của REA, cũng không phải tư vấn pháp lý. REA thay đổi rất nhanh, nên cần đối chiếu với <a href="https://github.com/morluto/rea" target="_blank" rel="noopener">README</a> của phiên bản đang dùng trước khi áp dụng.';
+window.SOURCES = [
+ {id: 'p-gh', g: 'Tài liệu của dự án REA', title: 'morluto/rea: README', by: 'GitHub, morluto', url: 'https://github.com/morluto/rea'},
+ {id: 'p-npm', g: 'Tài liệu của dự án REA', title: 'rea-agents: gói npm, giấy phép MIT', by: 'npm', url: 'https://www.npmjs.com/package/rea-agents'},
+ {id: 'p-disc', g: 'Tài liệu của dự án REA', title: 'DISCLAIMER.md: phạm vi sử dụng có trách nhiệm', by: 'GitHub, morluto', url: 'https://github.com/morluto/rea/blob/main/DISCLAIMER.md'},
+ {id: 'p-sec', g: 'Tài liệu của dự án REA', title: 'SECURITY.md: ranh giới an ninh', by: 'GitHub, morluto', url: 'https://github.com/morluto/rea/blob/main/SECURITY.md'},
+ {id: 'p-site', g: 'Tài liệu của dự án REA', title: 'REA: hướng dẫn và showcase', by: 'rea.tools', url: 'https://rea.tools/'},
+ {id: 'l-vn07', g: 'Văn bản pháp luật', title: 'Luật số 07/2022/QH15 sửa đổi, bổ sung một số điều của Luật Sở hữu trí tuệ', by: 'Cổng Thông tin điện tử Chính phủ', url: 'https://chinhphu.vn/?classid=1&docid=206240&orggroupid=1&pageid=27160'},
+ {id: 'l-vn155', g: 'Văn bản pháp luật', title: 'Văn bản hợp nhất 155/VBHN-VPQH năm 2025, Luật Sở hữu trí tuệ', by: 'Thư viện Pháp luật', url: 'https://thuvienphapluat.vn/van-ban/So-huu-tri-tue/Van-ban-hop-nhat-155-VBHN-VPQH-2025-Luat-So-huu-tri-tue-672556.aspx'},
+ {id: 'l-ai', g: 'Văn bản pháp luật', title: 'Luật số 134/2025/QH15 về Trí tuệ nhân tạo, hiệu lực 01/03/2026', by: 'Cổng Thông tin điện tử Chính phủ', url: 'https://chinhphu.vn/?classid=1&docid=216334&orggroupid=1&pageid=27160'},
+ {id: 'l-digital', g: 'Văn bản pháp luật', title: 'Luật số 71/2025/QH15 về Công nghiệp công nghệ số, hiệu lực 01/01/2026', by: 'Bộ Khoa học và Công nghệ', url: 'https://mst.gov.vn/van-ban-phap-luat/25224.htm'},
+ {id: 'l-us', g: 'Văn bản pháp luật', title: '17 U.S.C. §1201(f), Reverse Engineering', by: 'U.S. Copyright Office', url: 'https://copyright.gov/title17/92chap12.html'},
+ {id: 'l-eu', g: 'Văn bản pháp luật', title: 'Directive 2009/24/EC, Article 6: Decompilation', by: 'EUR-Lex', url: 'https://eur-lex.europa.eu/legal-content/en/TXT/?uri=CELEX%3A32009L0024'},
+ {id: 'v-nick', g: 'Bài viết và video cộng đồng', title: 'I Tested The Viral Github Repo That Reverse Engineers Anything', by: 'Nick Saraev, YouTube', url: 'https://www.youtube.com/watch?v=dAzs_rU6080'},
+ {id: 'c-eigent', g: 'Bài viết và video cộng đồng', title: 'REA (Reverse Engineer Anything): How Agents Decompile and Rebuild Apps', by: 'Eigent AI'},
+ {id: 'c-bench', g: 'Bài viết và video cộng đồng', title: 'REA Reverse Engineer Anything: What It Installs, and What We Verified', by: 'Benchclaw'},
+ {id: 'c-agent', g: 'Bài viết và video cộng đồng', title: 'REA — Reverse Engineering for Your Coding Agent', by: 'bài viết cộng đồng'},
+ {id: 'c-zephel', g: 'Bài viết và video cộng đồng', title: 'REA, which gives AI agents reverse engineering capabilities, is actually a “bundler” rather than an analyzer', by: 'zephel01, note'},
+ {id: 'c-mdskills', g: 'Bài viết và video cộng đồng', title: 'REA: Reverse Engineer Anything for Claude Code', by: 'mdskills.ai'},
+ {id: 'c-dapta', g: 'Bài viết và video cộng đồng', title: 'REA: The Free AI Reverse Engineering Tool Explained', by: 'Dapta'},
+ {id: 'c-kitploit', g: 'Bài viết và video cộng đồng', title: 'rea: Reverse engineer anything with agents, from app behavior down to native binaries', by: 'Kitploit'},
+ {id: 'c-explained', g: 'Bài viết và video cộng đồng', title: 'Reverse Engineer Anything (REA) EXPLAINED!', by: 'video YouTube'},
+ {id: 'c-tutorial', g: 'Bài viết và video cộng đồng', title: 'Reverse Engineer Anything with AI Agents | REA + MCP Tutorial (Practical Demo)', by: 'video YouTube'},
+ {id: 'ai-report', g: 'Nội dung do AI tạo', title: 'Báo cáo phân tích chuyên sâu về REA: kiến trúc, cơ chế hoạt động, an ninh và chiến lược triển khai', by: 'báo cáo do AI hỗ trợ soạn, dùng làm khung tham khảo'},
+ {id: 'ai-topic', g: 'Nội dung do AI tạo', title: 'REA: Reverse Engineer Anything, tài liệu chủ đề v1.0 (26/10/2026)', by: 'tài liệu biên soạn với sự hỗ trợ của AI, dùng làm mục lục cho handbook'},
+ {id: 'ai-overview', g: 'Nội dung do AI tạo', title: 'Tổng quan toàn diện về REA: kiến trúc, cơ chế hoạt động và tác động ngành', by: 'nguồn trong Gemini Notebook'},
+ {id: 'ai-nb', g: 'Nội dung do AI tạo', title: 'Audio tổng quan “REA giúp AI dịch ngược phần mềm” và bộ trắc nghiệm', by: 'Gemini Notebook, tạo từ các nguồn trên'}];
+// which sources each chapter leans on (keys are chapter numbers)
+window.CH_SOURCES = {
+ '00': ['ai-topic', 'p-gh', 'p-npm', 'p-disc'],
+ '01': ['ai-topic', 'ai-report', 'p-gh', 'c-zephel', 'v-nick'],
+ '02': ['ai-topic', 'ai-report', 'p-gh', 'c-eigent', 'c-bench', 'v-nick'],
+ '03': ['ai-topic', 'ai-report', 'p-gh', 'p-site', 'v-nick'],
+ '04': ['ai-topic', 'ai-report', 'p-gh', 'c-kitploit'],
+ '05': ['ai-topic', 'ai-report', 'v-nick', 'c-bench'],
+ '06': ['ai-topic', 'ai-report', 'p-sec', 'p-gh'],
+ '07': ['ai-topic', 'ai-report', 'p-npm', 'p-disc', 'l-vn07', 'l-vn155', 'l-us', 'l-eu'],
+ '08': ['ai-topic', 'ai-report', 'v-nick', 'c-dapta', 'l-ai', 'l-digital'],
+ '09': ['ai-topic', 'ai-report', 'p-gh', 'p-npm', 'c-mdskills', 'v-nick'],
+ '10': ['ai-topic', 'ai-report']};

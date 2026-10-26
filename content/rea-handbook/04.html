@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · REA dùng được vào việc gì? · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 04 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 04</div>
+  <h1>REA dùng được <i>vào việc gì?</i></h1>
+  <p class="dek">REA đọc được những loại tệp nào, cần cài thêm gì cho từng loại, và nên dùng nó vào việc gì. Chương này cũng so sánh ba cách phân tích: static, dynamic và hybrid.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 04 / 10</span><span>12 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Phạm vi của REA rộng, nhưng mỗi loại mục tiêu có điều kiện riêng. Trước khi hỏi agent, hãy biết tệp của mình thuộc nhóm nào và cần engine gì.</div>
+
+  <section id="s1">
+    <span class="num">04.1</span>
+    <h2>REA đọc được những gì?</h2>
+    <p class="gist">Từ mã máy cấp thấp đến ứng dụng web, mô hình AI và firmware.</p>
+    <p>README của REA (bản 6.8.0, xem ngày 26/10/2026) liệt kê hàng chục loại mục tiêu. Có thể gom chúng thành vài nhóm. Nhóm mã máy cần engine bên ngoài như Hopper, Ghidra hoặc IDA. Nhiều nhóm khác dùng bộ đọc tĩnh tích hợp sẵn, không cần cài thêm. Chọn một loại mục tiêu để xem REA trả về gì và cần những gì.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="tg"></div>
+        <div class="panel" id="tgP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Mỗi loại mục tiêu: REA trả về gì, và cần gì trên máy.</figcaption>
+    </figure>
+    <p>JavaScript, Electron và .NET là trường hợp riêng: REA đọc trực tiếp các tệp này mà không chạy ứng dụng và không cần engine native. Ngược lại, phân tích runtime như quan sát website hay ghi lại hành vi tiến trình sẽ chạy hoặc tương tác với mục tiêu bằng quyền của người dùng hiện tại.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Các định dạng đặc thù</span></summary><div>
+      <p>README còn liệt kê WASM, EVM bytecode của smart contract, firmware (qua Binwalk hoặc Unblob trên Linux), cơ sở dữ liệu SQLite, tín hiệu logic analyzer, GPU kernel (CUDA/HIP, PTX), metadata của mô hình AI (GGUF, safetensors), Unity IL2CPP (<code>global-metadata.dat</code> phiên bản 24, 27, 29, 31, 39) và Godot PCK (định dạng 2, 3, 4). Một số loại cần công cụ do người dùng tự cài, ví dụ WABT cho WASM hay tshark cho gói tin mạng.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>Danh sách hỗ trợ thay đổi theo phiên bản REA, hệ điều hành và engine đã cài. Hãy đối chiếu README của bản đang dùng.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">04.2</span>
+    <h2>Sáu tình huống tiêu biểu</h2>
+    <p class="gist">Mỗi tình huống có giá trị riêng và một giới hạn đi kèm.</p>
+    <p>Tài liệu nguồn nêu sáu tình huống mà REA thường được dùng. Chọn từng tình huống để xem giá trị và điều kiện đi kèm.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="uc"></div>
+        <div class="rows" id="ucP"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Giá trị và giới hạn của từng tình huống.</figcaption>
+    </figure>
+    <p>Trong video thử nghiệm của Nick Saraev, tình huống được chọn là tái triển khai tính năng: dựng lại ứng dụng Preview của macOS để thêm khả năng vẽ khung và viết tay lên ảnh. Đây là kiểu yêu cầu phổ biến nhất, và cũng là kiểu cần rà soát sở hữu trí tuệ kỹ nhất trước khi phát hành.</p>
+    <div class="take"><small>Ghi nhớ</small>Mọi tình huống đều giả định bạn có quyền phân tích mục tiêu. Kiểm toán bảo mật chỉ làm trên hệ thống được phép kiểm tra.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">04.3</span>
+    <h2>Static, dynamic hay hybrid?</h2>
+    <p class="gist">Đọc mà không chạy, quan sát khi chạy, hoặc kết hợp cả hai.</p>
+    <p>Chọn đúng phương pháp cho câu hỏi thì đỡ tốn thời gian và tránh được kết luận sai. Chuyển qua lại giữa ba phương pháp để so sánh.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Phương pháp phân tích</span><div class="seg" id="md"><button data-x="0" class="on">Static</button><button data-x="1">Dynamic</button><button data-x="2">Hybrid</button></div></div>
+        <div class="rows" id="mdP"></div>
+      </div>
+      <figcaption><b>Hình 3</b>Ưu điểm, điểm mù và ví dụ công cụ trong REA.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Vì sao hybrid đáng tin hơn</span></summary><div>
+      <p>Static analysis có thể thấy một nhánh mã nhưng không biết nhánh đó có thực sự chạy hay không. Dynamic analysis thấy nhánh đã chạy nhưng có thể bỏ sót nhánh chỉ kích hoạt theo điều kiện. Khi hai cách cho cùng một câu trả lời, giả thuyết có hai nguồn bằng chứng độc lập. Khi hai cách mâu thuẫn, đó là chỗ cần điều tra tiếp.</p>
+    </div></details>
+    <a class="next-ch" href="/blog/rea-handbook/05"><span><small>Chương tiếp theo</small><b>05 · Lợi ích và giới hạn</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Danh sách định dạng lấy từ README của rea-agents 6.8.0 (xem ngày 26/10/2026) và báo cáo nguồn; phạm vi hỗ trợ có thể đã thay đổi ở phiên bản mới hơn.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1: [name, what REA returns, what it needs]
+const TG = [['Native binary', 'Pseudocode, assembly, chuỗi ký tự, symbols, lời gọi hàm và tham chiếu chéo. Hỗ trợ x86, x64, ARM với Mach-O, ELF, PE; Ghidra đọc được cả DOS 16-bit.', 'Hopper, Ghidra hoặc IDA đã cài sẵn. Có thể dùng thêm GNU objdump hoặc Rizin do người dùng tự cài.'],
+ ['Go / Rust', 'Go: phiên bản trình biên dịch, module, build settings. Rust: tên crate, phiên bản và cây phụ thuộc do cargo-auditable nhúng vào.', 'Không cần. Bộ đọc tĩnh tích hợp, không phải cài Go hay Rust.'],
+ ['JavaScript / Electron', 'Module, import, source map, route, ranh giới IPC giữa tiến trình main và renderer, quan hệ với native add-on. Đọc được thư mục đã giải nén hoặc tệp .asar.', 'Node.js và npm. Trên Linux cần lệnh ps tương thích procps.'],
+ ['.NET', 'Metadata, lệnh CIL, phụ thuộc native đã khai báo, so sánh giữa các bản build.', 'Không cần, chỉ phân tích tĩnh.'],
+ ['Android APK', 'Khai báo trong AndroidManifest.xml, các lớp, phương thức đã dịch ngược sang Java/Kotlin và tham chiếu.', 'JADX chạy headless và một bộ JDK đầy đủ, trên Linux, macOS hoặc Windows x64.'],
+ ['Website', 'Cấu trúc trang, script, lưu lượng mạng quan sát được và ảnh chụp màn hình khi được yêu cầu.', 'Một trình duyệt họ Chrome, điều khiển qua CDP.'],
+ ['Định dạng đặc thù', 'WASM, EVM bytecode, firmware, SQLite, tín hiệu logic, GPU kernel, GGUF/safetensors, Unity IL2CPP, Godot PCK.', 'Tùy loại: nhiều loại dùng bộ đọc tích hợp; một số cần WABT, Binwalk/Unblob, tshark hay sigrok-cli.']];
+tg.innerHTML = TG.map((t, i) => `<button data-g="${i}" class="${i ? '' : 'on'}">${t[0]}</button>`).join('');
+const tgShow = i => tgP.innerHTML = `<h5>${TG[i][0]}</h5><div class="rows"><div><b>Trả về</b>${TG[i][1]}</div><div class="fix"><b>Cần có</b>${TG[i][2]}</div></div>`;
+one('#tg', 'g', tgShow); tgShow(0);
+// Hình 2
+const UC = [['Kiểm toán bảo mật', 'Tìm hiểu cách ứng dụng xử lý đầu vào, xác thực, dữ liệu nhạy cảm hoặc giao tiếp mạng.', 'Chỉ thực hiện trên hệ thống được phép kiểm tra.'],
+ ['Tương thích hệ thống', 'Làm rõ định dạng hoặc giao thức chưa có tài liệu để xây phần mềm độc lập có thể trao đổi dữ liệu.', 'Chỉ phân tích phần cần thiết cho việc tương thích.'],
+ ['Điều tra sự cố', 'Phân tích hành vi bất thường, so sánh các phiên bản, xác định thành phần có khả năng gây lỗi.', 'Kết luận phụ thuộc vào phiên bản và môi trường đã khảo sát.'],
+ ['Bảo tồn phần mềm', 'Hiểu định dạng cũ hoặc phần mềm không còn mã nguồn để giữ khả năng truy cập.', 'Trong phạm vi quyền hợp pháp.'],
+ ['Học tập và CTF', 'Dùng bằng chứng thực tế để học assembly, cấu trúc tệp, luồng điều khiển và kỹ thuật phân tích.', 'Dùng mục tiêu được phép, như đề CTF hoặc chương trình tự viết.'],
+ ['Tái triển khai tính năng', 'Từ hành vi quan sát được, xây phiên bản độc lập có kiểm thử.', 'Rà soát quyền sở hữu trí tuệ trước khi phát hành.']];
+uc.innerHTML = UC.map((u, i) => `<button data-u="${i}" class="${i ? '' : 'on'}">${u[0]}</button>`).join('');
+const ucShow = i => ucP.innerHTML = `<div><b>Giá trị</b>${UC[i][1]}</div><div class="fix"><b>Giới hạn</b>${UC[i][2]}</div>`;
+one('#uc', 'u', ucShow); ucShow(0);
+// Hình 3
+const MD = [['Đọc cấu trúc hoặc suy luận mà không chạy chương trình. An toàn hơn với tệp lạ, dễ lặp lại.', 'Có thể bỏ sót hành vi chỉ xuất hiện lúc runtime, như cấu hình tải từ mạng.', 'Pseudocode qua Ghidra/IDA, đọc .asar, đọc CIL của .NET.'],
+ ['Quan sát chương trình khi đang chạy: DOM, lưu lượng mạng, tiến trình, giá trị thực của biến.', 'Phụ thuộc vào môi trường, dữ liệu thử, anti-debugging hoặc hành vi kích hoạt theo điều kiện. Chạy mục tiêu với quyền của người dùng.', 'CDP cho website, Frida, tshark, ghi lại hành vi tiến trình.'],
+ ['Kết hợp hai cách để đối chiếu giả thuyết. Thường đáng tin hơn.', 'Đòi hỏi môi trường và kỹ năng phù hợp, tốn thời gian hơn.', 'Đọc pseudocode để đặt giả thuyết, rồi quan sát runtime để xác nhận.']];
+const mdShow = i => mdP.innerHTML = `<div><b>Cách làm</b>${MD[i][0]}</div><div><b>Điểm mù</b>${MD[i][1]}</div><div class="fix"><b>Ví dụ</b>${MD[i][2]}</div>`;
+one('#md', 'x', mdShow); mdShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea04', minutes: 12,
+ next: {href: '/blog/rea-handbook/05', n: '05', t: 'Lợi ích và giới hạn'},
+ sections: [
+  {id: 's1', n: '04.1', t: 'REA đọc được gì', sum: ['Native cần Hopper, Ghidra hoặc IDA.', 'Go, Rust, .NET, JS/Electron đọc tĩnh, không cần engine native.', 'Android cần JADX và JDK; website cần trình duyệt họ Chrome.'], terms: ['native', 'asar', 'ipc', 'jadx', 'cdp', 'rea', 'ida']},
+  {id: 's2', n: '04.2', t: 'Sáu tình huống', sum: ['Kiểm toán, tương thích, sự cố, bảo tồn, học tập, tái triển khai.', 'Mỗi tình huống có giới hạn; tất cả cần quyền phân tích.'], terms: ['interop', 'ctf']},
+  {id: 's3', n: '04.3', t: 'Static, dynamic, hybrid', sum: ['Static đọc không chạy, có thể sót hành vi runtime.', 'Dynamic quan sát khi chạy, phụ thuộc vào môi trường.', 'Hybrid đối chiếu hai nguồn, đáng tin hơn.'], terms: ['static', 'dynamic', 'antidebug']}],
+ terms: {
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  native: ['native binary', 'Tệp chứa mã máy chạy trực tiếp trên CPU, như PE trên Windows, ELF trên Linux, Mach-O trên macOS.', 'Chương trình đã được “nấu chín” thành ngôn ngữ của CPU, không còn công thức gốc đi kèm.'],
+  asar: ['.asar', 'Định dạng lưu trữ mà ứng dụng Electron dùng để đóng gói mã JavaScript và tài nguyên thành một tệp.', 'Một chiếc hộp đóng gói toàn bộ mã của ứng dụng Electron; mở hộp ra là đọc được.'],
+  ipc: ['IPC', 'Inter-Process Communication: cơ chế giao tiếp giữa các tiến trình, ví dụ giữa tiến trình main và renderer trong Electron.', 'Đường dây nội bộ giữa các phòng trong cùng một công ty.'],
+  jadx: ['JADX', 'Công cụ dịch ngược bytecode Android (DEX) sang mã Java dễ đọc; REA chạy nó ở chế độ headless.', 'Máy phiên dịch chuyển ứng dụng Android về dạng mã gần với Java để người đọc hiểu được.'],
+  cdp: ['CDP', 'Chrome DevTools Protocol: giao thức điều khiển và quan sát trình duyệt họ Chrome, đọc DOM, script, mạng và trạng thái trang.', 'Cửa sau của trình duyệt, nơi công cụ nhìn vào trang web đang chạy.'],
+  interop: ['interoperability', 'Khả năng các chương trình độc lập trao đổi dữ liệu hoặc hoạt động cùng nhau.', 'Hai thiết bị khác hãng vẫn cắm vào nhau và dùng được.'],
+  ctf: ['CTF', 'Capture The Flag: cuộc thi an ninh mạng, người chơi giải các bài phân tích, khai thác để tìm “cờ”.', 'Trò chơi giải đố cho dân bảo mật, với đề bài được phép phá.'],
+  static: ['static analysis', 'Phân tích chương trình mà không thực thi nó, dựa trên mã, cấu trúc tệp và metadata.', 'Đọc bản vẽ của ngôi nhà mà không cần bước vào.'],
+  dynamic: ['dynamic analysis', 'Quan sát chương trình trong lúc chạy: giá trị biến, lời gọi hệ thống, lưu lượng mạng.', 'Bước vào ngôi nhà và xem đèn nào sáng khi bấm công tắc.'],
+  antidebug: ['anti-debugging', 'Các kỹ thuật chương trình dùng để phát hiện mình đang bị gỡ lỗi hay quan sát, rồi thay đổi hành vi.', 'Người diễn đổi lời thoại khi biết có camera đang quay.']},
+ alias: {ida: ['IDA Pro', 'IDA'], rea: ['REA'], native: ['native binary', 'mã máy'], asar: ['.asar'], ipc: ['IPC'], jadx: ['JADX'], cdp: ['CDP'], interop: ['tương thích'], ctf: ['CTF'], static: ['Static analysis', 'static analysis', 'phân tích tĩnh'], dynamic: ['Dynamic analysis', 'dynamic analysis'], antidebug: ['anti-debugging']},
+ rel: {native: ['static'], asar: ['ipc'], ipc: ['asar'], jadx: ['static'], cdp: ['dynamic'], interop: ['ctf'], ctf: ['interop'], static: ['dynamic'], dynamic: ['static', 'antidebug'], antidebug: ['dynamic']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'nb4', s: 0, type: 'one', q: 'Điểm khác biệt quan trọng khi REA phân tích ứng dụng JavaScript/Electron hoặc .NET so với phân tích mã máy (native binaries) là gì?', o: ['Chỉ hoạt động được trên hệ điều hành macOS.', 'Bắt buộc phải tải toàn bộ tập tin lên máy chủ đám mây của REA để xử lý.', 'Yêu cầu ứng dụng phải đang được thực thi trên môi trường thực tế.', 'Có thể phân tích tĩnh (static analysis) nội bộ mà không cần cài đặt engine phân tích native bên ngoài.'], a: 3,
+   ex: 'REA đọc trực tiếp tệp JavaScript, .asar và .NET bằng bộ đọc tích hợp, không cần Hopper, Ghidra hay IDA.',
+   why: {0: 'REA chạy trên macOS, Linux và Windows.', 1: 'Phân tích diễn ra cục bộ; REA không có máy chủ đám mây nhận tệp.', 2: 'Phân tích tĩnh đọc tệp mà không chạy ứng dụng.'}},
+  {id: 'my1', s: 0, type: 'one', q: 'Muốn REA phân tích một APK Android, máy cần có gì?', o: ['IDA Pro', 'JADX chạy headless và một bộ JDK đầy đủ', 'Một trình duyệt họ Chrome', 'Không cần gì thêm'], a: 1,
+   ex: 'README ghi rõ Android APK cần headless JADX và full JDK.', why: {0: 'IDA dùng cho mã máy native.', 2: 'Trình duyệt dùng cho website.'}},
+  {id: 'my2', s: 0, type: 'multi', q: 'Những loại mục tiêu nào REA đọc bằng bộ đọc tĩnh tích hợp, không cần cài thêm engine?', o: ['Metadata build của Go', 'Cây phụ thuộc cargo-auditable của Rust', 'Pseudocode của tệp PE phức tạp', 'Metadata của mô hình GGUF'], a: [0, 1, 3],
+   ex: 'Go, Rust và GGUF/safetensors đều dùng bộ đọc tích hợp.', why: {2: 'Pseudocode của mã máy cần Hopper, Ghidra hoặc IDA.'}},
+  {id: 'my3', s: 0, type: 'one', q: 'Khi phân tích ứng dụng Electron, REA có thể chỉ ra điều gì?', o: ['Ranh giới IPC giữa tiến trình main và renderer', 'Mật khẩu người dùng đã lưu', 'Mã nguồn C++ gốc của Chromium', 'Doanh thu của ứng dụng'], a: 0,
+   ex: 'REA trả về module, import, route và ranh giới IPC của ứng dụng Electron.'},
+  {id: 'my4', s: 1, type: 'one', q: 'Tình huống nào gắn với giới hạn “chỉ thực hiện trên hệ thống được phép kiểm tra”?', o: ['Học tập và CTF', 'Kiểm toán bảo mật', 'Bảo tồn phần mềm', 'Điều tra sự cố'], a: 1,
+   ex: 'Kiểm toán bảo mật chạm vào xác thực, dữ liệu nhạy cảm và giao tiếp mạng, nên cần được phép rõ ràng.'},
+  {id: 'my5', s: 1, type: 'one', q: 'Trong video của Nick Saraev, REA được dùng để dựng lại ứng dụng nào?', o: ['Photoshop', 'Preview trên macOS', 'Windows Calculator', 'Notion'], a: 1,
+   ex: 'Nick Saraev yêu cầu agent “dùng REA để dựng lại app Preview trên Mac” và so với bản Claude dựng không dùng REA.'},
+  {id: 'my6', s: 1, type: 'one', q: 'Trước khi phát hành một tính năng tái triển khai từ hành vi quan sát được, việc cần làm là gì?', o: ['Đổi màu giao diện', 'Rà soát quyền sở hữu trí tuệ', 'Xóa toàn bộ test', 'Tắt mạng'], a: 1,
+   ex: 'Tái triển khai tính năng là tình huống cần rà soát sở hữu trí tuệ kỹ nhất.'},
+  {id: 'my7', s: 2, type: 'one', q: 'Điểm yếu chính của static analysis là gì?', o: ['Phải chạy mục tiêu với quyền quản trị', 'Có thể bỏ sót hành vi chỉ xuất hiện lúc runtime', 'Không đọc được chuỗi ký tự', 'Luôn bị anti-debugging chặn'], a: 1,
+   ex: 'Static analysis không chạy chương trình, nên không thấy những gì chỉ xảy ra khi chạy.', why: {0: 'Static analysis không chạy mục tiêu.', 3: 'Anti-debugging nhắm vào dynamic analysis.'}},
+  {id: 'my8', s: 2, type: 'multi', q: 'Kết quả dynamic analysis có thể phụ thuộc vào những yếu tố nào?', o: ['Môi trường chạy', 'Dữ liệu thử nghiệm', 'Anti-debugging', 'Hành vi kích hoạt theo điều kiện'], a: [0, 1, 2, 3],
+   ex: 'Cả bốn đều đúng. Đó là lý do nên đối chiếu với static analysis.'},
+  {id: 'my9', s: 2, type: 'one', q: 'Vì sao hybrid analysis thường đáng tin hơn?', o: ['Vì nó nhanh nhất', 'Vì giả thuyết được kiểm tra bằng hai nguồn bằng chứng độc lập', 'Vì không cần kỹ năng', 'Vì không cần môi trường riêng'], a: 1,
+   ex: 'Khi static và dynamic cùng cho một câu trả lời, giả thuyết vững hơn; khi chúng mâu thuẫn, đó là chỗ cần điều tra.', why: {0: 'Hybrid thường tốn thời gian hơn.', 2: 'Hybrid đòi hỏi kỹ năng cao hơn.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

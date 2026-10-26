@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.wire .w1{top:110px;width:min(280px,calc(50% - 476px));right:max(12px,calc((50% - 440px - 280px) / 2))}
+.wire .w2{top:auto;bottom:90px;left:max(12px,calc((50% - 440px - 170px) / 2));right:auto}
+/* media */
+.media{display:grid;gap:14px;margin-top:32px}
+.aud{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:12px}
+.pp{width:44px;height:44px;border-radius:50%;border:0;background:var(--fg);color:var(--bg);display:grid;place-items:center;cursor:pointer}
+.pp svg{width:16px;height:16px}
+.aud-t{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--fg);margin-bottom:6px}
+.aud-t span{color:var(--muted);font:400 12px var(--mono)}
+.scrub{position:relative;height:28px;display:flex;align-items:center;gap:2px;cursor:pointer}
+.scrub i{flex:1;background:var(--line);border-radius:1px;min-width:1px}.scrub i.on{background:var(--acc)}
+.chip{font:500 12px var(--mono);border:1px solid var(--line);background:transparent;border-radius:6px;padding:4px 8px;cursor:pointer;color:var(--fg)}
+.vid{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
+/* routes */
+.routes{margin-top:72px}
+.routes .pills{margin-top:6px}
+.route-note{font-size:15px;color:var(--muted);margin:12px 0 0;min-height:24px}
+.demo{margin-top:56px}
+.notes{display:grid;grid-template-columns:150px 1fr;gap:10px 20px;margin:18px 0 8px;font-size:15px;line-height:1.6;color:var(--body)}
+.notes dt{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.notes dd{margin:0}
+#srcList h3{font-size:18px;margin:22px 0 4px}
+@media(max-width:700px){.notes{grid-template-columns:1fr;gap:2px}.notes dd{margin-bottom:10px}}
+.demo iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+.moments{list-style:none;margin:14px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;font-size:14px}
+.moments li{display:grid;grid-template-columns:48px 1fr;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.moments b{font:400 12px/1.9 var(--mono);color:var(--acc);font-weight:400}
+.moments a{color:var(--body);text-decoration:none}.moments a:hover{color:var(--fg)}
+.moments small{display:block;font:400 11px var(--mono);color:var(--muted)}
+@media(max-width:700px){.moments{grid-template-columns:1fr}}
+/* chapter path */
+.path{list-style:none;margin:28px 0 0;padding:0;position:relative}
+.path:before{content:"";position:absolute;left:21px;top:24px;bottom:24px;border-left:1px dashed var(--line)}
+.ch{position:relative;display:grid;grid-template-columns:44px 1fr;gap:18px;padding:18px 0;transition:opacity .3s}
+.ch .no{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font:500 13px var(--mono);color:var(--fg)}
+.ch.hot .no{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.ch .no em{position:absolute;top:-6px;right:-8px;font:normal 500 10px var(--mono);background:var(--acc);color:var(--bg);border-radius:999px;padding:1px 5px}
+.path.filtered .ch:not(.hot){opacity:.35}
+.ch h3{margin:6px 0 2px;font-size:25px}
+.ch h3 a{color:var(--fg);text-decoration:none}.ch h3 a:hover{color:var(--acc)}
+.ch .why{margin:0 0 10px;font-size:16px;color:var(--body)}
+.ch .facts{display:flex;flex-wrap:wrap;gap:6px 16px;font:400 12px var(--mono);color:var(--muted)}
+.ch .facts .lvl{color:var(--acc)}
+.ch .bar{height:3px;background:var(--line);border-radius:2px;margin-top:10px;max-width:260px}.ch .bar b{display:block;height:100%;background:var(--acc);border-radius:2px}
+.ch details{margin-top:10px}
+.ch summary{cursor:pointer;font-size:13px;color:var(--muted);list-style:none}
+.ch summary::-webkit-details-marker{display:none}
+.ch summary:before{content:"+ ";font-family:var(--mono)}.ch details[open] summary:before{content:"− "}
+.ch ol{margin:8px 0 0;padding-left:0;list-style:none;font-size:14px;columns:2;column-gap:24px}
+.ch ol li{padding:3px 0;break-inside:avoid;color:var(--body)}
+.ch ol li b{font:400 11px var(--mono);color:var(--muted);margin-right:6px;font-weight:400}
+.ch .go{display:inline-flex;gap:6px;align-items:center;margin-top:12px;font:500 13px var(--sans);color:var(--bg);background:var(--fg);border-radius:8px;padding:7px 14px;text-decoration:none}
+@media(max-width:700px){.ch ol{columns:1}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true">
+ <svg class="w1" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg>
+ <svg class="w2" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/></g></svg>
+</div>
+<div class="progress" id="prog"></div>
+
+<article>
+  <div class="crumb"><b>Learning</b> / Security / Reverse engineering</div>
+  <h1>REA <i>Reverse Engineer Anything</i></h1>
+  <p class="dek">Mười một chương về REA, từ câu hỏi “REA thực chất là gì” đến cách dùng an toàn và đúng luật. Mỗi chương đọc trọn trong một buổi, kèm audio, video và câu hỏi tự kiểm tra.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span id="mCount"></span><span id="mTime"></span></div></div>
+
+  <div class="media">
+    <div class="aud" id="aud">
+      <button class="pp" id="pp" aria-label="Phát"></button>
+      <div style="min-width:0"><div class="aud-t">Nghe tổng quan · REA giúp AI dịch ngược phần mềm <span id="atime">0:00</span></div><div class="scrub" id="scrub"></div></div>
+      <button class="chip" id="rate">1×</button>
+      <span class="note" style="grid-column:1/-1;font-size:12px;margin:0">Audio do Gemini Notebook tạo bằng AI từ bộ nguồn của handbook.</span>
+      <audio id="au" src="/learn/rea-handbook/media/overview.m4a" preload="metadata"></audio>
+    </div>
+  </div>
+
+  <div class="demo">
+    <span class="label">Video thử nghiệm · Nick Saraev · 11 phút</span>
+    <div class="vid"><iframe id="yt" src="https://www.youtube-nocookie.com/embed/dAzs_rU6080?rel=0" title="I Tested The Viral Github Repo That Reverse Engineers Anything" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+    <p class="note">Nick Saraev cài REA, cho agent dựng lại app Preview trên macOS rồi so với một bản dựng không dùng REA, sau đó nhận xét về làn sóng hype quanh dự án. Đây là góc nhìn độc lập, không phải tài liệu của REA. Mỗi đoạn được liên kết với mục tương ứng trong các chương; chọn một mốc thời gian để mở mục đó. Video thuộc tác giả.</p>
+    <ol class="moments" id="moments"></ol>
+  </div>
+
+  <div class="routes">
+    <span class="label">Bắt đầu từ đâu?</span>
+    <div class="pills" id="routes"></div>
+    <p class="route-note" id="rnote"></p>
+  </div>
+
+  <ol class="path" id="path"></ol>
+
+  <section class="end" id="sources">
+    <h2 style="font-size:28px">Nguồn và lưu ý khi đọc</h2>
+    <dl class="notes">
+      <dt>Tính chất tài liệu</dt><dd>Đây là handbook cá nhân về REA (Reverse Engineer Anything), tổng hợp từ các nguồn liệt kê bên dưới, với mục đích học tập và chia sẻ kiến thức. Đây không phải tài liệu chính thức của dự án REA; tác giả dự án không liên kết, tài trợ hay xác nhận nội dung này. Các tên sản phẩm được nhắc đến là thương hiệu của chủ sở hữu tương ứng.</dd>
+      <dt>Cách biên soạn</dt><dd>Mục lục đi theo tài liệu chủ đề “REA: Reverse Engineer Anything” (v1.0, 26/10/2026); phần chi tiết được bổ sung từ một báo cáo phân tích chuyên sâu, README của dự án và các bài viết cộng đồng. Cả tài liệu chủ đề lẫn báo cáo đều được soạn với sự hỗ trợ của AI. Nội dung handbook được draft với Gemini và Claude, sau đó biên tập và rà soát lại.</dd>
+      <dt>Số liệu</dt><dd>Các con số như lượt sao GitHub, lượt tải npm, số công cụ MCP hay số byte trong các case study lấy từ báo cáo nguồn và showcase của dự án. Chúng chưa được kiểm chứng độc lập, nên chỉ nên đọc như minh họa.</dd>
+      <dt>Pháp lý</dt><dd>Chương 07 cung cấp khung suy nghĩ ở mức thông tin chung, không phải tư vấn pháp lý. Tính hợp pháp của việc dịch ngược phụ thuộc vào quốc gia, hợp đồng, giấy phép và mục đích cụ thể; hãy đọc văn bản gốc và hỏi người có chuyên môn trước khi quyết định.</dd>
+      <dt>Version và tính cập nhật</dt><dd>REA đổi rất nhanh. Các yêu cầu môi trường và lệnh trong chương 09 được đối chiếu với README ngày 26/10/2026 (rea-agents 6.8.0). Trước khi chạy, hãy đọc lại <a href="https://github.com/morluto/rea" target="_blank" rel="noopener">README</a> của phiên bản bạn dùng.</dd>
+      <dt>Audio, video và câu hỏi ôn tập</dt><dd><p>Audio tổng quan và mười câu trong bộ câu hỏi ôn tập được Gemini Notebook tạo bằng AI; phần còn lại được soạn thêm theo nội dung từng chương. Audio có thể còn lỗi phát âm hoặc diễn đạt chưa chính xác.</p><p>Video của Nick Saraev được nhúng từ YouTube để tham khảo; video không được tải xuống hay đăng lại trong handbook này.</p></dd>
+      <dt>Góp ý và phản hồi</dt><dd>Nếu phát hiện nội dung chưa chính xác, thiếu nguồn hoặc cần bổ sung, bạn có thể gửi feedback qua email <a href="mailto:tndkhoi.work@gmail.com"><b>tndkhoi.work@gmail.com</b></a>. Mình sẽ xem xét và cập nhật handbook khi cần.</dd>
+    </dl>
+    <div id="srcList"></div>
+  </section>
+</article>
+
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script>
+// one row per demo moment, linked to every handbook section it illustrates
+const mm = {};
+Object.entries(MEDIA.demo).forEach(([n, clips]) => clips.forEach(c => {(mm[c[0]] ??= {t: c[0], label: c[2], secs: []}).secs.push(n)}));
+const fmtT = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+moments.innerHTML = Object.values(mm).sort((a, b) => a.t - b.t).map(m => `<li><b>${fmtT(m.t)}</b><span><a href="/blog/rea-handbook/${m.secs[0].slice(0, 2)}#s${+m.secs[0].split('.')[1]}">${m.label}</a><small>Mục ${m.secs.join(', ')}</small></span></li>`).join('');
+srcList.innerHTML = [...new Set(SOURCES.map(x => x.g))].map(g => `<h3>${g}</h3><ol class="src">${SOURCES.filter(x => x.g === g).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title} · <span>${x.by}</span></li>`).join('')}</ol>`).join('');
+</script>
+<script>
+const CHS = [
+ {n: '00', t: 'Tổng quan nhanh', vi: 'REA là gì, khi nào nên dùng và bốn hiểu lầm thường gặp, gói trong một lần đọc ngắn.', lvl: 'Bắt đầu ở đây', min: 8, q: 7,
+  s: ['REA trong một đoạn', 'Khi nào nên dùng REA', 'Bốn hiểu lầm thường gặp']},
+ {n: '01', t: 'REA thực chất là gì?', vi: 'Phân biệt reverse engineering với decompilation, và xem REA như một lớp điều phối thay vì một decompiler.', lvl: 'Nền tảng', min: 12, q: 9,
+  s: ['Reverse engineering và decompilation', 'REA là lớp điều phối', 'Bằng chứng trước, kết luận sau']},
+ {n: '02', t: 'Kiến trúc: AI agent, MCP và các engine', vi: 'MCP nối agent với REA ra sao, REA gọi những engine nào, và cách giữ ngữ cảnh gọn.', lvl: 'Nền tảng', min: 14, q: 10,
+  s: ['MCP làm gì trong REA', 'Các nhóm công cụ', 'Quản lý ngữ cảnh và phần chưa biết']},
+ {n: '03', t: 'Quy trình: từ bằng chứng đến tái tạo', vi: 'Ba pha Decompile, Understand, Recreate qua ví dụ nút % của Calculator và ba case study khác.', lvl: 'Cơ chế', min: 16, q: 13,
+  s: ['Ba pha: Decompile, Understand, Recreate', 'Một kết quả có bằng chứng gồm những gì', 'Ví dụ: nút % trong Windows Calculator', 'Ba case study khác', 'Tái tạo khác sao chép']},
+ {n: '04', t: 'REA dùng được vào việc gì?', vi: 'REA đọc được những định dạng nào, dùng vào việc gì, và khi nào chọn phân tích tĩnh hay động.', lvl: 'Cơ chế', min: 12, q: 10,
+  s: ['REA đọc được những gì', 'Sáu tình huống tiêu biểu', 'Static, dynamic hay hybrid']},
+ {n: '05', t: 'Lợi ích và giới hạn', vi: 'Lợi ích thật, giới hạn cần tự kiểm tra, và năm tiêu chí để đánh giá một kết quả phân tích.', lvl: 'Đánh giá', min: 12, q: 10,
+  s: ['Lợi ích thực tế', 'Giới hạn cần chủ động kiểm tra', 'Tiêu chí đánh giá một kết quả']},
+ {n: '06', t: 'Rủi ro an ninh', vi: 'REA không phải sandbox. Prompt injection, rò rỉ dữ liệu và bảng kiểm trước mỗi phiên phân tích.', lvl: 'An ninh', min: 14, q: 10,
+  s: ['REA không phải sandbox', 'Giao tiếp cục bộ và cài đặt', 'Prompt injection gián tiếp', 'Rò rỉ dữ liệu qua nhà cung cấp mô hình', 'Bảng kiểm an ninh']},
+ {n: '07', t: 'Pháp lý: được phép đến đâu?', vi: 'Giấy phép MIT của REA không mở khóa engine thương mại; góc nhìn Việt Nam, quốc tế và ma trận quyết định.', lvl: 'Pháp lý', min: 16, q: 12,
+  s: ['MIT của REA và giấy phép engine', 'Quyền truy cập, phân tích và phát hành', 'Góc nhìn Việt Nam', 'So sánh quốc tế', 'Hợp pháp hay vi phạm', 'Sáu câu hỏi trước khi phân tích']},
+ {n: '08', t: 'REA và làn sóng AI agent', vi: 'Vì sao loại công cụ này nổi lên, nó thay đổi gì cho thiết kế sản phẩm, và điều gì chỉ là hype.', lvl: 'Bối cảnh', min: 12, q: 8,
+  s: ['Vì sao loại công cụ này nổi lên', 'Từ “mô hình biết nhiều” đến “agent có bằng chứng”', 'Người làm sản phẩm nên rút ra gì', 'Cẩn trọng với “AI tái tạo mọi ứng dụng”']},
+ {n: '09', t: 'Dùng REA có trách nhiệm', vi: 'Tám bước từ câu hỏi đến báo cáo, cách cài và kiểm tra REA, cùng checklist trước khi dùng thật.', lvl: 'Thực hành', min: 14, q: 11,
+  s: ['Quy trình tám bước', 'Chuẩn bị môi trường và cài đặt', 'Các lệnh thường dùng', 'Checklist trước khi dùng thật', 'Definition of Done cho một báo cáo']},
+ {n: '10', t: 'Kết luận và thuật ngữ', vi: 'Ba giới hạn cần nhớ, thông điệp cuối và bảng thuật ngữ để tra cứu.', lvl: 'Tra cứu', min: 8, q: 7,
+  s: ['Ba giới hạn cần nhớ', 'Thông điệp cuối', 'Bảng thuật ngữ']}].map(c => ({...c, href: '/blog/rea-handbook/' + c.n, key: 'rea' + c.n}));
+const ROUTES = [['Người mới tìm hiểu', ['00', '01', '02', '03'], 'Đọc chương 00 để có bức tranh chung, rồi 01 → 02 → 03 để hiểu REA là gì, ráp với agent ra sao và làm việc theo quy trình nào.'],
+ ['Muốn dùng thử', ['09', '06', '02'], 'Chương 09 hướng dẫn cài và kiểm tra REA; đọc chương 06 trước khi mở tệp đầu tiên; chương 02 giải thích những gì vừa cài.'],
+ ['An ninh và pháp lý', ['06', '07', '10'], 'Chương 06 nói về rủi ro khi cho agent mở tệp lạ; chương 07 về giấy phép và quyền tác giả; chương 10 tóm lại ba giới hạn cần nhớ.'],
+ ['Góc nhìn sản phẩm', ['08', '05'], 'Chương 08 bàn về việc REA thay đổi gì cho người làm sản phẩm; chương 05 tách lợi ích thật khỏi kỳ vọng.']];
+const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
+const sum = f => CHS.reduce((a, c) => a + f(c), 0);
+mCount.textContent = `${CHS.length} chương · ${sum(c => c.s.length)} mục`;
+mTime.textContent = `khoảng ${Math.round(sum(c => c.min) / 60 * 2) / 2} giờ đọc · ${sum(c => c.q)} câu tự kiểm tra`;
+function renderPath(hot) {
+ path.className = 'path' + (hot ? ' filtered' : '');
+ path.innerHTML = CHS.map(c => {
+  const ans = Object.values(store.get('ans:' + c.key, {})), ok = ans.filter(a => a.ok).length, order = hot ? hot.indexOf(c.n) : -1;
+  return `<li class="ch${order >= 0 ? ' hot' : ''}" id="ch${c.n}"><div class="no">${c.n}${order >= 0 && hot.length > 1 ? `<em>${order + 1}</em>` : ''}</div><div>
+   <h3><a href="${c.href}">${c.t}</a></h3><p class="why">${c.vi}</p>
+   <div class="facts"><span class="lvl">${c.lvl}</span><span>${c.s.length} mục</span><span>${c.min} phút</span><span>${c.q} câu tự kiểm tra</span></div>
+   <div class="bar" title="Câu đúng"><b style="width:${ok / c.q * 100}%"></b></div>
+   <details><summary>Xem ${c.s.length} mục</summary><ol>${c.s.map((s, i) => `<li><b>${c.n}.${i + 1}</b>${s}</li>`).join('')}</ol></details>
+   <a class="go" href="${c.href}">${ok ? 'Đọc tiếp' : 'Bắt đầu đọc'} →</a></div></li>`}).join('')}
+routes.innerHTML = ROUTES.map((r, i) => `<button data-r="${i}">${r[0]}</button>`).join('');
+routes.onclick = e => {const b = e.target.closest('[data-r]'); if (!b) return; const on = !b.classList.contains('on');
+ routes.querySelectorAll('button').forEach(x => x.classList.toggle('on', on && x === b)); rnote.textContent = on ? ROUTES[+b.dataset.r][2] : ''; renderPath(on ? ROUTES[+b.dataset.r][1] : null)};
+renderPath(null);
+
+// audio: native element, custom controls
+const PLAY = '<svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>', PAUSE = '<svg viewBox="0 0 16 16"><path d="M3 2h4v12H3zM9 2h4v12H9z" fill="currentColor"/></svg>';
+const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '–:––';
+scrub.innerHTML = Array.from({length: 72}, (_, i) => `<i style="height:${30 + Math.round(60 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * .43)))}%"></i>`).join('');
+const bars = [...scrub.children];
+function aui() {pp.innerHTML = au.paused ? PLAY : PAUSE; pp.setAttribute('aria-label', au.paused ? 'Phát' : 'Tạm dừng');
+ atime.textContent = `${fmt(au.currentTime)} / ${fmt(au.duration)}`; const k = au.currentTime / au.duration || 0; bars.forEach((b, i) => b.classList.toggle('on', i / bars.length < k))}
+pp.onclick = () => {au.paused ? au.play() : au.pause()};
+scrub.onclick = e => {const r = scrub.getBoundingClientRect(); if (au.duration) au.currentTime = (e.clientX - r.left) / r.width * au.duration};
+rate.onclick = () => {au.playbackRate = {1: 1.25, 1.25: 1.5, 1.5: 2, 2: 1}[au.playbackRate]; rate.textContent = au.playbackRate + '×'};
+['play', 'pause', 'timeupdate', 'loadedmetadata'].forEach(ev => au.addEventListener(ev, aui)); aui();
+
+// progress + lens rotation
+addEventListener('scroll', () => {const h = document.documentElement; prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+ document.querySelectorAll('.wire svg').forEach((v, i) => v.style.transform = `rotate(${(i ? -1 : 1) * scrollY * .08}deg)`)}, {passive: true, signal: window.__hbSignal});
+</script>
+</body>
+</html>

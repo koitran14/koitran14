@@ -44,6 +44,33 @@ export const SERIES = [
       { kind: "video" as const, label: "Xem video", href: "/blog/cube-handbook#vd" },
     ],
   },
+  {
+    slug: "rea-handbook",
+    title: "REA Reverse Engineer Anything",
+    summary: "REA nối AI agent với Ghidra, IDA, JADX và nhiều công cụ dịch ngược khác. Handbook đi từ cơ chế hoạt động đến an ninh, pháp lý và cách dùng có trách nhiệm, kèm câu hỏi ôn tập cuối mỗi chương.",
+    href: "/blog/rea-handbook",
+    createdAt: "2026-10-26T00:00:00.000Z",
+    chapters: [
+      "Tổng quan nhanh",
+      "REA thực chất là gì?",
+      "Kiến trúc: AI agent, MCP và các engine",
+      "Quy trình: từ bằng chứng đến tái tạo",
+      "REA dùng được vào việc gì?",
+      "Lợi ích và giới hạn",
+      "Rủi ro an ninh",
+      "Pháp lý: được phép đến đâu?",
+      "REA và làn sóng AI agent",
+      "Dùng REA có trách nhiệm",
+      "Kết luận và thuật ngữ",
+    ].map((title, i) => {
+      const n = String(i).padStart(2, "0");
+      return { n, title, key: `rea${n}`, href: `/blog/rea-handbook/${n}` };
+    }),
+    media: [
+      { kind: "audio" as const, label: "Nghe 19 phút", href: "/blog/rea-handbook#aud" },
+      { kind: "video" as const, label: "Xem video", href: "/blog/rea-handbook#yt" },
+    ],
+  },
 ];
 
 // shortcut: posts live in a local JSON file, which does not persist on Vercel; move to a DB before deploying the blog.

@@ -3,11 +3,12 @@
 import { useEffect } from "react";
 import type { HandbookPage as Page } from "@/lib/handbook";
 
-const LIB = "/learn/cube-handbook";
+// the chapter engine is shared by every handbook
+const KIT = "/learn/cube-handbook/kit.js";
 
 // Renders a handbook page inside the site layout, then runs its scripts in order:
-// shared data first, the page's own script, then the chapter engine.
-export function HandbookPage({ page, engine }: { page: Page; engine: boolean }) {
+// the book's shared data first, the page's own script, then the chapter engine.
+export function HandbookPage({ book, page, engine }: { book: string; page: Page; engine: boolean }) {
   useEffect(() => {
     const ctl = new AbortController();
     (window as any).__hbSignal = ctl.signal;
@@ -22,13 +23,14 @@ export function HandbookPage({ page, engine }: { page: Page; engine: boolean }) 
         if (!src) done();
       });
     (async () => {
-      await run(`${LIB}/sources.js`);
-      await run(`${LIB}/media.js`);
+      await run(`/learn/${book}/sources.js`);
+      await run(`/learn/${book}/media.js`);
+      for (const lib of page.libs) await run(`/learn/${book}/${lib}`);
       await run(undefined, page.script);
-      if (engine) await run(`${LIB}/kit.js`);
+      if (engine) await run(KIT);
     })();
     return () => { ctl.abort(); added.forEach((s) => s.remove()); };
-  }, [page, engine]);
+  }, [book, page, engine]);
 
   // Fade and lift each block in as it scrolls into view, like the rest of the site; blocks entering together stagger.
   useEffect(() => {

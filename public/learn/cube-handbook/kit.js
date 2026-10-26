@@ -32,7 +32,8 @@ function toc() {
 
 // ---- keywords (H4): first use of each glossary term per paragraph becomes clickable ----
 const A2T = new Map(Object.entries(ALIAS).flatMap(([k, a]) => a.map(x => [x.toLowerCase(), k])));
-const KW = new RegExp(`(?<![\\p{L}\\d_.])(${[...A2T.keys()].sort((a, b) => b.length - a.length).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![\\p{L}\\d_])`, 'giu');
+// a hyphen on either side means a package or tool name (rea-agents, ida-pro-mcp), not the term
+const KW = new RegExp(`(?<![\\p{L}\\d_.-])(${[...A2T.keys()].sort((a, b) => b.length - a.length).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?![\\p{L}\\d_-])`, 'giu');
 function mark(block) {
  const seen = new Set(), w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, {acceptNode: n => n.parentElement.closest('code,.kw,button,pre') ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT}), nodes = [];
  while (w.nextNode()) nodes.push(w.currentNode);
@@ -173,7 +174,7 @@ if (M) {
   const was = btn.classList.contains('on'); closeYT(); if (was) return;
   const c = M.demo[btn.dataset.n][+btn.dataset.i], box = document.createElement('div'); box.className = 'yt-box';
   box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${M.yt.id}?start=${c[0]}&end=${c[1]}&autoplay=1&rel=0" title="${c[2]}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>` +
-   `<p class="note">${fmt(c[0])}–${fmt(c[1])} trong buổi workshop của Cube. Bản demo chạy trên Cube Cloud, do đó một số bước khác với cách self-host được mô tả trong tài liệu. Video thuộc Cube Dev, Inc., nhúng từ kênh YouTube chính thức của Cube. <a href="https://www.youtube.com/watch?v=${M.yt.id}&t=${c[0]}s" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p>`;
+   `<p class="note">${fmt(c[0])}–${fmt(c[1])} ${M.yt.note} <a href="https://www.youtube.com/watch?v=${M.yt.id}&t=${c[0]}s" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p>`;
   btn.closest('.mrow').after(box); btn.classList.add('on'); au.pause()}
  // mapping tool: play the overview, stop where a section starts or ends, press the button on that section
  let panel = null;
@@ -206,9 +207,10 @@ if (M) {
 
 
 // ---- reminders and sources: a note under the byline, chapter sources at the end ----
-const SRC = window.SOURCES || [], mine = (window.CH_SOURCES || {})[key.slice(2)] || [];
+const SRC = window.SOURCES || [], mine = (window.CH_SOURCES || {})[key.slice(-2)] || [];
 const notice = document.createElement('aside'); notice.className = 'notice';
-notice.innerHTML = '<span class="label">Lưu ý</span>Tài liệu này tổng hợp cách sử dụng Cube từ tài liệu chính thức, blog của Cube và một số bài viết khác; bản nháp được soạn với sự hỗ trợ của công cụ AI. Đây không phải tài liệu chính thức của Cube. Do Cube được cập nhật thường xuyên, cần đối chiếu với <a href="https://docs.cube.dev" target="_blank" rel="noopener">tài liệu chính thức</a> của phiên bản đang sử dụng trước khi áp dụng. <a href="#credits">Nguồn của chương</a>.';
+// each book's sources.js sets its own reminder (window.NOTICE)
+notice.innerHTML = `<span class="label">Lưu ý</span>${window.NOTICE} <a href="#credits">Nguồn của chương</a>.`;
 $('.metarow')?.after(notice);
 const end = $('.end');
 if (end) {
@@ -220,8 +222,8 @@ if (end) {
   (mine.length ? `<ol class="src">${mine.map(id => SRC.find(x => x.id === id)).filter(Boolean).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title}${x.by ? ` · <span>${x.by}</span>` : ''}</li>`).join('')}</ol>` : '') +
   (extra ? `<p><b>Ghi chú.</b> ${extra}</p>` : '') +
   `<p><b>Tự kiểm tra.</b> ${QB.length} câu: ${nb ? `${nb} câu từ bộ trắc nghiệm do Gemini Notebook (AI) tạo, đã biên tập; ` : ''}${QB.length - nb} câu được soạn bổ sung theo nội dung chương với sự hỗ trợ của AI và đã được rà soát.</p>` +
-  (M ? `<p><b>Media.</b> Audio tổng quan do Gemini Notebook tạo bằng AI từ cùng bộ nguồn và có thể còn điểm chưa chính xác. Các đoạn demo trích từ buổi workshop chính thức của Cube trên YouTube; bản quyền video thuộc Cube Dev, Inc.</p>` : '') +
-  `<p><a href="/blog/cube-handbook#sources">Danh sách nguồn đầy đủ và các lưu ý →</a></p>`;
+  (M ? `<p><b>Media.</b> Audio tổng quan do Gemini Notebook tạo bằng AI từ cùng bộ nguồn và có thể còn điểm chưa chính xác. ${M.yt.credit}</p>` : '') +
+  `<p><a href="${location.pathname.replace(/\/[^/]*$/, '')}#sources">Danh sách nguồn đầy đủ và các lưu ý →</a></p>`;
 }
 
 addEventListener('scroll', onScroll, {passive: true, signal: sig}); addEventListener('resize', fitCube, {signal: sig});

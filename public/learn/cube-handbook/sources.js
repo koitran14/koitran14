@@ -1,4 +1,5 @@
 // Sources behind the handbook, verified 2026-10-24 (docs moved from cube.dev/docs to docs.cube.dev).
+window.NOTICE = 'Tài liệu này tổng hợp cách sử dụng Cube từ tài liệu chính thức, blog của Cube và một số bài viết khác; bản nháp được soạn với sự hỗ trợ của công cụ AI. Đây không phải tài liệu chính thức của Cube. Do Cube được cập nhật thường xuyên, cần đối chiếu với <a href="https://docs.cube.dev" target="_blank" rel="noopener">tài liệu chính thức</a> của phiên bản đang sử dụng trước khi áp dụng.';
 window.SOURCES = [
  {id: 'd-intro', g: 'Tài liệu chính thức của Cube', title: 'Introduction', by: 'Cube Documentation', url: 'https://docs.cube.dev/docs/introduction'},
  {id: 'd-model', g: 'Tài liệu chính thức của Cube', title: 'Data modeling: Getting started', by: 'Cube Documentation', url: 'https://docs.cube.dev/docs/data-modeling/overview'},

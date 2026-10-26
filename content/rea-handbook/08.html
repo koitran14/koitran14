@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 · REA và làn sóng AI agent · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* hype figures in 08.1: big number + caveat */
+.hype{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.hype div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:13px;color:var(--muted)}
+.hype div b{display:block;font:400 26px/1.2 var(--serif);color:var(--fg);margin:4px 0}
+@media(max-width:700px){.hype{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 08 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 08</div>
+  <h1>REA và <i>làn sóng AI agent</i></h1>
+  <p class="dek">Vì sao một công cụ gom các engine dịch ngược đã có từ lâu lại gây chú ý đến vậy, nó thay đổi điều gì trong cách AI agent làm việc, và người làm sản phẩm nên rút ra gì.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 08 / 10</span><span>12 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>REA không phải công nghệ dịch ngược mới. Điểm mới là AI agent giờ có thể tự gọi các công cụ đó và đưa bằng chứng ra. Hệ quả lớn nhất rơi vào người làm sản phẩm: mã đã biên dịch không còn là nơi giấu bí mật.</div>
+
+  <section id="s1">
+    <span class="num">08.1</span>
+    <h2>Vì sao loại công cụ này nổi lên?</h2>
+    <p class="gist">AI agent đã chuyển từ viết mã theo prompt sang tự dùng công cụ, và MCP khiến việc nối công cụ rẻ đi nhiều.</p>
+    <p>Vài năm trước, trợ lý lập trình chủ yếu sinh mã theo yêu cầu. Bây giờ các coding agent như Claude Code, Codex hay Cursor làm việc theo vòng lặp: khám phá môi trường, gọi công cụ, đọc kết quả, sửa giả thuyết rồi chạy kiểm thử. REA nằm trong xu hướng đưa chuyên môn sâu, ở đây là dịch ngược, vào một giao diện mà agent tự điều phối được. MCP giảm chi phí tích hợp giữa agent và công cụ, còn Ghidra, Hopper hay IDA vẫn làm phần việc chuyên môn như trước.</p>
+    <p>Tháng 10/2026, REA trở thành chủ đề nóng. Báo cáo nguồn đưa ra một loạt con số tăng trưởng. Chọn từng con số để xem nên đọc nó thế nào.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="hp"></div>
+        <div class="hype" id="hypeN"></div>
+        <div class="panel" id="hpP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Các con số lấy từ báo cáo nguồn, chưa được kiểm chứng độc lập.</figcaption>
+    </figure>
+    <p>Trong video thử nghiệm REA, Nick Saraev nhắc lại vài phản ứng trên mạng xã hội, kiểu “software is done” hay “phần mềm sắp thành mã nguồn mở hết”. Anh cũng nói thẳng rằng khi một video mở đầu bằng biểu đồ GitHub stars, nhiều khả năng nó thiếu một bản demo đáng xem hơn. Số sao đo mức độ chú ý, không đo giá trị của công cụ.</p>
+    <div class="take"><small>Ghi nhớ</small>Độ nóng của REA đến từ sự gặp nhau giữa agent biết dùng công cụ và MCP. Các con số về stars hay lượt tải chỉ cho biết bao nhiêu người quan tâm.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">08.2</span>
+    <h2>Từ “mô hình biết nhiều” đến “agent có bằng chứng”</h2>
+    <p class="gist">Agent được nối với công cụ thì trả lời dựa trên dữ liệu vừa lấy từ mục tiêu, thay vì dựa trên trí nhớ của mô hình.</p>
+    <p>Mô hình ngôn ngữ có thể viết ra một lời giải nghe rất hợp lý nhưng sai chi tiết. Báo cáo nguồn gọi kiểu làm việc này là “reasoning from vibes”: suy luận từ cảm giác và trí nhớ huấn luyện. REA thuộc một làn sóng thiết kế agent runtime khác, trong đó agent được cấp grounded tools và phải trả về kết quả kiểm chứng được. Thay vì đoán đoạn mã chạy thế nào, agent mở chính tệp đó và đọc.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Cùng câu hỏi: “Nút % trong ứng dụng này tính thế nào?”</span><div class="seg" id="gr"><button data-g="0" class="on">Mô hình trả lời từ trí nhớ</button><button data-g="1">Agent có công cụ</button></div></div>
+        <div class="rows" id="grP"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Hai cách trả lời một câu hỏi về hành vi phần mềm.</figcaption>
+    </figure>
+    <p>Nhưng có bằng chứng không có nghĩa là hết hallucination. Sai lệch chỉ đổi chỗ. Chọn từng dạng để xem nó xuất hiện ra sao.</p>
+    <div class="pills" id="err"></div>
+    <div class="panel" id="errP"></div>
+    <div class="take"><small>Ghi nhớ</small>Công cụ giúp agent bớt bịa dữ kiện, nhưng agent vẫn có thể chọn sai công cụ, đọc sai kết quả hoặc khái quát quá tay. Người đọc báo cáo vẫn phải kiểm tra.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">08.3</span>
+    <h2>Người làm sản phẩm nên rút ra gì</h2>
+    <p class="gist">Biên dịch ra binary không còn là cách giữ bí mật; giá trị phải nằm ở chỗ khác.</p>
+    <p>Quan niệm “cứ đóng gói thành mã máy là mã nguồn an toàn” là một dạng security through obscurity. Khi AI agent có công cụ như REA, đọc một binary nhanh và rẻ hơn nhiều, nên quan niệm này càng khó đứng vững. Báo cáo nguồn mô tả sự dịch chuyển của “moat”, tức lợi thế cạnh tranh khó bị sao chép, như hình dưới.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Doanh nghiệp phần mềm dựa vào đâu để không bị sao chép?</span><div class="seg" id="mo"><button data-o="0" class="on">Moat cũ</button><button data-o="1">Moat mới</button></div></div>
+        <div class="cmp" id="moP" style="grid-template-columns:repeat(2,1fr)"></div>
+      </div>
+      <figcaption><b>Hình 3</b>Hào nước cũ dựa vào việc mã khó đọc; hào nước mới dựa vào thứ không nằm trong binary.</figcaption>
+    </figure>
+    <p>Từ đó, tài liệu chủ đề đưa ra năm hướng thực tế cho đội phát triển:</p>
+    <ul>
+      <li>Không coi việc biên dịch thành binary là biện pháp bảo mật đủ mạnh. Mọi bí mật phía client đều có thể bị trích xuất.</li>
+      <li>Đưa xác thực, phân quyền và các kiểm tra nghiệp vụ quan trọng về phía server; không tin dữ liệu hay quyết định đến từ client.</li>
+      <li>Không đóng gói API key dài hạn, credential hay private key trong ứng dụng, kể cả trong file <code>.asar</code> của Electron hay APK Android.</li>
+      <li>Đầu tư vào dữ liệu, vận hành, trải nghiệm, tốc độ cập nhật, kiểm soát truy cập và khả năng xử lý sự cố, thay vì trông vào việc mã khó đọc.</li>
+      <li>Đưa AI reverse engineering vào mô hình đe dọa và quy trình kiểm thử, thay vì chỉ dùng đến sau khi đã có sự cố.</li>
+    </ul>
+    <p>Báo cáo nguồn cũng nói rõ về obfuscation: làm rối mã giờ chỉ làm chậm agent, không còn là lớp phòng thủ chính. Cách nghĩ phù hợp hơn là Zero Trust: coi mọi binary đã gửi đến máy người dùng như thể mã nguồn đã lộ.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Góc nhìn kinh doanh trong video</span></summary><div>
+      <p>Nick Saraev cho rằng xu hướng chung, không riêng REA, đang làm phần lớn front end và back end trở thành hàng phổ thông. Nhiều ứng dụng “bọc” quanh Claude hay Codex để thêm vài tính năng sẽ bị chính các mô hình nuốt dần qua các bản cập nhật. Theo anh, giá trị đã dời lên nấc khác.</p>
+      <p>Anh cũng nhắc rằng dịch ngược một ứng dụng rồi đem bán sẽ vướng rào cản sở hữu trí tuệ. Cái thực sự giảm là rào cản để phối lại các ý tưởng có sẵn thành thứ mới, và rào cản để có một demo gây chú ý. Phần pháp lý được trình bày ở chương 07.</p>
+    </div></details>
+  </section>
+
+  <section id="s4">
+    <span class="num">08.4</span>
+    <h2>Cẩn trọng với tuyên bố “AI tái tạo mọi ứng dụng”</h2>
+    <p class="gist">Tên gọi Reverse Engineer Anything là một định hướng, không phải lời cam kết.</p>
+    <p>Kết quả của REA vẫn phụ thuộc vào chất lượng binary, kiến trúc, cơ chế bảo vệ, phần cứng, dữ liệu, khả năng của engine và kỹ năng của người kiểm chứng. Tái tạo được hành vi quan sát thấy cũng không có nghĩa là tái tạo được dịch vụ backend, dữ liệu độc quyền hay một hệ thống phân tán đứng sau ứng dụng.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="vt"></div>
+        <div class="rows" id="vtP"></div>
+      </div>
+      <figcaption><b>Hình 4</b>Ba góc nhìn từ thử nghiệm dựng lại ứng dụng Preview trên macOS trong video của Nick Saraev.</figcaption>
+    </figure>
+    <p>Điểm Nick nhấn mạnh: không cần REA vẫn có thể bảo agent tìm hiểu một tính năng rồi làm lại, vì agent biết tự chụp màn hình, quan sát và suy luận. Bản đó có thể không giống từng hàm của ứng dụng gốc. REA và các engine như Ghidra, IDA chủ yếu giúp nhanh hơn và có bằng chứng rõ hơn. Anh dự đoán các agent rồi sẽ học được phần lớn khả năng này qua quá trình huấn luyện.</p>
+    <div class="take"><small>Ghi nhớ</small>Hãy đánh giá REA bằng câu hỏi hẹp và bằng chứng cụ thể, không bằng lời hứa “sao chép được mọi thứ”.</div>
+    <a class="next-ch" href="/blog/rea-handbook/09"><span><small>Chương tiếp theo</small><b>09 · Dùng REA có trách nhiệm</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Các con số về GitHub stars, fork và lượt tải npm ở mục 08.1 lấy từ báo cáo nguồn do AI hỗ trợ soạn và chưa được đối chiếu độc lập. Ý kiến trong video là quan điểm cá nhân của Nick Saraev.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1
+const HP = [['GitHub stars', 'dưới 10.000', 'hơn 379.000', 'Báo cáo nguồn mô tả số sao tăng từ dưới 10.000 lên hơn 379.000 trong tháng 10/2026. Con số này đo sự chú ý trên GitHub, các bài đăng lan truyền dễ đẩy nó lên cao, và nó chưa nói gì về chất lượng phân tích.'],
+ ['Fork', '—', 'hơn 94.000', 'Theo báo cáo nguồn, kho lưu trữ có hơn 94.000 fork. Fork chỉ là bản sao kho mã; phần lớn có thể không bao giờ được sửa hay dùng.'],
+ ['Lượt tải npm mỗi ngày', 'khoảng 15', 'khoảng 100.000', 'Báo cáo nguồn ghi lượt tải gói rea-agents tăng từ khoảng 15 lượt/ngày cuối tháng 9 lên khoảng 100.000 lượt/ngày giữa tháng 10. Lượt tải npm gồm cả CI, mirror và các lần chạy npx lặp lại, nên không bằng số người dùng.']];
+hp.innerHTML = HP.map((h, i) => `<button data-h="${i}" class="${i ? '' : 'on'}">${h[0]}</button>`).join('');
+const hpShow = i => {hypeN.innerHTML = `<div>Trước đợt sốt<b>${HP[i][1]}</b>báo cáo nguồn</div><div>Giữa tháng 10/2026<b>${HP[i][2]}</b>báo cáo nguồn</div><div>Trạng thái<b style="font-size:18px">chưa kiểm chứng</b>cần tự đối chiếu</div>`; hpP.innerHTML = `<h5>Đọc con số thế nào</h5>${HP[i][3]}`};
+one('#hp', 'h', hpShow); hpShow(0);
+// Hình 2
+const GR = [[['Nguồn', 'Trí nhớ huấn luyện về các ứng dụng máy tính nói chung.'], ['Câu trả lời', '“Thường thì % chia số hiện tại cho 100.” Nghe hợp lý nhưng không chắc đúng với ứng dụng này.'], ['Kiểm tra được?', 'Không. Không có địa chỉ, không có đoạn mã nào để đối chiếu.']],
+ [['Nguồn', 'Assembly trích từ chính DLL của ứng dụng qua REA và engine dịch ngược.'], ['Câu trả lời', 'Hai nhánh theo toán tử trước đó, kèm địa chỉ lệnh so sánh và hằng số 0x64 (100).'], ['Kiểm tra được?', 'Có. Người khác mở cùng tệp, cùng địa chỉ và viết test để xác nhận.']]];
+const grShow = g => grP.innerHTML = GR[g].map((r, i) => `<div class="${g && i === 2 ? 'fix' : ''}"><b>${r[0]}</b>${r[1]}</div>`).join('');
+one('#gr', 'g', grShow); grShow(0);
+const ERR = [['Chọn sai công cụ', 'Agent phân tích tĩnh một hành vi chỉ xuất hiện lúc chạy, hoặc dùng sai engine cho định dạng, rồi kết luận “không có”.'],
+ ['Đọc sai kết quả', 'Gán ý nghĩa sai cho một hằng số, một tên hàm do decompiler tự đặt, hoặc một nhánh điều kiện.'],
+ ['Bỏ qua phản chứng', 'Chỉ giữ những bằng chứng khớp với giả thuyết ban đầu và lờ đi phần mâu thuẫn.'],
+ ['Khái quát quá mức', 'Từ một phiên bản, một máy hay một ca thử, kết luận cho mọi phiên bản và mọi đầu vào.']];
+err.innerHTML = ERR.map((e, i) => `<button data-e="${i}" class="${i ? '' : 'on'}">${e[0]}</button>`).join('');
+const errShow = i => errP.innerHTML = `<h5>${ERR[i][0]}</h5>${ERR[i][1]}`;
+one('#err', 'e', errShow); errShow(0);
+// Hình 3
+const MO = [[['Mã nguồn đóng', 'Phát hành binary và tin rằng người khác không đọc được logic.'], ['Làm rối mã', 'Dùng obfuscation để kéo dài thời gian phân tích.'], ['Giấu secret trong client', 'Nhúng API key hay token vào ứng dụng và hy vọng không ai tìm ra.']],
+ [['Dữ liệu độc quyền', 'Thứ không nằm trong binary nên không dịch ngược được.'], ['Thương hiệu và niềm tin', 'Khách hàng chọn bên họ tin, kể cả khi tính năng có thể sao chép.'], ['Quan hệ khách hàng, dịch vụ', 'Trải nghiệm hỗ trợ, vận hành và cập nhật liên tục.'], ['Hệ sinh thái, tốc độ đổi mới', 'Ra tính năng mới nhanh hơn tốc độ người khác sao chép.'], ['Zero Trust', 'Kiểm tra quyền ở server cho mọi yêu cầu, coi client là đã lộ.']]];
+const moShow = m => moP.innerHTML = MO[m].map(r => `<div><b>${r[0]}</b>${r[1]}</div>`).join('');
+one("#mo", "o", moShow); moShow(0);
+// Hình 4
+const VT = [['Có REA', [['Cách làm', 'Agent dùng REA, gọi Ghidra để dịch ngược Preview, rồi mở và đóng nhiều lần để thử.'], ['Kết quả', 'Bản dựng lại trông gần như giống hệt: xem thông tin, zoom, xoay, vẽ chú thích, lưu file.'], ['Đánh đổi', 'Hoàn thành sau bản không dùng REA vài phút trong lần chạy này.']]],
+ ['Không có REA', [['Cách làm', 'Claude (Opus) dựng ứng dụng xem ảnh giống Preview chỉ từ hiểu biết và quan sát.'], ['Kết quả', 'Xong trước, dùng được, nhưng hơi giật và ít giống bản gốc hơn.'], ['Đánh đổi', 'Không có bằng chứng về cách ứng dụng gốc thực sự hoạt động.']]],
+ ['Điều chưa tái tạo được', [['Phía sau', 'Dịch vụ backend, dữ liệu độc quyền, hệ thống phân tán.'], ['Phạm vi', 'Một lần thử với một ứng dụng nhỏ, không phải phép đo có kiểm soát.'], ['Kết luận', 'Demo cho thấy khả năng, chưa chứng minh “tái tạo mọi ứng dụng”.']]]];
+vt.innerHTML = VT.map((v, i) => `<button data-w="${i}" class="${i ? '' : 'on'}">${v[0]}</button>`).join('');
+const vtShow = i => vtP.innerHTML = VT[i][1].map((r, j) => `<div class="${j === 2 ? 'fix' : ''}"><b>${r[0]}</b>${r[1]}</div>`).join('');
+one("#vt", "w", vtShow); vtShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea08', minutes: 12,
+ next: {href: '/blog/rea-handbook/09', n: '09', t: 'Dùng REA có trách nhiệm'},
+ sections: [
+  {id: 's1', n: '08.1', t: 'Vì sao REA nổi lên', sum: ['Agent chuyển từ sinh mã sang tự dùng công cụ; MCP giảm chi phí tích hợp.', 'Các con số tăng trưởng lấy từ báo cáo nguồn, chưa kiểm chứng.', 'Stars đo sự chú ý, không đo giá trị.'], terms: ['agent', 'mcp', 'stars', 'rea', 'ida']},
+  {id: 's2', n: '08.2', t: 'Agent có bằng chứng', sum: ['Grounded tools: agent đọc dữ liệu từ chính mục tiêu.', 'Hallucination không biến mất mà đổi dạng.', 'Bốn dạng: sai công cụ, đọc sai, bỏ phản chứng, khái quát quá mức.'], terms: ['grounded', 'vibes', 'hallu']},
+  {id: 's3', n: '08.3', t: 'Bài học cho sản phẩm', sum: ['Security through obscurity không còn đứng vững.', 'Moat chuyển sang dữ liệu, niềm tin, dịch vụ, tốc độ.', 'Không nhúng secret vào client; kiểm tra quyền ở server.'], terms: ['obscurity', 'moat', 'zerotrust', 'obfus']},
+  {id: 's4', n: '08.4', t: 'Không phải mọi ứng dụng', sum: ['Tên gọi là định hướng, không phải cam kết.', 'Agent thường cũng làm được nhiều; REA chủ yếu cho tốc độ và bằng chứng.', 'Hành vi quan sát được khác backend và dữ liệu.'], terms: ['agent', 'grounded']}],
+ terms: {
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  agent: ['AI coding agent', 'Hệ thống dựa trên mô hình ngôn ngữ có thể tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại để hoàn thành một nhiệm vụ lập trình, ví dụ Claude Code, Codex, Cursor.', 'Một trợ lý tự mở terminal, chạy lệnh, xem kết quả rồi làm tiếp, giống một đồng nghiệp được giao việc.'],
+  mcp: ['MCP', 'Model Context Protocol: giao thức mở chuẩn hóa cách ứng dụng AI khám phá và gọi công cụ, nguồn dữ liệu bên ngoài. REA cung cấp một MCP server.', 'Ổ cắm chuẩn: agent nào có phích đúng chuẩn đều cắm được vào REA mà không cần đi dây riêng.'],
+  stars: ['GitHub stars', 'Số lượt người dùng GitHub đánh dấu sao một kho mã; chỉ số về mức độ quan tâm, không phản ánh chất lượng hay mức sử dụng.', 'Giống lượt “thích” trên mạng xã hội: nhiều người bấm không có nghĩa nhiều người dùng.'],
+  grounded: ['grounded tools', 'Công cụ cho phép agent lấy dữ liệu trực tiếp từ đối tượng đang xét (tệp, tiến trình, trang web) để câu trả lời bám vào bằng chứng kiểm tra được.', 'Thay vì đoán, agent mở ra xem tận mắt rồi mới trả lời, và chỉ cho người hỏi chỗ đã xem.'],
+  vibes: ['reasoning from vibes', 'Cách gọi trong báo cáo nguồn cho việc mô hình suy luận dựa trên trí nhớ huấn luyện và cảm giác hợp lý, không dựa trên dữ liệu vừa thu thập.', 'Trả lời theo kiểu “chắc là vậy”, nghe trôi chảy nhưng không ai kiểm tra được.'],
+  hallu: ['hallucination', 'Hiện tượng mô hình tạo ra nội dung nghe hợp lý nhưng sai hoặc không có căn cứ.', 'AI nói rất tự tin về một điều không có thật.'],
+  obscurity: ['security through obscurity', 'Cách bảo vệ dựa vào việc giữ kín cách hệ thống hoạt động, ví dụ chỉ phát hành binary, thay vì dựa vào cơ chế an toàn kể cả khi thiết kế bị lộ.', 'Giấu chìa khóa dưới thảm và hy vọng không ai lật thảm lên.'],
+  moat: ['moat', 'Lợi thế cạnh tranh bền vững khiến đối thủ khó sao chép hoặc thay thế sản phẩm.', 'Con hào quanh lâu đài: càng rộng thì đối thủ càng khó vượt qua.'],
+  zerotrust: ['Zero Trust', 'Cách tiếp cận an ninh không mặc nhiên tin bất kỳ thành phần nào; xác minh quyền của mọi yêu cầu tại ranh giới cần thiết.', 'Ai vào cũng phải trình thẻ, kể cả người quen, và ứng dụng trên máy khách được coi như đã bị mở ra xem hết.'],
+  obfus: ['obfuscation', 'Kỹ thuật biến đổi mã để khó đọc, khó phân tích hơn mà không đổi hành vi, như đổi tên, làm rối luồng điều khiển, mã hóa chuỗi.', 'Viết lại công thức bằng chữ xấu và ký hiệu lạ: vẫn đúng, chỉ tốn thời gian đọc hơn.']},
+ alias: {ida: ['IDA Pro', 'IDA'], rea: ['REA'], agent: ['AI agent', 'coding agent', 'agent'], mcp: ['MCP'], stars: ['GitHub stars', 'stars'], grounded: ['grounded tools'], vibes: ['reasoning from vibes'], hallu: ['hallucination'],
+  obscurity: ['security through obscurity'], moat: ['moat'], zerotrust: ['Zero Trust'], obfus: ['obfuscation']},
+ rel: {agent: ['mcp', 'grounded'], mcp: ['agent'], stars: ['agent'], grounded: ['vibes', 'hallu'], vibes: ['grounded', 'hallu'], hallu: ['grounded'], obscurity: ['obfus', 'zerotrust'], moat: ['zerotrust'], zerotrust: ['obscurity'], obfus: ['obscurity']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'my1', s: 0, type: 'multi', q: 'Những yếu tố nào giải thích việc công cụ như REA nổi lên vào lúc này?', o: ['Coding agent đã biết tự gọi công cụ và lặp lại theo kết quả', 'MCP giảm chi phí nối agent với công cụ', 'Ghidra, Hopper và IDA mới được phát hành năm 2026', 'Agent có thể giao phần việc chuyên môn cho engine sẵn có'], a: [0, 1, 3],
+   ex: 'REA xuất hiện đúng lúc agent biết dùng công cụ và MCP làm việc tích hợp rẻ đi; phần chuyên môn vẫn do engine cũ đảm nhận.', why: {2: 'Các engine này đã có từ lâu: Ghidra công bố năm 2019, IDA có từ thập niên 1990.'}},
+  {id: 'my2', s: 0, type: 'one', q: 'Theo cách đọc thận trọng, con số “hơn 379.000 GitHub stars” cho biết điều gì?', o: ['REA phân tích chính xác hơn mọi công cụ khác', 'Có hàng trăm nghìn người dùng REA mỗi ngày', 'Mức độ chú ý của cộng đồng, theo một báo cáo chưa kiểm chứng', 'REA đã được kiểm toán an ninh độc lập'], a: 2,
+   ex: 'Stars đo sự quan tâm. Con số này lại đến từ báo cáo nguồn và chưa được đối chiếu.', why: {0: 'Stars không đo chất lượng phân tích.', 1: 'Đánh dấu sao không đồng nghĩa với sử dụng.', 3: 'Không có thông tin nào như vậy trong nguồn.'}},
+  {id: 'my3', s: 1, type: 'one', q: '“Reasoning from vibes” trong báo cáo nguồn mô tả điều gì?', o: ['Agent đọc từng byte mã máy trước khi trả lời', 'Mô hình trả lời dựa trên trí nhớ huấn luyện và cảm giác hợp lý', 'Agent chạy thử ứng dụng trong sandbox', 'Người dùng đánh giá câu trả lời bằng cảm nhận'], a: 1,
+   ex: 'Đó là kiểu suy luận REA muốn thay bằng grounded tools và kết quả kiểm chứng được.'},
+  {id: 'my4', s: 1, type: 'multi', q: 'Khi agent đã có công cụ phân tích, sai lệch còn có thể xuất hiện dưới dạng nào?', o: ['Chọn sai công cụ cho định dạng hoặc hành vi', 'Đọc sai ý nghĩa của hằng số hay tên hàm', 'Bỏ qua bằng chứng mâu thuẫn với giả thuyết', 'Khái quát từ một phiên bản cho mọi phiên bản'], a: [0, 1, 2, 3],
+   ex: 'Cả bốn đều đúng. Hallucination không biến mất, nó chỉ chuyển sang những dạng này.'},
+  {id: 'my5', s: 2, type: 'one', q: 'Một ứng dụng Electron nhúng API key dài hạn trong file .asar. Theo chương này, nên xử lý thế nào?', o: ['Làm rối mã để giấu key kỹ hơn', 'Chuyển key và kiểm tra quyền về phía server', 'Đổi tên file .asar', 'Biên dịch lại sang mã máy'], a: 1,
+   ex: 'Mọi bí mật phía client đều có thể bị trích xuất; tài nguyên nhạy cảm phải nằm ở server.', why: {0: 'Obfuscation chỉ làm chậm, không phải lớp phòng thủ chính.', 2: 'Đổi tên không ngăn được việc giải nén.', 3: 'Binary cũng đọc được bằng các engine dịch ngược.'}},
+  {id: 'my6', s: 2, type: 'multi', q: 'Theo báo cáo nguồn, “moat” mới của doanh nghiệp phần mềm gồm những gì?', o: ['Dữ liệu độc quyền', 'Thương hiệu và niềm tin', 'Làm rối mã nhiều lớp', 'Quan hệ khách hàng và trải nghiệm dịch vụ'], a: [0, 1, 3],
+   ex: 'Moat mới nằm ở những thứ không có trong binary.', why: {2: 'Obfuscation thuộc moat cũ và đang bị AI agent làm suy yếu.'}},
+  {id: 'my7', s: 3, type: 'one', q: 'Trong thử nghiệm dựng lại Preview của Nick Saraev, điều nào mô tả đúng?', o: ['Bản không dùng REA không chạy được', 'Bản dùng REA giống bản gốc hơn nhưng xong sau', 'Hai bản giống hệt nhau đến từng hàm', 'REA dựng lại được cả dịch vụ iCloud phía sau'], a: 1,
+   ex: 'Bản REA trông gần như giống hệt Preview; bản không dùng REA xong trước nhưng kém giống hơn.', why: {0: 'Bản không dùng REA vẫn chạy được, chỉ hơi giật.', 2: 'Không có kiểm chứng ở mức từng hàm trong demo.', 3: 'Demo chỉ dựng lại ứng dụng xem ảnh.'}},
+  {id: 'my8', s: 3, type: 'multi', q: 'Vì sao không nên tin tuyên bố “AI tái tạo được mọi ứng dụng”?', o: ['Kết quả phụ thuộc vào binary, cơ chế bảo vệ và engine', 'Hành vi quan sát được không bao gồm backend và dữ liệu độc quyền', 'REA cấm phân tích ứng dụng macOS', 'Kỹ năng của người kiểm chứng vẫn quyết định chất lượng'], a: [0, 1, 3],
+   ex: 'Tên gọi là định hướng; giới hạn kỹ thuật và phạm vi hành vi vẫn còn nguyên.', why: {2: 'Không có quy định nào như vậy; demo trong video chính là ứng dụng macOS.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

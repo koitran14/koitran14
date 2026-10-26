@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · REA thực chất là gì? · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Hình 1: what compilation keeps and drops */
+.bake{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:start}
+.bake ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.bake li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:14px;line-height:1.4;transition:opacity .3s,border-color .3s}
+.bake li em{flex:none;font:normal 500 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px;border:1px solid currentColor}
+.bake li.kept{border-color:var(--acc)}.bake li.kept em{color:var(--acc)}
+.bake li.gone{color:var(--muted)}.bake li.gone span{text-decoration:line-through}.bake li.gone em{color:var(--bad)}
+.bake .sum{margin-top:10px;font:400 12px var(--mono);color:var(--muted)}
+/* Hình 3: sort a statement into a layer */
+.lay{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.lay button{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:500 13px var(--sans);cursor:pointer;color:var(--body)}
+.lay button.right{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.lay button.wrong{border-color:var(--bad);color:var(--bad)}
+.stmt{font:400 20px/1.45 var(--serif);color:var(--fg)}
+@media(max-width:700px){.bake{grid-template-columns:1fr}.lay{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 01 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 01</div>
+  <h1>REA <i>thực chất là gì?</i></h1>
+  <p class="dek">Phân biệt reverse engineering với decompilation, xem REA đứng ở đâu giữa agent và các engine, và vì sao bằng chứng phải đi trước kết luận.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 01 / 10</span><span>12 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Hãy xem REA như một bộ điều phối: agent đặt câu hỏi, REA chọn và gọi engine, engine làm phần phân tích, rồi kết quả quay lại agent kèm bằng chứng.</div>
+
+  <section id="s1">
+    <span class="num">01.1</span>
+    <h2>Reverse engineering và decompilation</h2>
+    <p class="gist">Decompilation là một kỹ thuật; reverse engineering là cả một quá trình điều tra.</p>
+    <p>Decompilation chuyển mã máy hoặc bytecode sang dạng dễ đọc hơn, như pseudocode hay mã gần với ngôn ngữ bậc cao. Reverse engineering rộng hơn nhiều: đọc cấu trúc tệp, lọc chuỗi ký tự, dựng đồ thị gọi hàm, theo dõi chương trình khi chạy, quan sát lưu lượng mạng, so sánh hai bản dựng và kiểm tra giả thuyết. Decompile chỉ là một bước trong đó.</p>
+    <p>Báo cáo nguồn dùng một hình ảnh dễ nhớ: biên dịch giống nướng bánh. Công thức và nguyên liệu (mã nguồn, tên biến, comment, cấu trúc hàm) đi vào lò, ra một chiếc bánh (binary). Dịch ngược là nếm bánh để đoán lại công thức. Đoán được khá nhiều, nhưng những gì đã tan vào bánh thì không lấy lại được nguyên dạng.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span id="bakeT">Thông tin trong mã nguồn</span><div class="seg" id="bk"><button data-b="0" class="on">Trước khi biên dịch</button><button data-b="1">Sau khi biên dịch</button></div></div>
+        <div class="bake"><div><ul id="bakeL"></ul><div class="sum" id="bakeM"></div></div><div class="panel" id="bakeP" style="margin:0"></div></div>
+      </div>
+      <figcaption><b>Hình 1</b>Chuyển sang “Sau khi biên dịch” để xem thứ gì còn lại trong binary.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Pseudocode là bằng chứng để suy luận, không phải bản sao để tin ngay.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">01.2</span>
+    <h2>REA là lớp điều phối</h2>
+    <p class="gist">REA không tự dịch ngược; REA nối agent với những công cụ đã làm việc đó từ lâu.</p>
+    <p>Mental model hữu ích nhất là xem REA như một bộ điều phối (orchestrator). AI agent nhận mục tiêu bằng lời thường; REA cung cấp một giao diện công cụ thống nhất; các engine chuyên dụng làm phần phân tích; kết quả quay về agent để tổng hợp và đề xuất bước tiếp theo. REA làm được gì trên một máy cụ thể còn tùy engine đã cài, định dạng của mục tiêu, quyền truy cập và chất lượng bằng chứng thu được.</p>
+    <figure>
+      <div class="fig">
+        <div id="comp"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Bốn thành phần và cách chúng nối với nhau. Chọn một khối để xem vai trò và điều dễ nhầm.</figcaption>
+    </figure>
+    <p>Trong video thử nghiệm REA, Nick Saraev nhấn mạnh rằng các công cụ phía dưới đều không mới: Ghidra do NSA công bố năm 2019, Hopper ra đời từ khoảng 2011, IDA có từ thập niên 1990. Điểm mới của REA là cho agent một cách đơn giản để dùng tất cả chúng cùng lúc.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Dự án đã đi từ đâu tới đây</span></summary><div>
+      <p>Theo báo cáo nguồn, tác giả morluto khởi tạo kho mã ngày 14/4/2026 với tên betterBinaryMCP, ban đầu là bộ 39 công cụ dành riêng cho Hopper. Ngày 12/7/2026, dự án chuyển từ Python sang TypeScript/Node.js, lên npm với tên ngắn REAAA rồi đổi thành rea-agents, và mở rộng sang các engine khác.</p>
+      <p>Các mốc này lấy từ báo cáo, chưa được đối chiếu với lịch sử commit. Tại thời điểm viết (26/10/2026), gói <code>rea-agents</code> trên npm đang ở phiên bản 6.8.0.</p>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">01.3</span>
+    <h2>Bằng chứng trước, kết luận sau</h2>
+    <p class="gist">Một câu trả lời của REA gồm dữ liệu công cụ, diễn giải của AI và những gì còn chưa biết. Đừng gộp ba thứ đó làm một.</p>
+    <p>REA đặt bằng chứng lên trước: kết luận được kiểm tra bằng địa chỉ, chuỗi, pseudocode, assembly, tham chiếu chéo và đồ thị gọi hàm. Trạng thái coverage và danh sách unknowns giúp agent không che giấu khoảng trống. Nhưng có bằng chứng chưa có nghĩa là diễn giải đúng. Cần hỏi thêm: bằng chứng có đủ ngữ cảnh không, có bị cắt cụt không, có chỉ đúng với một phiên bản không.</p>
+    <p>Khi đọc kết quả, hãy tách ba lớp: (1) dữ liệu công cụ trả về; (2) diễn giải của AI; (3) giả thuyết chưa được kiểm chứng. Thử phân loại vài câu dưới đây.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span id="stN"></span><button class="pri" id="stNext" style="border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:4px 10px;cursor:pointer;font:500 12px var(--mono)">Câu khác →</button></div>
+        <div class="stmt" id="stQ"></div>
+        <div class="lay" id="stL"><button data-l="0">Dữ liệu công cụ</button><button data-l="1">Diễn giải của AI</button><button data-l="2">Giả thuyết chưa kiểm chứng</button></div>
+        <div class="panel" id="stP"></div>
+      </div>
+      <figcaption><b>Hình 3</b>Mỗi câu thuộc lớp nào?</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Một kết luận đáng tin chỉ ra được nó dựa trên dữ liệu nào, và nói rõ phần nào vẫn chưa xác minh.</div>
+    <a class="next-ch" href="/blog/rea-handbook/02"><span><small>Chương tiếp theo</small><b>02 · Kiến trúc: AI agent, MCP và các engine</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Các mốc lịch sử dự án ở mục 01.2 lấy từ báo cáo nguồn do AI hỗ trợ soạn và chưa được đối chiếu độc lập.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1: [item, survives compilation?]
+const BAKE = [['Logic và luồng điều khiển', 1], ['Hằng số, chuỗi ký tự', 1], ['Lời gọi tới thư viện, hệ điều hành', 1], ['Tên biến cục bộ', 0], ['Comment', 0], ['Cấu trúc trừu tượng, lớp đối tượng', 0], ['Ranh giới mô-đun', 0]];
+const bakeL = document.getElementById('bakeL'), bakeP = document.getElementById('bakeP'), bakeM = document.getElementById('bakeM');
+function bake(after) {
+ bakeL.innerHTML = BAKE.map(([t, k]) => `<li class="${after ? (k ? 'kept' : 'gone') : ''}"><span>${t}</span>${after ? `<em>${k ? 'còn' : 'mất'}</em>` : ''}</li>`).join('');
+ const kept = BAKE.filter(b => b[1]).length;
+ document.getElementById('bakeT').textContent = after ? 'Thông tin còn lại trong binary' : 'Thông tin trong mã nguồn';
+ bakeM.textContent = after ? `${kept}/${BAKE.length} loại thông tin còn trong binary` : `${BAKE.length} loại thông tin trong mã nguồn`;
+ bakeP.innerHTML = after ? '<h5>Chiếc bánh đã nướng</h5>Logic, hằng số và lời gọi hệ thống vẫn còn, nên decompiler suy ra được hàm làm gì. Tên biến, comment và phần lớn cấu trúc trừu tượng đã mất; tên trong pseudocode là tên do công cụ hoặc AI đặt lại.' : '<h5>Công thức và nguyên liệu</h5>Mã nguồn chứa đầy đủ ý đồ của người viết: tên biến có nghĩa, comment giải thích, lớp và mô-đun được chia rõ ràng.'}
+bakeP.innerHTML = '';
+one('#bk', 'b', bake); bake(0);
+// Hình 2
+const COMP = [['AI agent', 'Diễn giải mục tiêu, chọn công cụ, tổng hợp phát hiện và lập kế hoạch điều tra.', 'Nguồn chân lý. Agent có thể suy luận sai.'],
+ ['REA / MCP server', 'Cung cấp giao diện thống nhất, điều phối lời gọi và cấu trúc hóa kết quả.', 'Một engine thay thế mọi engine phân tích.'],
+ ['Engine chuyên dụng', 'Dịch ngược, giải nén, quan sát runtime hoặc phân tích định dạng (Ghidra, Hopper, IDA, JADX…).', 'Công cụ vạn năng. Mỗi engine có phạm vi, giới hạn và điều khoản riêng.'],
+ ['Ứng dụng mục tiêu', 'Tệp hoặc chương trình đang được kiểm tra.', 'Tài sản mà người phân tích mặc nhiên có quyền khai thác.']];
+DG.graph(document.getElementById('comp'), {label: 'REA nằm giữa agent và các engine phân tích', start: [1, 0],
+ cols: [[{label: 'AI agent', sub: 'Claude, Codex…', role: COMP[0][1], not: COMP[0][2]}],
+  [{label: 'REA server', sub: 'MCP, điều phối', tone: 'acc', role: COMP[1][1], not: COMP[1][2]}],
+  [{label: 'Engine', sub: 'Ghidra, IDA, JADX', role: COMP[2][1], not: COMP[2][2]}],
+  [{label: 'Mục tiêu', sub: 'tệp được kiểm tra', tone: 'soft', role: COMP[3][1], not: COMP[3][2]}]],
+ edges: [[[0, 0], [1, 0], 'MCP', true], [[1, 0], [2, 0], 'gọi', true], [[2, 0], [3, 0], 'đọc']],
+ zone: {label: 'Máy của bạn', from: 1, to: 3},
+ detail: n => `<div class="rows"><div><b>Vai trò</b>${n.role}</div><div class="fix"><b>Không nên nhầm với</b>${n.not}</div></div>`});
+// Hình 3: [statement, layer 0 data / 1 interpretation / 2 hypothesis, why]
+const ST = [['Tại 0x180124949 có lệnh CMP EAX, 0x5c.', 0, 'Đây là dữ liệu công cụ trả về: một địa chỉ và một lệnh assembly cụ thể, ai chạy lại cũng thấy.'],
+ ['Hằng số 0x5c ứng với phép nhân, nên nhánh này xử lý trường hợp “× rồi %”.', 1, 'Đây là diễn giải: gán ý nghĩa cho một hằng số. Có thể đúng, nhưng cần đối chiếu với bảng mã lệnh hoặc hành vi quan sát được.'],
+ ['Mọi phiên bản Calculator đều tính phần trăm theo cùng thuật toán này.', 2, 'Đây là giả thuyết chưa kiểm chứng: một ví dụ trên một bản dựng không đủ để khái quát cho mọi phiên bản.'],
+ ['Chuỗi “license_ok” xuất hiện trong phân đoạn dữ liệu của tệp.', 0, 'Dữ liệu công cụ: chuỗi được trích xuất trực tiếp từ binary.'],
+ ['Hàm sub_4012a0 có vẻ là hàm kiểm tra đăng nhập vì gọi tới hàm băm mật khẩu.', 1, 'Diễn giải của AI dựa trên đồ thị gọi hàm; tên hàm thật đã mất khi biên dịch.'],
+ ['Nhánh xử lý lỗi mạng chắc không bao giờ chạy, vì lúc thử không thấy.', 2, 'Giả thuyết: không quan sát thấy một nhánh không có nghĩa nhánh đó không tồn tại hoặc không chạy.']];
+let si = 0;
+const stQ = document.getElementById('stQ'), stP = document.getElementById('stP'), stL = document.getElementById('stL'), stN = document.getElementById('stN');
+function stShow() {stQ.textContent = '“' + ST[si][0] + '”'; stN.textContent = `Câu ${si + 1}/${ST.length}`; stP.innerHTML = '<h5>Chọn một lớp</h5>Câu này là dữ liệu công cụ, diễn giải của AI, hay giả thuyết?'; stL.querySelectorAll('button').forEach(b => b.className = '')}
+stL.onclick = e => {const b = e.target.closest('[data-l]'); if (!b) return; const ok = +b.dataset.l === ST[si][1];
+ stL.querySelectorAll('button').forEach(x => x.className = +x.dataset.l === ST[si][1] ? 'right' : x === b ? 'wrong' : '');
+ stP.innerHTML = `<h5>${ok ? 'Đúng.' : 'Chưa đúng.'}</h5>${ST[si][2]}`};
+document.getElementById('stNext').onclick = () => {si = (si + 1) % ST.length; stShow()};
+stShow();
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea01', minutes: 12,
+ next: {href: '/blog/rea-handbook/02', n: '02', t: 'Kiến trúc: AI agent, MCP và các engine'},
+ sections: [
+  {id: 's1', n: '01.1', t: 'Reverse engineering và decompilation', sum: ['Decompilation là một kỹ thuật; reverse engineering là cả quá trình điều tra.', 'Biên dịch như nướng bánh: tên biến, comment, cấu trúc bị mất.', 'Pseudocode là bằng chứng để suy luận, không phải mã gốc.'], terms: ['re', 'decomp', 'pseudo', 'binary']},
+  {id: 's2', n: '01.2', t: 'REA là lớp điều phối', sum: ['Agent đặt mục tiêu, REA điều phối, engine phân tích, kết quả quay về agent.', 'Ghidra, Hopper, IDA không mới; điểm mới là giao diện chung cho agent.', 'Khả năng thực tế tùy engine đã cài, định dạng và quyền truy cập.'], terms: ['orch', 'agent', 'mcp', 'engine', 'rea', 'ida', 'jadx']},
+  {id: 's3', n: '01.3', t: 'Bằng chứng trước, kết luận sau', sum: ['Tách ba lớp: dữ liệu công cụ, diễn giải của AI, giả thuyết.', 'Coverage và unknowns giúp không che giấu khoảng trống.', 'Có bằng chứng chưa chắc diễn giải đúng.'], terms: ['evidence', 'unknowns', 'coverage', 'halluc']}],
+ terms: {
+  jadx: ['JADX', 'Công cụ dịch ngược bytecode Android (DEX) sang mã Java dễ đọc; REA chạy nó ở chế độ headless.', 'Máy phiên dịch chuyển ứng dụng Android về dạng mã gần với Java để người đọc hiểu được.'],
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  re: ['reverse engineering', 'Quá trình phân tích một hệ thống đã có để suy luận cấu trúc, hành vi hoặc cách triển khai, bao gồm đọc cấu trúc tệp, chuỗi, đồ thị gọi hàm, quan sát runtime, lưu lượng mạng và so sánh bản dựng.', 'Tháo một chiếc máy ra để hiểu nó chạy thế nào, khi trong tay không có bản vẽ.'],
+  decomp: ['decompilation', 'Kỹ thuật chuyển mã máy hoặc bytecode sang dạng biểu diễn dễ đọc hơn như pseudocode hoặc mã gần ngôn ngữ bậc cao; không nhất thiết khôi phục mã nguồn gốc.', 'Nếm chiếc bánh để viết lại công thức: ra được món gần giống, không ra đúng từng chữ trong sổ tay của đầu bếp.'],
+  pseudo: ['pseudocode', 'Mã giả do decompiler suy diễn để con người dễ đọc và phân tích; tên biến và cấu trúc trong đó là do công cụ đặt lại.', 'Bản dịch lại một cuốn sách đã mất bản gốc: hiểu được nội dung, câu chữ không còn như cũ.'],
+  binary: ['binary', 'Tệp chứa mã máy hoặc bytecode đã biên dịch, sẵn sàng cho CPU hoặc máy ảo thực thi (PE, ELF, Mach-O, APK…).', 'Chiếc bánh đã ra lò: ăn được ngay, nhưng không còn nhìn thấy từng nguyên liệu.'],
+  orch: ['orchestrator', 'Lớp điều phối các công cụ hoặc bước xử lý: nhận yêu cầu, chọn công cụ phù hợp, gọi theo thứ tự và chuẩn hóa kết quả trả về.', 'Người điều phối ở công trường: không tự xây, nhưng biết gọi đúng thợ cho đúng việc và gom báo cáo về một chỗ.'],
+  agent: ['AI agent', 'Ứng dụng dựa trên mô hình ngôn ngữ có khả năng lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.', 'Trợ lý biết tự cầm dụng cụ, nhưng vẫn có thể hiểu sai việc được giao.'],
+  mcp: ['MCP', 'Model Context Protocol: giao thức chuẩn hóa cách ứng dụng AI khám phá và gọi công cụ, nguồn dữ liệu bên ngoài.', 'Ổ cắm tiêu chuẩn giữa agent và công cụ.'],
+  engine: ['engine phân tích', 'Phần mềm chuyên dụng thực hiện phân tích thực sự: decompiler, disassembler, trình giải nén, trình quan sát runtime (Ghidra, Hopper, IDA Pro, JADX, Rizin…).', 'Những người thợ lành nghề mà REA gọi tới; mỗi người giỏi một loại việc.'],
+  evidence: ['bằng chứng kỹ thuật', 'Dữ liệu cụ thể lấy từ mục tiêu, làm căn cứ cho kết luận: địa chỉ, chuỗi, pseudocode, assembly, tham chiếu chéo, đồ thị gọi hàm.', 'Biên lai đi kèm mỗi khoản chi, để người khác kiểm tra lại.'],
+  unknowns: ['unknowns', 'Danh sách các điểm chưa giải mã hoặc chưa kết luận được, kèm lý do và bước kiểm tra tiếp theo, thay vì để agent tự đoán.', 'Cột “chưa rõ” trong sổ ghi chép điều tra: ghi ra để không ai tưởng là đã biết.'],
+  coverage: ['coverage', 'Trạng thái bao phủ của một lần phân tích trong phạm vi cụ thể; “complete” chỉ nói về phạm vi đã khảo sát, không chứng minh cả ứng dụng đã được hiểu.', 'Đánh dấu “đã kiểm tra xong” cho một căn phòng, không phải cho cả tòa nhà.'],
+  halluc: ['hallucination', 'Hiện tượng mô hình ngôn ngữ tạo ra nội dung nghe hợp lý nhưng sai hoặc không có căn cứ.', 'Kể trôi chảy về một chuyện chưa từng thấy.']},
+ alias: {jadx: ['JADX'], ida: ['IDA Pro', 'IDA'], rea: ['REA'], re: ['reverse engineering', 'Reverse engineering'], decomp: ['decompilation', 'Decompilation', 'decompile', 'decompiler'], pseudo: ['pseudocode'], binary: ['binary'], orch: ['orchestrator', 'bộ điều phối'],
+  agent: ['AI agent', 'agent'], mcp: ['MCP server', 'MCP'], engine: ['engine chuyên dụng', 'engine'], evidence: ['bằng chứng'], unknowns: ['unknowns'], coverage: ['coverage'], halluc: ['hallucination', 'ảo giác']},
+ rel: {re: ['decomp'], decomp: ['pseudo', 're'], pseudo: ['decomp', 'evidence'], binary: ['decomp'], orch: ['engine', 'mcp'], agent: ['orch', 'halluc'], mcp: ['orch'], engine: ['orch'],
+  evidence: ['unknowns', 'coverage'], unknowns: ['coverage', 'evidence'], coverage: ['unknowns'], halluc: ['evidence']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'my1', s: 0, type: 'one', q: 'Quan hệ đúng giữa reverse engineering và decompilation là gì?', o: ['Hai từ đồng nghĩa', 'Decompilation là một kỹ thuật bên trong quá trình reverse engineering', 'Reverse engineering là một bước của decompilation', 'Decompilation chỉ dùng cho ứng dụng web'], a: 1,
+   ex: 'Reverse engineering còn gồm đọc cấu trúc tệp, chuỗi, đồ thị gọi hàm, quan sát runtime, mạng và so sánh bản dựng. Decompile chỉ là một bước.', why: {0: 'Hai khái niệm có phạm vi khác nhau.', 2: 'Quan hệ ngược lại.', 3: 'Decompilation áp dụng cho mã máy và bytecode nói chung.'}},
+  {id: 'my2', s: 0, type: 'multi', q: 'Thông tin nào thường mất khi biên dịch, nên decompiler không khôi phục được nguyên dạng?', o: ['Tên biến cục bộ', 'Comment', 'Hằng số dùng trong phép tính', 'Cấu trúc trừu tượng và ranh giới mô-đun'], a: [0, 1, 3],
+   ex: 'Tên biến, comment và cấu trúc trừu tượng bị xóa hoặc biến đổi; hằng số vẫn nằm trong mã máy.', why: {2: 'Hằng số vẫn còn trong lệnh máy, ví dụ 0x64 = 100 trong Calculator.'}},
+  {id: 'my3', s: 0, type: 'one', q: 'Trong phép so sánh “nướng bánh”, việc dịch ngược tương ứng với gì?', o: ['Viết công thức mới', 'Nếm bánh để đoán lại công thức', 'Nướng lại chiếc bánh y hệt', 'Mua công thức từ đầu bếp'], a: 1,
+   ex: 'Biên dịch là nướng bánh; dịch ngược là nếm bánh để đoán lại công thức, và những gì đã tan vào bánh không lấy lại nguyên dạng được.'},
+  {id: 'nb1', s: 1, type: 'one', q: 'Bản chất kỹ thuật cốt lõi của công cụ REA (Reverse Engineer Anything) là gì?', o: ['Một dịch vụ đám mây mã nguồn đóng tự động trích xuất mã nguồn nguyên bản từ các tệp thực thi.', 'Một hệ điều hành cách ly (sandbox) dùng để chạy mã độc an toàn.', 'Một bộ điều phối (bundler/orchestrator) dựa trên giao thức MCP kết nối các AI agent với nhiều công cụ phân tích hiện có.', 'Một trình dịch ngược (decompiler) hoàn toàn mới viết bằng C++ nhằm thay thế Ghidra và IDA Pro.'], a: 2,
+   ex: 'REA không tự viết engine giải mã cho mọi nền tảng. Nó gộp và định tuyến các công cụ phân tích như Ghidra, Hopper, IDA Pro tới AI agent qua MCP.',
+   why: {0: 'REA là dự án mã nguồn mở chạy cục bộ trên máy người dùng chứ không phải dịch vụ đám mây mã nguồn đóng.', 1: 'REA không phải sandbox. Nó chạy công cụ trực tiếp với quyền của tài khoản hệ điều hành đang dùng.', 3: 'REA không có decompiler riêng. Nó điều khiển các decompiler người dùng đã cài.'}},
+  {id: 'my4', s: 1, type: 'one', q: 'Trong mô hình của REA, thành phần nào KHÔNG nên được coi là nguồn chân lý?', o: ['AI agent', 'Địa chỉ bộ nhớ do engine trả về', 'Chuỗi ký tự trích xuất từ binary', 'Mã băm của tệp mục tiêu'], a: 0,
+   ex: 'Agent diễn giải và lập kế hoạch, nhưng có thể suy luận sai. Dữ liệu do engine trả về mới là thứ kiểm tra lại được.', why: {1: 'Đây là dữ liệu công cụ, kiểm tra lại được.', 2: 'Đây là dữ liệu công cụ.', 3: 'Đây là dữ liệu công cụ dùng để định danh tệp.'}},
+  {id: 'my5', s: 1, type: 'one', q: 'Theo video của Nick Saraev, điều gì thật sự mới ở REA?', o: ['Một thuật toán dịch ngược chưa từng có', 'Giao diện đơn giản để agent dùng các công cụ đã có từ lâu như Ghidra, Hopper, IDA', 'Khả năng chạy không cần máy tính', 'Bản quyền miễn phí cho IDA Pro'], a: 1,
+   ex: 'Ghidra (2019), Hopper (khoảng 2011) và IDA (thập niên 1990) đều không mới; REA gom chúng sau một giao diện mà agent dùng được.', why: {0: 'REA không tự viết decompiler.', 3: 'REA không đi kèm giấy phép thương mại nào.'}},
+  {id: 'nb10', s: 2, type: 'one', q: 'Yếu tố thiết kế nào trong kết quả trả về của REA giúp AI agent hạn chế “ảo giác” (hallucination) khi giải thích phần mềm?', o: ['Tự động sửa các lỗi logic trong mã nguồn để ứng dụng chạy nhanh hơn.', 'Đính kèm bằng chứng kỹ thuật cụ thể (evidence) và ghi nhận rõ các điểm chưa xác định (unknowns).', 'Tự động khôi phục 100% tên biến và ghi chú nguyên bản của lập trình viên.', 'Chỉ trả về biểu đồ hình ảnh mà không cung cấp dữ liệu dạng văn bản.'], a: 1,
+   ex: 'Kết quả đi kèm bằng chứng kiểm tra được và danh sách unknowns, nên agent khó lấp khoảng trống bằng phỏng đoán.', why: {0: 'REA phân tích, không tự sửa mã của ứng dụng mục tiêu.', 2: 'Tên biến và comment đã mất khi biên dịch, không khôi phục được.', 3: 'REA trả về dữ liệu văn bản có cấu trúc để agent đọc.'}},
+  {id: 'my6', s: 2, type: 'one', q: '“Nhánh xử lý lỗi này chắc không bao giờ chạy vì lúc thử không thấy.” Câu này thuộc lớp nào?', o: ['Dữ liệu công cụ', 'Diễn giải đã được kiểm chứng', 'Giả thuyết chưa kiểm chứng', 'Bằng chứng runtime đầy đủ'], a: 2,
+   ex: 'Không quan sát thấy một nhánh không có nghĩa nhánh đó không tồn tại hoặc không chạy. Đây là giả thuyết.'},
+  {id: 'my7', s: 2, type: 'multi', q: 'Trước khi tin một kết luận có bằng chứng đi kèm, nên hỏi thêm những gì?', o: ['Bằng chứng có đủ ngữ cảnh không?', 'Bằng chứng có bị cắt cụt không?', 'Bằng chứng có chỉ đúng với một phiên bản không?', 'Câu trả lời có đủ dài không?'], a: [0, 1, 2],
+   ex: 'Bằng chứng có đủ làm căn cứ cho kết luận hay không tùy vào ngữ cảnh, độ đầy đủ và việc nó có phụ thuộc phiên bản không.', why: {3: 'Độ dài không nói gì về độ đúng.'}}]};
+</script>
+<script src="diagram.js"></script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

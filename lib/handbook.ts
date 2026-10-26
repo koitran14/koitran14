@@ -2,9 +2,10 @@ import "server-only";
 import { promises as fs } from "fs";
 import path from "path";
 
-// The Cube handbook pages are authored as plain HTML (content/cube-handbook) and rendered inside the site layout.
-const DIR = path.join(process.cwd(), "content", "cube-handbook");
-export const CHAPTERS = ["00", "01", "02", "03", "04", "05", "06", "07"];
+// Handbook pages are authored as plain HTML (content/<book>) and rendered inside the site layout.
+const ROOT = path.join(process.cwd(), "content");
+const chapters = (n: number) => Array.from({ length: n }, (_, i) => String(i).padStart(2, "0"));
+export const BOOKS: Record<string, string[]> = { "cube-handbook": chapters(8), "rea-handbook": chapters(11) };
 
 /** Prefix every selector with `.hb` so handbook styles never leak into the rest of the site. */
 export function scopeCss(css: string) {
@@ -38,20 +39,27 @@ function scopeOne(raw: string) {
   return `.hb ${s}`;
 }
 
-export type HandbookPage = { title: string; css: string; body: string; script: string };
+export type HandbookPage = { title: string; css: string; body: string; script: string; libs: string[] };
 
-export async function loadPage(name: string): Promise<HandbookPage> {
-  const [html, shared] = await Promise.all([
-    fs.readFile(path.join(DIR, `${name}.html`), "utf-8"),
-    fs.readFile(path.join(DIR, "style.css"), "utf-8"),
+// scripts every page loads anyway (HandbookPage adds them); any other <script src> a page lists is a book-specific library
+const SHARED = ["sources.js", "media.js", "kit.js"];
+
+export async function loadPage(book: string, name: string): Promise<HandbookPage> {
+  const css = (dir: string) => fs.readFile(path.join(ROOT, dir, "style.css"), "utf-8");
+  // every handbook builds on the Cube handbook's stylesheet; other books add their own figure styles on top
+  const [html, shared, own] = await Promise.all([
+    fs.readFile(path.join(ROOT, book, `${name}.html`), "utf-8"),
+    css("cube-handbook"),
+    book === "cube-handbook" ? "" : css(book),
   ]);
   const body = html.match(/<body>([\s\S]*)<\/body>/)![1];
   const inline = Array.from(body.matchAll(/<script>([\s\S]*?)<\/script>/g), (m) => m[1]);
   return {
-    title: html.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "Cube.dev Engineering Handbook",
-    css: scopeCss(shared + Array.from(html.matchAll(/<style>([\s\S]*?)<\/style>/g), (m) => m[1]).join("\n")),
+    title: html.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "Handbook",
+    css: scopeCss(shared + own + Array.from(html.matchAll(/<style>([\s\S]*?)<\/style>/g), (m) => m[1]).join("\n")),
     body: body.replace(/<script[\s\S]*?<\/script>/g, ""),
     // each page script runs in its own scope so moving between pages never redeclares a const
     script: inline.map((s) => `(() => {\n${s}\n})();`).join("\n"),
+    libs: Array.from(body.matchAll(/<script src="([^"]+)"><\/script>/g), (m) => m[1]).filter((s) => !SHARED.includes(s)),
   };
 }

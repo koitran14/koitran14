@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Kiến trúc: AI agent, MCP và các engine · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 02 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 02</div>
+  <h1>Kiến trúc: <i>AI agent, MCP và các engine</i></h1>
+  <p class="dek">Một yêu cầu đi qua những tầng nào, mỗi tầng có thể hỏng ở đâu, REA gom những nhóm công cụ nào, và làm sao để kết quả không tràn ngữ cảnh của mô hình.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 02 / 10</span><span>14 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Agent không chạm trực tiếp vào binary. Agent gửi yêu cầu có cấu trúc qua MCP tới REA chạy trên máy, REA nhận diện loại tệp và chuyển việc cho engine phù hợp.</div>
+
+  <section id="s1">
+    <span class="num">02.1</span>
+    <h2>MCP làm gì trong REA</h2>
+    <p class="gist">MCP chuẩn hóa cách agent tìm và gọi công cụ. Bản thân MCP không phân tích gì cả.</p>
+    <p>Model Context Protocol (MCP) là giao thức chuẩn hóa cách ứng dụng AI kết nối với công cụ và nguồn dữ liệu. Có thể hình dung MCP như một chuẩn cổng cắm: agent không cần tích hợp riêng từng API, miễn là máy chủ công cụ nói cùng giao thức. Theo báo cáo nguồn, các thông điệp đi theo dạng JSON-RPC giữa agent và REA server chạy cục bộ.</p>
+    <p>Một yêu cầu đi qua nhiều chặng, và chặng nào cũng có thể sai. Bấm “Chạy luồng” trong Hình 1 để xem câu hỏi đi qua từng chặng, hoặc chọn một bước để xem nó làm gì và thường hỏng ở đâu.</p>
+    <figure>
+      <div class="fig">
+        <div id="hop"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Đường đi của một câu hỏi, và điểm có thể hỏng ở mỗi chặng.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Trước REA đã có các cầu nối MCP đơn lẻ</span></summary><div>
+      <p>Theo báo cáo nguồn, năm 2025 cộng đồng đã có những cầu nối MCP cho từng công cụ: GhidraMCP (LaurieWired), ida-pro-mcp (mrexodia), jadx-ai-mcp. Mỗi cầu nối chỉ phục vụ một phần mềm. REA đứng ở tầng cao hơn: một kết nối MCP duy nhất dẫn tới nhiều engine, và REA tự chọn engine theo loại mục tiêu.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>MCP giúp agent gọi được công cụ. Gọi đúng công cụ và đọc đúng kết quả vẫn là việc phải kiểm tra.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">02.2</span>
+    <h2>Các nhóm công cụ</h2>
+    <p class="gist">Native, Android, runtime và mạng, JavaScript/Electron, và các định dạng đặc thù có bộ đọc tích hợp sẵn.</p>
+    <p>REA gom engine theo loại mục tiêu. Một số nhóm cần cài phần mềm bên ngoài (Ghidra, Hopper, IDA, JADX); một số khác dùng bộ đọc tĩnh có sẵn trong REA, không cần cài thêm gì. Chọn một nhóm để xem công cụ và mục đích.</p>
+    <figure>
+      <div class="fig">
+        <div id="grp"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Các nhóm công cụ theo tài liệu chủ đề, README và báo cáo nguồn.</figcaption>
+    </figure>
+    <p>Báo cáo nguồn ghi rằng tới giữa tháng 10/2026, REA có 207 định nghĩa công cụ MCP và 153 lệnh con CLI chia thành 12 nhóm chức năng. Đây là con số của báo cáo, chưa được đếm lại; danh mục thay đổi theo từng phiên bản.</p>
+    <div class="take"><small>Ghi nhớ</small>Sơ đồ này mô tả phạm vi mà tài liệu nêu. Nó không có nghĩa mọi engine đã cài sẵn, hay mọi định dạng đều chạy được trên mọi hệ điều hành. Hãy kiểm tra danh mục, phiên bản, điều kiện hệ thống và giấy phép của bản REA đang dùng.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">02.3</span>
+    <h2>Quản lý ngữ cảnh và phần chưa biết</h2>
+    <p class="gist">Chỉ đưa vào ngữ cảnh phần bằng chứng liên quan, và ghi rõ những gì chưa hiểu.</p>
+    <p>Phân tích binary có thể sinh ra rất nhiều dữ liệu. Đẩy hết vào mô hình thì tốn token, và thông tin quan trọng dễ bị chìm. Cách làm thực tế là truy vấn theo mục tiêu, thu hẹp phạm vi hàm hoặc mô-đun, chỉ đưa phần bằng chứng liên quan vào ngữ cảnh, và giữ một danh sách câu hỏi chưa có lời đáp.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="ctx"></div>
+        <div class="cols"><div class="code"><div class="h"><span id="ctxF"></span></div><pre id="ctxC"></pre></div><div class="panel" id="ctxP"></div></div>
+      </div>
+      <figcaption><b>Hình 3</b>Bốn công cụ giữ cho ngữ cảnh gọn và trung thực.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Compact và full khác nhau ở đâu</span></summary><div>
+      <p>Theo README, MCP của REA mặc định dùng compact input schema để giảm chi phí ngữ cảnh. Khi cần hướng dẫn đầy đủ cho từng trường và chi tiết kiểm tra lồng nhau, đặt <code>REA_MCP_INPUT_SCHEMA_PROFILE=full</code> trong cấu hình đăng ký MCP. Cả hai chế độ đều giữ nguyên toàn bộ bộ công cụ và phần kiểm tra hợp lệ phía server; khác biệt chỉ nằm ở lượng mô tả gửi cho agent.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>“complete” chỉ nói về phạm vi đã khảo sát, không chứng minh cả ứng dụng đã được hiểu.</div>
+    <a class="next-ch" href="/blog/rea-handbook/03"><span><small>Chương tiếp theo</small><b>03 · Quy trình: từ bằng chứng đến tái tạo</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Số lượng công cụ (207 định nghĩa MCP, 153 lệnh CLI) và các cầu nối MCP trước REA lấy từ báo cáo nguồn do AI hỗ trợ soạn; danh mục thực tế thay đổi theo phiên bản.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1: swimlane of one question; each message carries [what it does, how it fails]
+DG.seq(document.getElementById('hop'), {label: 'Đường đi của một câu hỏi qua agent, REA và engine',
+ actors: [{label: 'Người dùng', tone: 'soft'}, {label: 'AI agent'}, {label: 'REA server', tone: 'acc'}, {label: 'Engine'}, {label: 'Binary', tone: 'soft'}],
+ zones: [{label: 'Máy của bạn · cục bộ', from: 2, to: 4}],
+ msgs: [
+  {from: 0, to: 1, label: 'Hỏi bằng lời thường', does: 'Đặt câu hỏi, ví dụ “nút % trong Calculator tính thế nào?”.', fails: 'Câu hỏi quá rộng (“sao chép cả ứng dụng”) khiến agent lan man và tốn ngữ cảnh.'},
+  {from: 1, to: 2, label: 'Gọi công cụ qua MCP', does: 'Agent lập kế hoạch, chọn công cụ của REA và gửi yêu cầu có cấu trúc qua MCP tới REA server chạy cục bộ.', fails: 'Chọn sai công cụ; hoặc MCP đăng ký sai nên agent không thấy công cụ nào của REA.'},
+  {from: 2, to: 3, label: 'Chọn engine, gửi lệnh', does: 'REA nhận diện định dạng mục tiêu rồi gọi Ghidra, Hopper, IDA, JADX hoặc trình duyệt phù hợp.', fails: 'Định dạng không được hỗ trợ, hoặc engine cần thiết chưa cài.'},
+  {from: 3, to: 4, label: 'Mở và phân tích tệp', risk: true, does: 'Engine đọc binary với quyền của tài khoản đang dùng. REA không phải sandbox.', fails: 'Binary bị làm rối, đóng gói hoặc quá lớn khiến engine đọc sai hay hết thời gian; tệp độc hại có thể gây hại cho máy.'},
+  {from: 3, to: 2, label: 'Kết quả thô', back: true, does: 'Pseudocode, assembly, chuỗi, ký hiệu, tham chiếu chéo.', fails: 'Kết quả bị cắt cụt hoặc thiếu ngữ cảnh.'},
+  {from: 2, to: 1, label: 'Bằng chứng + unknowns', back: true, risk: true, does: 'REA chuẩn hóa kết quả kèm địa chỉ, coverage và danh sách điểm chưa rõ. Từ đây dữ liệu rời máy, đi tới nhà cung cấp mô hình của agent.', fails: 'Chuỗi trong binary có thể chứa prompt injection; mã dịch ngược có thể lộ ra ngoài.'},
+  {from: 1, to: 0, label: 'Báo cáo hoặc mã mới', back: true, does: 'Agent tổng hợp thành giải thích, hoặc viết lại tính năng kèm test.', fails: 'Mô hình diễn giải sai kết quả, hoặc khái quát quá mức từ một ví dụ.'}],
+ detail: m => `<div class="rows"><div><b>Làm gì</b>${m.does}</div><div class="fix"><b>Có thể hỏng</b>${m.fails}</div></div>`});
+// Hình 2: [group, tools, used for]
+const GRP = [['Native / binary', 'Ghidra, IDA Pro, Hopper, Rizin, GNU objdump', 'Mã máy x86, x64, ARM trong Mach-O, ELF, PE: pseudocode, assembly, ký hiệu, chuỗi, đồ thị gọi hàm, tham chiếu chéo.'],
+ ['Android', 'JADX chạy headless, cần JDK', 'Đọc APK, manifest, dịch ngược bytecode sang dạng Java/Kotlin để kiểm tra lớp và phương thức.'],
+ ['Runtime / mạng', 'Chrome DevTools Protocol, Frida, tshark', 'Quan sát hành vi lúc chạy: DOM, script, lưu lượng mạng, tiến trình.'],
+ ['JavaScript / Electron', 'Bộ đọc JS, trình giải nén ASAR', 'Kiểm tra bundle, sơ đồ mô-đun, import, route và ranh giới IPC giữa tiến trình main và renderer.'],
+ ['.NET', 'Bộ phân tích .NET nội bộ', 'Đọc metadata và lệnh CIL; chỉ phân tích tĩnh, không cần engine ngoài.'],
+ ['Bộ đọc tích hợp sẵn', 'Không cần engine ngoài', 'Metadata build của Go, cây phụ thuộc cargo-auditable của Rust, WASM, EVM bytecode, GGUF/safetensors, Unity IL2CPP, Godot PCK, PTX.']];
+const SUB = ['Ghidra, IDA, Hopper, Rizin', 'JADX headless + JDK', 'CDP, Frida, tshark', 'bộ đọc JS, giải nén ASAR', 'bộ phân tích .NET', 'Go, Rust, WASM, EVM…'];
+DG.graph(document.getElementById('grp'), {label: 'REA định tuyến yêu cầu tới sáu nhóm công cụ', start: [2, 0],
+ cols: [[{label: 'AI agent', sub: 'gửi yêu cầu', tone: 'soft', role: 'Agent không cần biết lệnh của từng engine, chỉ gọi công cụ của REA.'}],
+  [{label: 'REA server', sub: 'chọn theo định dạng', tone: 'acc', role: 'Nhận diện mục tiêu (Mach-O, APK, .asar, .dll…) rồi chuyển tới nhóm công cụ phù hợp.'}],
+  GRP.map((g, i) => ({label: g[0], sub: SUB[i], tools: g[1], use: g[2]}))],
+ edges: [[[0, 0], [1, 0], 'MCP'], ...GRP.map((g, i) => [[1, 0], [2, i]])],
+ detail: n => n.tools ? `<div class="rows"><div><b>Công cụ</b>${n.tools}</div><div class="fix"><b>Dùng để</b>${n.use}</div></div>` : `<p style="margin:0">${n.role}</p>`});
+// Hình 3: [tab, file label, lines, explanation]
+const CTX = [['Compact schema', 'mô tả công cụ gửi cho agent (minh họa)', ['{ "name": "decompile_function",', '  "input": { "target": "...", "address": "..." } }'], '<h5>Compact schema</h5>Chế độ mặc định. Chỉ gửi những trường thiết yếu để agent gọi được công cụ, tiết kiệm token cho phần bằng chứng.'],
+ ['Full schema', 'cấu hình đăng ký MCP', ['"env": {', '  "REA_MCP_INPUT_SCHEMA_PROFILE": "full"', '}'], '<h5>Full schema</h5>Dùng khi cần agent hiểu đầy đủ cấu trúc đầu vào, hoặc khi chẩn đoán lỗi gọi công cụ. Bộ công cụ không đổi, chỉ mô tả dài hơn.'],
+ ['Unknowns', 'một mục trong danh sách chưa rõ (minh họa)', ['unknown: hàm 0x401a20 gọi gián tiếp qua bảng', 'lý do: chưa xác định được đích nhảy', 'tiếp theo: quan sát runtime với đầu vào mẫu'], '<h5>Unknowns</h5>Ghi rõ vùng chưa hiểu, vì sao chưa kết luận và bước kiểm tra tiếp theo, thay vì để agent tự lấp chỗ trống.'],
+ ['Coverage', 'trạng thái bao phủ (minh họa)', ['coverage.status: complete', 'scope: hàm xử lý phím % và các hàm nó gọi'], '<h5>Coverage</h5>“complete” chỉ có nghĩa phạm vi đã nêu được khảo sát hết. Nó không nói gì về phần còn lại của ứng dụng.']];
+const ctx = document.getElementById('ctx'), ctxC = document.getElementById('ctxC'), ctxF = document.getElementById('ctxF'), ctxP = document.getElementById('ctxP');
+ctx.innerHTML = CTX.map((c, i) => `<button data-x="${i}" class="${i ? '' : 'on'}">${c[0]}</button>`).join('');
+const ctxShow = i => {ctxF.textContent = CTX[i][1]; ctxC.textContent = CTX[i][2].join('\n'); ctxP.innerHTML = CTX[i][3]};
+one('#ctx', 'x', ctxShow); ctxShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea02', minutes: 14,
+ next: {href: '/blog/rea-handbook/03', n: '03', t: 'Quy trình: từ bằng chứng đến tái tạo'},
+ sections: [
+  {id: 's1', n: '02.1', t: 'MCP làm gì trong REA', sum: ['MCP chuẩn hóa cách agent tìm và gọi công cụ, không tự phân tích.', 'Người dùng → agent → MCP → REA → engine → bằng chứng → báo cáo.', 'Chặng nào cũng có thể hỏng: sai công cụ, thiếu engine, đọc sai kết quả.'], terms: ['mcp', 'jsonrpc', 'agent', 'bridge', 'rea']},
+  {id: 's2', n: '02.2', t: 'Các nhóm công cụ', sum: ['Native, Android, runtime/mạng, JS/Electron, .NET, bộ đọc tích hợp.', 'Có nhóm cần engine ngoài, có nhóm dùng bộ đọc sẵn trong REA.', '207 định nghĩa MCP / 153 lệnh CLI là số liệu của báo cáo nguồn.'], terms: ['native', 'jadx', 'cdp', 'asar', 'ipc', 'ida', 'cli']},
+  {id: 's3', n: '02.3', t: 'Quản lý ngữ cảnh', sum: ['Truy vấn theo mục tiêu, chỉ đưa bằng chứng liên quan vào ngữ cảnh.', 'Compact schema là mặc định; full schema qua REA_MCP_INPUT_SCHEMA_PROFILE=full.', 'Unknowns ghi điều chưa rõ; coverage chỉ nói về phạm vi đã khảo sát.'], terms: ['context', 'schema', 'unknowns', 'coverage']}],
+ terms: {
+  cli: ['CLI', 'Command-line interface: giao diện dòng lệnh, nơi người dùng hoặc agent gõ lệnh dạng văn bản để chạy chương trình. REA có một CLI bên cạnh MCP server.', 'Điều khiển chương trình bằng cách gõ lệnh thay vì bấm nút.'],
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  mcp: ['MCP', 'Model Context Protocol: giao thức mở chuẩn hóa cách ứng dụng AI khám phá và gọi công cụ, nguồn dữ liệu bên ngoài; không tự thực hiện phân tích.', 'Chuẩn cổng cắm: thiết bị nào cắm đúng chuẩn thì dùng được, không cần đi dây riêng.'],
+  jsonrpc: ['JSON-RPC', 'Giao thức gọi thủ tục từ xa nhẹ, mã hóa yêu cầu và phản hồi bằng JSON; MCP dùng dạng thông điệp này.', 'Một mẫu phiếu yêu cầu in sẵn: ghi tên việc cần làm và tham số, bên kia trả lời theo mẫu tương ứng.'],
+  agent: ['AI agent', 'Ứng dụng dựa trên mô hình ngôn ngữ biết lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại.', 'Trợ lý biết tự cầm dụng cụ, nhưng vẫn có thể cầm nhầm.'],
+  bridge: ['cầu nối MCP đơn lẻ', 'MCP server bọc một công cụ duy nhất (ví dụ GhidraMCP, ida-pro-mcp, jadx-ai-mcp) để agent điều khiển công cụ đó.', 'Bộ chuyển đổi chỉ hợp với một thiết bị; REA giống ổ cắm nhiều lỗ.'],
+  native: ['native binary', 'Tệp chứa mã máy cho một kiến trúc CPU cụ thể (x86, x64, ARM) trong định dạng như PE, ELF hoặc Mach-O.', 'Chương trình đã “nói tiếng” của bộ vi xử lý, con người phải nhờ công cụ mới đọc được.'],
+  jadx: ['JADX', 'Công cụ dịch ngược bytecode Android (DEX) sang mã Java; REA chạy ở chế độ headless và cần JDK đầy đủ.', 'Người phiên dịch chuyên cho ứng dụng Android.'],
+  cdp: ['Chrome DevTools Protocol', 'Giao thức điều khiển và quan sát trình duyệt họ Chrome: DOM, script đang chạy, mạng, cookie. Thường viết tắt CDP.', 'Cửa sổ nhìn vào bên trong trình duyệt khi trang web đang chạy.'],
+  asar: ['ASAR', 'Định dạng lưu trữ mà ứng dụng Electron dùng để đóng gói mã JavaScript và tài nguyên vào một tệp .asar.', 'Một chiếc hộp đựng toàn bộ mã của ứng dụng desktop viết bằng web; mở hộp ra là đọc được.'],
+  ipc: ['IPC', 'Inter-Process Communication: cơ chế giao tiếp giữa các tiến trình, ví dụ giữa tiến trình main và renderer của Electron.', 'Đường dây nội bộ giữa các phòng trong cùng một công ty.'],
+  context: ['ngữ cảnh mô hình', 'Lượng token mà mô hình ngôn ngữ đọc được trong một lần xử lý; vượt giới hạn thì thông tin cũ bị cắt hoặc chìm.', 'Mặt bàn làm việc: bày quá nhiều giấy thì tờ quan trọng bị lấp.'],
+  schema: ['input schema', 'Mô tả cấu trúc đầu vào của một công cụ MCP; REA mặc định dùng bản compact, có thể chuyển sang full bằng REA_MCP_INPUT_SCHEMA_PROFILE=full.', 'Hướng dẫn điền phiếu: bản rút gọn chỉ ghi các ô bắt buộc, bản đầy đủ giải thích từng ô.'],
+  unknowns: ['unknowns', 'Danh sách điểm chưa giải mã hoặc chưa kết luận được, kèm lý do và bước kiểm tra tiếp theo.', 'Cột “chưa rõ” trong sổ điều tra.'],
+  coverage: ['coverage', 'Trạng thái bao phủ trong phạm vi cụ thể (complete hoặc unknown); không chứng minh toàn bộ ứng dụng đã được hiểu.', 'Dấu “đã kiểm tra” cho một căn phòng, không phải cả tòa nhà.']},
+ alias: {cli: ['CLI'], ida: ['IDA Pro', 'IDA'], rea: ['REA'], mcp: ['Model Context Protocol', 'MCP'], jsonrpc: ['JSON-RPC'], agent: ['AI agent', 'agent'], bridge: ['cầu nối MCP'], native: ['native', 'nhị phân'], jadx: ['JADX'], cdp: ['Chrome DevTools Protocol', 'CDP'], asar: ['ASAR'], ipc: ['IPC'],
+  context: ['ngữ cảnh'], schema: ['compact input schema', 'input schema', 'schema'], unknowns: ['unknowns'], coverage: ['coverage']},
+ rel: {mcp: ['jsonrpc', 'bridge'], jsonrpc: ['mcp'], agent: ['mcp'], bridge: ['mcp'], native: ['jadx'], jadx: ['native'], cdp: ['asar'], asar: ['ipc'], ipc: ['asar'], context: ['schema'], schema: ['context'], unknowns: ['coverage'], coverage: ['unknowns']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'my1', s: 0, type: 'one', q: 'MCP đảm nhận phần việc nào trong kiến trúc của REA?', o: ['Dịch ngược mã máy sang pseudocode', 'Chuẩn hóa cách agent khám phá và gọi công cụ', 'Cách ly tiến trình phân tích khỏi hệ điều hành', 'Lưu trữ kết quả phân tích lên đám mây'], a: 1,
+   ex: 'MCP là giao thức kết nối. Phần phân tích do engine làm.', why: {0: 'Đây là việc của engine như Ghidra hay IDA.', 2: 'Không thành phần nào của REA làm sandbox.', 3: 'REA chạy cục bộ; MCP không lưu trữ kết quả.'}},
+  {id: 'my2', s: 0, type: 'one', q: 'Agent hỏi về một tệp nhưng REA trả lời rằng định dạng không được hỗ trợ. Sự cố nằm ở chặng nào?', o: ['Người dùng', 'MCP', 'REA / engine', 'Báo cáo cuối'], a: 2,
+   ex: 'REA nhận diện định dạng và chọn engine; nếu không có engine phù hợp hoặc engine chưa cài thì dừng ở đây.'},
+  {id: 'my3', s: 0, type: 'one', q: 'Điểm khác nhau chính giữa REA và các cầu nối như GhidraMCP hay ida-pro-mcp là gì?', o: ['REA nhanh hơn Ghidra', 'Mỗi cầu nối chỉ phục vụ một công cụ, REA gom nhiều engine sau một kết nối MCP', 'REA không dùng MCP', 'Các cầu nối kia là phần mềm thương mại'], a: 1,
+   ex: 'Theo báo cáo nguồn, REA đứng ở tầng cao hơn và tự chọn engine theo loại mục tiêu.', why: {2: 'REA chính là một MCP server.'}},
+  {id: 'nb3', s: 1, type: 'multi', q: 'Để thực hiện phân tích mã máy (native binaries) cấp thấp, REA có thể tương tác với những engine/công cụ phân tích bên ngoài nào?', o: ['Ghidra', 'IDA Pro', 'Adobe Photoshop', 'Hopper'], a: [0, 1, 3],
+   ex: 'Ghidra, IDA Pro và Hopper là các engine native mà REA điều phối; ngoài ra còn có Rizin và GNU objdump do người dùng tự cung cấp.', why: {2: 'Photoshop là phần mềm xử lý ảnh, không phải engine phân tích.'}},
+  {id: 'my4', s: 1, type: 'one', q: 'Muốn phân tích một tệp APK Android, REA cần thêm gì?', o: ['IDA Pro', 'JADX chạy headless và một JDK đầy đủ', 'Không cần gì, có bộ đọc sẵn', 'Trình duyệt Chrome'], a: 1,
+   ex: 'README ghi rõ Android APK cần headless JADX và full JDK.'},
+  {id: 'my5', s: 1, type: 'multi', q: 'Nhóm nào được REA đọc bằng bộ đọc tích hợp, không cần cài engine ngoài?', o: ['Metadata build của Go', 'Cây phụ thuộc cargo-auditable của Rust', 'Mã máy ARM cần pseudocode đầy đủ', 'Godot PCK'], a: [0, 1, 3],
+   ex: 'Go, Rust, Godot PCK (và WASM, GGUF, IL2CPP…) có bộ đọc tĩnh sẵn.', why: {2: 'Pseudocode cho mã máy cần Hopper, Ghidra hoặc IDA.'}},
+  {id: 'my6', s: 1, type: 'one', q: 'Con số “207 định nghĩa công cụ MCP, 153 lệnh CLI” nên được hiểu thế nào?', o: ['Con số cố định, đã được kiểm chứng', 'Số liệu của báo cáo nguồn tại một thời điểm, thay đổi theo phiên bản', 'Số engine REA cài sẵn', 'Số định dạng tệp REA hỗ trợ'], a: 1,
+   ex: 'Đây là số liệu báo cáo nguồn nêu cho giữa tháng 10/2026, chưa được đếm lại và sẽ đổi theo phiên bản.'},
+  {id: 'my7', s: 2, type: 'one', q: 'Vì sao không nên đẩy toàn bộ kết quả phân tích binary vào ngữ cảnh mô hình?', o: ['Vì MCP cấm gửi dữ liệu lớn', 'Vì tốn token và thông tin quan trọng dễ bị chìm', 'Vì mô hình không đọc được assembly', 'Vì REA sẽ xóa dữ liệu cũ'], a: 1,
+   ex: 'Nên truy vấn theo mục tiêu, thu hẹp phạm vi và chỉ đưa phần bằng chứng liên quan.'},
+  {id: 'my8', s: 2, type: 'one', q: 'Biến môi trường nào chuyển MCP của REA sang full input schema?', o: ['REA_FULL=1', 'REA_MCP_INPUT_SCHEMA_PROFILE=full', 'MCP_VERBOSE=true', 'REA_SCHEMA=compact'], a: 1,
+   ex: 'Đặt REA_MCP_INPUT_SCHEMA_PROFILE=full trong cấu hình đăng ký MCP. Cả hai chế độ giữ nguyên bộ công cụ.'},
+  {id: 'my9', s: 2, type: 'one', q: 'Kết quả ghi coverage.status: complete cho hàm xử lý phím %. Kết luận nào đúng?', o: ['Toàn bộ Calculator đã được hiểu', 'Phạm vi đã nêu (hàm đó và các hàm nó gọi) đã được khảo sát hết', 'Không còn unknowns nào trong ứng dụng', 'Có thể bỏ bước kiểm thử'], a: 1,
+   ex: '“complete” chỉ nói về phạm vi đã khảo sát.', why: {0: 'Coverage không mở rộng ra ngoài phạm vi đã nêu.', 3: 'Vẫn cần kiểm chứng độc lập.'}}]};
+</script>
+<script src="diagram.js"></script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

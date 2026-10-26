@@ -198,7 +198,8 @@ function Workbook({ s }: { s: Series }) {
       </div>
       {/* chapter tabs on the book's edge: read, current, not yet */}
       {/* -ml tucks the tabs under the cover so they read as attached to it, not floating beside it */}
-      <nav aria-label={`Chương của ${s.title}`} className="-ml-3 flex flex-col gap-[3px] pt-4">
+      {/* tabs shrink (down to min-h) so a long series never makes the card taller than its content */}
+      <nav aria-label={`Chương của ${s.title}`} className="-ml-3 flex flex-col gap-[3px] py-4">
         {s.chapters.map((c, i) => (
           <Link
             key={c.n}
@@ -206,7 +207,7 @@ function Workbook({ s }: { s: Series }) {
             title={`${c.n} · ${c.title}`}
             aria-label={`Chương ${c.n}: ${c.title}${read[i] ? " (đã đọc)" : ""}`}
             // the chapter to read next sticks out a little further
-            className={`h-6 rounded-r-md shadow-[0_1px_2px_rgba(24,24,27,0.12)] dark:shadow-none transition-transform hover:translate-x-1 ${read[i] || i === current ? SPINES[i % SPINES.length][0] : SPINES[i % SPINES.length][1]} ${
+            className={`flex-1 min-h-3 max-h-6 rounded-r-md shadow-[0_1px_2px_rgba(24,24,27,0.12)] dark:shadow-none transition-transform hover:translate-x-1 ${read[i] || i === current ? SPINES[i % SPINES.length][0] : SPINES[i % SPINES.length][1]} ${
               i === current && next !== -1 ? "translate-x-1.5" : ""
             }`}
           />

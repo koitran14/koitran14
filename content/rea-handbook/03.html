@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Quy trình: từ bằng chứng đến tái tạo · REA Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle cx="-8" cy="-8" r="34"/><circle cx="-8" cy="-8" r="26" stroke-dasharray="2 2"/><path d="M16 16L48 48"/><path d="M-22-16l-8 8 8 8M6-16l8 8-8 8M-4-20l-8 24"/><circle cx="48" cy="48" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 03 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 03</div>
+  <h1>Quy trình: từ bằng chứng <i>đến tái tạo</i></h1>
+  <p class="dek">REA giúp agent đi từ một tệp không có mã nguồn đến một bản cài đặt mới có kiểm thử. Chương này đi qua từng pha, xem một kết quả có bằng chứng trông ra sao, rồi đọc kỹ ví dụ nút phần trăm của Windows Calculator.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 03 / 10</span><span>16 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Mỗi kết luận phải trỏ về được một địa chỉ, một hàm hay một phép đo cụ thể. Tái tạo chỉ được coi là xong khi bản mới vượt qua bộ test so với bản gốc.</div>
+
+  <section id="s1">
+    <span class="num">03.1</span>
+    <h2>Ba pha: Decompile, Understand, Recreate</h2>
+    <p class="gist">Trích xuất dữ liệu, hiểu hành vi, rồi viết lại có kiểm thử.</p>
+    <p>Tài liệu nguồn mô tả quy trình của REA thành ba pha nối tiếp nhau. Agent không nhảy thẳng từ câu hỏi đến mã mới. Agent đi qua từng pha, và pha nào cũng phải giữ lại bằng chứng cho pha sau. Báo cáo nguồn thêm một bước thứ tư ở cuối: đối chiếu bản mới với bản gốc.</p>
+    <figure>
+      <div class="fig">
+        <div id="ph"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Bốn pha nối tiếp; chọn một pha để xem việc cần làm và thứ phải giữ lại cho pha sau.</figcaption>
+    </figure>
+    <p>Điểm quan trọng là vòng lặp. Trong video thử nghiệm của Nick Saraev, agent liên tục gọi REA, đọc kết quả, đặt câu hỏi tiếp, rồi lại gọi REA, cho đến khi dựng xong ứng dụng. Pha Understand thường lặp nhiều lần nhất, vì mỗi câu trả lời lại mở ra một nhánh cần kiểm tra.</p>
+    <div class="take"><small>Ghi nhớ</small>Recreate không phải pha cuối. Bản viết lại chỉ đáng tin khi đã chạy song song với bản gốc trên cùng bộ đầu vào.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">03.2</span>
+    <h2>Một kết quả có bằng chứng gồm những gì?</h2>
+    <p class="gist">Ngoài phần tóm tắt còn có địa chỉ, mã thô, mức bao phủ và danh sách điều chưa biết.</p>
+    <p>Theo báo cáo nguồn, REA yêu cầu kết quả trả về cho agent theo một định dạng gọi là Evidence v2. Một câu trả lời kiểu “hàm này tính phần trăm” là chưa đủ; câu trả lời phải kèm những trường để người khác kiểm tra lại. Chọn từng trường để xem trường đó dùng làm gì.</p>
+    <figure>
+      <div class="fig">
+        <div class="cols">
+          <div class="code"><div class="h"><span>kết quả minh họa</span><span>JSON</span></div><pre id="ev"></pre></div>
+          <div class="panel" id="evP"></div>
+        </div>
+      </div>
+      <figcaption><b>Hình 2</b>Một kết quả minh họa. Tên trường lấy theo báo cáo nguồn và có thể khác giữa các phiên bản REA.</figcaption>
+    </figure>
+    <p>Trường quan trọng nhất thường bị bỏ qua là danh sách điều chưa biết. Khi có một nhánh không giải mã được, REA ghi nó vào <code>list_unknowns</code> thay vì để agent tự điền cho đủ. Người đọc báo cáo nhờ vậy biết chỗ nào đã chắc và chỗ nào còn trống.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>“complete” nghĩa là gì?</span></summary><div>
+      <p>Trạng thái bao phủ <code>complete</code> chỉ nói rằng phạm vi đã khảo sát được đọc hết, ví dụ một hàm hay một mô-đun. Trạng thái này không có nghĩa là đã hiểu toàn bộ ứng dụng. Nhánh chưa phân tích không có nghĩa là nhánh đó không tồn tại.</p>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">03.3</span>
+    <h2>Ví dụ: nút % trong Windows Calculator</h2>
+    <p class="gist">Vì sao 200 + 10% ra 220, còn 200 × 10% ra 20.</p>
+    <p>Tài liệu nguồn dùng Windows Calculator để minh họa cách đối chiếu assembly với hành vi người dùng nhìn thấy. Đoạn mã dưới đây là assembly x64 mà báo cáo nguồn trích từ thư viện của Calculator. Chọn từng dòng để xem dòng đó làm gì.</p>
+    <figure>
+      <div class="fig">
+        <div class="cols">
+          <div class="code"><div class="h"><span>Calculator, x64</span><span>assembly</span></div><pre id="asm"></pre></div>
+          <div class="panel" id="asmP"></div>
+        </div>
+      </div>
+      <figcaption><b>Hình 3</b>Mỗi dòng là một bước chọn nhánh xử lý cho phím %.</figcaption>
+    </figure>
+    <p>Từ hai phép so sánh và hằng số 100, agent suy ra phím % có hai cách tính, tùy toán tử đứng trước nó. Chọn toán tử để xem kết quả.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Biểu thức: 200 [toán tử] 10%</span><div class="seg" id="op"><button data-o="0" class="on">+</button><button data-o="1">−</button><button data-o="2">×</button><button data-o="3">÷</button></div></div>
+        <div class="rows" id="opP"></div>
+      </div>
+      <figcaption><b>Hình 4</b>Hai nhánh của cùng một phím.</figcaption>
+    </figure>
+    <p>Điều đáng học ở ví dụ này là cách làm chứ không phải công thức: tìm nhánh xử lý trong assembly, nhận ra hằng số và điều kiện, đối chiếu với hành vi quan sát được, rồi viết test để tái tạo.</p>
+    <div class="take"><small>Ghi nhớ</small>Một ví dụ đơn lẻ chưa đủ để kết luận mọi phiên bản Calculator hay mọi kiểu nhập liệu đều dùng cùng thuật toán.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">03.4</span>
+    <h2>Ba case study khác</h2>
+    <p class="gist">Một trò chơi trên trình duyệt, một game Windows năm 1996 và một game PC-98.</p>
+    <p>Báo cáo nguồn kể thêm ba ví dụ. Trang README của REA cũng liệt kê DX-Ball (tính âm thanh trái phải), Notion (cầu nối clipboard) và TH04 (vòng đạn) là các showcase. Các con số dưới đây do nguồn công bố; handbook chưa chạy lại để kiểm chứng.</p>
+    <figure>
+      <div class="fig">
+        <div class="tabs" id="cs"></div>
+        <div class="rows" id="csP"></div>
+      </div>
+      <figcaption><b>Hình 5</b>Mỗi case study: đối tượng, cách REA lấy bằng chứng, và kết quả được công bố.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Vì sao 256 bước cho một vòng tròn?</span></summary><div>
+      <p>Một byte lưu được 256 giá trị. Khi chia 360° thành 256 bước, góc vừa khít một byte, nên máy PC-98 tính nhanh và tiết kiệm bộ nhớ. Bắn 16 viên đều quanh vòng thì mỗi viên cách nhau 256 / 16 = 16 bước, cộng thêm góc hướng về người chơi và độ xoay.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>Điểm chung của ba ví dụ là có một thước đo khách quan: tham số đọc được từ runtime, số byte trùng khớp, hoặc số test vượt qua.</div>
+  </section>
+
+  <section id="s5">
+    <span class="num">03.5</span>
+    <h2>Tái tạo khác sao chép</h2>
+    <p class="gist">Mục tiêu là hành vi tương thích, không phải bản sao mã, tài nguyên hay thiết kế.</p>
+    <p>Tái tạo hợp lý nhắm đến hành vi hoặc giao diện tương thích, chứ không chép lại toàn bộ mã, hình ảnh, âm thanh hay cách biểu đạt đã được bảo hộ. Ba thói quen giúp giữ ranh giới này: viết đặc tả hành vi trước khi viết mã, kiểm tra bằng test black-box, và cài đặt độc lập từ đặc tả đó.</p>
+    <figure>
+      <div class="fig">
+        <div class="pills" id="rc"></div>
+        <div class="panel" id="rcP"></div>
+      </div>
+      <figcaption><b>Hình 6</b>Ba thói quen của một lần tái tạo có trách nhiệm.</figcaption>
+    </figure>
+    <p>Khi cần tương thích, hãy ghi lại lý do, phạm vi tối thiểu đã phân tích và căn cứ cho quyền truy cập. Chương 07 bàn kỹ phần pháp lý.</p>
+    <a class="next-ch" href="/blog/rea-handbook/04"><span><small>Chương tiếp theo</small><b>04 · REA dùng được vào việc gì?</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"><p>Các con số trong case study (63 bytes, 3.205 test, 2.139 bytes, tham số của Chrome Dino) và tên trường Evidence v2 lấy từ báo cáo nguồn và trang showcase của REA, chưa được kiểm chứng lại độc lập.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+// Hình 1
+const PH = [['Decompile / Extract', 'Mở tệp mục tiêu bằng engine phù hợp, nạp symbols, lấy pseudocode, assembly, chuỗi ký tự, cấu trúc gói hoặc dữ liệu runtime.', 'Ghi rõ phiên bản, kiến trúc và phạm vi phân tích.'],
+ ['Understand', 'Lần theo luồng điều khiển, đồ thị gọi hàm, tham chiếu chéo (xrefs), dữ liệu vào ra và điều kiện rẽ nhánh. So giả thuyết với bằng chứng.', 'Ghi lại các điểm còn mơ hồ vào danh sách unknowns.'],
+ ['Recreate', 'Viết lại hành vi cần thiết bằng ngôn ngữ và framework của dự án đích, ví dụ C, TypeScript hay Python.', 'Ghi rõ phần nào tương đương hành vi, phần nào là thiết kế mới.'],
+ ['Verification', 'Xây bộ test dựa trên quan sát thực tế, chạy song song bản mới và bản gốc, kiểm tra các trường hợp biên.', 'Lưu kết quả test làm bằng chứng tương đương.']];
+DG.steps(document.getElementById('ph'), {unit: 'Pha', start: 0,
+ steps: PH.map((p, i) => ({t: p[0], sub: ['trích xuất', 'hiểu hành vi', 'tái tạo', 'kiểm chứng'][i], group: ['Phân tích', '', 'Xây dựng', ''][i],
+  body: `${p[1]}<p class="note" style="margin:8px 0 0">Giữ lại: ${p[2]}</p>`})),
+ loop: {at: 1, text: 'pha này thường lặp nhiều lần trước khi sang Recreate'}});
+// Hình 2: each JSON line carries the field it shows
+const EV = [['{', ''], ['  "claim": "Phím % rẽ nhánh theo toán tử trước",', 'claim'], ['  "address": "0x180124945",', 'addr'], ['  "digest": "sha256:…",', 'digest'], ['  "code": "CMP EAX, 0x5c ; IDC_MUL …",', 'code'], ['  "coverage": { "status": "complete" },', 'cov'], ['  "list_unknowns": [', 'unk'], ['    "chưa xác định nhánh khi nhập số âm"', 'unk'], ['  ]', 'unk'], ['}', '']];
+const EVI = {claim: ['Kết luận', 'Điều agent khẳng định. Riêng trường này chưa chứng minh được gì; giá trị nằm ở các trường bên dưới.'],
+ addr: ['Địa chỉ', 'Vị trí chính xác trong tệp nhị phân. Người khác mở cùng tệp bằng Ghidra hay IDA là nhảy đến đúng chỗ.'],
+ digest: ['Digest', 'Mã băm của tệp đã phân tích, cho thấy kết luận gắn với đúng phiên bản tệp đó chứ không phải một bản khác.'],
+ code: ['Mã thô', 'Assembly hoặc pseudocode của hàm, trích nguyên văn từ engine để đối chiếu.'],
+ cov: ['Coverage', 'Mức bao phủ của phạm vi đã khảo sát: complete hoặc unknown. complete không có nghĩa là đã hiểu cả ứng dụng.'],
+ unk: ['Unknowns', 'Những chỗ chưa giải mã được. REA ghi chúng ra thay vì để agent tự suy đoán.']};
+function evShow(k) {ev.innerHTML = EV.map(([t, c]) => `<span class="ln${c && c === k ? ' on' : ''}" data-c="${c}">${t.replace(/</g, '&lt;') || ' '}</span>`).join('');
+ evP.innerHTML = EVI[k] ? `<h5>${EVI[k][0]}</h5>${EVI[k][1]}` : ''}
+ev.onclick = e => {const l = e.target.closest('.ln'); if (l && l.dataset.c) evShow(l.dataset.c)};
+evShow('addr');
+// Hình 3
+const ASM = [['0x180124945: MOV EAX, dword ptr [R13 + 0x18]', 'Nạp toán tử đứng trước phím % vào thanh ghi EAX.'],
+ ['0x180124949: CMP EAX, 0x5c    ; IDC_MUL', 'So với 0x5c, mã của phép nhân ×.'],
+ ['0x18012494c: JZ 0x180124aba', 'Nếu là phép nhân, nhảy sang nhánh “đổi sang số thập phân”.'],
+ ['0x180124952: CMP EAX, 0x5b    ; IDC_DIV', 'So với 0x5b, mã của phép chia ÷.'],
+ ['0x180124955: JZ 0x180124aba', 'Phép chia cũng nhảy sang cùng nhánh với phép nhân.'],
+ ['0x18012495b: MOV EDX, 0x64    ; 100', 'Còn lại là cộng hoặc trừ: nạp hằng số 100 (0x64) để tính phần trăm của số thứ nhất.']];
+function asmShow(k) {asm.innerHTML = ASM.map((l, i) => `<span class="ln${i === k ? ' on' : ''}" data-i="${i}">${l[0]}</span>`).join('');
+ asmP.innerHTML = `<h5>Dòng ${k + 1}</h5>${ASM[k][1]}`}
+asm.onclick = e => {const l = e.target.closest('.ln'); if (l) asmShow(+l.dataset.i)};
+asmShow(1);
+// Hình 4
+const OP = [['+', 'previous × current / 100 = 200 × 10 / 100 = 20', '200 + 20 = 220'], ['−', 'previous × current / 100 = 200 × 10 / 100 = 20', '200 − 20 = 180'],
+ ['×', 'current / 100 = 10 / 100 = 0,1', '200 × 0,1 = 20'], ['÷', 'current / 100 = 10 / 100 = 0,1', '200 ÷ 0,1 = 2000']];
+const opShow = i => opP.innerHTML = `<div><b>Nhánh</b>${i < 2 ? 'Cộng hoặc trừ: % là phần trăm của số thứ nhất' : 'Nhân hoặc chia: % chỉ đổi số hiện tại sang thập phân'}</div><div><b>10% thành</b>${OP[i][1]}</div><div class="fix"><b>Kết quả</b>${OP[i][2]}</div>`;
+one('#op', 'o', opShow); opShow(0);
+// Hình 5
+const CS = [['Chrome Dino', 't-rex-runner, file index.js chạy trên trình duyệt.', 'Kết nối qua cổng gỡ lỗi CDP, đọc trực tiếp cấu hình gia tốc khi game đang chạy: SPEED 6.0, ACCELERATION 0.001, MAX_SPEED 13.0.', 'Tốc độ tăng 0,001 mỗi lần cập nhật, đạt 10 sau 4.000 lần và chạm trần 13 sau 7.000 lần (báo cáo nguồn ghi 10.000). Agent dựng lại game kèm thanh chỉnh tốc độ.'],
+ ['DX-Ball (1996)', 'Game Windows phát hành năm 1996.', 'Phục hồi thuật toán chia âm thanh trái phải theo tọa độ X của quả bóng.', 'Mã C viết lại, biên dịch bằng trình biên dịch cũ, cho ra 63 bytes mã máy trùng từng byte với bản gốc và vượt qua 3.205 test đối chứng.'],
+ ['Touhou 4 (PC-98)', 'Game bắn đạn (bullet hell) trên máy PC-98.', 'Tìm thuật toán bắn vòng 16 viên đạn nhắm vào người chơi; phát hiện vòng tròn được chia thành 256 bước.', 'Đoạn mã C dài 2.139 bytes trùng từng byte với mã máy biên dịch gốc.']];
+cs.innerHTML = CS.map((c, i) => `<button data-c="${i}" class="${i ? '' : 'on'}">${c[0]}</button>`).join('');
+const csShow = i => csP.innerHTML = `<div><b>Đối tượng</b>${CS[i][1]}</div><div><b>Bằng chứng</b>${CS[i][2]}</div><div class="fix"><b>Kết quả</b>${CS[i][3]}</div>`;
+one('#cs', 'c', csShow); csShow(0);
+// Hình 6
+const RC = [['Đặc tả hành vi', 'Viết ra hệ thống phải làm gì với từng đầu vào, bằng lời của mình, trước khi viết mã. Thứ mang sang bản mới là đặc tả, không phải mã gốc.'],
+ ['Test black-box', 'Kiểm tra bản mới chỉ qua đầu vào và đầu ra, giống cách người dùng nhìn thấy. Test không cần biết bên trong bản gốc viết thế nào.'],
+ ['Cài đặt độc lập', 'Viết mã mới từ đặc tả, theo cấu trúc và phong cách của dự án đích. Không dán lại pseudocode hay tài nguyên của bản gốc.']];
+rc.innerHTML = RC.map((r, i) => `<button data-r="${i}" class="${i ? '' : 'on'}">${r[0]}</button>`).join('');
+const rcShow = i => rcP.innerHTML = `<h5>${RC[i][0]}</h5>${RC[i][1]}`;
+one('#rc', 'r', rcShow); rcShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'rea03', minutes: 16,
+ next: {href: '/blog/rea-handbook/04', n: '04', t: 'REA dùng được vào việc gì?'},
+ sections: [
+  {id: 's1', n: '03.1', t: 'Ba pha', sum: ['Decompile lấy dữ liệu, Understand lần theo hành vi, Recreate viết lại.', 'Bước Verification so bản mới với bản gốc.', 'Pha Understand thường lặp nhiều lần nhất.'], terms: ['decompile', 'controlflow', 'xref', 'recreate', 'rea']},
+  {id: 's2', n: '03.2', t: 'Kết quả có bằng chứng', sum: ['Kết quả gồm địa chỉ, digest, mã thô, coverage và unknowns.', 'Tên trường theo báo cáo nguồn, có thể đổi theo phiên bản.', 'complete chỉ áp dụng cho phạm vi đã khảo sát.'], terms: ['evidence', 'digest', 'coverage', 'unknowns']},
+  {id: 's3', n: '03.3', t: 'Nút % trong Calculator', sum: ['Hai phép so sánh và hằng số 100 quyết định nhánh.', 'Cộng, trừ: phần trăm của số thứ nhất; nhân, chia: đổi sang thập phân.', 'Một ví dụ chưa đủ cho mọi phiên bản.'], terms: ['assembly', 'controlflow']},
+  {id: 's4', n: '03.4', t: 'Ba case study', sum: ['Chrome Dino qua CDP, DX-Ball và Touhou 4 khớp từng byte.', 'Các con số do nguồn công bố, chưa kiểm chứng lại.'], terms: ['cdp', 'bytematch', 'ida']},
+  {id: 's5', n: '03.5', t: 'Tái tạo khác sao chép', sum: ['Nhắm đến hành vi tương thích.', 'Đặc tả hành vi, test black-box, cài đặt độc lập.', 'Ghi lý do, phạm vi tối thiểu và căn cứ quyền truy cập.'], terms: ['blackbox', 'recreate']}],
+ terms: {
+  ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
+  rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
+  decompile: ['decompile', 'Bước trích xuất từ tệp nhị phân hoặc bytecode: pseudocode, assembly, chuỗi ký tự, symbols và cấu trúc tệp, dùng làm dữ liệu đầu vào cho phân tích.', 'Tháo một món đồ ra để xem các linh kiện bên trong, chưa cần hiểu chúng phối hợp với nhau thế nào.'],
+  recreate: ['recreate', 'Pha viết lại hành vi đã hiểu được thành một cài đặt mới trong công nghệ của dự án đích, kèm test chứng minh tương đương.', 'Nấu lại một món đã nếm, bằng bếp và nguyên liệu nhà mình, rồi cho người khác nếm thử xem có giống không.'],
+  controlflow: ['control flow', 'Thứ tự thực thi các lệnh trong chương trình, gồm các nhánh rẽ, vòng lặp và lời gọi hàm.', 'Sơ đồ đường đi trong một tòa nhà: từ cửa này rẽ trái hay rẽ phải tùy điều kiện.'],
+  xref: ['xrefs', 'Cross-references: danh sách các vị trí trong chương trình tham chiếu đến một hàm, biến hoặc chuỗi, dùng để lần ngược ai gọi ai.', 'Mục “xem thêm” ở cuối sách: cho biết những trang nào nhắc tới cùng một tên.'],
+  evidence: ['Evidence v2', 'Định dạng kết quả mà báo cáo nguồn mô tả: mỗi kết luận đi kèm địa chỉ, digest, mã thô, trạng thái coverage và danh sách unknowns.', 'Biên bản có chữ ký và ảnh chụp hiện trường, thay vì một lời kể miệng.'],
+  digest: ['digest', 'Giá trị băm của tệp đã phân tích, gắn kết luận với đúng phiên bản tệp.', 'Dấu vân tay của tệp: chỉ cần đổi một byte là dấu vân tay khác hẳn.'],
+  coverage: ['coverage', 'Trạng thái bao phủ của phạm vi đã khảo sát, ví dụ complete hoặc unknown; không mô tả mức hiểu toàn bộ ứng dụng.', 'Đánh dấu “đã đọc hết chương này”, không phải “đã đọc hết cả cuốn sách”.'],
+  unknowns: ['unknowns', 'Danh sách các điểm chưa giải mã hoặc chưa kết luận được, kèm lý do và bước kiểm tra tiếp theo.', 'Mục “còn bỏ ngỏ” trong biên bản, để người sau biết chỗ nào cần điều tra tiếp.'],
+  assembly: ['assembly', 'Dạng biểu diễn dễ đọc của mã máy, mỗi dòng ứng với một lệnh CPU như MOV, CMP, JZ.', 'Mã máy được viết bằng chữ thay vì số, vẫn rất sát với những gì CPU thực sự làm.'],
+  cdp: ['CDP', 'Chrome DevTools Protocol: giao thức điều khiển và quan sát trình duyệt họ Chrome, cho phép đọc DOM, script, mạng và trạng thái của trang đang chạy.', 'Cửa sau của trình duyệt, nơi công cụ có thể nhìn vào trang web đang chạy mà không phải đoán từ bên ngoài.'],
+  bytematch: ['byte-for-byte', 'Mức tương đương mà mã máy biên dịch từ bản viết lại trùng khớp từng byte với mã máy gốc.', 'Hai bản in giống nhau đến từng dấu chấm, không chỉ giống nội dung.'],
+  blackbox: ['black-box test', 'Kiểm thử chỉ dựa trên đầu vào và đầu ra quan sát được, không dựa vào cấu trúc bên trong của hệ thống.', 'Kiểm tra máy bán nước bằng cách bỏ tiền và bấm nút, không cần mở máy ra xem.']},
+ alias: {ida: ['IDA Pro', 'IDA'], rea: ['REA'], decompile: ['Decompile'], recreate: ['Recreate'], controlflow: ['luồng điều khiển', 'control flow'], xref: ['xrefs', 'tham chiếu chéo'], evidence: ['Evidence v2'], digest: ['digest'], coverage: ['coverage', 'bao phủ'], unknowns: ['unknowns', 'list_unknowns'],
+  assembly: ['assembly'], cdp: ['CDP'], bytematch: ['trùng từng byte', 'byte-for-byte'], blackbox: ['test black-box', 'black-box']},
+ rel: {decompile: ['assembly', 'recreate'], recreate: ['blackbox', 'decompile'], controlflow: ['xref', 'assembly'], xref: ['controlflow'], evidence: ['digest', 'coverage', 'unknowns'], digest: ['evidence'], coverage: ['unknowns', 'evidence'], unknowns: ['coverage', 'evidence'],
+  assembly: ['decompile', 'controlflow'], cdp: ['evidence'], bytematch: ['recreate'], blackbox: ['recreate']},
+ // ids starting with nb come from the Gemini Notebook quiz; my* are added to cover sections it skips
+ quiz: [
+  {id: 'nb2', s: 0, type: 'one', q: 'Quy trình 3 bước cốt lõi mà REA cung cấp cho AI agent để nghiên cứu và tái tạo một tính năng là gì?', o: ['Scan → Patch → Deploy', 'Isolate → Execute → Clean', 'Decompile → Understand → Recreate', 'Capture → Encrypt → Transmit'], a: 2,
+   ex: 'Đây là quy trình chuẩn của REA: giải mã hoặc kiểm tra ứng dụng, theo dõi luồng mã để hiểu cơ chế kèm bằng chứng, sau đó viết lại tính năng cho dự án mới.',
+   why: {0: 'Đây là quy trình quản lý lỗ hổng và triển khai phần mềm, không phải quy trình dịch ngược tính năng của REA.', 1: 'Đây là các bước trong phân tích mã độc ở môi trường động, không phải quy trình tìm hiểu và xây dựng lại của REA.', 3: 'Đây là quy trình xử lý dữ liệu mạng hoặc bảo mật truyền thông, không phản ánh các bước phân tích của REA.'}},
+  {id: 'my1', s: 0, type: 'one', q: 'Sau pha Recreate, bước nào giúp chứng minh bản viết lại tương đương bản gốc?', o: ['Đổi tên biến cho giống bản gốc', 'Chạy bộ test song song trên bản mới và bản gốc', 'Hỏi lại agent xem nó có chắc không', 'Tăng mức bao phủ lên complete'], a: 1,
+   ex: 'Bước Verification chạy cùng bộ đầu vào trên cả hai bản và so kết quả. Đó là bằng chứng tương đương.', why: {0: 'Tên biến không nói gì về hành vi.', 2: 'Sự tự tin của mô hình không phải bằng chứng.', 3: 'Coverage nói về phạm vi đã phân tích, không chứng minh bản mới đúng.'}},
+  {id: 'my2', s: 0, type: 'multi', q: 'Trong pha Understand, agent thường làm những việc nào?', o: ['Lần theo luồng điều khiển và đồ thị gọi hàm', 'Tìm tham chiếu chéo (xrefs)', 'Ghi lại các điểm còn mơ hồ', 'Đóng gói bản build để phát hành'], a: [0, 1, 2],
+   ex: 'Understand là pha lần theo hành vi và so giả thuyết với bằng chứng; phát hành không thuộc pha này.', why: {3: 'Đóng gói phát hành nằm ngoài quy trình phân tích.'}},
+  {id: 'my3', s: 1, type: 'multi', q: 'Theo báo cáo nguồn, một kết quả Evidence v2 kèm những thông tin nào?', o: ['Địa chỉ bộ nhớ chính xác', 'Digest của tệp nhị phân', 'Trạng thái coverage', 'Mã nguồn gốc có comment của tác giả'], a: [0, 1, 2],
+   ex: 'Kết quả gồm địa chỉ, digest, mã hàm thô, coverage và danh sách unknowns.', why: {3: 'Comment và tên biến gốc đã mất khi biên dịch, không thể có trong kết quả.'}},
+  {id: 'my4', s: 1, type: 'one', q: 'Trạng thái coverage.status = complete cho biết điều gì?', o: ['Toàn bộ ứng dụng đã được hiểu', 'Phạm vi đã khảo sát được đọc hết', 'Không còn lỗi bảo mật nào', 'Bản viết lại đã khớp từng byte'], a: 1,
+   ex: 'complete chỉ áp dụng cho phạm vi đã khảo sát, ví dụ một hàm hay một mô-đun.', why: {0: 'Đây là cách hiểu sai phổ biến nhất về coverage.', 2: 'Coverage không đánh giá bảo mật.', 3: 'Khớp byte là kết quả của bước kiểm chứng, không phải coverage.'}},
+  {id: 'my5', s: 1, type: 'one', q: 'Khi gặp một nhánh không giải mã được, REA làm gì?', o: ['Để agent tự suy đoán cho đủ', 'Bỏ qua và không nhắc đến', 'Ghi vào danh sách list_unknowns', 'Dừng toàn bộ phân tích'], a: 2,
+   ex: 'Ghi điểm chưa biết ra giúp người đọc phân biệt chỗ đã chắc và chỗ còn trống.'},
+  {id: 'my6', s: 2, type: 'one', q: 'Trên Windows Calculator, 200 + 10% cho kết quả bao nhiêu?', o: ['20', '210', '220', '2000'], a: 2,
+   ex: 'Sau phép cộng, % tính phần trăm của số thứ nhất: 200 × 10 / 100 = 20, rồi 200 + 20 = 220.', why: {0: '20 là kết quả của 200 × 10%.', 3: '2000 là kết quả của 200 ÷ 10%.'}},
+  {id: 'my7', s: 2, type: 'one', q: 'Trong đoạn assembly, lệnh CMP EAX, 0x5c dùng để làm gì?', o: ['Nạp hằng số 100', 'Kiểm tra toán tử trước có phải phép nhân không', 'Kiểm tra toán tử trước có phải phép chia không', 'Ghi kết quả ra màn hình'], a: 1,
+   ex: '0x5c là IDC_MUL, mã của phép nhân. Nếu bằng, chương trình nhảy sang nhánh đổi sang thập phân.', why: {0: 'Hằng số 100 được nạp bằng MOV EDX, 0x64.', 2: 'Phép chia là 0x5b.'}},
+  {id: 'my8', s: 2, type: 'one', q: 'Bài học chính của ví dụ Calculator là gì?', o: ['Công thức % của Calculator luôn giống nhau ở mọi phiên bản', 'Cách đối chiếu assembly với hành vi quan sát được rồi viết test', 'Assembly dễ đọc hơn mã nguồn', 'AI luôn đọc đúng hằng số'], a: 1,
+   ex: 'Giá trị nằm ở phương pháp. Một ví dụ đơn lẻ không đủ để kết luận cho mọi phiên bản.', why: {0: 'Tài liệu nguồn nói rõ một ví dụ chưa đủ để kết luận như vậy.', 3: 'AI có thể gán sai ý nghĩa cho hằng số, nên cần người kiểm tra.'}},
+  {id: 'my9', s: 3, type: 'one', q: 'Vì sao Touhou 4 chia vòng tròn thành 256 bước?', o: ['Vì màn hình PC-98 có 256 điểm ảnh', 'Vì góc vừa khít trong một byte', 'Vì game bắn 256 viên đạn mỗi vòng', 'Vì 256 là số khung hình mỗi giây'], a: 1,
+   ex: 'Một byte lưu được 256 giá trị, nên góc vừa đúng một byte. 16 viên đạn cách nhau 16 bước.'},
+  {id: 'my10', s: 3, type: 'one', q: 'Trong case study Chrome Dino, REA lấy tham số tốc độ bằng cách nào?', o: ['Dịch ngược mã máy bằng IDA', 'Kết nối CDP vào trang đang chạy và đọc cấu hình', 'Đoán từ video gameplay', 'Đọc tệp APK'], a: 1,
+   ex: 'Trò chơi chạy trên trình duyệt, nên REA đọc trực tiếp index.js và cấu hình qua Chrome DevTools Protocol.'},
+  {id: 'my11', s: 4, type: 'multi', q: 'Những thói quen nào giúp tái tạo mà không sao chép?', o: ['Viết đặc tả hành vi trước', 'Kiểm tra bằng test black-box', 'Dán nguyên pseudocode vào dự án', 'Cài đặt độc lập từ đặc tả'], a: [0, 1, 3],
+   ex: 'Đặc tả, test black-box và cài đặt độc lập giữ khoảng cách với cách biểu đạt của bản gốc.', why: {2: 'Dán pseudocode là chép cách cài đặt của bản gốc, đi ngược mục tiêu.'}},
+  {id: 'my12', s: 4, type: 'one', q: 'Khi cần phân tích để tương thích, nên ghi lại điều gì?', o: ['Chỉ tên công cụ đã dùng', 'Lý do, phạm vi tối thiểu đã phân tích và căn cứ quyền truy cập', 'Toàn bộ mã đã trích xuất', 'Không cần ghi gì'], a: 1,
+   ex: 'Ba thông tin này cho thấy lần phân tích có mục đích và có giới hạn.'}]};
+</script>
+<script src="diagram.js"></script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>
