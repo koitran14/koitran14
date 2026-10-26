@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { usePathname } from "next/navigation";
 import type { HandbookPage as Page } from "@/lib/handbook";
 import { useViews } from "@/components/view-count";
@@ -69,10 +69,15 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
     return () => span.remove();
   }, [views, page]);
 
-  return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: page.css }} />
-      <div className="hb" dangerouslySetInnerHTML={{ __html: page.body }} />
-    </>
+  // the page scripts fill figures, TOC and quizzes into this markup; a re-render (the view count arriving)
+  // would write the raw HTML back over them, so the same element is reused until the page itself changes
+  return useMemo(
+    () => (
+      <>
+        <style dangerouslySetInnerHTML={{ __html: page.css }} />
+        <div className="hb" dangerouslySetInnerHTML={{ __html: page.body }} />
+      </>
+    ),
+    [page],
   );
 }
