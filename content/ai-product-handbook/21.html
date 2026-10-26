@@ -48,8 +48,8 @@
     <h2>Giai đoạn 3 và 4: Đánh giá, rủi ro, triển khai</h2>
     <p class="gist">Eval set 800 mẫu, phân loại rủi ro, KPI giám sát và tối ưu chi phí.</p>
 <p><b>Eval set.</b> 500 mẫu chứng từ thật kèm 300 kịch bản câu hỏi khách hàng phức tạp; đo tự động qua CI/CD, kết hợp chuyên gia rà các phản hồi có confidence dưới 75%.</p>
-    <p><b>Tuân thủ.</b> Báo cáo nguồn xếp hệ thống vào nhóm rủi ro cao theo EU AI Act (mốc 02/12/2027), nên doanh nghiệp lập hồ sơ minh bạch thuật toán, lưu audit log truy vấn và hiển thị thông báo người dùng đang tương tác với AI. Việc một hệ thống cụ thể có thuộc nhóm rủi ro cao hay không cần đánh giá theo văn bản luật, không mặc định.</p>
-    <p><b>KPI giám sát.</b> Precision trích xuất tài chính &gt; 98,5%; latency tổng thể &lt; 1,8 giây; CSAT &gt; 4,5/5. Ưu tiên precision vì trích sai số tiền đắt hơn bỏ sót một trường (trường bỏ sót sẽ được người bổ sung).</p>
+    <p><b>Tuân thủ.</b> Báo cáo nguồn xếp hệ thống vào nhóm rủi ro cao theo EU AI Act (mốc 02/12/2027), nên doanh nghiệp lập hồ sơ minh bạch thuật toán, lưu audit log truy vấn và hiển thị thông báo người dùng đang tương tác với AI. Một hệ thống cụ thể có thuộc nhóm rủi ro cao hay không thì phải đối chiếu văn bản luật, đừng mặc định.</p>
+    <p><b>KPI giám sát.</b> Precision trích xuất tài chính &gt; 98,5%; latency tổng thể &lt; 1,8 giây; CSAT &gt; 4,5/5. Ưu tiên precision vì trích sai số tiền đắt hơn bỏ sót một trường (người sẽ bổ sung trường bỏ sót).</p>
     <p><b>Chi phí.</b> Prompt caching cho các điều khoản bảo hiểm cố định, báo cáo ước giảm 35% chi phí token đầu vào; model routing để giảm chi phí trên mỗi tác vụ thành công.</p>
   </section>
 
@@ -66,7 +66,7 @@
       <figcaption><b>Hình 2</b>Checklist capstone. Tiến độ được lưu trong trình duyệt này.</figcaption>
     </figure>
     <p>Chọn vấn đề đủ nhỏ để làm trong vài tuần và đủ thật để có người dùng thử. Một công cụ nội bộ cho đội của bạn thường là lựa chọn tốt: người dùng ở ngay bên cạnh, dữ liệu sẵn có, và bạn đo được outcome.</p>
-    <div class="take"><small>Ghi nhớ</small>Dự án capstone thành công không phải vì demo đẹp, mà vì bạn đo được nó giúp ai, bao nhiêu, với chi phí bao nhiêu.</div>
+    <div class="take"><small>Ghi nhớ</small>Demo đẹp chưa đủ. Capstone thành công khi bạn đo được dự án giúp ai, bao nhiêu, với chi phí bao nhiêu.</div>
   </section>
 
   <div class="vids" data-videos="21"></div>
@@ -178,17 +178,17 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
    "Câu “chắc 90%” của một người bạn."
   ],
   "hitl": [
    "human-in-the-loop",
-   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
    "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
   ],
   "evalset": [
@@ -203,7 +203,7 @@ window.CH = {
   ],
   "precision": [
    "precision",
-   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
    "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
   ],
   "cache": [

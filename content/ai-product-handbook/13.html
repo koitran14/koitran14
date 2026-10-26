@@ -30,12 +30,12 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Governance không phải phanh làm chậm sản phẩm. Nó là hệ thống phanh tốt giúp chạy nhanh mà không lao xuống vực.</div>
+  <div class="idea"><small>Ý chính của chương</small>Governance giống hệ thống phanh tốt: có phanh mới dám chạy nhanh mà không lao xuống vực.</div>
   <section id="s1">
     <span class="num">13.1</span>
     <h2>Các loại rủi ro mới</h2>
     <p class="gist">Hallucination, bias, lộ PII và vi phạm khung pháp lý: những rủi ro phần mềm thường ít gặp.</p>
-<p>AI PM phải bảo vệ doanh nghiệp trước một nhóm rủi ro mới: model bịa thông tin (hallucination), thiên lệch thuật toán (bias), rò rỉ dữ liệu cá nhân (PII leakage), và không tuân thủ các khung pháp lý đang được siết chặt trên toàn cầu. Mỗi rủi ro cần một chủ sở hữu, một cách đo, và một biện pháp giảm thiểu được ghi vào roadmap, không để tới lúc audit mới làm.</p>
+<p>AI PM phải bảo vệ doanh nghiệp trước một nhóm rủi ro mới: model bịa thông tin (hallucination), thiên lệch thuật toán (bias), rò rỉ dữ liệu cá nhân (PII leakage), và vi phạm các khung pháp lý đang siết chặt trên toàn cầu. Mỗi rủi ro cần một người phụ trách, một cách đo, và một biện pháp giảm thiểu được ghi vào roadmap, không để tới lúc audit mới làm.</p>
   </section>
 
   <section id="s2">
@@ -53,7 +53,7 @@
   <section id="s3">
     <span class="num">13.3</span>
     <h2>Shared responsibility model</h2>
-    <p class="gist">AWS lo bảo mật CỦA đám mây; khách hàng lo bảo mật TRONG đám mây.</p>
+    <p class="gist">AWS lo bảo mật hạ tầng cloud; khách hàng lo bảo mật những gì họ đặt và cấu hình trên cloud.</p>
 <div class="srm">
       <div><b>Khách hàng · Security IN the cloud</b><ul><li>Dữ liệu khách hàng và PII redaction</li><li>Quản lý truy cập IAM, cấu hình model</li><li>Tường lửa, mã hóa (KMS), Bedrock Guardrails</li></ul></div>
       <div><b>AWS · Security OF the cloud</b><ul><li>Hạ tầng điện toán, GPU/TPU vật lý</li><li>Bảo mật trung tâm dữ liệu, lớp ảo hóa (hypervisor)</li><li>An toàn của các dịch vụ managed (Bedrock, SageMaker)</li></ul></div>
@@ -188,12 +188,12 @@ window.CH = {
   ],
   "hitl": [
    "human-in-the-loop",
-   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
    "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
   ],
   "shared": [
    "shared responsibility model",
-   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật CỦA đám mây, khách hàng lo bảo mật TRONG đám mây.",
+   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật hạ tầng cloud, khách hàng lo bảo mật những gì họ đặt và cấu hình trên cloud.",
    "Chủ tòa nhà lo cửa chính và thang máy; khóa cửa căn hộ là việc của bạn."
   ],
   "redaction": [
@@ -203,7 +203,7 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "injection": [
@@ -335,10 +335,10 @@ window.CH = {
     "AWS",
     "Khách hàng",
     "Nhà cung cấp model",
-    "Cả hai không ai"
+    "Không ai"
    ],
    "a": 1,
-   "ex": "IAM thuộc bảo mật TRONG đám mây."
+   "ex": "IAM thuộc phần khách hàng tự lo."
   },
   {
    "id": "my5",

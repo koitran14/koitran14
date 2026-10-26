@@ -22,7 +22,7 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Tài liệu tốt giúp kỹ thuật và kinh doanh không hiểu lệch nhau. Với AI, tài liệu phải nói rõ những con số mà “đủ tốt” dựa vào.</div>
+  <div class="idea"><small>Ý chính của chương</small>Tài liệu tốt giúp kỹ thuật và kinh doanh không hiểu lệch nhau. Với AI, tài liệu phải ghi rõ “đủ tốt” nghĩa là đạt con số nào.</div>
   <section id="s1">
     <span class="num">20.1</span>
     <h2>Checklist PRD cho tính năng AI</h2>
@@ -34,7 +34,7 @@
           <li><label><input type="checkbox"><span><b>Phạm vi tự động hóa và handoff</b>Tác vụ nào AI tự xử lý; luồng chuyển cho người khi độ tin cậy thấp ra sao?</span></label></li>
           <li><label><input type="checkbox"><span><b>Eval criteria</b>Đường dẫn tới eval set đại diện; ngưỡng precision, recall, latency bắt buộc để ra mắt.</span></label></li>
           <li><label><input type="checkbox"><span><b>Guardrails và bảo mật</b>Quy tắc chặn prompt injection, lọc nội dung độc hại, quy trình PII redaction.</span></label></li>
-          <li><label><input type="checkbox"><span><b>Ngân sách suy luận và TCO</b>Chi phí tối đa cho mỗi tác vụ thành công ($/task).</span></label></li>
+          <li><label><input type="checkbox"><span><b>Ngân sách inference và TCO</b>Chi phí tối đa cho mỗi tác vụ thành công ($/task).</span></label></li>
           <li><label><input type="checkbox"><span><b>Hồ sơ tuân thủ</b>Mức rủi ro theo EU AI Act; thông điệp minh bạch trên giao diện.</span></label></li>
         </ul>
         <div class="meter"><b id="prdM"></b></div>
@@ -54,7 +54,7 @@
   <section id="s3">
     <span class="num">20.3</span>
     <h2>Decision log và product review</h2>
-    <p class="gist">Hai loại tài liệu nhỏ giúp tổ chức nhớ và học.</p>
+    <p class="gist">Hai loại tài liệu nhỏ giúp đội nhớ lại và rút kinh nghiệm.</p>
 <p>Decision log ghi bối cảnh, giả định, dữ liệu lúc đó và lý do chấp nhận rủi ro (mẫu ở chương 14). Product review là buổi xem lại định kỳ: so outcome thật với giả định trong PRD, xem eval có còn đại diện cho người dùng hiện tại không, và quyết định tiếp tục, điều chỉnh hay dừng.</p>
     <div class="code"><pre>## Product review · Trợ lý tra quy trình · Quý 4
 Giả định trong PRD:  Thời gian tra giảm từ 8 phút xuống dưới 1 phút.
@@ -113,7 +113,7 @@ window.CH = {
    "sum": [
     "Nói rõ vấn đề, thứ tự, lý do.",
     "Thêm điều kiện đi tiếp theo ngưỡng chất lượng.",
-    "Tách roadmap đối ngoại khỏi kế hoạch chi tiết."
+    "Tách roadmap cho người ngoài đội khỏi kế hoạch chi tiết."
    ],
    "terms": [
     "roadmap"
@@ -152,7 +152,7 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "injection": [

@@ -26,7 +26,7 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần I / 03</div>
   <h1>Thị trường <i>và đánh giá cơ hội</i></h1>
-  <p class="dek">Giải đúng vấn đề vẫn có thể thất bại nếu thị trường quá nhỏ, rào cản pháp lý quá cao hoặc chi phí suy luận vượt giá trị thu về. ICP, TAM/SAM/SOM, moat và ba câu hỏi desirability, feasibility, viability.</p>
+  <p class="dek">Giải đúng vấn đề vẫn có thể thất bại nếu thị trường quá nhỏ, rào cản pháp lý quá cao hoặc inference cost vượt giá trị thu về. ICP, TAM/SAM/SOM, moat và ba câu hỏi desirability, feasibility, viability.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 03 / 21</span><span>9 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
@@ -36,7 +36,7 @@
     <span class="num">03.1</span>
     <h2>Phân khúc, ICP và buyer persona</h2>
     <p class="gist">Trong B2B, người dùng sản phẩm và người duyệt tiền thường là hai người khác nhau.</p>
-<p>Thị trường sản phẩm AI có thể chia theo quy mô doanh nghiệp, mức sẵn sàng về dữ liệu (data readiness), hạ tầng an ninh và yêu cầu tuân thủ. Trong B2B cần tách hai khái niệm. ICP (Ideal Customer Profile) là loại tổ chức hợp nhất: đủ lớn, có nhiều dữ liệu số, có ngân sách đổi mới và chịu áp lực cắt giảm chi phí vận hành. Buyer persona là người duyệt ngân sách hoặc có quyền chặn: ngoài CPO, CEO, quyết định mua sản phẩm AI còn chịu ảnh hưởng lớn từ CDO (Giám đốc dữ liệu) và CISO (Giám đốc an toàn thông tin), những người quan tâm tới rủi ro lộ PII, tuân thủ, an ninh mạng và ROI.</p>
+<p>Thị trường sản phẩm AI có thể chia theo quy mô doanh nghiệp, mức sẵn sàng về dữ liệu (data readiness), hạ tầng an ninh và yêu cầu tuân thủ. Trong B2B cần tách hai khái niệm. ICP (Ideal Customer Profile) là loại tổ chức hợp nhất: đủ lớn, có nhiều dữ liệu số, có ngân sách đổi mới và chịu áp lực cắt giảm chi phí vận hành. Buyer persona là người duyệt ngân sách hoặc có quyền chặn. Ngoài CPO, CEO, quyết định mua sản phẩm AI còn chịu ảnh hưởng lớn từ CDO (Giám đốc dữ liệu) và CISO (Giám đốc an toàn thông tin), những người quan tâm tới rủi ro lộ PII, tuân thủ, an ninh mạng và ROI.</p>
     <div class="take"><small>Ghi nhớ</small>Bán sản phẩm AI cho doanh nghiệp là thuyết phục cả CISO, không chỉ người dùng cuối.</div>
   </section>
 
@@ -67,8 +67,8 @@
     <h2>Đối thủ, moat và Value Proposition Canvas</h2>
     <p class="gist">Model nền ai cũng thuê được. Lợi thế phải nằm ở dữ liệu, ở độ sâu trong quy trình, và ở cách xử lý lúc AI sai.</p>
 <p>Có hai nhóm đối thủ chính. Incumbents là các công ty phần mềm lớn gắn thêm AI vào hệ sinh thái sẵn có (như Microsoft, Google), mạnh ở tệp khách hàng và quy trình đã quen. Startup AI-native xây sản phẩm quanh AI từ đầu, đổi mới nhanh và linh hoạt.</p>
-    <p>Vì thuật toán hay model gốc dễ bị thay, moat (lợi thế khó sao chép) của sản phẩm AI thường đến từ ba nguồn: <b>dữ liệu độc quyền</b> mà đối thủ không có; <b>gắn sâu vào quy trình</b> hằng ngày của người dùng, tạo chi phí chuyển đổi cao; và <b>UX tốt cho sự không chắc chắn</b>, tức giao diện và guardrails xử lý lỗi của model một cách êm, giữ được niềm tin.</p>
-    <p>Value Proposition Canvas đặt hồ sơ khách hàng cạnh bản đồ giá trị. Ví dụ với hệ thống RAG doanh nghiệp kết hợp IDP: customer jobs là trích dữ liệu hợp đồng, rà soát pháp lý, tra thông tin nội bộ; customer pains là nhập liệu sai, mất hàng giờ đọc PDF, sợ lộ PII; pain relievers là bóc tách văn bản tự động, tìm kiếm có trích nguồn, che PII, phân quyền; gain creators là câu trả lời tổng hợp trong vài giây, gợi ý theo ngữ cảnh. Báo cáo nguồn ước tính giảm 80% thời gian tìm thông tin, nhưng con số này cần đo lại trên dữ liệu của chính bạn.</p>
+    <p>Vì thuật toán hay model gốc dễ bị thay, moat (lợi thế khó sao chép) của sản phẩm AI thường đến từ ba nguồn: <b>dữ liệu độc quyền</b> mà đối thủ không có; <b>gắn sâu vào quy trình</b> hằng ngày của người dùng, tạo chi phí chuyển đổi cao; và <b>UX tốt cho sự không chắc chắn</b>, tức giao diện và guardrails xử lý êm lỗi của model, giữ được niềm tin.</p>
+    <p>Value Proposition Canvas đặt hồ sơ khách hàng cạnh bản đồ giá trị. Ví dụ với hệ thống RAG doanh nghiệp kết hợp IDP. Customer jobs là trích dữ liệu hợp đồng, rà soát pháp lý, tra thông tin nội bộ. Customer pains là nhập liệu sai, mất hàng giờ đọc PDF, sợ lộ PII. Pain relievers là bóc tách văn bản tự động, tìm kiếm có trích nguồn, che PII, phân quyền. Gain creators là câu trả lời tổng hợp trong vài giây, gợi ý theo ngữ cảnh. Báo cáo nguồn ước tính giảm 80% thời gian tìm thông tin, nhưng con số này cần đo lại trên dữ liệu của chính bạn.</p>
     <div class="take"><small>Ghi nhớ</small>Câu hỏi về moat: nếu đối thủ dùng đúng model của bạn từ ngày mai, họ còn thiếu gì?</div>
   </section>
 
@@ -79,7 +79,7 @@
 <p><b>Desirability</b>: người dùng có thật sự muốn không, sản phẩm có giải đúng điểm đau, họ có sẵn lòng dùng và trả tiền không? <b>Feasibility</b>: model có đạt độ chính xác và độ tin cậy cần thiết không, latency có chấp nhận được không, hạ tầng có đảm bảo an toàn thông tin, phân quyền (IAM), mã hóa và bảo vệ PII không? <b>Viability</b>: mô hình tài chính có bền không khi tính chi phí gọi API và hạ tầng suy luận trên mỗi người dùng, so với LTV thu về?</p>
     <figure>
       <div class="fig"><div class="figbar"><span>Đánh dấu những câu hỏi bạn đã có câu trả lời “có”</span></div><div class="dvf" id="dvf"></div><div class="panel" id="dvfP"></div></div>
-      <figcaption><b>Hình 2</b>Thiếu bất kỳ trụ nào, cơ hội chưa nên được duyệt.</figcaption>
+      <figcaption><b>Hình 2</b>Thiếu bất kỳ trụ nào, chưa nên duyệt cơ hội.</figcaption>
     </figure>
     <p>Rủi ro pháp lý cũng thuộc feasibility. EU AI Act có hiệu lực từ 01/08/2024 và quản lý theo mức rủi ro. Theo báo cáo nguồn, nghĩa vụ cho hệ thống AI rủi ro cao (sinh trắc học, hạ tầng thiết yếu, giáo dục, tuyển dụng) áp dụng từ 02/12/2027, và cho hệ thống AI gắn trong sản phẩm đã có luật chuyên ngành từ 02/08/2028. AI PM nên phân loại mức rủi ro của sản phẩm ngay từ lúc thẩm định cơ hội. Chương 13 nói kỹ hơn về lộ trình này.</p>
     <div class="take"><small>Ghi nhớ</small>Viability của AI khác SaaS thường: chi phí biên không gần bằng 0, nên phải tính chi phí suy luận trên mỗi người dùng ngay từ đầu.</div>
@@ -217,7 +217,7 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "dvf": [
@@ -373,7 +373,7 @@ window.CH = {
     "Viability"
    ],
    "a": 2,
-   "ex": "Đây là câu hỏi về khả năng sống về mặt kinh doanh."
+   "ex": "Đây là câu hỏi về mô hình kinh doanh có bền không."
   },
   {
    "id": "my6",

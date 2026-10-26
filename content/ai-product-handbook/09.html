@@ -30,7 +30,7 @@
 <ol>
       <li><b>Thu dữ liệu thật</b> từ tương tác của người dùng trong giai đoạn thử nghiệm.</li>
       <li><b>Thêm edge case</b>: câu hỏi khó, mơ hồ, có yếu tố gây nhiễu, và câu cố tình tấn công hệ thống (adversarial prompt).</li>
-      <li><b>Gán nhãn bởi chuyên gia</b>: người hiểu nghiệp vụ thẩm định và ghi câu trả lời chuẩn, tạo thành golden dataset làm căn cứ chấm tự động.</li>
+      <li><b>Chuyên gia gán nhãn</b>: người hiểu nghiệp vụ thẩm định và ghi câu trả lời chuẩn, tạo thành golden dataset làm căn cứ chấm tự động.</li>
     </ol>
     <p>Golden dataset là mốc cố định: mỗi lần đổi model, prompt hay cấu hình RAG, chạy lại trên cùng bộ này để biết chất lượng tăng hay giảm. Không có nó, đội dễ rơi vào kiểu đánh giá “vibes”: thử vài câu, thấy ổn, ship.</p>
     <div class="take"><small>Ghi nhớ</small>Golden dataset nhỏ mà đúng tốt hơn bộ lớn mà không ai kiểm.</div>
@@ -44,7 +44,7 @@
       <tr><th>Cách</th><th>Ưu điểm, chỉ số</th><th>Hạn chế</th></tr>
       <tr><td>Offline evaluation</td><td>Trước khi phát hành; đo chính xác precision, recall, accuracy trên tập chuẩn</td><td>Không phản ánh hết sự đa dạng của người dùng thật; tốn công chuẩn bị dữ liệu</td></tr>
       <tr><td>Online evaluation (A/B test)</td><td>Trên người dùng thật; đo CSAT, tỷ lệ chấp nhận, win-rate giữa các phiên bản</td><td>Phiên bản thử nghiệm lỗi thì người dùng chịu ảnh hưởng</td></tr>
-      <tr><td>LLM-as-a-judge</td><td>Dùng một LLM mạnh chấm câu trả lời theo tiêu chí cho trước, tự động, chạy được nhiều</td><td>Tốn tiền API cho model chấm; model chấm có thể có thiên lệch riêng</td></tr>
+      <tr><td>LLM-as-a-judge</td><td>Dùng một LLM mạnh chấm câu trả lời theo tiêu chí cho trước, tự động, chạy được ở quy mô lớn</td><td>Tốn tiền API cho model chấm; model chấm có thể có thiên lệch riêng</td></tr>
     </table>
     <p>Cách hay dùng trong thực tế là kết hợp: LLM-as-a-judge chạy tự động trong CI mỗi khi đổi prompt; chuyên gia chấm lại định kỳ một mẫu nhỏ để hiệu chỉnh “giám khảo” máy; online evaluation xác nhận trên người dùng thật.</p>
   </section>
@@ -216,12 +216,12 @@ window.CH = {
   ],
   "precision": [
    "precision",
-   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
    "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
   ],
   "recall": [
    "recall",
-   "Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
+   "Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
    "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
   ],
   "halluc": [
@@ -246,7 +246,7 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "injection": [
@@ -271,7 +271,7 @@ window.CH = {
   ],
   "shared": [
    "shared responsibility model",
-   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật CỦA đám mây, khách hàng lo bảo mật TRONG đám mây.",
+   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật hạ tầng cloud, khách hàng lo bảo mật những gì họ đặt và cấu hình trên cloud.",
    "Chủ tòa nhà lo cửa chính và thang máy; khóa cửa căn hộ là việc của bạn."
   ]
  },

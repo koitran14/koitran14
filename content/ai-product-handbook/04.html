@@ -30,7 +30,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>UX của sản phẩm AI chủ yếu là quản lý sự không chắc chắn: đặt đúng kỳ vọng, cho người dùng sửa và từ chối, và xử lý lúc AI sai một cách an toàn.</div>
+  <div class="idea"><small>Ý chính của chương</small>UX của sản phẩm AI chủ yếu là quản lý sự không chắc chắn: đặt đúng kỳ vọng, cho người dùng sửa và từ chối, và xử lý an toàn lúc AI sai.</div>
   <section id="s1">
     <span class="num">04.1</span>
     <h2>UX khi đầu ra không cố định</h2>
@@ -41,7 +41,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
       <tr><td>Hành vi</td><td>Cùng thao tác luôn ra cùng kết quả</td><td>Phản hồi khác nhau theo ngữ cảnh, có thể đổi khi model được cập nhật</td></tr>
       <tr><td>Kiểm thử</td><td>Pass/fail</td><td>Tỷ lệ câu trả lời đúng hoặc chấp nhận được trên một tập mẫu</td></tr>
     </table>
-    <p>Khác biệt này đi thẳng vào information architecture và interaction design. Kiến trúc thông tin không thể giả định một luồng dữ liệu tuyến tính; nó phải hiển thị kết quả dự đoán theo lớp, kèm tín hiệu về độ tin cậy. Thiết kế tương tác phải cho người dùng đánh giá, sửa, duyệt hoặc từ chối kết quả, thay vì buộc họ chấp nhận nguyên văn những gì máy đưa ra.</p>
+    <p>Khác biệt này ảnh hưởng trực tiếp tới information architecture và interaction design. Information architecture không thể giả định một luồng dữ liệu tuyến tính, mà phải hiển thị kết quả dự đoán theo lớp, kèm tín hiệu về độ tin cậy. Thiết kế tương tác phải cho người dùng đánh giá, sửa, duyệt hoặc từ chối kết quả, thay vì buộc họ chấp nhận nguyên văn những gì máy đưa ra.</p>
     <div class="take"><small>Ghi nhớ</small>Mỗi đầu ra AI trên màn hình nên đi kèm một cách để người dùng sửa hoặc bỏ nó.</div>
   </section>
 
@@ -53,7 +53,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
     <ol>
       <li><b>Điểm nhập và đầu vào.</b> Giao diện thu thập yêu cầu: prompt gợi ý, bộ lọc ngữ cảnh, các trường dữ liệu rõ ràng để model dễ xử lý.</li>
       <li><b>Nhánh fallback.</b> Khi confidence của model xuống dưới ngưỡng an toàn, hệ thống chuyển sang câu trả lời dự phòng, hỏi thêm thông tin, hoặc chuyển sang xử lý thủ công, thay vì đưa ra thông tin bịa.</li>
-      <li><b>Điểm duyệt cho dữ liệu nhạy cảm.</b> Với giao dịch tài chính, dữ liệu y tế, thông tin cá nhân, đặt một review checkpoint rõ ràng để người kiểm tra trước khi hệ thống thực hiện hành động.</li>
+      <li><b>Điểm duyệt cho dữ liệu nhạy cảm.</b> Với giao dịch tài chính, dữ liệu y tế, thông tin cá nhân, đặt một review checkpoint rõ ràng để người kiểm tra trước khi hệ thống hành động.</li>
     </ol>
     <figure>
       <div class="fig">
@@ -72,7 +72,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
     <span class="num">04.3</span>
     <h2>Design thinking như một bộ lọc</h2>
     <p class="gist">Dùng design thinking để loại những chỗ AI không tạo thêm giá trị so với quy tắc cố định.</p>
-<p>Trong sản phẩm AI, design thinking giúp chặn việc gắn AI tràn lan. Có hai bộ lọc. Thứ nhất, phân biệt bài toán thật sự cần năng lực học máy hay sinh nội dung với bài toán chỉ cần rule-based: nếu IF-THEN giải được với chi phí thấp và đúng 100%, AI là thừa. Thứ hai, thấu cảm bằng dữ liệu thật: đọc support ticket, phỏng vấn sâu để tìm tác vụ lặp lại. Báo cáo nguồn lấy ví dụ đặt lại mật khẩu hay tải hóa đơn: phổ biến, lặp lại nhiều, hợp để tự động hóa bằng AI.</p>
+<p>Trong sản phẩm AI, design thinking giúp chặn việc gắn AI tràn lan. Có hai bộ lọc. Thứ nhất, phân biệt bài toán thật sự cần machine learning hay sinh nội dung với bài toán chỉ cần rule-based: nếu IF-THEN giải được với chi phí thấp và đúng 100%, AI là thừa. Thứ hai, thấu cảm bằng dữ liệu thật: đọc support ticket, phỏng vấn sâu để tìm tác vụ lặp lại. Báo cáo nguồn lấy ví dụ đặt lại mật khẩu hay tải hóa đơn: phổ biến, lặp lại nhiều, hợp để tự động hóa bằng AI.</p>
   </section>
 
   <section id="s4">
@@ -186,7 +186,7 @@ window.CH = {
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
    "Câu “chắc 90%” của một người bạn."
   ],
   "prototype": [
@@ -211,7 +211,7 @@ window.CH = {
   ],
   "hitl": [
    "human-in-the-loop",
-   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
    "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
   ]
  },

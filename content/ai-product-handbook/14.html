@@ -27,22 +27,22 @@
     <span class="num">14.1</span>
     <h2>Ảnh hưởng không cần quyền lực</h2>
     <p class="gist">AI PM hiếm khi là sếp của những người làm ra sản phẩm, nên phải dẫn dắt bằng lý lẽ và dữ liệu.</p>
-<p>Quản lý sản phẩm AI đòi hỏi influencing without authority: dẫn dắt mà không dùng quyền lực chức vụ. AI PM đứng ở giao điểm giữa đội kỹ thuật phức tạp, mục tiêu kinh doanh và giới hạn pháp lý, và làm “người phiên dịch chiến lược” giữa các bên.</p>
+<p>Quản lý sản phẩm AI đòi hỏi influencing without authority: dẫn dắt mà không dùng quyền lực chức vụ. AI PM đứng giữa đội kỹ thuật, mục tiêu kinh doanh và giới hạn pháp lý, làm người phiên dịch giữa các bên.</p>
     <p>Với người xuất thân kỹ sư, đây thường là chỗ khó nhất: lập luận kỹ thuật đúng chưa đủ để thuyết phục. Cần nói bằng ngôn ngữ của người nghe: chi phí, rủi ro, thời gian, tác động lên khách hàng.</p>
   </section>
 
   <section id="s2">
     <span class="num">14.2</span>
     <h2>AI PM và AI Engineer theo swyx</h2>
-    <p class="gist">Bài luận “The Rise of the AI Engineer” của Shawn “swyx” Wang là một mốc tham chiếu cho cách chia hai vai trò.</p>
+    <p class="gist">Bài luận “The Rise of the AI Engineer” của Shawn “swyx” Wang là mốc tham chiếu hay được dùng để chia hai vai trò.</p>
 <table class="tbl">
       <tr><th></th><th>AI PM</th><th>AI Engineer</th></tr>
-      <tr><td>Mục tiêu</td><td>Định vị bài toán thật, giá trị thương mại, product-market fit</td><td>Xây, triển khai, tối ưu hệ thống AI tin cậy, an toàn, tiết kiệm tài nguyên</td></tr>
+      <tr><td>Mục tiêu</td><td>Xác định bài toán thật, giá trị thương mại, product-market fit</td><td>Xây, triển khai, tối ưu hệ thống AI tin cậy, an toàn, tiết kiệm tài nguyên</td></tr>
       <tr><td>Việc hằng ngày</td><td>Discovery, định nghĩa bài toán, ưu tiên backlog, eval criteria, roadmap</td><td>Lập trình, nối API model, pipeline RAG, tối ưu prompt, test tự động, theo dõi log</td></tr>
       <tr><td>Chiều sâu kỹ thuật</td><td>Hiểu năng lực, giới hạn, chi phí, phân phối xác suất của model; không bắt buộc viết code production</td><td>Kiến trúc phần mềm, vector DB, RAG, tích hợp API, cloud, tối ưu latency</td></tr>
       <tr><td>Lập trình</td><td>Hiếm khi viết code production; có thể dùng Python hoặc no-code để làm prototype</td><td>Bắt buộc: Python, TypeScript, REST/gRPC, framework như LangChain, LlamaIndex</td></tr>
       <tr><td>Đối tác chính</td><td>Lãnh đạo, kỹ sư AI, UX, kinh doanh/marketing, pháp lý</td><td>AI PM, data scientist, kỹ sư backend/frontend, cloud/DevOps</td></tr>
-      <tr><td>Đo thành công</td><td>Adoption, retention, CSAT, tỷ lệ tác vụ thành công, doanh thu</td><td>Accuracy/precision/recall, latency, uptime, chi phí suy luận</td></tr>
+      <tr><td>Đo thành công</td><td>Adoption, retention, CSAT, tỷ lệ tác vụ thành công, doanh thu</td><td>Accuracy/precision/recall, latency, uptime, inference cost</td></tr>
     </table>
     <p>Người làm AI Product Engineer đứng ở khoảng giữa hai cột: viết được code production như AI Engineer, nhưng chịu trách nhiệm cả những chỉ số ở cột AI PM.</p>
   </section>
@@ -61,14 +61,14 @@
     <span class="num">14.4</span>
     <h2>Decision log</h2>
     <p class="gist">Với hệ thống xác suất, quyết định nào cũng là đánh cược có tính toán. Ghi lại để sau này hiểu vì sao.</p>
-<p>AI PM nên duy trì decision log. Mỗi quyết định đổi kiến trúc, chỉnh ngưỡng confidence hay chọn model đều ghi bốn ý: bối cảnh; giả định ban đầu; dữ liệu thực nghiệm lúc đó; lý do chấp nhận rủi ro. Nó vừa là căn cứ khi audit, vừa giúp cả tổ chức học lại từ quyết định cũ thay vì tranh cãi lại từ đầu.</p>
+<p>AI PM nên duy trì decision log. Mỗi quyết định đổi kiến trúc, chỉnh ngưỡng confidence hay chọn model đều ghi bốn ý: bối cảnh; giả định ban đầu; dữ liệu thực nghiệm lúc đó; lý do chấp nhận rủi ro. Decision log vừa là căn cứ khi audit, vừa giúp cả tổ chức học lại từ quyết định cũ thay vì tranh cãi lại từ đầu.</p>
     <div class="code"><pre>## 2026-10-12 · Đổi ngưỡng handoff từ 70% lên 75%
 Bối cảnh:   12 khiếu nại tuần qua về câu trả lời sai trong nhóm “hoàn tiền”.
 Giả định:  Câu sai tập trung ở confidence 70–75%.
 Dữ liệu:   Eval 300 câu: 9/11 câu sai có confidence 70–75%.
 Rủi ro:    Tỷ lệ handoff dự kiến tăng 6%; chấp nhận vì chi phí khiếu nại cao hơn.</pre></div>
     <p>Mẫu trên chỉ minh họa định dạng; các con số là giả định.</p>
-    <div class="take"><small>Ghi nhớ</small>Nếu sáu tháng sau không ai nhớ vì sao chọn model này, decision log đã thiếu.</div>
+    <div class="take"><small>Ghi nhớ</small>Nếu sáu tháng sau không ai nhớ vì sao chọn model này, nghĩa là đã thiếu decision log.</div>
   </section>
 
   <div class="vids" data-videos="14"></div>
@@ -186,7 +186,7 @@ window.CH = {
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
    "Câu “chắc 90%” của một người bạn."
   ]
  },

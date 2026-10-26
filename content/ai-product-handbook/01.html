@@ -35,7 +35,7 @@
       <tr><td>AI feature</td><td>Một thành phần nhỏ trong sản phẩm (tìm kiếm RAG, trích xuất văn bản)</td><td>Chi phí theo từng lượt gọi API; phải giữ latency để không làm chậm cả luồng</td><td>Độ chính xác tác vụ, tần suất dùng, số thao tác thủ công giảm được</td></tr>
       <tr><td>AI service</td><td>Cung cấp hạ tầng hoặc model dạng API (Amazon Bedrock, SageMaker, Textract)</td><td>Tính tiền theo mức dùng; cần cam kết SLA</td><td>Uptime, latency thấp, API ổn định, giá mỗi lượt suy luận</td></tr>
     </table>
-    <p>Điểm cần để ý là cột chi phí. Một dự án kết thúc khi bàn giao; một sản phẩm AI tiếp tục tốn tiền mỗi lần có người dùng nó, và chất lượng của nó có thể trôi đi theo thời gian.</p>
+    <p>Điểm cần để ý là cột chi phí. Một dự án kết thúc khi bàn giao; một sản phẩm AI tiếp tục tốn tiền mỗi lần có người dùng, và chất lượng có thể trôi đi theo thời gian.</p>
     <div class="take"><small>Ghi nhớ</small>Nếu chỉ coi AI là một dự án cần bàn giao, bạn sẽ bỏ qua chi phí vận hành, latency và việc chất lượng giảm dần sau ra mắt.</div>
   </section>
 
@@ -48,7 +48,7 @@
       <div class="fig"><div id="ooi"></div></div>
       <figcaption><b>Hình 1</b>Mỗi câu là output, outcome hay impact?</figcaption>
     </figure>
-    <p>Với bài toán phân loại hay phát hiện, outcome thường phải đào sâu tới chuyện đánh đổi giữa precision và recall. Precision là tỷ lệ dự đoán dương tính mà đúng thật (giảm false positive). Recall là tỷ lệ trường hợp dương tính thật mà mô hình bắt được (giảm false negative). Chọn ưu tiên cái nào là quyết định kinh doanh: hệ thống phát hiện gian lận hay chẩn đoán y tế không được bỏ sót, nên ưu tiên recall; hệ thống tự duyệt tiền thưởng hay gắn nhãn spam không được khóa nhầm người tốt, nên ưu tiên precision. Chương 10 quay lại chủ đề này kỹ hơn.</p>
+    <p>Với bài toán phân loại hay phát hiện, outcome thường phải đào sâu tới chuyện đánh đổi giữa precision và recall. Precision là tỷ lệ dự đoán dương tính mà đúng thật (giảm false positive). Recall là tỷ lệ trường hợp dương tính thật mà model bắt được (giảm false negative). Chọn ưu tiên cái nào là quyết định kinh doanh. Hệ thống phát hiện gian lận hay chẩn đoán y tế không được bỏ sót, nên ưu tiên recall; hệ thống tự duyệt tiền thưởng hay gắn nhãn spam không được khóa nhầm người tốt, nên ưu tiên precision. Chương 10 quay lại chủ đề này kỹ hơn.</p>
     <div class="take"><small>Ghi nhớ</small>Hỏi “người dùng làm được gì tốt hơn” trước khi hỏi “mình đã làm xong cái gì”.</div>
   </section>
 
@@ -97,7 +97,7 @@ function sorter(box, data, labels) {
  show()}
 
 sorter(document.getElementById('ooi'), [
- ['Đội đã tích hợp xong API của một LLM vào app hỗ trợ khách hàng.', 0, 'Đây là output: một thứ đã bàn giao. Nó chưa nói gì về việc người dùng có được lợi không.'],
+ ['Đội đã tích hợp xong API của một LLM vào app hỗ trợ khách hàng.', 0, 'Đây là output: một thứ đã bàn giao. Câu này chưa cho biết người dùng có được lợi không.'],
  ['Tỷ lệ yêu cầu hỗ trợ được AI tự giải quyết tăng từ 20% lên 45%.', 1, 'Outcome: thay đổi đo được trong hiệu quả hệ thống và hành vi người dùng.'],
  ['Chi phí vận hành bộ phận hỗ trợ giảm và tỷ lệ gia hạn hợp đồng tăng sau hai quý.', 2, 'Impact: giá trị kinh doanh dài hạn mà outcome mang lại.'],
  ['Hoàn thành eval set 300 câu cho trợ lý tra cứu.', 0, 'Output: eval set là một sản phẩm bàn giao của đội, giúp đo outcome nhưng tự nó chưa là outcome.'],
@@ -210,7 +210,7 @@ window.CH = {
   ],
   "drift": [
    "drift",
-   "Chất lượng mô hình giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
+   "Chất lượng model giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
    "Bản đồ in năm ngoái, đường đã mở thêm vài lối mới."
   ],
   "halluc": [
@@ -235,12 +235,12 @@ window.CH = {
   ],
   "precision": [
    "precision",
-   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
    "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
   ],
   "recall": [
    "recall",
-   "Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
+   "Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
    "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
   ],
   "fp": [
@@ -255,7 +255,7 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "fallback": [
@@ -265,7 +265,7 @@ window.CH = {
   ],
   "hitl": [
    "human-in-the-loop",
-   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
    "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
   ],
   "pm": [

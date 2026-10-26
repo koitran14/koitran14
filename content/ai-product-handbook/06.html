@@ -28,18 +28,18 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>PRD của tính năng AI không chỉ mô tả màn hình. Nó phải ghi rõ ngưỡng chất lượng đo được, luồng xử lý khi AI sai, và mức rủi ro chấp nhận được.</div>
+  <div class="idea"><small>Ý chính của chương</small>Ngoài màn hình, PRD của tính năng AI phải ghi rõ ngưỡng chất lượng đo được, luồng xử lý khi AI sai, và mức rủi ro chấp nhận được.</div>
   <section id="s1">
     <span class="num">06.1</span>
     <h2>PRD cho tính năng AI</h2>
     <p class="gist">Ba phần mới so với PRD thường: guardrails và fallback, tiêu chí chấp nhận định lượng, và eval set.</p>
 <p>Dưới đây là khung PRD rút từ báo cáo nguồn, với ví dụ một trợ lý tra quy trình cho bộ phận chăm sóc khách hàng.</p>
     <div class="prd">
-      <div><b>1. Vấn đề và mục tiêu</b><p>Điểm đau: nhân viên CSKH mất trung bình 8 phút để tự tra quy trình xử lý ticket trong kho tài liệu nội bộ. Mục tiêu: trợ lý AI trích đúng quy trình và câu trả lời trong dưới 2 giây.</p></div>
+      <div><b>1. Vấn đề và mục tiêu</b><p>Điểm đau: nhân viên CSKH mất trung bình 8 phút để tự tra quy trình xử lý ticket trong kho tài liệu nội bộ. Mục tiêu: trợ lý AI trích đúng quy trình và bắt đầu trả lời trong 2 giây.</p></div>
       <div><b>2. Guardrails và fallback</b><p>Chỉ dùng dữ liệu trong kho tài liệu nội bộ (RAG), không tự bịa thông tin ngoài nguồn. Câu hỏi về thông tin nhạy cảm (hợp đồng pháp lý, dữ liệu nhân sự) thì từ chối và chuyển sang chuyên viên phụ trách.</p></div>
       <div><b>3. Acceptance criteria định lượng</b><p>Groundedness trên golden dataset &gt; 85%. TTFT &lt; 2,0 giây. Hallucination rate &lt; 5%.</p></div>
     </div>
-    <p>Thêm vào đó, PRD nên dẫn tới eval set đại diện và mức lỗi chấp nhận được (acceptable error rate). Chương 20 có checklist PRD đầy đủ hơn.</p>
+    <p>PRD cũng nên trỏ tới eval set đại diện và ghi mức lỗi chấp nhận được (acceptable error rate). Chương 20 có checklist PRD đầy đủ hơn.</p>
     <div class="take"><small>Ghi nhớ</small>Nếu acceptance criteria của tính năng AI không có con số, đội sẽ cãi nhau về “đủ tốt chưa” tới tận ngày ra mắt.</div>
   </section>
 
@@ -53,7 +53,7 @@
       </div>
       <figcaption><b>Hình 1</b>Đi qua bốn giai đoạn để xem mục tiêu, phạm vi kỹ thuật và cách đo.</figcaption>
     </figure>
-    <p>POC và prototype hay bị gộp làm một. POC trả lời câu hỏi kỹ thuật (model có giải được bài toán lõi không), còn prototype trả lời câu hỏi trải nghiệm (người dùng có hiểu và thao tác được không). Một POC thành công chưa nói gì về việc người dùng có muốn sản phẩm.</p>
+    <p>POC và prototype hay bị gộp làm một. POC trả lời câu hỏi kỹ thuật (model có giải được bài toán lõi không), còn prototype trả lời câu hỏi trải nghiệm (người dùng có hiểu và thao tác được không). Một POC thành công chưa cho biết người dùng có muốn sản phẩm không.</p>
   </section>
 
   <section id="s3">
@@ -61,7 +61,7 @@
     <h2>Ưu tiên backlog</h2>
     <p class="gist">Ngoài tác động và độ khó, backlog AI cần thêm một trục: rủi ro dữ liệu và model.</p>
 <p>Khi xếp ưu tiên backlog cho sản phẩm AI, cân ba yếu tố. <b>Business impact</b>: tính năng đóng góp bao nhiêu vào doanh thu, giảm chi phí hay trải nghiệm. <b>Technical complexity</b>: khối lượng xử lý dữ liệu, thời gian tính toán, độ phức tạp khi nối RAG/API và tích hợp. <b>Data/model risk</b>: có thiếu dữ liệu không, có rủi ro PII, bịa thông tin hay bias không.</p>
-    <p>Các framework như RICE (Reach × Impact × Confidence / Effort) hay MoSCoW (Must, Should, Could, Won’t) vẫn dùng được. Với AI, trục Confidence trong RICE là chỗ phản ánh rủi ro model: một tính năng chưa chạy thử trên eval set thì không nên được chấm Confidence cao. Chương 19 có bảng so sánh các framework.</p>
+    <p>Các framework như RICE (Reach × Impact × Confidence / Effort) hay MoSCoW (Must, Should, Could, Won’t) vẫn dùng được. Với AI, trục Confidence trong RICE là chỗ phản ánh rủi ro model: một tính năng chưa chạy thử trên eval set thì không nên chấm Confidence cao. Chương 19 có bảng so sánh các framework.</p>
     <div class="take"><small>Ghi nhớ</small>Trong RICE, Confidence của một tính năng AI chỉ nên cao khi đã có số đo trên eval set.</div>
   </section>
 
@@ -185,7 +185,7 @@ window.CH = {
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
    "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
   ],
   "fallback": [
@@ -441,7 +441,7 @@ window.CH = {
     "Thử giao diện"
    ],
    "a": 1,
-   "ex": "Dữ liệu thật từ Beta giúp đánh giá nâng cao trước GA."
+   "ex": "Dữ liệu thật từ Beta giúp đánh giá kỹ hơn trước GA."
   }
  ]
 };

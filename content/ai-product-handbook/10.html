@@ -33,7 +33,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
   <section id="s1">
     <span class="num">10.1</span>
     <h2>Đo phần mềm thường và đo sản phẩm AI</h2>
-    <p class="gist">Phần mềm thường đo luồng đúng/sai. Sản phẩm AI đo tỷ lệ trả lời đúng trong không gian đầu ra mở, và theo dõi nó thay đổi theo thời gian.</p>
+    <p class="gist">Phần mềm thường đo luồng đúng/sai. Sản phẩm AI đo tỷ lệ trả lời đúng khi đầu ra mở, và theo dõi tỷ lệ này theo thời gian.</p>
 <p>Với phần mềm truyền thống, sản phẩm chạy đúng thiết kế hoặc có bug; chỉ số chính là uptime, tỷ lệ lỗi HTTP, số bug, thời gian tải trang. Với sản phẩm AI, cần theo dõi thêm: tỷ lệ phản hồi chính xác khi đầu ra là văn bản mở; drift của model khi dữ liệu đầu vào hoặc ý nghĩa của dữ liệu thay đổi (data drift, concept drift); latency suy luận; và chi phí điện toán trên mỗi tác vụ thành công.</p>
     <p>Ở tầng sản phẩm, các khái niệm analytics quen thuộc vẫn cần: <b>North Star Metric</b> là một chỉ số phản ánh giá trị người dùng nhận được (ví dụ số ticket được giải quyết đúng nhờ AI mỗi tuần); <b>funnel</b> cho thấy người dùng rơi ở bước nào; <b>cohort analysis</b> theo dõi từng nhóm người dùng bắt đầu cùng thời điểm, để biết retention của người mới tháng này có tốt hơn tháng trước không.</p>
     <div class="take"><small>Ghi nhớ</small>Chỉ số kỹ thuật (độ chính xác, latency) và chỉ số sản phẩm (retention, North Star) phải đặt cạnh nhau trên cùng một dashboard.</div>
@@ -61,7 +61,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
     <span class="num">10.3</span>
     <h2>Giữ chất lượng qua vòng đời ML</h2>
     <p class="gist">Model cần dữ liệu gán nhãn liên tục và vòng phản hồi để cập nhật khi thực tế thay đổi.</p>
-<p>Để giữ hiệu năng model qua thời gian, cần thu và gán nhãn dữ liệu ở quy mô lớn. Báo cáo nguồn lấy ví dụ AWS SageMaker Ground Truth: quy trình gán nhãn tự động kết hợp người (human-in-the-loop), giúp đội dựng dữ liệu huấn luyện và đánh giá chất lượng cao, và lập feedback loop để cập nhật model mỗi khi phát hiện lệch so với dữ liệu thực tế.</p>
+<p>Để giữ hiệu năng model qua thời gian, cần thu và gán nhãn dữ liệu ở quy mô lớn. Báo cáo nguồn lấy ví dụ AWS SageMaker Ground Truth: quy trình gán nhãn tự động kết hợp người (human-in-the-loop), giúp đội dựng dữ liệu huấn luyện và đánh giá chất lượng cao. Quy trình này cũng lập feedback loop để cập nhật model mỗi khi phát hiện lệch so với dữ liệu thực tế.</p>
     <p>Ở phía sản phẩm, feedback loop có thể đơn giản như nút thích/không thích, hoặc cho người dùng sửa câu trả lời ngay trong giao diện. Mỗi lần sửa là một mẫu dữ liệu có nhãn.</p>
   </section>
 
@@ -175,7 +175,7 @@ window.CH = {
  "terms": {
   "drift": [
    "drift",
-   "Chất lượng mô hình giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
+   "Chất lượng model giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
    "Bản đồ in năm ngoái, đường đã mở thêm vài lối mới."
   ],
   "nsm": [
@@ -200,12 +200,12 @@ window.CH = {
   ],
   "precision": [
    "precision",
-   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
    "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
   ],
   "recall": [
    "recall",
-   "Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
+   "Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
    "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
   ],
   "fp": [
@@ -220,7 +220,7 @@ window.CH = {
   ],
   "hitl": [
    "human-in-the-loop",
-   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
    "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
   ],
   "evalset": [
@@ -240,7 +240,7 @@ window.CH = {
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
    "Câu “chắc 90%” của một người bạn."
   ]
  },

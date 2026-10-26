@@ -36,11 +36,11 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Đưa AI từ prototype lên production là bài toán độ ổn định, latency, khả năng mở rộng và chi phí, không phải bài toán prompt.</div>
+  <div class="idea"><small>Ý chính của chương</small>Đưa AI từ prototype lên production chủ yếu là bài toán độ ổn định, latency, khả năng mở rộng và chi phí; prompt chỉ là phần nhỏ.</div>
   <section id="s1">
     <span class="num">08.1</span>
     <h2>Bốn lớp kiến trúc</h2>
-    <p class="gist">Frontend, orchestration, model, data và messaging: mỗi lớp lo một loại rủi ro.</p>
+    <p class="gist">Frontend, orchestration, model, data &amp; messaging: mỗi lớp lo một loại rủi ro.</p>
 <figure>
       <div class="fig"><div class="stack" id="stack"></div><div class="panel" id="stackP"></div></div>
       <figcaption><b>Hình 1</b>Bốn lớp của hệ thống AI production theo báo cáo nguồn. Chọn một lớp để xem vai trò và công cụ ví dụ.</figcaption>
@@ -76,7 +76,7 @@
       <tr><td>Danh tính, phân quyền</td><td>AWS IAM</td><td>Phân quyền giữa các dịch vụ, bảo vệ API key và tài nguyên</td></tr>
       <tr><td>Kết nối riêng</td><td>AWS PrivateLink</td><td>Dữ liệu giữa các dịch vụ AI không đi qua internet công cộng</td></tr>
     </table>
-    <p>Hàng chờ là phần hay bị quên ở prototype. Khi lưu lượng tăng, gọi LLM đồng bộ trực tiếp từ request của người dùng dễ đụng rate limit; đẩy qua queue giúp hệ thống chịu tải đều hơn với các tác vụ không cần trả lời tức thì.</p>
+    <p>Queue là phần hay bị quên ở prototype. Khi lưu lượng tăng, gọi LLM đồng bộ trực tiếp từ request của người dùng dễ đụng rate limit; đẩy qua queue giúp hệ thống chịu tải đều hơn với các tác vụ không cần trả lời tức thì.</p>
   </section>
 
   <section id="s4">

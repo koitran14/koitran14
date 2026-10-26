@@ -46,7 +46,7 @@
     <p class="gist">Token là đơn vị tính tiền và giới hạn; embedding là cách máy “hiểu” nghĩa; context window là mặt bàn làm việc.</p>
 <p><b>Tokenization</b> chia văn bản thành token: một từ, một phần của từ hoặc một ký tự. LLM tính chi phí và giới hạn đầu vào, đầu ra theo số token, nên số token ảnh hưởng trực tiếp tới tiền API và latency. Với tiếng Anh, khoảng 1.000 token tương đương 750 từ; tiếng Việt thường tốn nhiều token hơn cho cùng lượng chữ.</p>
     <p><b>Embedding</b> chuyển văn bản thành vector số nhiều chiều; các đoạn gần nghĩa nằm gần nhau. Vector database lưu các vector này để tìm kiếm theo nghĩa (semantic search) thay vì khớp từ khóa.</p>
-    <p><b>Context window</b> là số token tối đa model nhận và xử lý trong một lần gọi, tính cả prompt và câu trả lời. Quản lý bộ nhớ hội thoại và sắp xếp nội dung trong context window là việc kỹ thuật quan trọng để model không “quên” ngữ cảnh trong tương tác dài.</p>
+    <p><b>Context window</b> là số token tối đa model nhận và xử lý trong một lần gọi, tính cả prompt và câu trả lời. Trong hội thoại dài, phải quản lý bộ nhớ hội thoại và sắp xếp nội dung trong context window để model không “quên” ngữ cảnh.</p>
     <div class="take"><small>Ghi nhớ</small>Token là đơn vị tiền tệ của LLM. Quản lý token là quản lý chi phí sản phẩm.</div>
   </section>
 
@@ -59,7 +59,7 @@
       <li><b>Few-shot prompting.</b> Đưa một vài ví dụ đầu vào – đầu ra ngay trong prompt để định hình cấu trúc và định dạng.</li>
       <li><b>Context injection.</b> Chèn thêm thông tin động (dữ liệu người dùng, tài liệu tra cứu) vào prompt trước khi gửi, giúp giảm hallucination.</li>
     </ul>
-    <p>Context engineering mở rộng ý cuối: không chỉ viết câu lệnh hay, mà chọn đúng thông tin nào được đưa vào context window, theo thứ tự nào, cắt bớt cái gì. Với sản phẩm thật, phần này thường quyết định chất lượng nhiều hơn câu chữ của prompt.</p>
+    <p>Context engineering mở rộng ý cuối: ngoài viết câu lệnh hay, còn phải chọn đúng thông tin nào đưa vào context window, theo thứ tự nào, cắt bớt cái gì. Với sản phẩm thật, phần này thường quyết định chất lượng nhiều hơn câu chữ của prompt.</p>
   </section>
 
   <section id="s4">
@@ -77,7 +77,7 @@
       <div class="fig"><div id="rftQ"></div></div>
       <figcaption><b>Hình 2</b>Tình huống nào hợp RAG, tình huống nào hợp fine-tuning?</figcaption>
     </figure>
-    <p>Bên cạnh hai hướng trên có thêm hai mẫu kiến trúc. <b>Tool calling</b> (function calling) cho model quyết định gọi API bên ngoài để làm việc thật: truy vấn SQL, gửi email, tạo hóa đơn. <b>AI agent và model routing</b>: hệ thống tự điều hướng từng tác vụ tới model phù hợp, dùng model nhỏ, rẻ cho việc đơn giản và chỉ chuyển sang model lớn khi cần suy luận phức tạp.</p>
+    <p>Ngoài hai hướng trên còn hai mẫu kiến trúc. <b>Tool calling</b> (function calling) cho model quyết định gọi API bên ngoài để làm việc thật: truy vấn SQL, gửi email, tạo hóa đơn. <b>AI agent và model routing</b>: hệ thống tự điều hướng từng tác vụ tới model phù hợp, dùng model nhỏ, rẻ cho việc đơn giản và chỉ chuyển sang model lớn khi cần suy luận phức tạp.</p>
     <div class="take"><small>Ghi nhớ</small>Câu hỏi đầu tiên khi chọn RAG hay fine-tuning: tri thức có thay đổi hằng tuần không, và người dùng có cần thấy nguồn không?</div>
   </section>
 

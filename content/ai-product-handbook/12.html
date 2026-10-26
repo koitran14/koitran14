@@ -17,7 +17,7 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 12</div>
   <h1>Kinh tế học <i>của sản phẩm AI</i></h1>
-  <p class="dek">Vì sao chi phí biên của AI không về 0, bốn thành phần chi phí cần theo dõi, ba cách tối ưu token, khung Build vs. Buy vs. Partner, và bức tranh thu nhập AI PM trong báo cáo nguồn.</p>
+  <p class="dek">Vì sao chi phí biên của AI không về 0, bốn thành phần chi phí cần theo dõi, ba cách tối ưu token, khung Build vs. Buy vs. Partner, và mức thu nhập AI PM trong báo cáo nguồn.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 12 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
@@ -56,9 +56,9 @@
 <ol>
       <li><b>Prompt compression.</b> Bỏ chữ thừa, sắp lại cấu trúc prompt để giảm token đầu vào mà không mất ngữ cảnh.</li>
       <li><b>Embedding và prompt caching.</b> Lưu sẵn phản hồi hoặc embedding của câu hỏi phổ biến, trả từ cache thay vì gọi lại LLM.</li>
-      <li><b>Model routing.</b> Dùng model nhỏ, đã tinh chỉnh cho việc đơn giản (như phân loại intent), chỉ chuyển câu hỏi phức tạp lên foundation model lớn.</li>
+      <li><b>Model routing.</b> Dùng model nhỏ đã fine-tune cho việc đơn giản (như phân loại intent), chỉ chuyển câu hỏi phức tạp lên foundation model lớn.</li>
     </ol>
-    <p>Ba cách này cộng dồn được. Một hệ thống CSKH điển hình có nhiều câu hỏi lặp lại, nên cache thường cho hiệu quả lớn nhất với ít công sức nhất; routing cần eval cẩn thận để model nhỏ không làm tụt chất lượng ở những câu khó bị phân loại nhầm là dễ.</p>
+    <p>Ba cách này cộng dồn được. Một hệ thống CSKH điển hình có nhiều câu hỏi lặp lại, nên cache thường cho hiệu quả lớn nhất với ít công sức nhất. Routing cần eval cẩn thận để model nhỏ không làm tụt chất lượng ở những câu khó bị phân loại nhầm là dễ.</p>
   </section>
 
   <section id="s3">
@@ -85,7 +85,7 @@
       <tr><td>Netflix</td><td>300.000 – 650.000 USD</td></tr>
       <tr><td>Châu Âu / Pháp (Bluecoders)</td><td>Product nói chung: trung vị 60.000 EUR (55.000 – 80.000); Deeptech / AI / Data: trung vị 75.000 EUR</td></tr>
     </table>
-    <p>Báo cáo tự ghi chú rằng mức trung vị 60.000 EUR của Bluecoders dựa trên mẫu rất hẹp (5 hợp đồng). Nó cũng cho rằng ứng viên kết hợp tư duy sản phẩm với hiểu biết kỹ thuật ở mức model thường thương lượng được mức cao hơn. Thông điệp đáng giữ là thị trường đang trả cao cho người nối được hai phía, chứ không phải con số chính xác.</p>
+    <p>Báo cáo tự ghi chú rằng mức trung vị 60.000 EUR của Bluecoders dựa trên mẫu rất hẹp (5 hợp đồng). Báo cáo cũng cho rằng ứng viên kết hợp tư duy sản phẩm với hiểu biết kỹ thuật ở mức model thường thương lượng được mức cao hơn. Thông điệp đáng giữ là thị trường đang trả cao cho người nối được hai phía, chứ không phải con số chính xác.</p>
   </section>
 
   <div class="vids" data-videos="12"></div>
@@ -312,7 +312,7 @@ window.CH = {
    "q": "Vì sao sản phẩm AI khác SaaS thường về chi phí biên?",
    "o": [
     "AI không cần server",
-    "Mỗi lượt dùng tốn chi phí suy luận, tăng tuyến tính theo lưu lượng",
+    "Mỗi lượt dùng tốn inference cost, tăng tuyến tính theo lưu lượng",
     "SaaS thường đắt hơn",
     "Không khác gì"
    ],
