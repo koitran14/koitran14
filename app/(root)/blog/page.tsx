@@ -53,7 +53,14 @@ export default async function BlogPage() {
           Notes <span className="text-zinc-400 dark:text-zinc-600">—</span> <span className="italic text-orange-600 dark:text-orange-400">sổ tay</span>
         </h1>
         <p className="mt-3 max-w-md leading-relaxed text-zinc-700 dark:text-zinc-400">
-          Góc nhỏ lưu giữ những điều mình học được, những thứ mình tò mò và những ý tưởng mình muốn ghi lại trên hành trình khám phá thế giới công nghệ.
+          Góc nhỏ lưu giữ những điều mình học được, những thứ mình tò mò và những ý tưởng mình muốn ghi lại trên hành trình khám phá thế giới tri thức.
+        </p>
+        <p
+          className="mt-3 max-w-md border-l-2 border-orange-500/60 pl-3 italic leading-relaxed text-zinc-600 dark:text-zinc-400"
+          style={{ fontFamily: "var(--font-notes-serif)" }}
+        >
+          Đây không phải là note của một người học giỏi; đây là note của một người học chưa giỏi nhưng chỉ khao khát để học được như
+          các bạn giỏi thôi. Và đó là lí do cái note này ra đời.
         </p>
       </Reveal>
       <Reveal delay={0.08}>
