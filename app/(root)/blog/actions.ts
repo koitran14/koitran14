@@ -4,6 +4,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { ADMIN_COOKIE, adminToken, checkPassword, getPosts, isAdmin, savePosts, slugify, type PostType } from "@/lib/blog";
+import { BOOKS } from "@/lib/handbook";
+import { getViews, incrementView } from "@/lib/views";
 
 export async function login(_: string | null, form: FormData) {
   if (!checkPassword(String(form.get("password") ?? ""))) return "Wrong password.";
@@ -39,6 +41,16 @@ export async function createPost(_: string | null, form: FormData) {
   await savePosts(posts);
   revalidatePath("/blog");
   redirect(`/blog/${slug}`);
+}
+
+// only real slugs (published posts, or "<book>/<chapter>") are touched so nobody can fill the table with junk rows
+export async function recordView(slug: string, count = true) {
+  const [book, ch] = slug.split("/");
+  const known = ch
+    ? Object.hasOwn(BOOKS, book) && BOOKS[book].includes(ch)
+    : (await getPosts()).find((p) => p.slug === slug)?.published;
+  if (!known) return null;
+  return count ? incrementView(slug) : getViews(slug);
 }
 
 export async function togglePublished(slug: string) {

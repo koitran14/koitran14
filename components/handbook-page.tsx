@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import type { HandbookPage as Page } from "@/lib/handbook";
+import { useViews } from "@/components/view-count";
 
 // the chapter engine is shared by every handbook
 const KIT = "/learn/cube-handbook/kit.js";
@@ -53,6 +55,19 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
     blocks.forEach((el) => { el.classList.add("rv"); io.observe(el); });
     return () => io.disconnect();
   }, [page]);
+
+  // "/blog/cube-handbook/01" -> "cube-handbook/01"; the hub page has no chapter, so the server ignores it
+  const views = useViews(usePathname().replace(/^\/blog\//, ""));
+
+  // the meta row lives in the page's raw HTML, so the count is appended to it rather than rendered by React
+  useEffect(() => {
+    const meta = document.querySelector(".hb .meta");
+    if (views == null || !meta) return;
+    const span = document.createElement("span");
+    span.textContent = `${views.toLocaleString("vi-VN")} lượt xem`;
+    meta.append(span);
+    return () => span.remove();
+  }, [views, page]);
 
   return (
     <>
