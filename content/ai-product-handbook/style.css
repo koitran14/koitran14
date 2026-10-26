@@ -83,6 +83,13 @@ section>:is(ol,ul):not(.loop,.chk)>li::marker{color:var(--muted);font:500 .85em 
 .stp-body{margin-top:14px}
 .stp-body>p{margin:0;font-size:16px;line-height:1.6}
 @media(max-width:700px){.stp-l{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.stp-n{width:26px;height:26px;font-size:11px}.stp-track:before{top:13px}.stp-t{font-size:18px}}
+/* tables in the running text get the same width as figures (80px past the column on wide screens) and more air */
+section>.tbl{width:calc(100% + 160px);margin:32px -80px;font-size:15px;line-height:1.6;border-radius:12px}
+section>.tbl :is(th,td){padding:14px 18px}
+section>.tbl tr>:first-child{width:8.5em}
+section>.tbl td:first-child{font-weight:500;color:var(--fg)}
+@media(max-width:1000px){section>.tbl{width:100%;margin:28px 0}}
+@media(max-width:700px){section>.tbl{font-size:14px}section>.tbl :is(th,td){padding:10px 12px}section>.tbl tr>:first-child{width:6em}}
 /* segmented buttons wrap onto a new row instead of squeezing their labels letter by letter */
 .seg{flex-wrap:wrap;max-width:100%}
 .seg button{white-space:nowrap}
