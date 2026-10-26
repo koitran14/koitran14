@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>21 · Capstone: From Problem Discovery to AI Product Launch · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 21 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VII / 21</div>
+  <h1>Capstone: <i>từ vấn đề đến launch</i></h1>
+  <p class="dek">Một dự án mẫu ghép mọi chương lại: hệ thống IDP và trợ lý CSKH cho một tập đoàn tài chính – bảo hiểm trên AWS, đi qua bốn giai đoạn. Cuối chương là checklist để bạn tự làm dự án của mình.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 21 / 21</span><span>7 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Đừng chỉ xem video rồi làm theo. Chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</div>
+  <section id="s1">
+    <span class="num">21.1</span>
+    <h2>Giai đoạn 1: Discovery và định nghĩa sản phẩm</h2>
+    <p class="gist">Bối cảnh, giá trị mục tiêu, và ranh giới giữa việc AI làm với việc người làm.</p>
+<p><b>Bối cảnh.</b> Một tập đoàn tài chính – bảo hiểm bị quá tải vận hành: hàng triệu chứng từ, hóa đơn nhập tay gây chậm trễ, và trung tâm CSKH xử lý hàng nghìn yêu cầu tra cứu lặp lại.</p>
+    <p><b>Giá trị mục tiêu</b> (theo báo cáo nguồn): tự động hóa 85% quy trình nhập liệu tài liệu, giảm 60% thời gian phản hồi CSKH, giảm 40% chi phí vận hành.</p>
+    <p><b>Phạm vi.</b> AI tự xử lý: trích dữ liệu hóa đơn, hợp đồng chuẩn; trả lời câu hỏi tra cứu chính sách bảo hiểm, hướng dẫn thủ tục. Chuyển cho người: hồ sơ mờ, rách; khiếu nại bồi thường tài chính trực tiếp.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">21.2</span>
+    <h2>Giai đoạn 2: Kiến trúc</h2>
+    <p class="gist">Luồng end-to-end từ tài liệu scan tới giao diện CSKH, có điểm chuyển cho người khi confidence thấp.</p>
+<figure>
+      <div class="fig"><div class="flow" id="cap"></div><div class="panel" id="capP"></div></div>
+      <figcaption><b>Hình 1</b>Luồng dữ liệu trong dự án mẫu. Chọn một bước.</figcaption>
+    </figure>
+    <p>Báo cáo nguồn dùng Claude 3.5 Sonnet trên Amazon Bedrock làm model sinh câu trả lời. Khi bạn làm dự án của mình, chọn model theo eval set và ngân sách, không theo tên trong ví dụ.</p>
+  </section>
+
+  <section id="s3">
+    <span class="num">21.3</span>
+    <h2>Giai đoạn 3 và 4: Đánh giá, rủi ro, triển khai</h2>
+    <p class="gist">Eval set 800 mẫu, phân loại rủi ro, KPI giám sát và tối ưu chi phí.</p>
+<p><b>Eval set.</b> 500 mẫu chứng từ thật kèm 300 kịch bản câu hỏi khách hàng phức tạp; đo tự động qua CI/CD, kết hợp chuyên gia rà các phản hồi có confidence dưới 75%.</p>
+    <p><b>Tuân thủ.</b> Báo cáo nguồn xếp hệ thống vào nhóm rủi ro cao theo EU AI Act (mốc 02/12/2027), nên doanh nghiệp lập hồ sơ minh bạch thuật toán, lưu audit log truy vấn và hiển thị thông báo người dùng đang tương tác với AI. Việc một hệ thống cụ thể có thuộc nhóm rủi ro cao hay không cần đánh giá theo văn bản luật, không mặc định.</p>
+    <p><b>KPI giám sát.</b> Precision trích xuất tài chính &gt; 98,5%; latency tổng thể &lt; 1,8 giây; CSAT &gt; 4,5/5. Ưu tiên precision vì trích sai số tiền đắt hơn bỏ sót một trường (trường bỏ sót sẽ được người bổ sung).</p>
+    <p><b>Chi phí.</b> Prompt caching cho các điều khoản bảo hiểm cố định, báo cáo ước giảm 35% chi phí token đầu vào; model routing để giảm chi phí trên mỗi tác vụ thành công.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">21.4</span>
+    <h2>Tự làm dự án của bạn</h2>
+    <p class="gist">Mười bước, mỗi bước dẫn về chương liên quan.</p>
+<figure>
+      <div class="fig">
+        <ul class="chk" id="mine"></ul>
+        <div class="meter"><b id="mineM"></b></div>
+        <p class="note" id="mineN" style="margin:10px 0 0"></p>
+      </div>
+      <figcaption><b>Hình 2</b>Checklist capstone. Tiến độ được lưu trong trình duyệt này.</figcaption>
+    </figure>
+    <p>Chọn vấn đề đủ nhỏ để làm trong vài tuần và đủ thật để có người dùng thử. Một công cụ nội bộ cho đội của bạn thường là lựa chọn tốt: người dùng ở ngay bên cạnh, dữ liệu sẵn có, và bạn đo được outcome.</p>
+    <div class="take"><small>Ghi nhớ</small>Dự án capstone thành công không phải vì demo đẹp, mà vì bạn đo được nó giúp ai, bao nhiêu, với chi phí bao nhiêu.</div>
+  </section>
+
+  <div class="vids" data-videos="21"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook"><span><small>Hết handbook</small><b>Quay về trang mục lục</b></span><span>→</span></a>
+
+  <div class="end"><p>Các con số mục tiêu (85%, 60%, 40%), KPI và mức giảm 35% chi phí token trong dự án mẫu lấy từ báo cáo nguồn, là ví dụ minh họa chứ không phải kết quả đã kiểm chứng.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const CAP = [['Tài liệu scan', 'Hóa đơn, hợp đồng, chứng từ được tải lên.'], ['Amazon Textract', 'Trích văn bản và cấu trúc bảng (IDP); kết quả lưu vào S3 data lake.'],
+ ['Macie + Lambda', 'Phát hiện và che PII (số thẻ, CCCD) trước khi lưu và index.'], ['Bedrock Knowledge Bases', 'Tạo embedding, lưu và tìm kiếm cho RAG.'],
+ ['Model + Guardrails', 'Model trên Amazon Bedrock sinh câu trả lời kèm trích nguồn; Guardrails chặn câu ngoài phạm vi. Lưu lượng đi qua PrivateLink, phân quyền bằng IAM.'],
+ ['Giao diện CSKH', 'Nhân viên và khách xem câu trả lời; nếu confidence < 75%, luồng tự đẩy sang chuyên gia rà soát (human-in-the-loop).']];
+cap.innerHTML = CAP.map((c, i) => `<button data-i="${i}">${c[0]}</button>${i < CAP.length - 1 ? '<i>→</i>' : ''}`).join('');
+cap.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; cap.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); capP.innerHTML = `<h5>${CAP[+b.dataset.i][0]}</h5>${CAP[+b.dataset.i][1]}`};
+cap.querySelector('button').click();
+const STEPS = [['02', 'Viết problem statement cho một vấn đề thật, chưa nhắc giải pháp'], ['02', 'Phỏng vấn ít nhất năm người dùng mục tiêu'], ['03', 'Trả lời desirability, feasibility, viability'],
+ ['06', 'Viết PRD có acceptance criteria định lượng'], ['09', 'Dựng golden dataset, có edge case'], ['04', 'Prototype luồng có fallback và human-in-the-loop'],
+ ['07', 'Chọn RAG hay fine-tuning, ghi lý do vào decision log'], ['08', 'Đưa lên production với gateway, log và trace'], ['10', 'Đo outcome và cost per successful task'], ['20', 'Tổ chức product review: tiếp tục, điều chỉnh hay dừng']];
+const KEY = 'aip21:capstone', st = (() => {try {return JSON.parse(localStorage.getItem(KEY)) || []} catch {return []}})();
+mine.innerHTML = STEPS.map(([c, t], i) => `<li><label><input type="checkbox" data-i="${i}"${st[i] ? ' checked' : ''}><span><b>Bước ${i + 1} · chương ${c}</b>${t}</span></label></li>`).join('');
+function mu() {const v = [...mine.querySelectorAll('input')].map(x => x.checked); try {localStorage.setItem(KEY, JSON.stringify(v))} catch {}
+ const n = v.filter(Boolean).length; mineM.style.width = n / v.length * 100 + '%'; mineN.textContent = `${n}/${v.length} bước đã xong`}
+mine.onchange = mu; mu();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip21",
+ "minutes": 7,
+ "next": null,
+ "sections": [
+  {
+   "id": "s1",
+   "n": "21.1",
+   "t": "Giai đoạn 1: Discovery và định nghĩa sản phẩm",
+   "sum": [
+    "Bối cảnh: chứng từ nhập tay, CSKH quá tải.",
+    "Mục tiêu: 85% tự động nhập liệu, −60% thời gian phản hồi, −40% chi phí.",
+    "Hồ sơ hỏng và khiếu nại bồi thường chuyển cho người."
+   ],
+   "terms": [
+    "handoff"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "21.2",
+   "t": "Giai đoạn 2: Kiến trúc",
+   "sum": [
+    "Textract → S3 → Macie/Lambda che PII.",
+    "Bedrock Knowledge Bases cho RAG, Guardrails lọc.",
+    "Confidence < 75% thì chuyển người duyệt."
+   ],
+   "terms": [
+    "rag",
+    "redaction",
+    "guardrails",
+    "confidence",
+    "hitl"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "21.3",
+   "t": "Giai đoạn 3 và 4: Đánh giá, rủi ro, triển khai",
+   "sum": [
+    "Eval 800 mẫu, CI/CD + chuyên gia.",
+    "KPI: precision > 98,5%, latency < 1,8 s, CSAT > 4,5.",
+    "Caching và routing để giảm $/task."
+   ],
+   "terms": [
+    "evalset",
+    "euaiact",
+    "precision",
+    "cache",
+    "routing",
+    "cpst"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "21.4",
+   "t": "Tự làm dự án của bạn",
+   "sum": [
+    "Mười bước từ vấn đề tới product review.",
+    "Chọn vấn đề nhỏ, thật, có người dùng thử.",
+    "Đo outcome và chi phí."
+   ],
+   "terms": [
+    "outcome"
+   ]
+  }
+ ],
+ "terms": {
+  "handoff": [
+   "handoff",
+   "Chuyển cuộc hội thoại hoặc tác vụ từ AI sang người, kèm ngữ cảnh để người dùng không phải kể lại.",
+   "Bàn giao ca trực kèm sổ ghi chép."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "redaction": [
+   "PII redaction",
+   "Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.",
+   "Bôi đen thông tin cá nhân trước khi photo hồ sơ."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "confidence": [
+   "confidence score",
+   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Câu “chắc 90%” của một người bạn."
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+  ],
+  "evalset": [
+   "eval set",
+   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
+   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+  ],
+  "euaiact": [
+   "EU AI Act",
+   "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
+   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+  ],
+  "precision": [
+   "precision",
+   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+  ],
+  "cache": [
+   "prompt caching",
+   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
+   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+  ],
+  "routing": [
+   "model routing",
+   "Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.",
+   "Phòng khám: cảm cúm gặp bác sĩ đa khoa, ca khó mới lên chuyên gia."
+  ],
+  "cpst": [
+   "cost per successful task",
+   "Tổng chi phí chia cho số tác vụ được giải quyết trọn vẹn (đã trừ câu trả lời sai, phải thử lại).",
+   "Giá mỗi chiếc bánh bán được, đã tính cả những mẻ hỏng."
+  ],
+  "outcome": [
+   "outcome",
+   "Thay đổi trong hành vi người dùng hoặc hiệu năng hệ thống mà output tạo ra: độ chính xác, latency, tỷ lệ hoàn thành tác vụ, mức hài lòng.",
+   "Ngôi nhà có ở được không."
+  ]
+ },
+ "alias": {
+  "handoff": [
+   "handoff",
+   "Handoff"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "redaction": [
+   "PII redaction"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "confidence": [
+   "confidence score",
+   "confidence"
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Human-in-the-loop"
+  ],
+  "evalset": [
+   "eval set",
+   "eval sets"
+  ],
+  "euaiact": [
+   "EU AI Act"
+  ],
+  "precision": [
+   "precision",
+   "Precision"
+  ],
+  "cache": [
+   "prompt caching",
+   "caching",
+   "cache"
+  ],
+  "routing": [
+   "model routing",
+   "Model routing"
+  ],
+  "cpst": [
+   "cost per successful task"
+  ],
+  "outcome": [
+   "outcome"
+  ]
+ },
+ "rel": {},
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Trong dự án mẫu, loại yêu cầu nào được chuyển cho người?",
+   "o": [
+    "Tra cứu chính sách bảo hiểm",
+    "Trích hóa đơn chuẩn",
+    "Khiếu nại bồi thường tài chính trực tiếp",
+    "Hướng dẫn thủ tục"
+   ],
+   "a": 2,
+   "ex": "Hồ sơ hỏng và khiếu nại bồi thường cần người."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Bước nào che PII trước khi index?",
+   "o": [
+    "Textract",
+    "Macie + Lambda",
+    "Bedrock Knowledge Bases",
+    "Giao diện CSKH"
+   ],
+   "a": 1,
+   "ex": "PII phải được che trước khi vào kho vector."
+  },
+  {
+   "id": "my3",
+   "s": 2,
+   "type": "one",
+   "q": "Vì sao dự án ưu tiên precision cho trích xuất tài chính?",
+   "o": [
+    "Vì recall không đo được",
+    "Vì trích sai số tiền đắt hơn bỏ sót một trường mà người sẽ bổ sung",
+    "Vì precision rẻ hơn",
+    "Vì luật yêu cầu"
+   ],
+   "a": 1,
+   "ex": "False positive (số sai) gây hậu quả tài chính trực tiếp."
+  },
+  {
+   "id": "my4",
+   "s": 3,
+   "type": "one",
+   "q": "Theo chương này, thế nào là capstone thành công?",
+   "o": [
+    "Demo đẹp",
+    "Đo được giúp ai, bao nhiêu, với chi phí bao nhiêu",
+    "Dùng model lớn nhất",
+    "Có nhiều tính năng"
+   ],
+   "a": 1,
+   "ex": "Outcome và chi phí là thước đo."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

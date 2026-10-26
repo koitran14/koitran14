@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 · AI System Architecture &amp; Production Engineering · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.stack{display:grid;gap:6px}
+.stack button{display:grid;grid-template-columns:28px 1fr;gap:10px;text-align:left;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;font:500 14px var(--sans);color:var(--fg)}
+.stack button b{font:500 12px var(--mono);color:var(--muted)}
+.stack button small{display:block;font:400 12px var(--mono);color:var(--muted);margin-top:2px}
+.stack button.on{border-color:var(--acc);background:var(--acc-soft)}.stack button.on b{color:var(--acc)}
+.gwflow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:center;font-size:13.5px}
+.gwflow div{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);text-align:center;transition:all .25s}
+.gwflow div.on{border-color:var(--acc);background:var(--acc-soft);color:var(--acc)}
+.gwflow div.bad{border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.gwflow i{font:normal 400 12px var(--mono);color:var(--muted)}
+.gwflow p{grid-column:1/-1;margin:6px 0 0;font-size:14px;color:var(--body)}
+@media(max-width:700px){.gwflow{grid-template-columns:1fr}.gwflow i{display:none}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 08 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần III / 08</div>
+  <h1>Kiến trúc hệ thống AI <i>cho production</i></h1>
+  <p class="dek">Bốn lớp của một hệ thống AI production, model gateway với fallback khi nhà cung cấp lỗi, orchestration, hạ tầng cloud, và các chỉ số vận hành: TTFT, throughput, error rate, uptime.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 08 / 21</span><span>8 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Đưa AI từ prototype lên production là bài toán độ ổn định, latency, khả năng mở rộng và chi phí, không phải bài toán prompt.</div>
+  <section id="s1">
+    <span class="num">08.1</span>
+    <h2>Bốn lớp kiến trúc</h2>
+    <p class="gist">Frontend, orchestration, model, data và messaging: mỗi lớp lo một loại rủi ro.</p>
+<figure>
+      <div class="fig"><div class="stack" id="stack"></div><div class="panel" id="stackP"></div></div>
+      <figcaption><b>Hình 1</b>Bốn lớp của hệ thống AI production theo báo cáo nguồn. Chọn một lớp để xem vai trò và công cụ ví dụ.</figcaption>
+    </figure>
+    <p>Tách lớp rõ giúp thay thế từng phần mà không đụng phần còn lại: đổi nhà cung cấp model chỉ chạm lớp model, đổi vector DB chỉ chạm lớp dữ liệu. Ví dụ dùng dịch vụ AWS vì báo cáo nguồn viết theo AWS; các cloud khác có dịch vụ tương đương.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">08.2</span>
+    <h2>Model gateway và orchestration</h2>
+    <p class="gist">Mọi lời gọi model đi qua một cổng chung, nơi quản lý key, rate limit và chuyển nhà cung cấp khi lỗi.</p>
+<p>Model gateway là lớp đệm quản lý mọi kết nối API tới model: giữ API key tập trung, load balancing, rate limiting. Khi gặp lỗi giới hạn tần suất (<code>HTTP 429 Too Many Requests</code>), hoặc nhà cung cấp chính chậm bất thường hay gián đoạn, gateway kích hoạt fallback: tự chuyển truy vấn từ nhà cung cấp chính sang nhà cung cấp phụ mà người dùng không bị gián đoạn.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Mô phỏng: trạng thái nhà cung cấp chính</span><div class="seg" id="gw"><button data-s="ok" class="on">Bình thường</button><button data-s="429">429 rate limit</button><button data-s="slow">Chậm bất thường</button><button data-s="down">Gián đoạn</button></div></div>
+        <div class="gwflow" id="gwF"></div>
+      </div>
+      <figcaption><b>Hình 2</b>Gateway quyết định gửi request tới đâu.</figcaption>
+    </figure>
+    <p>Orchestration dùng framework như LangChain, LlamaIndex, LangGraph hoặc dịch vụ như AWS Lambda, Step Functions để điều phối chuỗi tác vụ phức tạp, quản lý state và khôi phục khi có sự cố. Với agent nhiều bước, phần quản lý state và khả năng chạy lại từ bước lỗi quan trọng hơn chọn framework nào.</p>
+    <div class="take"><small>Ghi nhớ</small>Fallback giữa các nhà cung cấp chỉ an toàn khi bạn đã chấm model phụ trên cùng eval set với model chính.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">08.3</span>
+    <h2>API, database, queue và tích hợp</h2>
+    <p class="gist">Một sản phẩm AI trên cloud ghép nhiều dịch vụ: lưu trữ, suy luận, hàng chờ, phân quyền, kết nối riêng.</p>
+<table class="tbl">
+      <tr><th>Thành phần</th><th>Ví dụ trên AWS</th><th>Vai trò</th></tr>
+      <tr><td>Lưu trữ dữ liệu</td><td>Amazon S3</td><td>Tài liệu thô, dữ liệu huấn luyện, dữ liệu kiểm thử, log</td></tr>
+      <tr><td>Suy luận</td><td>Amazon Bedrock / SageMaker AI</td><td>Gọi foundation model qua API (Bedrock) hoặc huấn luyện, fine-tune, triển khai model riêng (SageMaker AI)</td></tr>
+      <tr><td>Hàng chờ, bất đồng bộ</td><td>Amazon SQS / EventBridge</td><td>Đệm request để kiểm soát rate limit khi gọi LLM, giảm tải backend</td></tr>
+      <tr><td>Danh tính, phân quyền</td><td>AWS IAM</td><td>Phân quyền giữa các dịch vụ, bảo vệ API key và tài nguyên</td></tr>
+      <tr><td>Kết nối riêng</td><td>AWS PrivateLink</td><td>Dữ liệu giữa các dịch vụ AI không đi qua internet công cộng</td></tr>
+    </table>
+    <p>Hàng chờ là phần hay bị quên ở prototype. Khi lưu lượng tăng, gọi LLM đồng bộ trực tiếp từ request của người dùng dễ đụng rate limit; đẩy qua queue giúp hệ thống chịu tải đều hơn với các tác vụ không cần trả lời tức thì.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">08.4</span>
+    <h2>Observability, latency và mở rộng</h2>
+    <p class="gist">Bốn chỉ số vận hành cốt lõi, cộng với theo dõi token theo thời gian thực để không vỡ ngân sách.</p>
+<ul>
+      <li><b>Latency (TTFT)</b>: thời gian tới token đầu tiên.</li>
+      <li><b>Throughput</b>: số token hoặc request xử lý được mỗi đơn vị thời gian (TPS, RPS).</li>
+      <li><b>Error rate</b>: tỷ lệ lời gọi API thất bại hoặc bị ngắt.</li>
+      <li><b>Uptime</b>: tỷ lệ thời gian hệ thống chạy không sự cố.</li>
+    </ul>
+    <p>Về chi phí, theo dõi lượng token tiêu thụ theo thời gian thực để không vượt ngân sách. Prompt caching cho các câu hỏi hoặc phần prompt lặp lại giúp trả kết quả nhanh mà không phải gọi lại model, vừa giảm chi phí vừa giảm latency. Observability tốt cho hệ thống AI còn gồm trace từng bước của agent: prompt nào đã gửi, công cụ nào đã gọi, kết quả nào quay về, để khi trả lời sai có thể lần ra bước hỏng.</p>
+    <div class="take"><small>Ghi nhớ</small>Không có trace thì không debug được agent. Ghi lại prompt, tool call và kết quả của từng bước.</div>
+  </section>
+
+  <div class="vids" data-videos="08"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/09"><span><small>Chương tiếp theo</small><b>09 · AI Evaluation, Reliability & Responsible AI</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const STACK = [['Frontend / UI', 'Người dùng gửi tương tác và nhận kết quả.', 'Web, mobile, chat UI'],
+ ['Orchestration', 'Quản lý luồng dữ liệu, xử lý prompt, gọi công cụ, nối các dịch vụ.', 'LangChain, LlamaIndex, AWS Lambda / Step Functions'],
+ ['Model', 'Foundation model, dịch vụ suy luận hoặc API model thương mại, đi qua model gateway.', 'Model gateway, Amazon Bedrock, SageMaker AI'],
+ ['Data & messaging', 'Dữ liệu thô, vector DB, hàng chờ cho xử lý bất đồng bộ.', 'Amazon S3, vector DB, SQS / EventBridge']];
+stack.innerHTML = STACK.map((s, i) => `<button data-i="${i}"><b>${i + 1}</b><span>${s[0]}<small>${s[2]}</small></span></button>`).join('');
+stack.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; stack.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); stackP.innerHTML = `<h5>${STACK[+b.dataset.i][0]}</h5>${STACK[+b.dataset.i][1]}`};
+stack.querySelector('button').click();
+const GW = {ok: [0, 'Gateway gửi tới nhà cung cấp chính như thường.'], '429': [1, 'Nhà cung cấp chính trả 429. Gateway chuyển request sang nhà cung cấp phụ, người dùng không thấy lỗi.'],
+ slow: [1, 'Latency nhà cung cấp chính vượt ngưỡng. Gateway chuyển sang nhà cung cấp phụ để giữ trải nghiệm.'], down: [1, 'Nhà cung cấp chính gián đoạn. Mọi request đi sang nhà cung cấp phụ cho tới khi bên chính hồi phục.']};
+function gwu(s) {const [k, t] = GW[s];
+ gwF.innerHTML = `<div class="on">Ứng dụng</div><i>→</i><div class="on">Model gateway</div><i>→</i><div style="display:grid;gap:6px;padding:0;border:0;background:none"><div class="${k ? 'bad' : 'on'}">Nhà cung cấp chính</div><div class="${k ? 'on' : ''}">Nhà cung cấp phụ</div></div><p>${t}</p>`}
+document.getElementById('gw').onclick = e => {const b = e.target.closest('[data-s]'); if (!b) return; document.querySelectorAll('#gw button').forEach(x => x.classList.toggle('on', x === b)); gwu(b.dataset.s)};
+gwu('ok');
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip08",
+ "minutes": 8,
+ "next": {
+  "href": "/blog/ai-product-handbook/09",
+  "n": "09",
+  "t": "AI Evaluation, Reliability & Responsible AI"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "08.1",
+   "t": "Bốn lớp kiến trúc",
+   "sum": [
+    "Frontend: nhận tương tác, hiển thị kết quả.",
+    "Orchestration: luồng, prompt, công cụ.",
+    "Model và data/messaging: suy luận, lưu trữ, hàng chờ."
+   ],
+   "terms": [
+    "orchestration",
+    "vectordb"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "08.2",
+   "t": "Model gateway và orchestration",
+   "sum": [
+    "Gateway: API key, load balancing, rate limiting.",
+    "Lỗi 429 hoặc gián đoạn thì chuyển nhà cung cấp phụ.",
+    "Orchestration quản lý chuỗi tác vụ và state."
+   ],
+   "terms": [
+    "gateway",
+    "fallback",
+    "orchestration",
+    "agent"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "08.3",
+   "t": "API, database, queue và tích hợp",
+   "sum": [
+    "S3 lưu dữ liệu, Bedrock/SageMaker suy luận.",
+    "SQS/EventBridge đệm request, kiểm soát rate limit.",
+    "IAM phân quyền, PrivateLink giữ dữ liệu khỏi internet công cộng."
+   ],
+   "terms": []
+  },
+  {
+   "id": "s4",
+   "n": "08.4",
+   "t": "Observability, latency và mở rộng",
+   "sum": [
+    "TTFT, throughput, error rate, uptime.",
+    "Theo dõi token theo thời gian thực.",
+    "Prompt caching giảm chi phí và latency; trace để debug."
+   ],
+   "terms": [
+    "ttft",
+    "throughput",
+    "cache",
+    "observability",
+    "token"
+   ]
+  }
+ ],
+ "terms": {
+  "orchestration": [
+   "orchestration",
+   "Lớp điều phối luồng: dựng prompt, gọi công cụ, quản lý state, nối các dịch vụ (LangChain, LlamaIndex, Step Functions…).",
+   "Nhạc trưởng: không chơi đàn nhưng giữ nhịp cho cả dàn nhạc."
+  ],
+  "vectordb": [
+   "vector database",
+   "Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).",
+   "Thủ thư xếp sách theo nội dung, không theo tên."
+  ],
+  "gateway": [
+   "model gateway",
+   "Lớp trung gian quản lý mọi lời gọi model: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.",
+   "Tổng đài: mọi cuộc gọi đi qua đây, đường này bận thì nối đường khác."
+  ],
+  "fallback": [
+   "fallback",
+   "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
+   "Kế hoạch B khi kế hoạch A trục trặc."
+  ],
+  "agent": [
+   "AI agent",
+   "Ứng dụng dựa trên LLM tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.",
+   "Trợ lý được giao cả việc, tự chia bước và tự cầm dụng cụ."
+  ],
+  "ttft": [
+   "TTFT",
+   "Time to First Token: thời gian đến khi model trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.",
+   "Lúc người phục vụ mang ly nước ra, trước khi món chính tới."
+  ],
+  "throughput": [
+   "throughput",
+   "Lượng yêu cầu hoặc token hệ thống xử lý được trong một đơn vị thời gian.",
+   "Số xe qua trạm thu phí mỗi phút."
+  ],
+  "cache": [
+   "prompt caching",
+   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
+   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+  ],
+  "observability": [
+   "observability",
+   "Khả năng nhìn vào hệ thống đang chạy qua log, metric, trace để biết nó làm gì và hỏng ở đâu.",
+   "Bảng đồng hồ trên xe."
+  ],
+  "token": [
+   "token",
+   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
+   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+  ]
+ },
+ "alias": {
+  "orchestration": [
+   "orchestration"
+  ],
+  "vectordb": [
+   "vector database",
+   "vector DB"
+  ],
+  "gateway": [
+   "model gateway",
+   "Model gateway"
+  ],
+  "fallback": [
+   "fallback",
+   "Fallback"
+  ],
+  "agent": [
+   "AI agent",
+   "agent"
+  ],
+  "ttft": [
+   "TTFT"
+  ],
+  "throughput": [
+   "throughput"
+  ],
+  "cache": [
+   "prompt caching",
+   "caching",
+   "cache"
+  ],
+  "observability": [
+   "observability",
+   "Observability"
+  ],
+  "token": [
+   "token"
+  ]
+ },
+ "rel": {},
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Lớp nào quản lý luồng, xử lý prompt và gọi công cụ?",
+   "o": [
+    "Frontend",
+    "Orchestration",
+    "Model",
+    "Data & messaging"
+   ],
+   "a": 1,
+   "ex": "Orchestration là lớp điều phối."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Khi nhà cung cấp chính trả HTTP 429, model gateway nên làm gì?",
+   "o": [
+    "Trả lỗi cho người dùng",
+    "Kích hoạt fallback sang nhà cung cấp phụ",
+    "Tăng max token",
+    "Xóa cache"
+   ],
+   "a": 1,
+   "ex": "429 là rate limit; gateway chuyển sang nhà cung cấp phụ."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "multi",
+   "q": "Model gateway chịu trách nhiệm những gì?",
+   "o": [
+    "Quản lý API key tập trung",
+    "Load balancing",
+    "Rate limiting",
+    "Thiết kế giao diện"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Giao diện thuộc lớp frontend."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "one",
+   "q": "Dịch vụ nào trong ví dụ dùng để đệm request, kiểm soát rate limit?",
+   "o": [
+    "Amazon S3",
+    "AWS IAM",
+    "Amazon SQS / EventBridge",
+    "AWS PrivateLink"
+   ],
+   "a": 2,
+   "ex": "Hàng chờ giúp hệ thống chịu tải đều hơn."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "Prompt caching giúp gì?",
+   "o": [
+    "Tăng độ sáng tạo",
+    "Giảm chi phí và latency cho phần lặp lại",
+    "Tăng context window",
+    "Chống prompt injection"
+   ],
+   "a": 1,
+   "ex": "Không phải xử lý hay trả tiền lại cho phần đã có."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

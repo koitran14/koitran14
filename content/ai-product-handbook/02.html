@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Problem Discovery &amp; User Research · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.formula{margin:18px 0;padding:14px 18px;border:1px dashed var(--acc);border-radius:10px;font:400 18px/1.5 var(--serif);color:var(--fg);background:var(--acc-soft)}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 02 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần I / 02</div>
+  <h1>Problem Discovery <i>và nghiên cứu người dùng</i></h1>
+  <p class="dek">Tránh bẫy “có AI rồi mới đi tìm bài toán”: đóng khung vấn đề, dùng Jobs to Be Done, persona, customer journey, và viết problem statement trước khi nghĩ tới giải pháp.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 02 / 21</span><span>7 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>AI chỉ có giá trị khi đặt đúng vào một vấn đề thật và đủ lớn. Nếu một quy tắc IF-THEN giải được, đừng dùng AI.</div>
+  <section id="s1">
+    <span class="num">02.1</span>
+    <h2>Bẫy công nghệ đi tìm bài toán</h2>
+    <p class="gist">Nhiều đội chọn LLM vì đang là xu hướng, rồi mới tìm chỗ để gắn nó vào.</p>
+<p>Một sai lầm phổ biến là triển khai model ngôn ngữ hay tự động hóa phức tạp chỉ vì nó đang “hot”, trong khi vấn đề của người dùng có thể giải rẻ hơn, chắc hơn bằng phần mềm thường hoặc quy tắc nghiệp vụ cố định. Khi đóng khung vấn đề, hãy trả lời ba câu hỏi:</p>
+    <ol>
+      <li><b>Dữ liệu có sẵn và đủ tốt không?</b> Có quyền truy cập dữ liệu đại diện, sạch, được bảo mật và tuân thủ quy định về PII để huấn luyện hoặc làm nguồn tri thức không?</li>
+      <li><b>Bài toán cần dự đoán hay sinh nội dung?</b> Dự báo, phân loại, trích xuất, sinh văn bản tự nhiên là những việc logic cố định khó làm. Nếu không phải loại này, có thể không cần AI.</li>
+      <li><b>Người dùng chịu được sai tới đâu?</b> Tìm hướng dẫn hay tóm tắt tài liệu khác hẳn quyết định hoàn tiền, đánh giá nhân sự, y tế, tài chính. Ngưỡng lỗi chấp nhận được của mỗi loại là bao nhiêu?</li>
+    </ol>
+    <figure>
+      <div class="fig"><div id="air"></div></div>
+      <figcaption><b>Hình 1</b>Tình huống nào cần AI, tình huống nào quy tắc cố định là đủ?</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Nếu một thuật toán IF-THEN giải được vấn đề với chi phí thấp và đúng 100%, dùng AI là lãng phí.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">02.2</span>
+    <h2>Launch readiness bắt đầu từ discovery</h2>
+    <p class="gist">Ngay từ lúc khám phá vấn đề, đã nên nghĩ tới bộ đề để kiểm tra AI trước khi ra mắt.</p>
+<p>Báo cáo nguồn gắn câu hỏi về ngưỡng lỗi với “launch readiness”: để biết khi nào đủ an toàn đưa lên production, AI PM và đội kỹ thuật dựng eval set tự động đại diện cho cả những edge case cực đoan. Sản phẩm chỉ được ra mắt khi tỷ lệ trả lời đúng trên eval set vượt ngưỡng đã định từ trước, và đã có cơ chế xử lý ngoại lệ tự động.</p>
+    <p>Làm việc này sớm có một lợi ích phụ: khi phải viết ra “thế nào là trả lời đúng”, đội buộc phải hiểu vấn đề sâu hơn. Nhiều khi chính lúc soạn eval set, đội mới phát hiện người dùng thật ra hỏi một kiểu câu hoàn toàn khác với giả định ban đầu.</p>
+    <div class="take"><small>Ghi nhớ</small>Ngưỡng ra mắt đặt trước khi build, đo trên eval set có edge case, kèm cơ chế xử lý ngoại lệ.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">02.3</span>
+    <h2>Jobs to Be Done</h2>
+    <p class="gist">Khách hàng “thuê” sản phẩm để làm một việc. Việc đó có mặt chức năng, cảm xúc và xã hội.</p>
+<p>Jobs to Be Done (JTBD) nhìn người dùng qua việc họ cần hoàn thành, thay vì qua tính năng. Một việc có ba mặt: chức năng (làm cho xong), cảm xúc (bớt mệt, bớt lo) và xã hội (trông chuyên nghiệp trước đồng nghiệp, sếp). Bảng dưới so cách giải truyền thống và cách có AI cho ba việc quen thuộc.</p>
+    <table class="tbl">
+      <tr><th>Việc cần làm</th><th>Cách truyền thống</th><th>Cách có AI</th></tr>
+      <tr><td>Lấy lại mật khẩu, tra hóa đơn (chức năng)</td><td>Tự tìm trong FAQ, đi qua nhiều menu</td><td>Trợ lý hội thoại nhận diện ý định, truy vấn dữ liệu và hướng dẫn ngay</td></tr>
+      <tr><td>Trích xuất dữ liệu từ hàng loạt tài liệu (chức năng, cảm xúc)</td><td>Nhập tay, rà từng trang, mệt và dễ sai</td><td>Xử lý tài liệu thông minh (IDP, ví dụ Amazon Textract) tự đọc, trích xuất, phân loại</td></tr>
+      <tr><td>Tìm câu trả lời nghiệp vụ trong kho tri thức nội bộ (chức năng, xã hội)</td><td>Gõ đúng từ khóa, đọc lướt hàng chục file PDF</td><td>RAG tìm tài liệu liên quan và tổng hợp câu trả lời kèm trích nguồn</td></tr>
+    </table>
+    <div class="take"><small>Ghi nhớ</small>Hỏi “người dùng đang cố làm xong việc gì”, đừng hỏi “người dùng muốn tính năng gì”.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">02.4</span>
+    <h2>Persona, customer journey và pain point</h2>
+    <p class="gist">Persona cho sản phẩm AI cần thêm hai trường: mức hiểu công nghệ và mức tin vào AI.</p>
+<p>Ngoài nhân khẩu học và thói quen, persona cho sản phẩm AI nên ghi thêm hai điều. Một là tech literacy: người này quen với công cụ số và viết prompt tới đâu. Hai là trust in AI: họ sẵn lòng nhận đề xuất tự động tới mức nào, và khắt khe ra sao khi AI trả lời sai. Hai người cùng chức danh có thể cần hai thiết kế rất khác nhau chỉ vì hai trường này.</p>
+    <p>Khi vẽ customer journey, đánh dấu các pain point: chờ lâu, thao tác thủ công lặp lại, quá tải thông tin. Đó là chỗ AI thường giúp được: tự động hóa quy trình bỏ bớt bước tay; tìm kiếm ngữ nghĩa với RAG gom nhanh câu trả lời từ kho tri thức đã duyệt; IDP tự trích dữ liệu từ biểu mẫu, hợp đồng, hóa đơn.</p>
+    <div class="take"><small>Ghi nhớ</small>Hai người dùng cùng chức danh có thể cần hai thiết kế khác nhau nếu mức tin vào AI của họ khác nhau.</div>
+  </section>
+
+  <section id="s5">
+    <span class="num">02.5</span>
+    <h2>Problem statement và cơ hội tạo giá trị</h2>
+    <p class="gist">Viết vấn đề trước, chưa nhắc tới giải pháp. Sau đó mới xếp cơ hội vào ba nhóm.</p>
+<p>Một problem statement tốt mô tả rào cản của người dùng, không vội nói về công nghệ. Công thức gợi ý:</p>
+    <div class="formula">[Người dùng] gặp khó khăn khi [tác vụ, điểm đau], dẫn tới [hậu quả, chi phí], vì [nguyên nhân gốc].</div>
+    <p>Ví dụ: “Nhân viên chăm sóc khách hàng mất trung bình 8 phút để tra quy trình xử lý một ticket, khiến khách phải chờ lâu, vì tài liệu nội bộ nằm rải rác ở nhiều nơi và khó tìm theo từ khóa.” Câu này chưa nói gì về RAG hay chatbot, nhưng đã đủ để cả đội hiểu nên đo cái gì.</p>
+    <p>Từ đó, cơ hội tạo giá trị với AI thường rơi vào ba nhóm: <b>Efficiency</b> (giảm thời gian, tự động bước lặp lại, như tóm tắt văn bản, phân loại thư hỗ trợ), <b>Personalization</b> (nội dung, gợi ý theo ngữ cảnh từng người), và <b>Innovation</b> (năng lực mà phần mềm thường không làm được: hội thoại tự nhiên, sinh nội dung đa phương tiện, phân tích ngữ nghĩa sâu).</p>
+    <div class="take"><small>Ghi nhớ</small>Problem statement không chứa tên giải pháp. Nếu đọc lên đã thấy chữ “chatbot”, hãy viết lại.</div>
+  </section>
+
+  <div class="vids" data-videos="02"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/03"><span><small>Chương tiếp theo</small><b>03 · Market Research & Opportunity Assessment</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+// a statement sorter: data = [[statement, right layer index, why]], labels = layer names
+function sorter(box, data, labels) {
+ let i = 0;
+ box.innerHTML = `<div class="figbar"><span data-n></span><button class="pri" data-next>Câu khác →</button></div><div class="stmt" data-q></div><div class="lay" style="grid-template-columns:repeat(${labels.length},1fr)">${labels.map((l, j) => `<button data-l="${j}">${l}</button>`).join('')}</div><div class="panel" data-p></div>`;
+ const $ = s => box.querySelector(s);
+ const show = () => {$('[data-q]').textContent = '“' + data[i][0] + '”'; $('[data-n]').textContent = `Câu ${i + 1}/${data.length}`; $('[data-p]').innerHTML = '<h5>Chọn một ô</h5>Câu này thuộc nhóm nào?'; box.querySelectorAll('[data-l]').forEach(b => b.className = '')};
+ box.onclick = e => {
+  if (e.target.closest('[data-next]')) {i = (i + 1) % data.length; return show()}
+  const b = e.target.closest('[data-l]'); if (!b) return; const ok = +b.dataset.l === data[i][1];
+  box.querySelectorAll('[data-l]').forEach(x => x.className = +x.dataset.l === data[i][1] ? 'right' : x === b ? 'wrong' : '');
+  $('[data-p]').innerHTML = `<h5>${ok ? 'Đúng.' : 'Chưa đúng.'}</h5>${data[i][2]}`};
+ show()}
+
+sorter(document.getElementById('air'), [
+ ['Tự động khóa tài khoản sau 5 lần nhập sai mật khẩu.', 1, 'Quy tắc rõ ràng, đúng 100%, không cần dự đoán. Dùng AI ở đây là lãng phí.'],
+ ['Phân loại 2.000 email hỗ trợ mỗi ngày theo ý định của khách.', 0, 'Ngôn ngữ tự nhiên, cách viết đa dạng; quy tắc từ khóa sẽ sót nhiều. Đây là bài toán phân loại hợp với AI.'],
+ ['Tính thuế VAT cho mỗi hóa đơn.', 1, 'Công thức cố định theo luật; cần đúng tuyệt đối. Quy tắc là đủ và an toàn hơn.'],
+ ['Tóm tắt biên bản cuộc họp dài 90 phút.', 0, 'Sinh nội dung từ văn bản tự do là việc logic cố định không làm được.'],
+ ['Gửi email nhắc khi hóa đơn quá hạn 7 ngày.', 1, 'Điều kiện ngày tháng đơn giản; một job theo lịch là đủ.'],
+ ['Trích số hợp đồng, ngày ký, giá trị từ hợp đồng scan nhiều mẫu khác nhau.', 0, 'Bố cục và chất lượng scan thay đổi; IDP dùng AI xử lý tốt hơn template cứng.']], ['Cần AI', 'Quy tắc là đủ']);
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip02",
+ "minutes": 7,
+ "next": {
+  "href": "/blog/ai-product-handbook/03",
+  "n": "03",
+  "t": "Market Research & Opportunity Assessment"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "02.1",
+   "t": "Bẫy công nghệ đi tìm bài toán",
+   "sum": [
+    "Đừng chọn công nghệ trước rồi mới tìm vấn đề.",
+    "Ba câu hỏi: dữ liệu, loại bài toán, ngưỡng lỗi.",
+    "Quy tắc cố định đủ dùng thì không cần AI."
+   ],
+   "terms": [
+    "pii",
+    "deterministic"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "02.2",
+   "t": "Launch readiness bắt đầu từ discovery",
+   "sum": [
+    "Eval set đại diện, có edge case.",
+    "Chỉ ra mắt khi vượt ngưỡng đặt trước.",
+    "Soạn eval set giúp hiểu vấn đề rõ hơn."
+   ],
+   "terms": [
+    "evalset",
+    "edge"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "02.3",
+   "t": "Jobs to Be Done",
+   "sum": [
+    "JTBD: khách hàng thuê sản phẩm để làm một việc.",
+    "Ba mặt: chức năng, cảm xúc, xã hội.",
+    "AI giải lại các việc cũ theo cách mới: hội thoại, IDP, RAG."
+   ],
+   "terms": [
+    "jtbd",
+    "rag"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "02.4",
+   "t": "Persona, customer journey và pain point",
+   "sum": [
+    "Persona AI thêm tech literacy và trust in AI.",
+    "Customer journey đánh dấu pain point.",
+    "AI giúp ở chỗ chờ lâu, việc tay lặp lại, quá tải thông tin."
+   ],
+   "terms": [
+    "persona",
+    "journey",
+    "painpoint"
+   ]
+  },
+  {
+   "id": "s5",
+   "n": "02.5",
+   "t": "Problem statement và cơ hội tạo giá trị",
+   "sum": [
+    "Công thức: ai, gặp khó gì, hậu quả, nguyên nhân.",
+    "Không nhắc giải pháp trong problem statement.",
+    "Ba nhóm cơ hội: Efficiency, Personalization, Innovation."
+   ],
+   "terms": [
+    "problemstmt"
+   ]
+  }
+ ],
+ "terms": {
+  "pii": [
+   "PII",
+   "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
+   "Những thứ đủ để người lạ biết đó là bạn."
+  ],
+  "deterministic": [
+   "deterministic",
+   "Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.",
+   "Máy bán nước: bấm nút số 3 lần nào cũng ra đúng lon số 3."
+  ],
+  "evalset": [
+   "eval set",
+   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
+   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+  ],
+  "edge": [
+   "edge case",
+   "Tình huống hiếm, nằm ở rìa của đầu vào, dễ làm hệ thống hỏng.",
+   "Khách gọi món không có trong thực đơn."
+  ],
+  "jtbd": [
+   "Jobs to Be Done",
+   "Khung nhìn coi khách hàng “thuê” sản phẩm để hoàn thành một việc; việc đó có mặt chức năng, cảm xúc và xã hội.",
+   "Người ta không cần mũi khoan, người ta cần cái lỗ trên tường."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "persona": [
+   "persona",
+   "Chân dung đại diện một nhóm người dùng: mục tiêu, thói quen, khó khăn, mức hiểu công nghệ.",
+   "Một nhân vật hư cấu nhưng đủ thật để cả đội cùng hình dung."
+  ],
+  "journey": [
+   "customer journey",
+   "Chuỗi bước người dùng đi qua khi tương tác với sản phẩm, kèm cảm xúc và điểm đau ở mỗi bước.",
+   "Lộ trình của khách từ lúc biết đến quán tới lúc thanh toán."
+  ],
+  "painpoint": [
+   "pain point",
+   "Điểm khó chịu, tốn thời gian hoặc tốn tiền mà người dùng gặp trong công việc.",
+   "Hòn sỏi trong giày."
+  ],
+  "problemstmt": [
+   "problem statement",
+   "Câu mô tả vấn đề: ai gặp khó khăn gì, hậu quả ra sao, vì nguyên nhân gì; chưa nói tới giải pháp.",
+   "Đơn bệnh trước khi kê thuốc."
+  ]
+ },
+ "alias": {
+  "pii": [
+   "PII"
+  ],
+  "deterministic": [
+   "deterministic"
+  ],
+  "evalset": [
+   "eval set",
+   "eval sets"
+  ],
+  "edge": [
+   "edge case"
+  ],
+  "jtbd": [
+   "Jobs to Be Done",
+   "JTBD"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "persona": [
+   "persona",
+   "Persona"
+  ],
+  "journey": [
+   "customer journey",
+   "journey map"
+  ],
+  "painpoint": [
+   "pain point",
+   "điểm đau"
+  ],
+  "problemstmt": [
+   "problem statement",
+   "Problem statement"
+  ]
+ },
+ "rel": {
+  "evalset": [
+   "edge"
+  ],
+  "jtbd": [
+   "painpoint"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "“Technology looking for a problem” nghĩa là gì?",
+   "o": [
+    "Dùng công nghệ mới cho vấn đề mới",
+    "Chọn AI vì xu hướng rồi mới tìm chỗ gắn vào",
+    "Tìm vấn đề bằng công nghệ phân tích dữ liệu",
+    "Dùng phần mềm cũ cho vấn đề mới"
+   ],
+   "a": 1,
+   "ex": "Đây là bẫy chọn công nghệ trước, trong khi vấn đề có thể giải rẻ hơn bằng phần mềm thường."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "multi",
+   "q": "Ba câu hỏi khi đóng khung vấn đề AI là gì?",
+   "o": [
+    "Dữ liệu có sẵn và đủ tốt không",
+    "Bài toán cần dự đoán hay sinh nội dung không",
+    "Người dùng chịu được sai tới đâu",
+    "Model nào đang đứng đầu bảng xếp hạng"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Dữ liệu, loại bài toán và ngưỡng lỗi quyết định có nên dùng AI.",
+   "why": {
+    "3": "Chọn model là bước sau, không phải câu hỏi đóng khung vấn đề."
+   }
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Khi nào sản phẩm AI được coi là sẵn sàng ra mắt theo chương này?",
+   "o": [
+    "Khi demo chạy tốt vài lần",
+    "Khi vượt ngưỡng đặt trước trên eval set có edge case, và đã có cơ chế xử lý ngoại lệ",
+    "Khi sếp đồng ý",
+    "Khi model mới nhất ra mắt"
+   ],
+   "a": 1,
+   "ex": "Ngưỡng đặt trước, đo trên eval set đại diện, kèm xử lý ngoại lệ."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "one",
+   "q": "Trong JTBD, “muốn trông chuyên nghiệp trước sếp” là mặt nào của việc?",
+   "o": [
+    "Chức năng",
+    "Cảm xúc",
+    "Xã hội"
+   ],
+   "a": 2,
+   "ex": "Cách người khác nhìn mình là mặt xã hội của việc."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "multi",
+   "q": "Persona cho sản phẩm AI nên ghi thêm những trường nào?",
+   "o": [
+    "Tech literacy",
+    "Trust in AI",
+    "Màu yêu thích",
+    "Mức khắt khe khi AI trả lời sai"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "Mức hiểu công nghệ và mức tin vào AI (gồm cả độ khắt khe khi AI sai) ảnh hưởng trực tiếp tới thiết kế."
+  },
+  {
+   "id": "my6",
+   "s": 4,
+   "type": "one",
+   "q": "Problem statement nào viết đúng tinh thần chương?",
+   "o": [
+    "Chúng ta cần một chatbot RAG cho nhân viên",
+    "Nhân viên CSKH mất 8 phút tra quy trình mỗi ticket, khách chờ lâu, vì tài liệu rải rác",
+    "Hãy dùng GPT để tăng năng suất",
+    "AI sẽ thay đổi bộ phận CSKH"
+   ],
+   "a": 1,
+   "ex": "Câu tốt nêu ai, khó gì, hậu quả và nguyên nhân, chưa nói giải pháp.",
+   "why": {
+    "0": "Câu này đã chứa giải pháp.",
+    "2": "Không nói ai gặp khó khăn gì.",
+    "3": "Là khẩu hiệu, không đo được."
+   }
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>18 · AI Product Builder &amp; Forward Deployed Engineer Glossary · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.gl{display:grid;grid-template-columns:200px 1fr;gap:0;margin:18px 0;border-top:1px solid var(--line)}
+.gl dt,.gl dd{padding:10px 0;border-bottom:1px solid var(--line);margin:0}
+.gl dt{font:500 14px var(--mono);color:var(--fg);padding-right:12px}
+.gl dd{font-size:15.5px;line-height:1.55}
+.gl .ins{display:block;margin-top:6px;font-size:14px;color:var(--body);padding-left:10px;border-left:2px solid var(--acc)}
+.gl .ins b{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-right:6px}
+.glf{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:400 15px var(--sans)}
+@media(max-width:700px){.gl{grid-template-columns:1fr}.gl dt{border-bottom:0;padding-bottom:0}}
+.loop{list-style:none;margin:18px 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;counter-reset:s}
+.loop li{counter-increment:s;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14.5px;line-height:1.5}
+.loop li b{display:block;color:var(--fg);margin-bottom:4px}
+.loop li b:before{content:counter(s) " · ";font:500 12px var(--mono);color:var(--acc)}
+@media(max-width:700px){.loop{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 18 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 18</div>
+  <h1>AI Product Builder <i>và Forward Deployed Engineer</i></h1>
+  <p class="dek">Hai vai trò đang được nhắc nhiều, và sáu thuật ngữ mô tả cách họ làm việc: từ customer discovery tới outcome measurement.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 18 / 21</span><span>7 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Builder và FDE gần với người đã quen viết phần mềm nhất: họ code, nhưng thước đo của họ là vấn đề của khách hàng có được giải không.</div>
+  <section id="s1">
+    <span class="num">18.1</span>
+    <h2>Hai vai trò</h2>
+    <p class="gist">Một người đi từ vấn đề tới sản phẩm chạy được; một người đưa sản phẩm vào hệ thống thật của khách hàng.</p>
+<dl class="gl"><dt>AI Product Builder</dt><dd>Người tự đi từ vấn đề đến sản phẩm AI chạy được: discovery, prototype, tích hợp, đo kết quả.</dd><dt>Forward Deployed Engineer</dt><dd>Kỹ sư làm việc sát khách hàng, tích hợp và tùy biến sản phẩm vào hệ thống thật của họ, rồi mang bài học về cho đội sản phẩm.</dd></dl>
+    <p>Cả hai vai trò đều cần nền tảng kỹ sư và tư duy sản phẩm. AI Product Builder thường làm từ con số 0: tự tìm vấn đề, dựng prototype, đưa cho người dùng thử, đo kết quả. Forward Deployed Engineer làm ở phía khách hàng: hiểu quy trình và dữ liệu của họ, tích hợp và tùy biến sản phẩm, rồi mang những gì học được về cho đội sản phẩm. Video trong chương giúp hình dung công việc hằng ngày của hai vai trò này.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">18.2</span>
+    <h2>Sáu thuật ngữ trong vòng làm việc</h2>
+    <p class="gist">Một vòng đi từ hiểu khách hàng tới đo tác động.</p>
+<ol class="loop">
+      <li><b>Customer discovery</b>Phỏng vấn và quan sát để tìm nỗi đau thật của khách hàng.</li>
+      <li><b>Solution validation</b>Thử nhanh để xác nhận giải pháp AI có giải được bài toán không.</li>
+      <li><b>Prototyping</b>Dựng bản chạy thử nhanh bằng API hoặc no-code để kiểm tính khả thi.</li>
+      <li><b>Production readiness</b>Mức sẵn sàng về an toàn, latency, chịu tải và bảo mật để đưa ra thật.</li>
+      <li><b>System integration</b>Đưa model AI vào kiến trúc phần mềm đang có.</li>
+      <li><b>Outcome measurement</b>Đo tác động kinh doanh thật sau khi triển khai.</li>
+    </ol>
+    <p>Vòng này lặp lại: outcome measurement chỉ ra chỗ cần discovery tiếp. Với người xuất thân Software Engineer, bước 4 và 5 là thế mạnh sẵn có; bước 1, 2 và 6 là chỗ cần tập thêm, và chính là nội dung của Phần I, Phần IV handbook này.</p>
+    <div class="take"><small>Ghi nhớ</small>Bạn đã giỏi bước 4 và 5. Đầu tư vào bước 1, 2 và 6.</div>
+  </section>
+
+  <div class="vids" data-videos="18"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/19"><span><small>Chương tiếp theo</small><b>19 · Product Frameworks & Decision-Making Cheat Sheet</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip18",
+ "minutes": 7,
+ "next": {
+  "href": "/blog/ai-product-handbook/19",
+  "n": "19",
+  "t": "Product Frameworks & Decision-Making Cheat Sheet"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "18.1",
+   "t": "Hai vai trò",
+   "sum": [
+    "Builder: từ vấn đề tới sản phẩm chạy được.",
+    "FDE: tích hợp sản phẩm vào hệ thống khách hàng.",
+    "Cả hai cần kỹ năng kỹ sư và tư duy sản phẩm."
+   ],
+   "terms": [
+    "builder",
+    "fde"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "18.2",
+   "t": "Sáu thuật ngữ trong vòng làm việc",
+   "sum": [
+    "Discovery → validation → prototyping.",
+    "Production readiness → integration → outcome measurement.",
+    "Kỹ sư mạnh bước 4–5, cần tập bước 1, 2, 6."
+   ],
+   "terms": [
+    "prototype",
+    "latency"
+   ]
+  }
+ ],
+ "terms": {
+  "builder": [
+   "AI Product Builder",
+   "Người tự đi từ vấn đề đến sản phẩm AI chạy được: discovery, prototype, tích hợp, đo kết quả.",
+   "Thợ cả vừa vẽ được bản vẽ vừa tự dựng được nhà mẫu."
+  ],
+  "fde": [
+   "Forward Deployed Engineer",
+   "Kỹ sư làm việc sát khách hàng, tích hợp và tùy biến sản phẩm vào hệ thống thật của họ, rồi mang bài học về cho đội sản phẩm.",
+   "Kỹ sư công trường, không phải kỹ sư ngồi văn phòng thiết kế."
+  ],
+  "prototype": [
+   "prototype",
+   "Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.",
+   "Mô hình giấy của căn nhà."
+  ],
+  "latency": [
+   "latency",
+   "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
+   "Thời gian chờ món sau khi gọi."
+  ]
+ },
+ "alias": {
+  "builder": [
+   "AI Product Builder"
+  ],
+  "fde": [
+   "Forward Deployed Engineer",
+   "FDE"
+  ],
+  "prototype": [
+   "prototype",
+   "Prototype"
+  ],
+  "latency": [
+   "latency",
+   "Latency"
+  ]
+ },
+ "rel": {
+  "builder": [
+   "fde"
+  ],
+  "fde": [
+   "builder"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Forward Deployed Engineer làm việc chủ yếu ở đâu?",
+   "o": [
+    "Chỉ trong phòng lab nghiên cứu model",
+    "Sát khách hàng, tích hợp sản phẩm vào hệ thống thật của họ",
+    "Ở bộ phận marketing",
+    "Ở bộ phận pháp lý"
+   ],
+   "a": 1,
+   "ex": "FDE đưa sản phẩm vào môi trường thật và mang bài học về."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Bước nào kiểm mức sẵn sàng về an toàn, latency, chịu tải, bảo mật?",
+   "o": [
+    "Customer discovery",
+    "Prototyping",
+    "Production readiness",
+    "Outcome measurement"
+   ],
+   "a": 2,
+   "ex": "Production readiness là cổng trước khi ra thật."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Bước nào đo tác động kinh doanh sau triển khai?",
+   "o": [
+    "Solution validation",
+    "System integration",
+    "Outcome measurement",
+    "Prototyping"
+   ],
+   "a": 2,
+   "ex": "Outcome measurement khép vòng và mở vòng discovery tiếp theo."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

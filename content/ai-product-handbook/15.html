@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>15 · Advanced Product Strategy · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.formula{margin:18px 0;padding:14px 18px;border:1px dashed var(--acc);border-radius:10px;font:400 17px/1.5 var(--serif);color:var(--fg);background:var(--acc-soft)}
+.pf{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pf>div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.pf h5{margin:0 0 8px;font:500 14px var(--sans);color:var(--fg)}
+.pf label{display:grid;grid-template-columns:1fr 70px 18px;gap:8px;align-items:center;font-size:13px;color:var(--body);padding:2px 0}
+.pf input{accent-color:var(--acc)}
+.pf output{font:500 12px var(--mono)}
+.pf .sc{margin-top:8px;font:500 22px var(--mono);color:var(--acc)}
+@media(max-width:700px){.pf{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 15 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 15</div>
+  <h1>Chiến lược nâng cao: <i>nền tảng và danh mục</i></h1>
+  <p class="dek">Khi có nhiều sản phẩm AI: platform strategy với năng lực dùng chung, bản đồ dịch vụ AI trên AWS, và công thức điểm ưu tiên cân giá trị với chi phí, latency, độ phức tạp.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 15 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Ở quy mô danh mục, lợi thế đến từ năng lực dùng chung: mỗi đội không tự dựng RAG, guardrails, gateway riêng.</div>
+  <section id="s1">
+    <span class="num">15.1</span>
+    <h2>Platform strategy</h2>
+    <p class="gist">Chuẩn hóa các lớp RAG, cache, guardrails, gateway một lần để nhiều sản phẩm dùng chung.</p>
+<p>Khi doanh nghiệp có nhiều dòng sản phẩm dùng AI, xây giải pháp riêng lẻ cho từng đội gây lãng phí. Platform strategy là dựng các shared AI capabilities: lớp xử lý RAG, prompt cache, hệ thống guardrails, gateway kết nối model. Báo cáo nguồn nêu ba lợi ích: tận dụng chiết khấu theo khối lượng từ nhà cung cấp cloud, tránh vendor lock-in vì gateway cho phép đổi nhà cung cấp, và rút ngắn thời gian ra mắt các sản phẩm sau (báo cáo ước tới 70%, con số chưa kiểm chứng).</p>
+    <p>Rủi ro ngược lại là làm platform quá sớm, khi chưa có sản phẩm nào chứng minh được giá trị. Platform tốt thường được rút ra từ hai, ba sản phẩm đã chạy, không phải thiết kế trên giấy trước.</p>
+    <div class="take"><small>Ghi nhớ</small>Rút platform từ sản phẩm đã chạy, đừng xây platform rồi mới đi tìm sản phẩm.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">15.2</span>
+    <h2>Bản đồ dịch vụ AI trên AWS</h2>
+    <p class="gist">Ba lớp: nền tảng GenAI, dịch vụ AI chuyên biệt, hạ tầng và bảo mật.</p>
+<div class="cmp">
+      <div><b>Nền tảng GenAI</b>Amazon Bedrock (API foundation model), Bedrock Knowledge Bases (hạ tầng RAG), Bedrock Guardrails, Amazon Q (trợ lý GenAI cho doanh nghiệp)</div>
+      <div><b>AI chuyên biệt</b>Amazon Textract (IDP), Lex (chatbot), Transcribe (giọng nói thành văn bản), Polly (văn bản thành giọng nói), Comprehend (NLP), Translate (dịch)</div>
+      <div><b>Hạ tầng, bảo mật</b>Amazon SageMaker AI (huấn luyện, triển khai, Ground Truth để gán nhãn), Macie (PII), PrivateLink, IAM</div>
+    </div>
+    <p>Bản đồ này theo AWS vì báo cáo nguồn viết theo AWS. Ý chính dùng được cho mọi nhà cung cấp: trước khi tự xây, kiểm tra xem bài toán đã có dịch vụ chuyên biệt giải sẵn chưa (như OCR, dịch, chuyển giọng nói).</p>
+  </section>
+
+  <section id="s3">
+    <span class="num">15.3</span>
+    <h2>Ưu tiên danh mục</h2>
+    <p class="gist">Một tính năng AI chỉ lên production khi giá trị nó tạo ra vượt xa TCO và rủi ro chấp nhận được.</p>
+<p>Báo cáo nguồn đưa ra một công thức điểm ưu tiên cho danh mục:</p>
+    <div class="formula">Điểm ưu tiên = (Business Value × Adoption) / (Inference Cost × Latency × Technical Complexity)</div>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Chấm 1–5 cho mỗi yếu tố của hai tính năng</span></div>
+        <div class="pf" id="pf"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Công thức chỉ để so sánh tương đối giữa các ứng viên, không có ý nghĩa tuyệt đối.</figcaption>
+    </figure>
+    <p>Công thức nhân chia như vậy rất nhạy: một yếu tố chấm 1 ở mẫu số có thể đẩy điểm lên gấp nhiều lần. Hãy dùng nó để mở cuộc thảo luận, không phải để thay quyết định.</p>
+    <div class="take"><small>Ghi nhớ</small>Điểm số giúp đặt câu hỏi đúng; quyết định vẫn cần người chịu trách nhiệm.</div>
+  </section>
+
+  <div class="vids" data-videos="15"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/16"><span><small>Chương tiếp theo</small><b>16 · Product Management Glossary</b></span><span>→</span></a>
+
+  <div class="end"><p>Mức rút ngắn 70% thời gian ra mắt ở mục 15.1 và công thức điểm ưu tiên ở mục 15.3 lấy từ báo cáo nguồn, chưa được kiểm chứng.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const F = [['Business value', 4, 3], ['Adoption', 4, 2], ['Inference cost', 3, 1], ['Latency', 2, 1], ['Technical complexity', 3, 2]];
+pf.innerHTML = ['Trợ lý tra quy trình (RAG)', 'Phân loại ticket tự động'].map((t, k) => `<div data-k="${k}"><h5>${t}</h5>${F.map((f, i) => `<label>${f[0]}<input type="range" min="1" max="5" value="${f[k + 1]}" data-i="${i}"><output>${f[k + 1]}</output></label>`).join('')}<div class="sc"></div></div>`).join('');
+function pfu() {pf.querySelectorAll('[data-k]').forEach(d => {const v = [...d.querySelectorAll('input')].map(x => +x.value);
+ d.querySelectorAll('output').forEach((o, i) => o.textContent = v[i]); d.querySelector('.sc').textContent = (v[0] * v[1] / (v[2] * v[3] * v[4])).toFixed(2)})}
+pf.oninput = pfu; pfu();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip15",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/16",
+  "n": "16",
+  "t": "Product Management Glossary"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "15.1",
+   "t": "Platform strategy",
+   "sum": [
+    "Shared capabilities: RAG, cache, guardrails, gateway.",
+    "Lợi ích: chiết khấu, tránh lock-in, ra mắt nhanh hơn.",
+    "Đừng làm platform trước khi có sản phẩm chứng minh giá trị."
+   ],
+   "terms": [
+    "platform",
+    "lockin",
+    "gateway",
+    "cache"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "15.2",
+   "t": "Bản đồ dịch vụ AI trên AWS",
+   "sum": [
+    "GenAI: Bedrock, Knowledge Bases, Guardrails, Q.",
+    "Chuyên biệt: Textract, Lex, Transcribe, Polly, Comprehend, Translate.",
+    "Hạ tầng: SageMaker AI, Macie, PrivateLink, IAM."
+   ],
+   "terms": [
+    "fm",
+    "rag"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "15.3",
+   "t": "Ưu tiên danh mục",
+   "sum": [
+    "Tử số: business value × adoption.",
+    "Mẫu số: inference cost × latency × complexity.",
+    "Dùng để so sánh tương đối, mở thảo luận."
+   ],
+   "terms": [
+    "tco",
+    "adoption",
+    "inference",
+    "latency"
+   ]
+  }
+ ],
+ "terms": {
+  "platform": [
+   "platform strategy",
+   "Xây năng lực dùng chung (RAG, guardrails, gateway, cache) để nhiều sản phẩm dùng lại thay vì mỗi đội tự làm.",
+   "Làm chung một bếp trung tâm cho cả chuỗi nhà hàng."
+  ],
+  "lockin": [
+   "vendor lock-in",
+   "Phụ thuộc vào một nhà cung cấp tới mức đổi sang bên khác rất tốn kém.",
+   "Mua máy in chỉ nhận mực chính hãng."
+  ],
+  "gateway": [
+   "model gateway",
+   "Lớp trung gian quản lý mọi lời gọi model: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.",
+   "Tổng đài: mọi cuộc gọi đi qua đây, đường này bận thì nối đường khác."
+  ],
+  "cache": [
+   "prompt caching",
+   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
+   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+  ],
+  "fm": [
+   "foundation model",
+   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
+   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "tco": [
+   "TCO",
+   "Total Cost of Ownership: tổng chi phí sở hữu gồm hạ tầng, dữ liệu, gán nhãn, nhân sự, kiểm định, tuân thủ.",
+   "Giá xe cộng xăng, bảo hiểm, bảo dưỡng và chỗ đậu."
+  ],
+  "adoption": [
+   "adoption",
+   "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
+   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+  ],
+  "inference": [
+   "inference cost",
+   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+  ],
+  "latency": [
+   "latency",
+   "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
+   "Thời gian chờ món sau khi gọi."
+  ]
+ },
+ "alias": {
+  "platform": [
+   "platform strategy",
+   "Platform strategy"
+  ],
+  "lockin": [
+   "vendor lock-in"
+  ],
+  "gateway": [
+   "model gateway",
+   "Model gateway"
+  ],
+  "cache": [
+   "prompt caching",
+   "caching",
+   "cache"
+  ],
+  "fm": [
+   "foundation model"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "tco": [
+   "TCO"
+  ],
+  "adoption": [
+   "adoption",
+   "Adoption"
+  ],
+  "inference": [
+   "inference cost",
+   "chi phí suy luận"
+  ],
+  "latency": [
+   "latency",
+   "Latency"
+  ]
+ },
+ "rel": {
+  "tco": [
+   "inference"
+  ],
+  "inference": [
+   "tco"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "multi",
+   "q": "Năng lực nào thường được dùng chung trong platform strategy?",
+   "o": [
+    "Lớp xử lý RAG",
+    "Prompt cache",
+    "Guardrails",
+    "Logo từng sản phẩm"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Gateway cũng là một năng lực dùng chung."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "one",
+   "q": "Gateway dùng chung giúp tránh rủi ro nào?",
+   "o": [
+    "Hallucination",
+    "Vendor lock-in",
+    "Bias",
+    "Drift"
+   ],
+   "a": 1,
+   "ex": "Đổi nhà cung cấp chỉ cần đổi ở gateway."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Dịch vụ AWS nào chuyên trích xuất dữ liệu từ tài liệu scan?",
+   "o": [
+    "Amazon Polly",
+    "Amazon Textract",
+    "Amazon Lex",
+    "Amazon Macie"
+   ],
+   "a": 1,
+   "ex": "Textract là dịch vụ IDP."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "one",
+   "q": "Trong công thức điểm ưu tiên, yếu tố nào nằm ở tử số?",
+   "o": [
+    "Inference cost và latency",
+    "Business value và adoption",
+    "Technical complexity",
+    "Tất cả"
+   ],
+   "a": 1,
+   "ex": "Chi phí, latency và độ phức tạp nằm ở mẫu số."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16 · Product Management Glossary · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.gl{display:grid;grid-template-columns:200px 1fr;gap:0;margin:18px 0;border-top:1px solid var(--line)}
+.gl dt,.gl dd{padding:10px 0;border-bottom:1px solid var(--line);margin:0}
+.gl dt{font:500 14px var(--mono);color:var(--fg);padding-right:12px}
+.gl dd{font-size:15.5px;line-height:1.55}
+.gl .ins{display:block;margin-top:6px;font-size:14px;color:var(--body);padding-left:10px;border-left:2px solid var(--acc)}
+.gl .ins b{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-right:6px}
+.glf{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:400 15px var(--sans)}
+@media(max-width:700px){.gl{grid-template-columns:1fr}.gl dt{border-bottom:0;padding-bottom:0}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 16 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 16</div>
+  <h1>Thuật ngữ <i>quản lý sản phẩm</i></h1>
+  <p class="dek">Các thuật ngữ sản phẩm dùng xuyên suốt handbook, kèm lưu ý riêng khi áp dụng cho sản phẩm AI.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 16 / 21</span><span>8 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Một ngôn ngữ chung giữa kinh doanh, sản phẩm và kỹ thuật giúp bớt hiểu lầm. Phần này dùng để tra, không cần đọc theo thứ tự.</div>
+  <section id="s1">
+    <span class="num">16.1</span>
+    <h2>Chiến lược và thị trường</h2>
+    <p class="gist">Những từ hay gặp khi bàn về việc nên làm sản phẩm gì, cho ai.</p>
+<input class="glf" data-glf placeholder="Lọc thuật ngữ trong chương…" aria-label="Lọc thuật ngữ">
+    <dl class="gl"><dt>product-market fit</dt><dd>Trạng thái sản phẩm đáp ứng nhu cầu đủ mạnh của một thị trường đủ lớn để người dùng tự quay lại và chịu trả tiền.<span class="ins"><b>Lưu ý</b>Với AI, PMF chỉ bền khi bài toán được giải với chi phí suy luận thấp hơn số tiền khách sẵn lòng trả.</span></dd><dt>Jobs to Be Done</dt><dd>Khung nhìn coi khách hàng “thuê” sản phẩm để hoàn thành một việc; việc đó có mặt chức năng, cảm xúc và xã hội.</dd><dt>persona</dt><dd>Chân dung đại diện một nhóm người dùng: mục tiêu, thói quen, khó khăn, mức hiểu công nghệ.</dd><dt>ICP</dt><dd>Ideal Customer Profile: loại tổ chức hoặc khách hàng hợp nhất với sản phẩm.</dd><dt>buyer persona</dt><dd>Người có quyền duyệt ngân sách hoặc chặn quyết định mua, khác với người dùng hằng ngày.</dd><dt>TAM / SAM / SOM</dt><dd>Tổng thị trường (TAM), phần thị trường sản phẩm phục vụ được (SAM), phần có thể giành được trong vài năm tới (SOM).</dd><dt>ACV</dt><dd>Annual Contract Value: giá trị hợp đồng trung bình mỗi năm của một khách hàng.</dd><dt>moat</dt><dd>Lợi thế cạnh tranh khó sao chép, giữ được khi đối thủ có cùng model nền.</dd><dt>Value Proposition Canvas</dt><dd>Khung đặt cạnh nhau hồ sơ khách hàng (jobs, pains, gains) và bản đồ giá trị (sản phẩm, pain relievers, gain creators).</dd><dt>desirability / feasibility / viability</dt><dd>Ba câu hỏi để duyệt một cơ hội: người dùng có muốn không, làm được không, có sống được về mặt kinh doanh không.</dd></dl>
+  </section>
+
+  <section id="s2">
+    <span class="num">16.2</span>
+    <h2>Yêu cầu, lộ trình và giao hàng</h2>
+    <p class="gist">Những từ hay gặp khi biến ý tưởng thành kế hoạch.</p>
+<dl class="gl"><dt>PRD</dt><dd>Product Requirements Document: tài liệu nêu vấn đề, mục tiêu, phạm vi, luồng và tiêu chí thành công.<span class="ins"><b>Lưu ý</b>PRD cho AI cần thêm ba mục: mức lỗi chấp nhận được, thiết kế fallback, và bộ chỉ số đánh giá model (eval set).</span></dd><dt>acceptance criteria</dt><dd>Điều kiện đo được mà một tính năng phải đạt để được coi là xong.</dd><dt>roadmap</dt><dd>Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.<span class="ins"><b>Lưu ý</b>Với AI, gắn mốc roadmap với ngưỡng chất lượng thay vì chỉ ngày cố định.</span></dd><dt>RICE</dt><dd>Reach × Impact × Confidence / Effort: điểm ưu tiên cho một hạng mục trong backlog.</dd><dt>MoSCoW</dt><dd>Chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này).</dd><dt>POC</dt><dd>Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.</dd><dt>prototype</dt><dd>Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.</dd><dt>MVP</dt><dd>Minimum Viable Product: bản nhỏ nhất đưa cho người dùng thật để kiểm chứng giá trị.</dd><dt>pilot</dt><dd>Chạy thật ở quy mô giới hạn với người dùng thật, có giám sát và log đầy đủ.</dd><dt>GA</dt><dd>General Availability: phát hành cho toàn bộ người dùng.</dd><dt>customer journey</dt><dd>Chuỗi bước người dùng đi qua khi tương tác với sản phẩm, kèm cảm xúc và điểm đau ở mỗi bước.<span class="ins"><b>Lưu ý</b>Đặt các điểm thu phản hồi (thích/không thích, sửa câu trả lời) ngay trên journey để có dữ liệu cải tiến.</span></dd></dl>
+  </section>
+
+  <section id="s3">
+    <span class="num">16.3</span>
+    <h2>Đo lường và tăng trưởng</h2>
+    <p class="gist">Những từ hay gặp khi hỏi sản phẩm có tạo ra giá trị không.</p>
+<dl class="gl"><dt>output</dt><dd>Thứ đội làm ra và bàn giao: model, API, eval set, PRD, tính năng.</dd><dt>outcome</dt><dd>Thay đổi trong hành vi người dùng hoặc hiệu năng hệ thống mà output tạo ra: độ chính xác, latency, tỷ lệ hoàn thành tác vụ, mức hài lòng.</dd><dt>impact</dt><dd>Giá trị kinh doanh dài hạn: retention, doanh thu, chi phí vận hành giảm, ROI.</dd><dt>North Star Metric</dt><dd>Một chỉ số cốt lõi phản ánh giá trị sản phẩm mang lại cho người dùng, dùng để định hướng cả đội.</dd><dt>retention</dt><dd>Tỷ lệ người dùng còn quay lại sau một khoảng thời gian.</dd><dt>churn</dt><dd>Tỷ lệ người dùng hoặc khách hàng rời bỏ sản phẩm trong một kỳ.</dd><dt>cohort analysis</dt><dd>Phân tích theo nhóm người dùng bắt đầu cùng thời điểm để xem hành vi của họ thay đổi ra sao theo thời gian.</dd><dt>funnel</dt><dd>Chuỗi bước người dùng cần đi qua để đạt một mục tiêu, kèm tỷ lệ rơi rớt ở mỗi bước.</dd><dt>A/B test</dt><dd>Thí nghiệm chia người dùng ngẫu nhiên thành nhóm, mỗi nhóm thấy một phiên bản, rồi so chỉ số.</dd><dt>AARRR</dt><dd>Pirate metrics của Dave McClure: Acquisition, Activation, Retention, Referral, Revenue.</dd><dt>adoption</dt><dd>Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.</dd><dt>LTV</dt><dd>Lifetime Value: tổng doanh thu (hoặc lợi nhuận) kỳ vọng từ một khách hàng trong suốt thời gian họ dùng sản phẩm.</dd><dt>unit economics</dt><dd>Doanh thu và chi phí tính trên một đơn vị (một người dùng, một khách hàng, một tác vụ) để xem mỗi đơn vị lời hay lỗ.</dd></dl>
+  </section>
+
+  <div class="vids" data-videos="16"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/17"><span><small>Chương tiếp theo</small><b>17 · AI Engineering Glossary</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+document.querySelectorAll('[data-glf]').forEach(inp => inp.oninput = () => {const q = inp.value.trim().toLowerCase();
+ document.querySelectorAll('.gl dt').forEach(dt => {const dd = dt.nextElementSibling, on = !q || (dt.textContent + dd.textContent).toLowerCase().includes(q); dt.hidden = dd.hidden = !on})});
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip16",
+ "minutes": 8,
+ "next": {
+  "href": "/blog/ai-product-handbook/17",
+  "n": "17",
+  "t": "AI Engineering Glossary"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "16.1",
+   "t": "Chiến lược và thị trường",
+   "sum": [
+    "PMF, JTBD, persona, ICP, buyer persona.",
+    "TAM/SAM/SOM, ACV, moat.",
+    "Value Proposition Canvas, desirability/feasibility/viability."
+   ],
+   "terms": [
+    "pmf",
+    "jtbd",
+    "tam"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "16.2",
+   "t": "Yêu cầu, lộ trình và giao hàng",
+   "sum": [
+    "PRD, acceptance criteria, roadmap.",
+    "RICE, MoSCoW.",
+    "POC, prototype, MVP, pilot, GA."
+   ],
+   "terms": [
+    "prd",
+    "roadmap",
+    "rice"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "16.3",
+   "t": "Đo lường và tăng trưởng",
+   "sum": [
+    "Output, outcome, impact.",
+    "North Star, retention, churn, cohort, funnel.",
+    "A/B test, AARRR, adoption, LTV, unit economics."
+   ],
+   "terms": [
+    "nsm",
+    "retention",
+    "ab"
+   ]
+  }
+ ],
+ "terms": {
+  "pmf": [
+   "product-market fit",
+   "Trạng thái sản phẩm đáp ứng nhu cầu đủ mạnh của một thị trường đủ lớn để người dùng tự quay lại và chịu trả tiền.",
+   "Quán ăn tới mức khách tự kéo bạn bè đến."
+  ],
+  "jtbd": [
+   "Jobs to Be Done",
+   "Khung nhìn coi khách hàng “thuê” sản phẩm để hoàn thành một việc; việc đó có mặt chức năng, cảm xúc và xã hội.",
+   "Người ta không cần mũi khoan, người ta cần cái lỗ trên tường."
+  ],
+  "tam": [
+   "TAM / SAM / SOM",
+   "Tổng thị trường (TAM), phần thị trường sản phẩm phục vụ được (SAM), phần có thể giành được trong vài năm tới (SOM).",
+   "Cả thành phố, những khu bạn giao hàng tới, và số nhà thực sự đặt hàng của bạn."
+  ],
+  "prd": [
+   "PRD",
+   "Product Requirements Document: tài liệu nêu vấn đề, mục tiêu, phạm vi, luồng và tiêu chí thành công.",
+   "Bản đề bài chung cho cả đội."
+  ],
+  "roadmap": [
+   "roadmap",
+   "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
+   "Bản đồ chặng đường, không phải lịch trình từng phút."
+  ],
+  "rice": [
+   "RICE",
+   "Reach × Impact × Confidence / Effort: điểm ưu tiên cho một hạng mục trong backlog.",
+   "Chấm điểm việc nào đáng làm trước bằng bốn câu hỏi."
+  ],
+  "nsm": [
+   "North Star Metric",
+   "Một chỉ số cốt lõi phản ánh giá trị sản phẩm mang lại cho người dùng, dùng để định hướng cả đội.",
+   "Sao Bắc Đẩu: đi đâu cũng nhìn về nó để chỉnh hướng."
+  ],
+  "retention": [
+   "retention",
+   "Tỷ lệ người dùng còn quay lại sau một khoảng thời gian.",
+   "Bao nhiêu khách quay lại quán tuần sau."
+  ],
+  "ab": [
+   "A/B test",
+   "Thí nghiệm chia người dùng ngẫu nhiên thành nhóm, mỗi nhóm thấy một phiên bản, rồi so chỉ số.",
+   "Hai nồi canh, mời khách nếm mù rồi đếm phiếu."
+  ]
+ },
+ "alias": {
+  "pmf": [
+   "product-market fit",
+   "Product-market fit",
+   "PMF"
+  ],
+  "jtbd": [
+   "Jobs to Be Done",
+   "JTBD"
+  ],
+  "tam": [
+   "TAM",
+   "SAM",
+   "SOM"
+  ],
+  "prd": [
+   "PRD"
+  ],
+  "roadmap": [
+   "roadmap",
+   "Roadmap"
+  ],
+  "rice": [
+   "RICE"
+  ],
+  "nsm": [
+   "North Star Metric"
+  ],
+  "retention": [
+   "retention",
+   "Retention"
+  ],
+  "ab": [
+   "A/B test"
+  ]
+ },
+ "rel": {},
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Với AI, PMF bền khi nào?",
+   "o": [
+    "Khi có nhiều người dùng thử",
+    "Khi bài toán được giải với chi phí suy luận thấp hơn số tiền khách sẵn lòng trả",
+    "Khi model mới nhất",
+    "Khi được báo chí nhắc"
+   ],
+   "a": 1,
+   "ex": "Chi phí biên của AI không về 0, nên PMF phải tính cả chi phí phục vụ."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "multi",
+   "q": "PRD cho AI cần thêm những mục nào?",
+   "o": [
+    "Mức lỗi chấp nhận được",
+    "Thiết kế fallback",
+    "Eval set",
+    "Logo sản phẩm"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Ba mục phản ánh tính xác suất của AI."
+  },
+  {
+   "id": "my3",
+   "s": 2,
+   "type": "one",
+   "q": "Phân tích theo nhóm người dùng bắt đầu cùng thời điểm gọi là gì?",
+   "o": [
+    "Funnel",
+    "Cohort analysis",
+    "A/B test",
+    "Churn"
+   ],
+   "a": 1,
+   "ex": "Cohort analysis theo dõi từng nhóm qua thời gian."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

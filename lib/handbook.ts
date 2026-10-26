@@ -5,7 +5,7 @@ import path from "path";
 // Handbook pages are authored as plain HTML (content/<book>) and rendered inside the site layout.
 const ROOT = path.join(process.cwd(), "content");
 const chapters = (n: number) => Array.from({ length: n }, (_, i) => String(i).padStart(2, "0"));
-export const BOOKS: Record<string, string[]> = { "cube-handbook": chapters(8), "rea-handbook": chapters(11) };
+export const BOOKS: Record<string, string[]> = { "cube-handbook": chapters(8), "rea-handbook": chapters(11), "ai-product-handbook": chapters(22) };
 
 /** Prefix every selector with `.hb` so handbook styles never leak into the rest of the site. */
 export function scopeCss(css: string) {

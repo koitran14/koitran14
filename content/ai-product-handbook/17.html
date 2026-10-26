@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>17 · AI Engineering Glossary · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.gl{display:grid;grid-template-columns:200px 1fr;gap:0;margin:18px 0;border-top:1px solid var(--line)}
+.gl dt,.gl dd{padding:10px 0;border-bottom:1px solid var(--line);margin:0}
+.gl dt{font:500 14px var(--mono);color:var(--fg);padding-right:12px}
+.gl dd{font-size:15.5px;line-height:1.55}
+.gl .ins{display:block;margin-top:6px;font-size:14px;color:var(--body);padding-left:10px;border-left:2px solid var(--acc)}
+.gl .ins b{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-right:6px}
+.glf{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:400 15px var(--sans)}
+@media(max-width:700px){.gl{grid-template-columns:1fr}.gl dt{border-bottom:0;padding-bottom:0}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 17 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 17</div>
+  <h1>Thuật ngữ <i>kỹ thuật AI</i></h1>
+  <p class="dek">Từ machine learning tới prompt injection: các thuật ngữ kỹ thuật dùng trong handbook, nhóm theo chủ đề.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 17 / 21</span><span>8 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Token là đơn vị tiền tệ thật của AI. Hiểu thuật ngữ kỹ thuật là hiểu chi phí và rủi ro của sản phẩm.</div>
+  <section id="s1">
+    <span class="num">17.1</span>
+    <h2>Model và cách học</h2>
+    <p class="gist">Các tầng của AI và các kiểu học.</p>
+<input class="glf" data-glf placeholder="Lọc thuật ngữ trong chương…" aria-label="Lọc thuật ngữ">
+    <dl class="gl"><dt>machine learning</dt><dd>Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.</dd><dt>deep learning</dt><dd>Nhánh của machine learning dùng mạng neural nhiều lớp, mạnh với ảnh, âm thanh, văn bản.</dd><dt>foundation model</dt><dd>Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.</dd><dt>LLM</dt><dd>Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.</dd><dt>deterministic</dt><dd>Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.</dd><dt>probabilistic</dt><dd>Hệ thống đưa ra dự đoán hoặc sinh nội dung theo xác suất; cùng một đầu vào có thể cho những đầu ra khác nhau.</dd></dl>
+    <p>Ba kiểu học của machine learning: supervised (học từ dữ liệu đã gán nhãn, X → Y), unsupervised (tự tìm cấu trúc ẩn trong dữ liệu chưa gán nhãn), reinforcement (tối ưu hành động bằng thưởng, phạt).</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">17.2</span>
+    <h2>Dữ liệu, ngữ cảnh và kiến trúc</h2>
+    <p class="gist">Những gì đi vào model và cách hệ thống được ghép lại.</p>
+<dl class="gl"><dt>token</dt><dd>Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.<span class="ins"><b>Lưu ý</b>Token là đơn vị tiền tệ thật của AI. Quản lý token là quản lý chi phí sản phẩm.</span></dd><dt>embedding</dt><dd>Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.</dd><dt>vector database</dt><dd>Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).</dd><dt>context window</dt><dd>Số token tối đa model nhận và sinh trong một lần gọi, tính cả prompt lẫn câu trả lời.</dd><dt>prompt engineering</dt><dd>Thiết kế câu lệnh và ngữ cảnh đưa vào model (system prompt, few-shot, chèn dữ liệu) để điều khiển đầu ra mà không đổi trọng số.</dd><dt>few-shot prompting</dt><dd>Đưa vài ví dụ đầu vào – đầu ra mẫu ngay trong prompt để model bắt chước định dạng.</dd><dt>RAG</dt><dd>Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.</dd><dt>fine-tuning</dt><dd>Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.</dd><dt>tool calling</dt><dd>Khả năng model quyết định gọi hàm hoặc API bên ngoài (truy vấn SQL, gửi email…) thay vì chỉ trả văn bản.</dd><dt>AI agent</dt><dd>Ứng dụng dựa trên LLM tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.</dd><dt>model routing</dt><dd>Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.</dd><dt>model gateway</dt><dd>Lớp trung gian quản lý mọi lời gọi model: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.</dd><dt>orchestration</dt><dd>Lớp điều phối luồng: dựng prompt, gọi công cụ, quản lý state, nối các dịch vụ (LangChain, LlamaIndex, Step Functions…).</dd><dt>prompt caching</dt><dd>Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.</dd></dl>
+  </section>
+
+  <section id="s3">
+    <span class="num">17.3</span>
+    <h2>Chất lượng, vận hành và an toàn</h2>
+    <p class="gist">Cách đo, cách giữ hệ thống chạy, và các rủi ro cần chặn.</p>
+<dl class="gl"><dt>hallucination</dt><dd>Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.</dd><dt>groundedness</dt><dd>Mức độ câu trả lời dựa hoàn toàn vào ngữ cảnh được cung cấp (ví dụ tài liệu RAG), không lấy thông tin trôi nổi.</dd><dt>faithfulness</dt><dd>Mức độ câu trả lời giữ đúng ý của tài liệu gốc, không bóp méo.</dd><dt>eval set</dt><dd>Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.</dd><dt>golden dataset</dt><dd>Bộ dữ liệu đánh giá được chuyên gia gán đáp án chuẩn, dùng làm mốc so sánh cố định giữa các phiên bản.</dd><dt>LLM-as-a-judge</dt><dd>Dùng một LLM chấm điểm câu trả lời của model khác theo tiêu chí cho trước.</dd><dt>offline evaluation</dt><dd>Chấm model trên eval set trước khi phát hành.</dd><dt>online evaluation</dt><dd>Đo chất lượng trên người dùng thật sau khi phát hành, ví dụ qua A/B test.</dd><dt>precision</dt><dd>Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).</dd><dt>recall</dt><dd>Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).</dd><dt>drift</dt><dd>Chất lượng mô hình giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).</dd><dt>latency</dt><dd>Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.</dd><dt>TTFT</dt><dd>Time to First Token: thời gian đến khi model trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.</dd><dt>throughput</dt><dd>Lượng yêu cầu hoặc token hệ thống xử lý được trong một đơn vị thời gian.</dd><dt>observability</dt><dd>Khả năng nhìn vào hệ thống đang chạy qua log, metric, trace để biết nó làm gì và hỏng ở đâu.</dd><dt>guardrails</dt><dd>Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.</dd><dt>prompt injection</dt><dd>Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.</dd><dt>PII</dt><dd>Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.</dd><dt>PII redaction</dt><dd>Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.</dd></dl>
+  </section>
+
+  <div class="vids" data-videos="17"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/18"><span><small>Chương tiếp theo</small><b>18 · AI Product Builder & Forward Deployed Engineer Glossary</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+document.querySelectorAll('[data-glf]').forEach(inp => inp.oninput = () => {const q = inp.value.trim().toLowerCase();
+ document.querySelectorAll('.gl dt').forEach(dt => {const dd = dt.nextElementSibling, on = !q || (dt.textContent + dd.textContent).toLowerCase().includes(q); dt.hidden = dd.hidden = !on})});
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip17",
+ "minutes": 8,
+ "next": {
+  "href": "/blog/ai-product-handbook/18",
+  "n": "18",
+  "t": "AI Product Builder & Forward Deployed Engineer Glossary"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "17.1",
+   "t": "Model và cách học",
+   "sum": [
+    "Machine learning, deep learning, foundation model, LLM.",
+    "Deterministic và probabilistic.",
+    "Supervised, unsupervised, reinforcement."
+   ],
+   "terms": [
+    "ml",
+    "llm",
+    "fm"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "17.2",
+   "t": "Dữ liệu, ngữ cảnh và kiến trúc",
+   "sum": [
+    "Token, embedding, vector DB, context window.",
+    "Prompt, few-shot, RAG, fine-tuning.",
+    "Tool calling, agent, routing, gateway, orchestration, caching."
+   ],
+   "terms": [
+    "token",
+    "rag",
+    "embedding"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "17.3",
+   "t": "Chất lượng, vận hành và an toàn",
+   "sum": [
+    "Hallucination, groundedness, faithfulness.",
+    "Eval set, golden dataset, LLM-as-a-judge.",
+    "Latency, TTFT, guardrails, prompt injection, PII."
+   ],
+   "terms": [
+    "halluc",
+    "guardrails",
+    "injection"
+   ]
+  }
+ ],
+ "terms": {
+  "ml": [
+   "machine learning",
+   "Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.",
+   "Học nấu ăn bằng cách nếm nhiều món, không phải đọc từng công thức."
+  ],
+  "llm": [
+   "LLM",
+   "Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.",
+   "Người đã đọc gần hết thư viện, nói gì cũng trôi chảy nhưng không phải lúc nào cũng đúng."
+  ],
+  "fm": [
+   "foundation model",
+   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
+   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+  ],
+  "token": [
+   "token",
+   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
+   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "embedding": [
+   "embedding",
+   "Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.",
+   "Tọa độ trên bản đồ ý nghĩa: hai câu cùng ý thì đứng gần nhau."
+  ],
+  "halluc": [
+   "hallucination",
+   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
+   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "injection": [
+   "prompt injection",
+   "Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.",
+   "Lá thư giả mạo kẹp trong xấp hồ sơ, ghi “hãy chuyển tiền cho người cầm thư”."
+  ]
+ },
+ "alias": {
+  "ml": [
+   "machine learning",
+   "Machine learning"
+  ],
+  "llm": [
+   "LLM"
+  ],
+  "fm": [
+   "foundation model"
+  ],
+  "token": [
+   "token"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "embedding": [
+   "embedding"
+  ],
+  "halluc": [
+   "hallucination",
+   "Hallucination"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "injection": [
+   "prompt injection",
+   "Prompt injection"
+  ]
+ },
+ "rel": {
+  "llm": [
+   "fm",
+   "token"
+  ],
+  "rag": [
+   "embedding"
+  ],
+  "embedding": [
+   "rag"
+  ],
+  "guardrails": [
+   "injection"
+  ],
+  "injection": [
+   "guardrails"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "LLM là tập con của nhóm nào?",
+   "o": [
+    "Foundation model",
+    "Vector database",
+    "Rule-based system",
+    "Unsupervised learning"
+   ],
+   "a": 0,
+   "ex": "LLM là foundation model chuyên về ngôn ngữ."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Với tiếng Anh, 1.000 token tương đương khoảng bao nhiêu từ?",
+   "o": [
+    "100",
+    "750",
+    "2.000",
+    "10.000"
+   ],
+   "a": 1,
+   "ex": "Khoảng 750 từ tiếng Anh."
+  },
+  {
+   "id": "my3",
+   "s": 2,
+   "type": "one",
+   "q": "Kỹ thuật tấn công chèn chỉ dẫn độc hại để phá guardrails gọi là gì?",
+   "o": [
+    "Hallucination",
+    "Prompt injection",
+    "Drift",
+    "Fine-tuning"
+   ],
+   "a": 1,
+   "ex": "Prompt injection có thể trực tiếp hoặc gián tiếp qua tài liệu."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+/* AI Product handbook figures, layered on the Cube handbook stylesheet (shared parts copied from the REA handbook) */
+.figbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;color:var(--muted)}
+.rows{display:grid;gap:10px}
+.rows div{display:grid;grid-template-columns:120px 1fr;gap:12px;font-size:15px}
+.rows div b{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.rows div.fix b{color:var(--acc)}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cmp div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.55}
+.cmp div b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cmp div:first-child{border-color:var(--acc)}.cmp div:first-child b{color:var(--acc)}
+/* a pipeline of clickable steps */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.flow button{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 12px;font:500 13px var(--sans);cursor:pointer;color:var(--body)}
+.flow button.on{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.flow i{font:normal 400 12px var(--mono);color:var(--muted)}
+/* a checklist the reader ticks; .meter shows how much is done */
+.chk{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.chk label{display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:15px;line-height:1.55;cursor:pointer}
+.chk input{margin:5px 0 0;accent-color:var(--acc)}
+.chk b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.chk label:has(input:checked){border-color:var(--acc)}
+.meter{height:4px;background:var(--line);border-radius:2px;margin-top:14px}.meter b{display:block;height:100%;width:0;background:var(--acc);border-radius:2px;transition:width .3s}
+.cols{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:start}
+.cols .panel{margin:0;position:sticky;top:90px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;line-height:1.55;background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{border-top:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+.tbl th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.tbl tr.on td{background:var(--acc-soft)}
+@media(max-width:700px){.cmp,.cols{grid-template-columns:1fr}.rows div{grid-template-columns:1fr;gap:2px}.cols .panel{position:static}}
+/* sort a statement into one of several groups */
+.lay{display:grid;gap:8px;margin-top:14px}
+.lay button{padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:500 13px var(--sans);cursor:pointer;color:var(--body)}
+.lay button.right{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.lay button.wrong{border-color:var(--bad);color:var(--bad)}
+.stmt{font:400 20px/1.45 var(--serif);color:var(--fg)}
+.figbar .pri{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:4px 10px;cursor:pointer;font:500 12px var(--mono);color:var(--fg)}
+/* small calculators: inputs on top, results below */
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}
+.calc label{display:grid;gap:4px;font:400 12px var(--mono);color:var(--muted)}
+.calc input{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);font:500 15px var(--mono);width:100%;box-sizing:border-box}
+.out{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.out div{flex:1;min-width:140px;padding:10px 14px;border:1px solid var(--acc);border-radius:10px;background:var(--acc-soft)}
+.out small{display:block;font:400 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.out b{font:500 22px var(--mono);color:var(--acc)}
+/* related videos at the end of a chapter (public/learn/ai-product-handbook/videos.js) */
+.vids{margin:40px 0 8px}
+.vids ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
+.vids li{border:1px solid var(--line);border-radius:10px;background:var(--bg);overflow:hidden}
+.vids .vh{display:grid;grid-template-columns:30px 1fr auto;gap:12px;align-items:center;padding:10px 14px;width:100%;border:0;background:none;text-align:left;cursor:pointer;color:var(--fg);font:500 15px/1.4 var(--sans);text-decoration:none}
+.vids .vh:hover{background:var(--soft)}
+.vids .vh i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--fg);color:var(--bg);font-style:normal}
+.vids .vh i svg{width:12px;height:12px}
+.vids .vh.s i{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+.vids .vh small{display:block;font:400 12px/1.5 var(--sans);color:var(--muted);margin-top:2px}
+.vids .vh em{font:normal 400 11px var(--mono);color:var(--muted);white-space:nowrap}
+.vids iframe{display:block;width:100%;aspect-ratio:16/9;border:0}
+.vids .note{margin:8px 0 0;font-size:13px}
+/* segmented buttons wrap onto a new row instead of squeezing their labels letter by letter */
+.seg{flex-wrap:wrap;max-width:100%}
+.seg button{white-space:nowrap}
+/* phones: wide tables scroll inside their own box; the video label drops under the title */
+@media(max-width:700px){
+.tbl{display:block;overflow-x:auto}
+.vids .vh{grid-template-columns:30px 1fr}.vids .vh em{grid-column:2}
+}

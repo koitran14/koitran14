@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Product Vision, Strategy &amp; Positioning · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 05 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần II / 05</div>
+  <h1>Vision, strategy <i>và định vị</i></h1>
+  <p class="dek">Ai trả lời “cái gì, tại sao”, ai trả lời “làm thế nào”; AI PM khác AI Engineer ra sao; value proposition; và tam giác đánh đổi chất lượng, chi phí, latency.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 05 / 21</span><span>7 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Chiến lược sản phẩm AI là biến năng lực kỹ thuật thành lời giải cho đúng bài toán thị trường, với mức chất lượng, chi phí và tốc độ mà mô hình kinh doanh gánh được.</div>
+  <section id="s1">
+    <span class="num">05.1</span>
+    <h2>Vision, mission và chia việc</h2>
+    <p class="gist">AI PM lo “cái gì” và “tại sao”; AI Engineer lo “làm thế nào”.</p>
+<p>Product vision và mission nói mục tiêu dài hạn và giá trị cốt lõi sản phẩm mang lại. Từ đó, việc được chia rõ: AI Product Manager xác định cái gì cần xây dựa trên nhu cầu thị trường, và tại sao nó quan trọng với mục tiêu kinh doanh; AI PM cũng đặt tiêu chuẩn thành công, ngân sách và phạm vi. AI Engineer tìm cách làm: chọn kiến trúc model, xử lý dữ liệu, tối ưu hạ tầng và giữ hệ thống chạy ổn định.</p>
+    <p>Với người xuất thân Software Engineer, điểm cần tập là đứng ở cả hai phía: khi đề xuất một hướng kỹ thuật, nói được nó phục vụ mục tiêu nào và cái giá phải trả là gì. Video trong chương phân biệt rõ thêm vision, strategy và roadmap, ba khái niệm hay bị dùng lẫn.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">05.2</span>
+    <h2>AI Product Manager và AI Engineer</h2>
+    <p class="gist">Hai vai trò khác nhau ở mục tiêu, việc hằng ngày, kỹ năng và cách đo thành công.</p>
+<table class="tbl">
+      <tr><th></th><th>AI Product Manager</th><th>AI Engineer</th></tr>
+      <tr><td>Mục tiêu</td><td>Giải bài toán người dùng, nghiên cứu thị trường, đặt chỉ số thành công, cân chi phí và chất lượng</td><td>Xây và giữ hệ thống AI chạy, viết code, nối API/RAG, giảm latency, giữ uptime</td></tr>
+      <tr><td>Việc hằng ngày</td><td>Nghiên cứu người dùng, thu yêu cầu, ưu tiên, roadmap, đặt tiêu chuẩn đánh giá model, phối hợp các phòng ban</td><td>Lập trình, tích hợp model, cải thiện truy xuất dữ liệu, viết test tự động, theo dõi chỉ số kỹ thuật, sửa lỗi</td></tr>
+      <tr><td>Kỹ năng</td><td>Tư duy sản phẩm, giao tiếp, phân tích dữ liệu, hiểu AI/ML ở mức tổng quan, chiến lược kinh doanh, quản trị rủi ro</td><td>Python, API, xử lý dữ liệu, kiến trúc LLM/RAG, system design, cloud</td></tr>
+      <tr><td>Đo thành công</td><td>Adoption, CSAT, doanh thu, chi phí mỗi giao dịch</td><td>Độ chính xác, latency, uptime, chi phí hạ tầng</td></tr>
+    </table>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Mức lương AI PM trong báo cáo nguồn</span></summary><div>
+      <p>Báo cáo nguồn dẫn số liệu ZipRecruiter: lương trung bình AI Product Manager ở Mỹ khoảng 159.405 USD/năm, và tổng thu nhập ở một số công ty lớn từ khoảng 170.000 tới hơn 900.000 USD/năm tùy cấp. Các con số này chưa được kiểm chứng độc lập, đổi theo thời điểm và thị trường; chỉ nên đọc như tín hiệu về mức nhu cầu với vai trò này. Chương 12 có bảng chi tiết hơn.</p>
+    </div></details>
+    <div class="take"><small>Ghi nhớ</small>Hai cột đo thành công khác nhau. Một sản phẩm tốt cần cả hai cột cùng đạt.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">05.3</span>
+    <h2>Value proposition</h2>
+    <p class="gist">Khách hàng chỉ trả tiền khi sản phẩm giải dứt điểm một bài toán cụ thể và tốt hơn phần mềm quy tắc thông thường.</p>
+<p>Value proposition của sản phẩm AI gắn với mức sẵn lòng trả tiền: khách chỉ chi khi sản phẩm giải triệt để một bài toán cụ thể, giúp tiết kiệm thời gian, giảm chi phí vận hành, hoặc tăng năng suất rõ rệt so với phần mềm quy tắc. “Có AI” tự nó không phải là giá trị. Câu value proposition tốt nói được người dùng làm gì nhanh hơn, rẻ hơn hoặc trước đây không làm được.</p>
+    <div class="take"><small>Ghi nhớ</small>Viết value proposition mà không dùng chữ “AI”. Nếu không viết được, giá trị chưa rõ.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">05.4</span>
+    <h2>Chất lượng, chi phí và latency</h2>
+    <p class="gist">Ba đỉnh của một tam giác: kéo một đỉnh lên thường làm hai đỉnh kia xấu đi.</p>
+<p>Mọi quyết định chọn model đều đánh đổi giữa ba thứ. <b>Chất lượng</b>: độ chính xác, đầy đủ, hữu ích của câu trả lời; chất lượng cao thường cần model lớn và suy luận nhiều bước. <b>Inference cost</b>: tiền gọi model theo token hoặc hạ tầng tính toán, tăng theo kích thước model và số lượng truy vấn, ăn thẳng vào biên lợi nhuận. <b>Latency</b>: tốc độ phản hồi; chậm là hỏng trải nghiệm.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Ước tính chi phí theo token (giá là giả định, hãy điền giá hiện tại của nhà cung cấp)</span></div>
+        <div class="calc">
+          <label>Số request<input type="number" id="cR" value="1000000" min="0" step="1000"></label>
+          <label>Input token / request<input type="number" id="cI" value="1000" min="0"></label>
+          <label>Output token / request<input type="number" id="cO" value="500" min="0"></label>
+          <label>Giá input (USD / 1M token)<input type="number" id="cPI" value="3" min="0" step="0.05"></label>
+          <label>Giá output (USD / 1M token)<input type="number" id="cPO" value="15" min="0" step="0.05"></label>
+        </div>
+        <div class="seg" id="cTier"><button data-t="3,15" class="on">Model lớn (giả định)</button><button data-t="0.8,4">Model nhỏ (giả định)</button></div>
+        <div class="out" id="cOut"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Chi phí = request × (input × giá input + output × giá output) / 1.000.000. Giá trên nút chỉ là ví dụ, không phải bảng giá hiện hành.</figcaption>
+    </figure>
+    <p>Báo cáo nguồn đưa ra nguyên tắc: với tác vụ phân loại, tóm tắt đơn giản hoặc truy vấn tần suất cao, ưu tiên model nhỏ, rẻ, nhanh; với model nhỏ hoặc đã fine-tune, chất lượng trên tác vụ hẹp có thể đạt khoảng 90–95% so với model lớn. Chỉ chuyển sang model lớn cho phân tích phức tạp, tư vấn pháp lý, hoặc dữ liệu nhạy cảm cần độ chính xác cao nhất. Muốn biết model nhỏ có đủ tốt không, cách duy nhất là chấm cả hai trên eval set của chính bạn (chương 9).</p>
+    <div class="take"><small>Ghi nhớ</small>Đừng chọn model theo bảng xếp hạng. Chọn model rẻ nhất mà vẫn vượt ngưỡng chất lượng trên eval set của bạn.</div>
+  </section>
+
+  <div class="vids" data-videos="05"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/06"><span><small>Chương tiếp theo</small><b>06 · Requirements, Prioritization & Roadmapping</b></span><span>→</span></a>
+
+  <div class="end"><p>Giá token trong Hình 1 là giả định để minh họa phép tính, không phải bảng giá của nhà cung cấp nào. Mức 90–95% chất lượng của model nhỏ lấy từ báo cáo nguồn và tùy rất nhiều vào tác vụ.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+function cost() {const r = +cR.value || 0, i = +cI.value || 0, o = +cO.value || 0, pi = +cPI.value || 0, po = +cPO.value || 0;
+ const total = r * (i * pi + o * po) / 1e6;
+ cOut.innerHTML = `<div><small>Tổng chi phí</small><b>$${Math.round(total).toLocaleString('en-US')}</b></div><div><small>Mỗi request</small><b>$${(r ? total / r : 0).toFixed(5)}</b></div><div><small>Tỷ trọng output</small><b>${total ? Math.round(r * o * po / 1e6 / total * 100) : 0}%</b></div>`}
+[cR, cI, cO, cPI, cPO].forEach(x => x.oninput = () => {cTier.querySelectorAll('button').forEach(b => b.classList.remove('on')); cost()});
+cTier.onclick = e => {const b = e.target.closest('[data-t]'); if (!b) return; cTier.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); [cPI.value, cPO.value] = b.dataset.t.split(','); cost()};
+cost();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip05",
+ "minutes": 7,
+ "next": {
+  "href": "/blog/ai-product-handbook/06",
+  "n": "06",
+  "t": "Requirements, Prioritization & Roadmapping"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "05.1",
+   "t": "Vision, mission và chia việc",
+   "sum": [
+    "Vision, mission: mục tiêu dài hạn, giá trị cốt lõi.",
+    "AI PM: cái gì, tại sao, tiêu chuẩn, ngân sách, phạm vi.",
+    "AI Engineer: làm thế nào, kiến trúc, dữ liệu, hạ tầng."
+   ],
+   "terms": [
+    "pm",
+    "aie"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "05.2",
+   "t": "AI Product Manager và AI Engineer",
+   "sum": [
+    "PM đo bằng adoption, CSAT, doanh thu, chi phí giao dịch.",
+    "Engineer đo bằng độ chính xác, latency, uptime, chi phí hạ tầng.",
+    "Số liệu lương trong báo cáo chỉ là tín hiệu tham khảo."
+   ],
+   "terms": [
+    "adoption",
+    "latency",
+    "rag"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "05.3",
+   "t": "Value proposition",
+   "sum": [
+    "Giá trị gắn với sẵn lòng trả tiền.",
+    "Tiết kiệm thời gian, giảm chi phí, tăng năng suất.",
+    "“Có AI” không phải value proposition."
+   ],
+   "terms": [
+    "pmf"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "05.4",
+   "t": "Chất lượng, chi phí và latency",
+   "sum": [
+    "Tam giác: chất lượng, chi phí suy luận, latency.",
+    "Model nhỏ cho tác vụ đơn giản, tần suất cao.",
+    "Model lớn cho tác vụ phức tạp, nhạy cảm."
+   ],
+   "terms": [
+    "inference",
+    "token",
+    "finetune",
+    "evalset"
+   ]
+  }
+ ],
+ "terms": {
+  "pm": [
+   "AI Product Manager",
+   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
+   "Người chọn đích đến và giải thích vì sao đi đường này."
+  ],
+  "aie": [
+   "AI Engineer",
+   "Kỹ sư xây và vận hành hệ thống AI: tích hợp model, RAG, prompt, eval tự động, theo dõi latency và chi phí.",
+   "Người lái và bảo dưỡng chiếc xe."
+  ],
+  "adoption": [
+   "adoption",
+   "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
+   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+  ],
+  "latency": [
+   "latency",
+   "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
+   "Thời gian chờ món sau khi gọi."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "pmf": [
+   "product-market fit",
+   "Trạng thái sản phẩm đáp ứng nhu cầu đủ mạnh của một thị trường đủ lớn để người dùng tự quay lại và chịu trả tiền.",
+   "Quán ăn tới mức khách tự kéo bạn bè đến."
+  ],
+  "inference": [
+   "inference cost",
+   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+  ],
+  "token": [
+   "token",
+   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
+   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
+   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+  ],
+  "evalset": [
+   "eval set",
+   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
+   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+  ]
+ },
+ "alias": {
+  "pm": [
+   "AI Product Manager",
+   "AI PM"
+  ],
+  "aie": [
+   "AI Engineer"
+  ],
+  "adoption": [
+   "adoption",
+   "Adoption"
+  ],
+  "latency": [
+   "latency",
+   "Latency"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "pmf": [
+   "product-market fit",
+   "Product-market fit",
+   "PMF"
+  ],
+  "inference": [
+   "inference cost",
+   "chi phí suy luận"
+  ],
+  "token": [
+   "token"
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Fine-tuning"
+  ],
+  "evalset": [
+   "eval set",
+   "eval sets"
+  ]
+ },
+ "rel": {
+  "pm": [
+   "aie"
+  ],
+  "aie": [
+   "pm"
+  ],
+  "rag": [
+   "finetune"
+  ],
+  "inference": [
+   "token"
+  ],
+  "token": [
+   "inference"
+  ],
+  "finetune": [
+   "rag"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Ai chịu trách nhiệm câu hỏi “tại sao tính năng này quan trọng với mục tiêu kinh doanh”?",
+   "o": [
+    "AI Engineer",
+    "AI Product Manager",
+    "Data Engineer",
+    "Khách hàng"
+   ],
+   "a": 1,
+   "ex": "AI PM lo cái gì và tại sao; AI Engineer lo làm thế nào."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "multi",
+   "q": "Chỉ số nào thường dùng để đo thành công của AI Engineer?",
+   "o": [
+    "Latency",
+    "Uptime",
+    "CSAT",
+    "Độ chính xác model"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "CSAT thuộc cột của AI PM.",
+   "why": {
+    "2": "CSAT là chỉ số trải nghiệm khách hàng, thuộc cột AI PM."
+   }
+  },
+  {
+   "id": "my3",
+   "s": 2,
+   "type": "one",
+   "q": "Value proposition nào thuyết phục nhất?",
+   "o": [
+    "Sản phẩm có tích hợp AI mới nhất",
+    "Nhân viên tra quy trình trong dưới 2 giây thay vì 8 phút",
+    "Chúng tôi dẫn đầu về AI",
+    "AI giúp mọi thứ tốt hơn"
+   ],
+   "a": 1,
+   "ex": "Giá trị cụ thể, đo được, không phụ thuộc chữ “AI”."
+  },
+  {
+   "id": "my4",
+   "s": 3,
+   "type": "one",
+   "q": "Với 1.000.000 request, mỗi request 1.000 input và 500 output token, giá 3 USD và 15 USD cho 1M token, chi phí là bao nhiêu?",
+   "o": [
+    "4.500 USD",
+    "10.500 USD",
+    "18.000 USD",
+    "1.500 USD"
+   ],
+   "a": 1,
+   "ex": "Input: 1.000.000 × 1.000 × 3 / 1M = 3.000 USD. Output: 1.000.000 × 500 × 15 / 1M = 7.500 USD. Tổng 10.500 USD."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "Nguyên tắc chọn model theo chương này là gì?",
+   "o": [
+    "Luôn dùng model lớn nhất",
+    "Model nhỏ, rẻ cho tác vụ đơn giản và tần suất cao; model lớn cho tác vụ phức tạp, nhạy cảm",
+    "Luôn dùng model rẻ nhất",
+    "Chọn theo bảng xếp hạng công khai"
+   ],
+   "a": 1,
+   "ex": "Chọn model rẻ nhất vẫn vượt ngưỡng chất lượng trên eval set của bạn."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

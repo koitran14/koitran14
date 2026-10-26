@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11 · Experimentation, Launch &amp; Growth · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 11 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần IV / 11</div>
+  <h1>Ra mắt, adoption <i>và tăng trưởng</i></h1>
+  <p class="dek">Đưa AI từ POC ra thật: khoanh phạm vi tự động hóa, guardrails cho handoff, chọn RAG hay fine-tuning khi ra mắt, ba cơ chế UX giúp người dùng chấp nhận, và đo tăng trưởng bằng A/B test, AARRR.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 11 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Khó nhất khi ra mắt AI không phải hạ tầng mà là giữ người dùng tiếp tục dùng một hệ thống đôi khi trả lời không nhất quán.</div>
+  <section id="s1">
+    <span class="num">11.1</span>
+    <h2>Khoanh phạm vi và handoff</h2>
+    <p class="gist">AI xử lý trọn những việc lặp lại, rủi ro thấp; việc nhạy cảm thì thu ngữ cảnh rồi chuyển cho người.</p>
+<p>Báo cáo nguồn lấy ví dụ trợ lý AI chăm sóc khách hàng cho một phần mềm kế toán doanh nghiệp. Bước đầu là phân tích lịch sử ticket để tìm việc lặp lại, rủi ro thấp, như hướng dẫn đặt lại mật khẩu hay tra và tải hóa đơn GTGT. Những việc này giao cho AI xử lý trọn vẹn.</p>
+    <p>Với yêu cầu nhạy cảm như khiếu nại sai lệch số liệu tài chính hay yêu cầu hoàn tiền, guardrails chặn AI xử lý trực tiếp. AI thu ngữ cảnh, tóm tắt sự cố, rồi handoff cho nhân viên mà người dùng không phải nhập lại thông tin.</p>
+    <figure>
+      <div class="fig"><div id="scope"></div></div>
+      <figcaption><b>Hình 1</b>Yêu cầu nào AI nên tự xử lý, yêu cầu nào nên chuyển cho người?</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Handoff tốt là khi nhân viên nhận ca đã biết khách cần gì, không phải hỏi lại từ đầu.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">11.2</span>
+    <h2>RAG hay fine-tuning khi ra mắt</h2>
+    <p class="gist">So theo chi phí, latency, độ chính xác và ngữ cảnh dùng.</p>
+<table class="tbl">
+      <tr><th></th><th>RAG</th><th>Fine-tuning</th></tr>
+      <tr><td>Chi phí</td><td>Đầu tư ban đầu thấp hơn nhiều; chi phí vận hành theo vector DB, tìm ngữ cảnh và token</td><td>Chi phí ban đầu cao: GPU để huấn luyện lại, dữ liệu gán nhãn chuẩn, nhân sự data science</td></tr>
+      <tr><td>Latency</td><td>Cao hơn vì chuỗi nối tiếp: mã hóa truy vấn → tìm vector → nạp ngữ cảnh → gọi model</td><td>Thấp và ổn định hơn vì tri thức đã nằm trong trọng số</td></tr>
+      <tr><td>Độ chính xác</td><td>Tốt cho tri thức thực tế thay đổi; sửa thông tin sai bằng cách cập nhật dữ liệu, không cần huấn luyện lại</td><td>Tốt cho văn phong, định dạng phức tạp (JSON schema), ngôn ngữ chuyên ngành hẹp; dễ lạc hậu tri thức</td></tr>
+      <tr><td>Hợp với</td><td>Tri thức nội bộ, CSKH tra chính sách thường đổi, ứng dụng cần trích nguồn</td><td>Phân loại chuyên sâu, chuyển định dạng đặc thù, văn phong thương hiệu, cắt token trong prompt</td></tr>
+    </table>
+  </section>
+
+  <section id="s3">
+    <span class="num">11.3</span>
+    <h2>Ba cơ chế giúp người dùng chấp nhận</h2>
+    <p class="gist">Người duyệt cho hành động lớn, minh bạch về độ tin cậy, và fallback khi AI không chắc.</p>
+<ul>
+      <li><b>Human-in-the-loop validation.</b> Giao diện yêu cầu người duyệt các hành động có tác động lớn (gửi email hàng loạt cho khách, thực hiện chuyển tiền) trước khi chạy.</li>
+      <li><b>Cảnh báo và độ tin cậy.</b> Nói rõ đây là AI, hiển thị confidence level hoặc trích nguồn để người dùng tự kiểm chứng.</li>
+      <li><b>Fallback linh hoạt.</b> Khi confidence xuống dưới ngưỡng (ví dụ dưới 75%), chuyển về kịch bản tra cứu theo quy tắc, gợi ý danh sách câu hỏi, hoặc nối ngay với tư vấn viên.</li>
+    </ul>
+    <p>Đây là phần change management: người dùng đang quen một cách làm cũ, và họ chỉ đổi khi thấy cái mới đáng tin trong những lần đầu tiên.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">11.4</span>
+    <h2>Thử nghiệm và đo tăng trưởng</h2>
+    <p class="gist">A/B test để kiểm giả thuyết; AARRR để biết người dùng rơi ở chặng nào.</p>
+<p>A/B test chia người dùng ngẫu nhiên thành nhóm, mỗi nhóm thấy một phiên bản, rồi so chỉ số. Với AI, phiên bản có thể khác nhau ở prompt, model hay cách hiển thị confidence. Online evaluation ở chương 9 chính là dạng A/B test này.</p>
+    <p>Pirate metrics AARRR của Dave McClure chia hành trình thành năm chặng: Acquisition (biết tới), Activation (dùng thử và thấy giá trị lần đầu), Retention (quay lại), Referral (giới thiệu), Revenue (trả tiền). Với tính năng AI, Activation thường quyết định nhiều nhất: nếu vài câu trả lời đầu tiên sai, người dùng hiếm khi cho cơ hội thứ hai.</p>
+    <div class="take"><small>Ghi nhớ</small>Với tính năng AI, những câu trả lời đầu tiên quyết định retention. Đầu tư vào trải nghiệm lần đầu.</div>
+  </section>
+
+  <div class="vids" data-videos="11"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/12"><span><small>Chương tiếp theo</small><b>12 · Product Economics & Business Strategy</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+// a statement sorter: data = [[statement, right layer index, why]], labels = layer names
+function sorter(box, data, labels) {
+ let i = 0;
+ box.innerHTML = `<div class="figbar"><span data-n></span><button class="pri" data-next>Câu khác →</button></div><div class="stmt" data-q></div><div class="lay" style="grid-template-columns:repeat(${labels.length},1fr)">${labels.map((l, j) => `<button data-l="${j}">${l}</button>`).join('')}</div><div class="panel" data-p></div>`;
+ const $ = s => box.querySelector(s);
+ const show = () => {$('[data-q]').textContent = '“' + data[i][0] + '”'; $('[data-n]').textContent = `Câu ${i + 1}/${data.length}`; $('[data-p]').innerHTML = '<h5>Chọn một ô</h5>Câu này thuộc nhóm nào?'; box.querySelectorAll('[data-l]').forEach(b => b.className = '')};
+ box.onclick = e => {
+  if (e.target.closest('[data-next]')) {i = (i + 1) % data.length; return show()}
+  const b = e.target.closest('[data-l]'); if (!b) return; const ok = +b.dataset.l === data[i][1];
+  box.querySelectorAll('[data-l]').forEach(x => x.className = +x.dataset.l === data[i][1] ? 'right' : x === b ? 'wrong' : '');
+  $('[data-p]').innerHTML = `<h5>${ok ? 'Đúng.' : 'Chưa đúng.'}</h5>${data[i][2]}`};
+ show()}
+
+sorter(document.getElementById('scope'), [
+ ['Làm sao để đặt lại mật khẩu?', 0, 'Lặp lại nhiều, rủi ro thấp, câu trả lời có trong tài liệu. AI xử lý trọn.'],
+ ['Số dư trên báo cáo quý sai lệch 120 triệu so với sổ cái, tôi muốn khiếu nại.', 1, 'Khiếu nại số liệu tài chính là nhạy cảm. AI tóm tắt sự cố rồi chuyển cho nhân viên.'],
+ ['Cho tôi tải hóa đơn GTGT tháng 9.', 0, 'Tra và tải hóa đơn là việc lặp lại, rủi ro thấp.'],
+ ['Tôi muốn hoàn tiền gói năm vừa gia hạn.', 1, 'Hoàn tiền là quyết định tài chính, cần người duyệt.'],
+ ['Phím tắt để tạo phiếu chi mới là gì?', 0, 'Hướng dẫn thao tác, AI trả lời được và không gây hại nếu sai nhẹ.']], ['AI tự xử lý', 'Chuyển cho người']);
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip11",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/12",
+  "n": "12",
+  "t": "Product Economics & Business Strategy"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "11.1",
+   "t": "Khoanh phạm vi và handoff",
+   "sum": [
+    "Tìm việc lặp lại, rủi ro thấp từ lịch sử ticket.",
+    "Việc nhạy cảm: AI tóm tắt, chuyển cho người.",
+    "Người dùng không phải nhập lại thông tin."
+   ],
+   "terms": [
+    "guardrails",
+    "handoff",
+    "poc"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "11.2",
+   "t": "RAG hay fine-tuning khi ra mắt",
+   "sum": [
+    "RAG: rẻ lúc đầu, latency cao hơn, dễ cập nhật.",
+    "Fine-tuning: đắt lúc đầu, nhanh và ổn định, dễ lạc hậu.",
+    "Chọn theo tri thức có thay đổi và có cần trích nguồn không."
+   ],
+   "terms": [
+    "rag",
+    "finetune",
+    "latency"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "11.3",
+   "t": "Ba cơ chế giúp người dùng chấp nhận",
+   "sum": [
+    "Người duyệt hành động lớn.",
+    "Hiển thị confidence, trích nguồn.",
+    "Fallback khi dưới ngưỡng, ví dụ 75%."
+   ],
+   "terms": [
+    "hitl",
+    "confidence",
+    "fallback",
+    "adoption"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "11.4",
+   "t": "Thử nghiệm và đo tăng trưởng",
+   "sum": [
+    "A/B test so phiên bản prompt, model, giao diện.",
+    "AARRR: Acquisition, Activation, Retention, Referral, Revenue.",
+    "Activation là chặng then chốt với AI."
+   ],
+   "terms": [
+    "ab",
+    "aarrr",
+    "retention",
+    "online"
+   ]
+  }
+ ],
+ "terms": {
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "handoff": [
+   "handoff",
+   "Chuyển cuộc hội thoại hoặc tác vụ từ AI sang người, kèm ngữ cảnh để người dùng không phải kể lại.",
+   "Bàn giao ca trực kèm sổ ghi chép."
+  ],
+  "poc": [
+   "POC",
+   "Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.",
+   "Thử xem đất có đóng cọc được không."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
+   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+  ],
+  "latency": [
+   "latency",
+   "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
+   "Thời gian chờ món sau khi gọi."
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+  ],
+  "confidence": [
+   "confidence score",
+   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Câu “chắc 90%” của một người bạn."
+  ],
+  "fallback": [
+   "fallback",
+   "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
+   "Kế hoạch B khi kế hoạch A trục trặc."
+  ],
+  "adoption": [
+   "adoption",
+   "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
+   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+  ],
+  "ab": [
+   "A/B test",
+   "Thí nghiệm chia người dùng ngẫu nhiên thành nhóm, mỗi nhóm thấy một phiên bản, rồi so chỉ số.",
+   "Hai nồi canh, mời khách nếm mù rồi đếm phiếu."
+  ],
+  "aarrr": [
+   "AARRR",
+   "Pirate metrics của Dave McClure: Acquisition, Activation, Retention, Referral, Revenue.",
+   "Năm chặng của một vị khách: biết quán, ăn thử, quay lại, rủ bạn, trả tiền."
+  ],
+  "retention": [
+   "retention",
+   "Tỷ lệ người dùng còn quay lại sau một khoảng thời gian.",
+   "Bao nhiêu khách quay lại quán tuần sau."
+  ],
+  "online": [
+   "online evaluation",
+   "Đo chất lượng trên người dùng thật sau khi phát hành, ví dụ qua A/B test.",
+   "Thi thật trong phòng thi."
+  ]
+ },
+ "alias": {
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "handoff": [
+   "handoff",
+   "Handoff"
+  ],
+  "poc": [
+   "POC"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Fine-tuning"
+  ],
+  "latency": [
+   "latency",
+   "Latency"
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Human-in-the-loop"
+  ],
+  "confidence": [
+   "confidence score",
+   "confidence"
+  ],
+  "fallback": [
+   "fallback",
+   "Fallback"
+  ],
+  "adoption": [
+   "adoption",
+   "Adoption"
+  ],
+  "ab": [
+   "A/B test"
+  ],
+  "aarrr": [
+   "AARRR"
+  ],
+  "retention": [
+   "retention",
+   "Retention"
+  ],
+  "online": [
+   "online evaluation",
+   "Online evaluation"
+  ]
+ },
+ "rel": {
+  "rag": [
+   "finetune"
+  ],
+  "finetune": [
+   "rag"
+  ],
+  "hitl": [
+   "fallback"
+  ],
+  "fallback": [
+   "hitl",
+   "confidence"
+  ],
+  "online": [
+   "ab"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Với yêu cầu hoàn tiền, trợ lý AI nên làm gì?",
+   "o": [
+    "Tự hoàn tiền",
+    "Thu ngữ cảnh, tóm tắt, handoff cho nhân viên",
+    "Từ chối và kết thúc",
+    "Hỏi người dùng nhập lại toàn bộ thông tin"
+   ],
+   "a": 1,
+   "ex": "Việc nhạy cảm cần người, và handoff phải mang theo ngữ cảnh."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Vì sao RAG thường có latency cao hơn fine-tuning?",
+   "o": [
+    "Vì model lớn hơn",
+    "Vì phải đi qua chuỗi mã hóa truy vấn, tìm vector, nạp ngữ cảnh rồi mới gọi model",
+    "Vì RAG chạy trên CPU",
+    "Vì RAG không dùng cache"
+   ],
+   "a": 1,
+   "ex": "Các bước nối tiếp cộng dồn thời gian."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Cách sửa một thông tin sai trong hệ thống RAG là gì?",
+   "o": [
+    "Huấn luyện lại model",
+    "Cập nhật dữ liệu trong kho tri thức",
+    "Đổi nhà cung cấp",
+    "Tăng context window"
+   ],
+   "a": 1,
+   "ex": "Đây là lợi thế lớn của RAG."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "multi",
+   "q": "Ba cơ chế UX giúp người dùng chấp nhận đầu ra xác suất là gì?",
+   "o": [
+    "Human-in-the-loop cho hành động lớn",
+    "Hiển thị confidence hoặc trích nguồn",
+    "Fallback khi dưới ngưỡng",
+    "Ẩn mọi lỗi của AI"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Ẩn lỗi làm mất niềm tin khi người dùng tự phát hiện."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "Chặng “người dùng dùng thử và thấy giá trị lần đầu” trong AARRR là gì?",
+   "o": [
+    "Acquisition",
+    "Activation",
+    "Retention",
+    "Referral"
+   ],
+   "a": 1,
+   "ex": "Activation là khoảnh khắc người dùng thấy giá trị lần đầu."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -71,6 +71,41 @@ export const SERIES = [
       { kind: "video" as const, label: "Xem video", href: "/blog/rea-handbook#yt" },
     ],
   },
+  {
+    slug: "ai-product-handbook",
+    title: "AI Product Engineering & Management",
+    summary: "Dành cho Software Engineer muốn làm sản phẩm AI: tìm đúng vấn đề, thiết kế và đánh giá hệ thống AI, đo lường, kinh tế và rủi ro, rồi ghép lại trong một dự án. Mỗi chương kèm video liên quan và câu hỏi ôn tập.",
+    href: "/blog/ai-product-handbook",
+    createdAt: "2026-10-26T12:00:00.000Z",
+    chapters: [
+      "Lộ trình học",
+      "Product Thinking & Lifecycle",
+      "Problem Discovery & User Research",
+      "Market Research & Opportunity",
+      "Product Design & UX cho AI",
+      "Vision, Strategy & Positioning",
+      "Requirements & Roadmapping",
+      "AI & LLM Fundamentals",
+      "AI System Architecture",
+      "AI Evaluation & Responsible AI",
+      "Product Analytics",
+      "Launch, Adoption & Growth",
+      "Product Economics",
+      "Risk & Governance",
+      "Stakeholders & Communication",
+      "Advanced Product Strategy",
+      "Product Management Glossary",
+      "AI Engineering Glossary",
+      "Builder & FDE Glossary",
+      "Frameworks Cheat Sheet",
+      "Documentation Reference",
+      "Capstone: từ vấn đề đến launch",
+    ].map((title, i) => {
+      const n = String(i).padStart(2, "0");
+      return { n, title, key: `aip${n}`, href: `/blog/ai-product-handbook/${n}` };
+    }),
+    media: [{ kind: "audio" as const, label: "Nghe 8 audio", href: "/blog/ai-product-handbook#aud" }],
+  },
 ];
 
 // shortcut: posts live in a local JSON file, which does not persist on Vercel; move to a DB before deploying the blog.

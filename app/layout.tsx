@@ -24,7 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const wide = pathname.startsWith("/blog/cube-handbook");
+  // every handbook route (/blog/<name>-handbook) lays out its own column and side rails
+  const wide = /^\/blog\/[^/]+-handbook(\/|$)/.test(pathname);
   // the floating contact toolbar would sit over the article and the audio player while reading
   const reading = pathname.startsWith("/blog");
 

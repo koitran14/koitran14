@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Market Research &amp; Opportunity Assessment · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.dvf{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dvf div{padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.5}
+.dvf div.ok{border-color:var(--acc)}
+.dvf b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.dvf div.ok b{color:var(--acc)}
+.dvf label{display:flex;gap:8px;align-items:flex-start;padding:3px 0;cursor:pointer}.dvf input{margin-top:4px;accent-color:var(--acc)}
+@media(max-width:700px){.dvf{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 03 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần I / 03</div>
+  <h1>Thị trường <i>và đánh giá cơ hội</i></h1>
+  <p class="dek">Giải đúng vấn đề vẫn có thể thất bại nếu thị trường quá nhỏ, rào cản pháp lý quá cao hoặc chi phí suy luận vượt giá trị thu về. ICP, TAM/SAM/SOM, moat và ba câu hỏi desirability, feasibility, viability.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 03 / 21</span><span>9 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Một cơ hội AI chỉ đáng làm khi người dùng muốn, đội làm được, và mô hình kinh doanh vẫn có lãi sau khi trả tiền model.</div>
+  <section id="s1">
+    <span class="num">03.1</span>
+    <h2>Phân khúc, ICP và buyer persona</h2>
+    <p class="gist">Trong B2B, người dùng sản phẩm và người duyệt tiền thường là hai người khác nhau.</p>
+<p>Thị trường sản phẩm AI có thể chia theo quy mô doanh nghiệp, mức sẵn sàng về dữ liệu (data readiness), hạ tầng an ninh và yêu cầu tuân thủ. Trong B2B cần tách hai khái niệm. ICP (Ideal Customer Profile) là loại tổ chức hợp nhất: đủ lớn, có nhiều dữ liệu số, có ngân sách đổi mới và chịu áp lực cắt giảm chi phí vận hành. Buyer persona là người duyệt ngân sách hoặc có quyền chặn: ngoài CPO, CEO, quyết định mua sản phẩm AI còn chịu ảnh hưởng lớn từ CDO (Giám đốc dữ liệu) và CISO (Giám đốc an toàn thông tin), những người quan tâm tới rủi ro lộ PII, tuân thủ, an ninh mạng và ROI.</p>
+    <div class="take"><small>Ghi nhớ</small>Bán sản phẩm AI cho doanh nghiệp là thuyết phục cả CISO, không chỉ người dùng cuối.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">03.2</span>
+    <h2>TAM, SAM và SOM</h2>
+    <p class="gist">Ước quy mô thị trường bằng hai chiều: từ trên xuống theo báo cáo ngành, và từ dưới lên theo số khách hàng thật và giá bán.</p>
+<p>TAM (Total Addressable Market) là tổng nhu cầu nếu chiếm 100% thị phần. SAM (Serviceable Addressable Market) là phần sản phẩm phục vụ được với mô hình, khu vực và năng lực hiện tại. SOM (Serviceable Obtainable Market) là phần có thể giành được trong 1–3 năm tới với nguồn lực bán hàng và mức cạnh tranh thực tế.</p>
+    <p>Báo cáo nguồn lấy ví dụ một sản phẩm xử lý tài liệu cho doanh nghiệp: TAM là chi tiêu toàn cầu cho tự động hóa quy trình và xử lý văn bản (ví dụ 10 tỷ USD); SAM là chi tiêu cho IDP của doanh nghiệp tài chính, pháp lý ở Bắc Mỹ và châu Âu (ví dụ 2 tỷ USD); SOM là doanh thu từ 200 khách hàng tầm trung trong 2 năm đầu (ví dụ 20 triệu USD). Đây là con số minh họa, không phải số liệu thị trường.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>SOM tính từ dưới lên = số khách hàng ICP tiếp cận được × ACV</span></div>
+        <div class="calc">
+          <label>Số khách hàng ICP tiếp cận được<input type="number" id="smN" value="200" min="0"></label>
+          <label>ACV (USD / năm)<input type="number" id="smA" value="100000" min="0" step="1000"></label>
+          <label>Tỷ lệ chốt được (%)<input type="number" id="smR" value="100" min="0" max="100"></label>
+        </div>
+        <div class="out" id="smO"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Đổi số để thấy SOM nhạy với giả định thế nào. Mặc định khớp ví dụ 20 triệu USD.</figcaption>
+    </figure>
+    <p>Với AI, các dự báo này phải cập nhật thường xuyên, vì inference cost giảm và tỷ lệ doanh nghiệp chấp nhận AI tăng làm thay đổi cả giá bán lẫn số khách hàng tiềm năng.</p>
+    <div class="take"><small>Ghi nhớ</small>SOM tính từ dưới lên đáng tin hơn TAM “từ báo cáo ngành”, vì nó buộc bạn nói rõ khách là ai và trả bao nhiêu.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">03.3</span>
+    <h2>Đối thủ, moat và Value Proposition Canvas</h2>
+    <p class="gist">Model nền ai cũng thuê được. Lợi thế phải nằm ở dữ liệu, ở độ sâu trong quy trình, và ở cách xử lý lúc AI sai.</p>
+<p>Có hai nhóm đối thủ chính. Incumbents là các công ty phần mềm lớn gắn thêm AI vào hệ sinh thái sẵn có (như Microsoft, Google), mạnh ở tệp khách hàng và quy trình đã quen. Startup AI-native xây sản phẩm quanh AI từ đầu, đổi mới nhanh và linh hoạt.</p>
+    <p>Vì thuật toán hay model gốc dễ bị thay, moat (lợi thế khó sao chép) của sản phẩm AI thường đến từ ba nguồn: <b>dữ liệu độc quyền</b> mà đối thủ không có; <b>gắn sâu vào quy trình</b> hằng ngày của người dùng, tạo chi phí chuyển đổi cao; và <b>UX tốt cho sự không chắc chắn</b>, tức giao diện và guardrails xử lý lỗi của model một cách êm, giữ được niềm tin.</p>
+    <p>Value Proposition Canvas đặt hồ sơ khách hàng cạnh bản đồ giá trị. Ví dụ với hệ thống RAG doanh nghiệp kết hợp IDP: customer jobs là trích dữ liệu hợp đồng, rà soát pháp lý, tra thông tin nội bộ; customer pains là nhập liệu sai, mất hàng giờ đọc PDF, sợ lộ PII; pain relievers là bóc tách văn bản tự động, tìm kiếm có trích nguồn, che PII, phân quyền; gain creators là câu trả lời tổng hợp trong vài giây, gợi ý theo ngữ cảnh. Báo cáo nguồn ước tính giảm 80% thời gian tìm thông tin, nhưng con số này cần đo lại trên dữ liệu của chính bạn.</p>
+    <div class="take"><small>Ghi nhớ</small>Câu hỏi về moat: nếu đối thủ dùng đúng model của bạn từ ngày mai, họ còn thiếu gì?</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">03.4</span>
+    <h2>Desirability, feasibility, viability</h2>
+    <p class="gist">Ba câu hỏi phải cùng có câu trả lời “có” thì mới duyệt một cơ hội.</p>
+<p><b>Desirability</b>: người dùng có thật sự muốn không, sản phẩm có giải đúng điểm đau, họ có sẵn lòng dùng và trả tiền không? <b>Feasibility</b>: model có đạt độ chính xác và độ tin cậy cần thiết không, latency có chấp nhận được không, hạ tầng có đảm bảo an toàn thông tin, phân quyền (IAM), mã hóa và bảo vệ PII không? <b>Viability</b>: mô hình tài chính có bền không khi tính chi phí gọi API và hạ tầng suy luận trên mỗi người dùng, so với LTV thu về?</p>
+    <figure>
+      <div class="fig"><div class="figbar"><span>Đánh dấu những câu hỏi bạn đã có câu trả lời “có”</span></div><div class="dvf" id="dvf"></div><div class="panel" id="dvfP"></div></div>
+      <figcaption><b>Hình 2</b>Thiếu bất kỳ trụ nào, cơ hội chưa nên được duyệt.</figcaption>
+    </figure>
+    <p>Rủi ro pháp lý cũng thuộc feasibility. EU AI Act có hiệu lực từ 01/08/2024 và quản lý theo mức rủi ro. Theo báo cáo nguồn, nghĩa vụ cho hệ thống AI rủi ro cao (sinh trắc học, hạ tầng thiết yếu, giáo dục, tuyển dụng) áp dụng từ 02/12/2027, và cho hệ thống AI gắn trong sản phẩm đã có luật chuyên ngành từ 02/08/2028. AI PM nên phân loại mức rủi ro của sản phẩm ngay từ lúc thẩm định cơ hội. Chương 13 nói kỹ hơn về lộ trình này.</p>
+    <div class="take"><small>Ghi nhớ</small>Viability của AI khác SaaS thường: chi phí biên không gần bằng 0, nên phải tính chi phí suy luận trên mỗi người dùng ngay từ đầu.</div>
+  </section>
+
+  <div class="vids" data-videos="03"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/04"><span><small>Chương tiếp theo</small><b>04 · Product Design & UX cho sản phẩm AI</b></span><span>→</span></a>
+
+  <div class="end"><p>Các con số TAM/SAM/SOM và mức giảm 80% thời gian ở mục 03.2–03.3 là ví dụ minh họa lấy từ báo cáo nguồn, không phải số liệu thị trường đã kiểm chứng. Mốc 02/12/2027 và 02/08/2028 lấy theo báo cáo nguồn; nên đối chiếu văn bản chính thức của EU trước khi dùng.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const usd = v => '$' + Math.round(v).toLocaleString('en-US');
+function som() {const n = +smN.value || 0, a = +smA.value || 0, r = Math.min(100, +smR.value || 0) / 100;
+ smO.innerHTML = `<div><small>SOM ước tính / năm</small><b>${usd(n * a * r)}</b></div><div><small>Số khách hàng chốt được</small><b>${Math.round(n * r)}</b></div>`}
+[smN, smA, smR].forEach(x => x.oninput = som); som();
+const DVF = [['Desirability', ['Người dùng mục tiêu xác nhận điểm đau là thật', 'Họ sẵn lòng đổi cách làm hiện tại', 'Có tín hiệu sẵn sàng trả tiền']],
+ ['Feasibility', ['Model đạt độ chính xác cần thiết trên eval set', 'Latency chấp nhận được trong luồng thật', 'Bảo mật, PII, tuân thủ pháp lý đã được tính']],
+ ['Viability', ['Chi phí suy luận trên mỗi người dùng đã ước tính', 'LTV lớn hơn chi phí phục vụ khách hàng', 'Có đường mở rộng không làm chi phí phình theo']]];
+dvf.innerHTML = DVF.map(([h, qs], i) => `<div data-g="${i}"><b>${h}</b>${qs.map(q => `<label><input type="checkbox">${q}</label>`).join('')}</div>`).join('');
+function dv() {const g = [...dvf.children].map(d => [...d.querySelectorAll('input')].every(x => x.checked));
+ [...dvf.children].forEach((d, i) => d.classList.toggle('ok', g[i]));
+ const miss = DVF.filter((_, i) => !g[i]).map(d => d[0]);
+ dvfP.innerHTML = miss.length ? `<h5>Chưa nên duyệt</h5>Còn thiếu: ${miss.join(', ')}.` : '<h5>Đủ ba trụ</h5>Cơ hội này đáng được đầu tư thử nghiệm tiếp.'}
+dvf.onchange = dv; dv();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip03",
+ "minutes": 9,
+ "next": {
+  "href": "/blog/ai-product-handbook/04",
+  "n": "04",
+  "t": "Product Design & UX cho sản phẩm AI"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "03.1",
+   "t": "Phân khúc, ICP và buyer persona",
+   "sum": [
+    "Phân khúc theo quy mô, data readiness, bảo mật, tuân thủ.",
+    "ICP là loại tổ chức hợp nhất.",
+    "Buyer persona gồm cả CDO, CISO."
+   ],
+   "terms": [
+    "icp",
+    "buyer",
+    "pii"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "03.2",
+   "t": "TAM, SAM và SOM",
+   "sum": [
+    "TAM, SAM, SOM: toàn bộ, phục vụ được, giành được.",
+    "SOM = số khách hàng ICP × ACV.",
+    "Cập nhật khi chi phí suy luận và tỷ lệ chấp nhận AI thay đổi."
+   ],
+   "terms": [
+    "tam",
+    "acv"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "03.3",
+   "t": "Đối thủ, moat và Value Proposition Canvas",
+   "sum": [
+    "Incumbents mạnh ở khách hàng sẵn có; AI-native mạnh ở tốc độ.",
+    "Moat: dữ liệu độc quyền, gắn sâu quy trình, UX cho sự không chắc chắn.",
+    "Value Proposition Canvas nối jobs, pains, gains với sản phẩm."
+   ],
+   "terms": [
+    "moat",
+    "vpc",
+    "guardrails"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "03.4",
+   "t": "Desirability, feasibility, viability",
+   "sum": [
+    "Desirability: người dùng có muốn.",
+    "Feasibility: kỹ thuật, dữ liệu, bảo mật, pháp lý.",
+    "Viability: chi phí suy luận so với LTV."
+   ],
+   "terms": [
+    "dvf",
+    "ltv",
+    "inference",
+    "euaiact"
+   ]
+  }
+ ],
+ "terms": {
+  "icp": [
+   "ICP",
+   "Ideal Customer Profile: loại tổ chức hoặc khách hàng hợp nhất với sản phẩm.",
+   "Kiểu nhà mà bộ cửa của bạn lắp vừa nhất."
+  ],
+  "buyer": [
+   "buyer persona",
+   "Người có quyền duyệt ngân sách hoặc chặn quyết định mua, khác với người dùng hằng ngày.",
+   "Phụ huynh trả tiền đồ chơi, đứa trẻ là người chơi."
+  ],
+  "pii": [
+   "PII",
+   "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
+   "Những thứ đủ để người lạ biết đó là bạn."
+  ],
+  "tam": [
+   "TAM / SAM / SOM",
+   "Tổng thị trường (TAM), phần thị trường sản phẩm phục vụ được (SAM), phần có thể giành được trong vài năm tới (SOM).",
+   "Cả thành phố, những khu bạn giao hàng tới, và số nhà thực sự đặt hàng của bạn."
+  ],
+  "acv": [
+   "ACV",
+   "Annual Contract Value: giá trị hợp đồng trung bình mỗi năm của một khách hàng.",
+   "Mỗi khách trả bạn bao nhiêu một năm."
+  ],
+  "moat": [
+   "moat",
+   "Lợi thế cạnh tranh khó sao chép, giữ được khi đối thủ có cùng model nền.",
+   "Hào nước quanh lâu đài."
+  ],
+  "vpc": [
+   "Value Proposition Canvas",
+   "Khung đặt cạnh nhau hồ sơ khách hàng (jobs, pains, gains) và bản đồ giá trị (sản phẩm, pain relievers, gain creators).",
+   "Hai mảnh ghép phải khớp nhau."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "dvf": [
+   "desirability / feasibility / viability",
+   "Ba câu hỏi để duyệt một cơ hội: người dùng có muốn không, làm được không, có sống được về mặt kinh doanh không.",
+   "Ba chân của một cái ghế; thiếu một chân là đổ."
+  ],
+  "ltv": [
+   "LTV",
+   "Lifetime Value: tổng doanh thu (hoặc lợi nhuận) kỳ vọng từ một khách hàng trong suốt thời gian họ dùng sản phẩm.",
+   "Một khách quen mang lại bao nhiêu tiền trong mấy năm ghé quán."
+  ],
+  "inference": [
+   "inference cost",
+   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+  ],
+  "euaiact": [
+   "EU AI Act",
+   "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
+   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+  ]
+ },
+ "alias": {
+  "icp": [
+   "ICP"
+  ],
+  "buyer": [
+   "buyer persona"
+  ],
+  "pii": [
+   "PII"
+  ],
+  "tam": [
+   "TAM",
+   "SAM",
+   "SOM"
+  ],
+  "acv": [
+   "ACV"
+  ],
+  "moat": [
+   "moat"
+  ],
+  "vpc": [
+   "Value Proposition Canvas"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "dvf": [
+   "desirability",
+   "feasibility",
+   "viability"
+  ],
+  "ltv": [
+   "LTV"
+  ],
+  "inference": [
+   "inference cost",
+   "chi phí suy luận"
+  ],
+  "euaiact": [
+   "EU AI Act"
+  ]
+ },
+ "rel": {
+  "icp": [
+   "buyer"
+  ],
+  "tam": [
+   "acv",
+   "icp"
+  ],
+  "guardrails": [
+   "pii"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Trong B2B, buyer persona khác người dùng ở điểm nào?",
+   "o": [
+    "Không khác gì",
+    "Buyer persona là người duyệt ngân sách hoặc có quyền chặn quyết định mua",
+    "Buyer persona luôn là CEO",
+    "Buyer persona không quan tâm bảo mật"
+   ],
+   "a": 1,
+   "ex": "Với AI, CDO và CISO thường có tiếng nói lớn vì rủi ro PII và tuân thủ."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Công thức SOM từ dưới lên là gì?",
+   "o": [
+    "TAM × 10%",
+    "Số khách hàng ICP tiếp cận được × ACV",
+    "SAM − TAM",
+    "Doanh thu đối thủ / 2"
+   ],
+   "a": 1,
+   "ex": "200 khách × 100.000 USD ACV = 20 triệu USD như ví dụ trong chương."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Vì sao dự báo TAM/SAM/SOM cho AI cần cập nhật thường xuyên?",
+   "o": [
+    "Vì luật yêu cầu",
+    "Vì chi phí suy luận giảm và tỷ lệ doanh nghiệp chấp nhận AI tăng",
+    "Vì đối thủ thay đổi tên",
+    "Không cần cập nhật"
+   ],
+   "a": 1,
+   "ex": "Hai yếu tố này đổi cả giá bán lẫn số khách hàng tiềm năng."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "multi",
+   "q": "Moat bền của sản phẩm AI thường đến từ đâu?",
+   "o": [
+    "Dữ liệu độc quyền",
+    "Gắn sâu vào quy trình người dùng",
+    "Dùng model nền mới nhất",
+    "UX xử lý tốt lúc AI sai"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "Model nền ai cũng thuê được nên không phải moat.",
+   "why": {
+    "2": "Đối thủ cũng gọi được cùng model đó."
+   }
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "“Chi phí API trên mỗi người dùng có thấp hơn LTV không?” thuộc trụ nào?",
+   "o": [
+    "Desirability",
+    "Feasibility",
+    "Viability"
+   ],
+   "a": 2,
+   "ex": "Đây là câu hỏi về khả năng sống về mặt kinh doanh."
+  },
+  {
+   "id": "my6",
+   "s": 3,
+   "type": "one",
+   "q": "EU AI Act có hiệu lực từ ngày nào?",
+   "o": [
+    "01/08/2024",
+    "02/12/2027",
+    "02/08/2028",
+    "01/01/2026"
+   ],
+   "a": 0,
+   "ex": "Đạo luật có hiệu lực từ 01/08/2024; các nghĩa vụ áp dụng dần theo lộ trình.",
+   "why": {
+    "1": "Theo báo cáo nguồn, đây là mốc cho hệ thống rủi ro cao.",
+    "2": "Theo báo cáo nguồn, đây là mốc cho AI gắn trong sản phẩm có luật chuyên ngành."
+   }
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

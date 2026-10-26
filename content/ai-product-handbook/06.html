@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · Requirements, Prioritization &amp; Roadmapping · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.prd{display:grid;gap:10px;margin:18px 0}
+.prd div{padding:12px 16px;border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:8px;background:var(--bg)}
+.prd b{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+.prd p{margin:6px 0 0;font-size:15.5px}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 06 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần II / 06</div>
+  <h1>Yêu cầu, ưu tiên <i>và roadmap</i></h1>
+  <p class="dek">PRD cho tính năng AI cần thêm gì, POC khác prototype, MVP và pilot ra sao, cách ưu tiên backlog khi có rủi ro dữ liệu và model, và lộ trình phát hành Alpha → Beta → GA.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 06 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>PRD của tính năng AI không chỉ mô tả màn hình. Nó phải ghi rõ ngưỡng chất lượng đo được, luồng xử lý khi AI sai, và mức rủi ro chấp nhận được.</div>
+  <section id="s1">
+    <span class="num">06.1</span>
+    <h2>PRD cho tính năng AI</h2>
+    <p class="gist">Ba phần mới so với PRD thường: guardrails và fallback, tiêu chí chấp nhận định lượng, và eval set.</p>
+<p>Dưới đây là khung PRD rút từ báo cáo nguồn, với ví dụ một trợ lý tra quy trình cho bộ phận chăm sóc khách hàng.</p>
+    <div class="prd">
+      <div><b>1. Vấn đề và mục tiêu</b><p>Điểm đau: nhân viên CSKH mất trung bình 8 phút để tự tra quy trình xử lý ticket trong kho tài liệu nội bộ. Mục tiêu: trợ lý AI trích đúng quy trình và câu trả lời trong dưới 2 giây.</p></div>
+      <div><b>2. Guardrails và fallback</b><p>Chỉ dùng dữ liệu trong kho tài liệu nội bộ (RAG), không tự bịa thông tin ngoài nguồn. Câu hỏi về thông tin nhạy cảm (hợp đồng pháp lý, dữ liệu nhân sự) thì từ chối và chuyển sang chuyên viên phụ trách.</p></div>
+      <div><b>3. Acceptance criteria định lượng</b><p>Groundedness trên golden dataset &gt; 85%. TTFT &lt; 2,0 giây. Hallucination rate &lt; 5%.</p></div>
+    </div>
+    <p>Thêm vào đó, PRD nên dẫn tới eval set đại diện và mức lỗi chấp nhận được (acceptable error rate). Chương 20 có checklist PRD đầy đủ hơn.</p>
+    <div class="take"><small>Ghi nhớ</small>Nếu acceptance criteria của tính năng AI không có con số, đội sẽ cãi nhau về “đủ tốt chưa” tới tận ngày ra mắt.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">06.2</span>
+    <h2>POC, prototype, MVP và pilot</h2>
+    <p class="gist">Bốn giai đoạn kiểm hai loại rủi ro khác nhau: làm được không, và có ai cần không.</p>
+<figure>
+      <div class="fig">
+        <div class="seg" id="stg"><button data-i="0" class="on">POC</button><button data-i="1">Prototype</button><button data-i="2">MVP</button><button data-i="3">Pilot</button></div>
+        <div class="rows" id="stgR" style="margin-top:14px"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Chọn một giai đoạn để xem mục tiêu, phạm vi kỹ thuật và cách đo.</figcaption>
+    </figure>
+    <p>POC và prototype hay bị gộp làm một. POC trả lời câu hỏi kỹ thuật (model có giải được bài toán lõi không), còn prototype trả lời câu hỏi trải nghiệm (người dùng có hiểu và thao tác được không). Một POC thành công chưa nói gì về việc người dùng có muốn sản phẩm.</p>
+  </section>
+
+  <section id="s3">
+    <span class="num">06.3</span>
+    <h2>Ưu tiên backlog</h2>
+    <p class="gist">Ngoài tác động và độ khó, backlog AI cần thêm một trục: rủi ro dữ liệu và model.</p>
+<p>Khi xếp ưu tiên backlog cho sản phẩm AI, cân ba yếu tố. <b>Business impact</b>: tính năng đóng góp bao nhiêu vào doanh thu, giảm chi phí hay trải nghiệm. <b>Technical complexity</b>: khối lượng xử lý dữ liệu, thời gian tính toán, độ phức tạp khi nối RAG/API và tích hợp. <b>Data/model risk</b>: có thiếu dữ liệu không, có rủi ro PII, bịa thông tin hay bias không.</p>
+    <p>Các framework như RICE (Reach × Impact × Confidence / Effort) hay MoSCoW (Must, Should, Could, Won’t) vẫn dùng được. Với AI, trục Confidence trong RICE là chỗ phản ánh rủi ro model: một tính năng chưa chạy thử trên eval set thì không nên được chấm Confidence cao. Chương 19 có bảng so sánh các framework.</p>
+    <div class="take"><small>Ghi nhớ</small>Trong RICE, Confidence của một tính năng AI chỉ nên cao khi đã có số đo trên eval set.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">06.4</span>
+    <h2>Roadmap và phạm vi phát hành</h2>
+    <p class="gist">Alpha nội bộ, Beta nhóm nhỏ để thu dữ liệu thật, rồi GA kèm giám sát tự động.</p>
+<ol>
+      <li><b>Internal testing / Alpha.</b> Thử trong đội phát triển để bắt lỗi kỹ thuật cơ bản, chỉnh prompt và dựng guardrails.</li>
+      <li><b>Beta / Pilot.</b> Mở cho một nhóm người dùng mục tiêu. Trọng tâm là thu tương tác thật để xây golden dataset phục vụ đánh giá kỹ hơn.</li>
+      <li><b>General Availability (GA).</b> Mở cho mọi người dùng, kèm giám sát tự động về latency, chi phí token, độ chính xác và tỷ lệ lỗi.</li>
+    </ol>
+    <p>Một gợi ý từ báo cáo nguồn: đừng lập AI roadmap chỉ theo mốc ngày cố định. Hãy gắn các mốc với ngưỡng chất lượng (quality threshold), ví dụ “mở Beta khi groundedness trên eval set đạt 85%”. Ngày có thể dự kiến, nhưng điều kiện để đi tiếp là con số.</p>
+    <div class="take"><small>Ghi nhớ</small>Mốc roadmap của sản phẩm AI nên là “đạt ngưỡng X”, không chỉ là “đến ngày Y”.</div>
+  </section>
+
+  <div class="vids" data-videos="06"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/07"><span><small>Chương tiếp theo</small><b>07 · AI & LLM Fundamentals</b></span><span>→</span></a>
+
+  <div class="end"><p>Các ngưỡng 85%, 2 giây, 5% trong mục 06.1 là ví dụ trong báo cáo nguồn; ngưỡng phù hợp tùy bài toán và mức rủi ro của bạn.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const STG = [['Thử tính khả thi kỹ thuật của thuật toán hoặc model.', 'Dữ liệu mẫu nhỏ; gọi API model có sẵn hoặc chạy kịch bản thử cơ bản.', 'Model giải được bài toán lõi trong điều kiện thí nghiệm.'],
+ ['Thử giao diện tương tác và luồng trải nghiệm.', 'Công cụ no-code/low-code nối API; dữ liệu giả hoặc tĩnh.', 'Phản hồi định tính của người dùng về luồng thao tác và độ dễ dùng.'],
+ ['Kiểm chứng giá trị trên thị trường với chi phí tối thiểu.', 'Luồng dữ liệu thật, có guardrails cơ bản.', 'Tỷ lệ người dùng quay lại, mức sẵn sàng dùng tính năng trong thực tế.'],
+ ['Vận hành thử ở quy mô giới hạn với người dùng thật.', 'Hệ thống RAG/API hoàn chỉnh, giám sát và log đầy đủ.', 'Đạt KPI về độ chính xác, CSAT và vận hành ổn định.']];
+function stg(i) {stgR.innerHTML = `<div><b>Mục tiêu</b>${STG[i][0]}</div><div><b>Phạm vi kỹ thuật</b>${STG[i][1]}</div><div class="fix"><b>Đo thành công</b>${STG[i][2]}</div>`}
+document.getElementById('stg').onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; stg.call(null, +b.dataset.i); document.querySelectorAll('#stg button').forEach(x => x.classList.toggle('on', x === b))};
+stg(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip06",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/07",
+  "n": "07",
+  "t": "AI & LLM Fundamentals"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "06.1",
+   "t": "PRD cho tính năng AI",
+   "sum": [
+    "PRD AI thêm guardrails, fallback, tiêu chí định lượng.",
+    "Ví dụ: groundedness > 85%, TTFT < 2 s, hallucination < 5%.",
+    "Dẫn tới eval set và mức lỗi chấp nhận được."
+   ],
+   "terms": [
+    "prd",
+    "ac",
+    "guardrails",
+    "fallback",
+    "grounded",
+    "golden",
+    "ttft",
+    "halluc"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "06.2",
+   "t": "POC, prototype, MVP và pilot",
+   "sum": [
+    "POC: khả thi kỹ thuật.",
+    "Prototype: luồng trải nghiệm.",
+    "MVP: giá trị thị trường; Pilot: vận hành thật quy mô nhỏ."
+   ],
+   "terms": [
+    "poc",
+    "prototype",
+    "mvp",
+    "pilot"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "06.3",
+   "t": "Ưu tiên backlog",
+   "sum": [
+    "Ba trục: business impact, technical complexity, data/model risk.",
+    "RICE, MoSCoW vẫn dùng được.",
+    "Confidence trong RICE phản ánh rủi ro model."
+   ],
+   "terms": [
+    "rice",
+    "moscow",
+    "pii",
+    "bias"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "06.4",
+   "t": "Roadmap và phạm vi phát hành",
+   "sum": [
+    "Alpha nội bộ → Beta thu dữ liệu thật → GA có giám sát.",
+    "Beta là nơi xây golden dataset.",
+    "Gắn mốc roadmap với ngưỡng chất lượng."
+   ],
+   "terms": [
+    "roadmap",
+    "ga",
+    "golden",
+    "grounded"
+   ]
+  }
+ ],
+ "terms": {
+  "prd": [
+   "PRD",
+   "Product Requirements Document: tài liệu nêu vấn đề, mục tiêu, phạm vi, luồng và tiêu chí thành công.",
+   "Bản đề bài chung cho cả đội."
+  ],
+  "ac": [
+   "acceptance criteria",
+   "Điều kiện đo được mà một tính năng phải đạt để được coi là xong.",
+   "Vạch đích của một đường chạy."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "fallback": [
+   "fallback",
+   "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
+   "Kế hoạch B khi kế hoạch A trục trặc."
+  ],
+  "grounded": [
+   "groundedness",
+   "Mức độ câu trả lời dựa hoàn toàn vào ngữ cảnh được cung cấp (ví dụ tài liệu RAG), không lấy thông tin trôi nổi.",
+   "Nói có sách, mách có chứng."
+  ],
+  "golden": [
+   "golden dataset",
+   "Bộ dữ liệu đánh giá được chuyên gia gán đáp án chuẩn, dùng làm mốc so sánh cố định giữa các phiên bản.",
+   "Bộ đề thi có đáp án mẫu, dùng chấm mọi lứa học sinh."
+  ],
+  "ttft": [
+   "TTFT",
+   "Time to First Token: thời gian đến khi model trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.",
+   "Lúc người phục vụ mang ly nước ra, trước khi món chính tới."
+  ],
+  "halluc": [
+   "hallucination",
+   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
+   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+  ],
+  "poc": [
+   "POC",
+   "Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.",
+   "Thử xem đất có đóng cọc được không."
+  ],
+  "prototype": [
+   "prototype",
+   "Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.",
+   "Mô hình giấy của căn nhà."
+  ],
+  "mvp": [
+   "MVP",
+   "Minimum Viable Product: bản nhỏ nhất đưa cho người dùng thật để kiểm chứng giá trị.",
+   "Bán thử một món trước khi mở cả thực đơn."
+  ],
+  "pilot": [
+   "pilot",
+   "Chạy thật ở quy mô giới hạn với người dùng thật, có giám sát và log đầy đủ.",
+   "Mở một chi nhánh trước khi mở chuỗi."
+  ],
+  "rice": [
+   "RICE",
+   "Reach × Impact × Confidence / Effort: điểm ưu tiên cho một hạng mục trong backlog.",
+   "Chấm điểm việc nào đáng làm trước bằng bốn câu hỏi."
+  ],
+  "moscow": [
+   "MoSCoW",
+   "Chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này).",
+   "Bốn ngăn trong vali: bắt buộc mang, nên mang, mang nếu còn chỗ, để ở nhà."
+  ],
+  "pii": [
+   "PII",
+   "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
+   "Những thứ đủ để người lạ biết đó là bạn."
+  ],
+  "bias": [
+   "bias",
+   "Thiên lệch có hệ thống trong dữ liệu hoặc model khiến kết quả bất lợi cho một nhóm.",
+   "Cân bị lệch từ trước khi đặt hàng lên."
+  ],
+  "roadmap": [
+   "roadmap",
+   "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
+   "Bản đồ chặng đường, không phải lịch trình từng phút."
+  ],
+  "ga": [
+   "GA",
+   "General Availability: phát hành cho toàn bộ người dùng.",
+   "Khai trương chính thức."
+  ]
+ },
+ "alias": {
+  "prd": [
+   "PRD"
+  ],
+  "ac": [
+   "acceptance criteria",
+   "Acceptance criteria"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "fallback": [
+   "fallback",
+   "Fallback"
+  ],
+  "grounded": [
+   "groundedness",
+   "Groundedness"
+  ],
+  "golden": [
+   "golden dataset",
+   "Golden dataset"
+  ],
+  "ttft": [
+   "TTFT"
+  ],
+  "halluc": [
+   "hallucination",
+   "Hallucination"
+  ],
+  "poc": [
+   "POC"
+  ],
+  "prototype": [
+   "prototype",
+   "Prototype"
+  ],
+  "mvp": [
+   "MVP"
+  ],
+  "pilot": [
+   "pilot",
+   "Pilot"
+  ],
+  "rice": [
+   "RICE"
+  ],
+  "moscow": [
+   "MoSCoW"
+  ],
+  "pii": [
+   "PII"
+  ],
+  "bias": [
+   "bias"
+  ],
+  "roadmap": [
+   "roadmap",
+   "Roadmap"
+  ],
+  "ga": [
+   "GA"
+  ]
+ },
+ "rel": {
+  "prd": [
+   "ac"
+  ],
+  "guardrails": [
+   "pii"
+  ],
+  "grounded": [
+   "halluc"
+  ],
+  "halluc": [
+   "grounded"
+  ],
+  "poc": [
+   "prototype",
+   "mvp"
+  ],
+  "mvp": [
+   "pilot"
+  ],
+  "rice": [
+   "moscow"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "multi",
+   "q": "PRD cho tính năng AI cần thêm những gì so với PRD thường?",
+   "o": [
+    "Guardrails và fallback",
+    "Acceptance criteria định lượng (groundedness, TTFT, hallucination)",
+    "Màu sắc thương hiệu",
+    "Eval set và mức lỗi chấp nhận được"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "Đây là các phần phản ánh hành vi xác suất của model."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "one",
+   "q": "TTFT đo điều gì?",
+   "o": [
+    "Tổng thời gian sinh câu trả lời",
+    "Thời gian tới token đầu tiên",
+    "Số token mỗi giây",
+    "Thời gian huấn luyện"
+   ],
+   "a": 1,
+   "ex": "Time to First Token quyết định cảm giác “nhanh” khi stream."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Giai đoạn nào thử luồng trải nghiệm bằng no-code và dữ liệu giả?",
+   "o": [
+    "POC",
+    "Prototype",
+    "MVP",
+    "Pilot"
+   ],
+   "a": 1,
+   "ex": "Prototype trả lời câu hỏi trải nghiệm, không phải câu hỏi kỹ thuật."
+  },
+  {
+   "id": "my4",
+   "s": 1,
+   "type": "one",
+   "q": "Một POC thành công chứng minh điều gì?",
+   "o": [
+    "Người dùng muốn sản phẩm",
+    "Model giải được bài toán lõi trong điều kiện thí nghiệm",
+    "Sản phẩm có lãi",
+    "Sẵn sàng GA"
+   ],
+   "a": 1,
+   "ex": "POC chỉ kiểm khả thi kỹ thuật."
+  },
+  {
+   "id": "my5",
+   "s": 2,
+   "type": "one",
+   "q": "Trục ưu tiên nào đặc thù cho backlog AI?",
+   "o": [
+    "Business impact",
+    "Technical complexity",
+    "Data/model risk",
+    "Số người trong đội"
+   ],
+   "a": 2,
+   "ex": "Rủi ro thiếu dữ liệu, PII, hallucination, bias là đặc thù của AI."
+  },
+  {
+   "id": "my6",
+   "s": 3,
+   "type": "one",
+   "q": "Mục đích chính của giai đoạn Beta theo chương này?",
+   "o": [
+    "Tăng doanh thu",
+    "Thu tương tác thật để xây golden dataset",
+    "Quảng bá sản phẩm",
+    "Thử giao diện"
+   ],
+   "a": 1,
+   "ex": "Dữ liệu thật từ Beta giúp đánh giá nâng cao trước GA."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

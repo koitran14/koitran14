@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>00 · Lộ trình học · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.map{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.map a{display:grid;grid-template-columns:34px 1fr;align-items:start;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.45;color:var(--body);text-decoration:none}
+.map a:hover{border-color:var(--acc)}
+.map b{font:500 12px/1.7 var(--mono);color:var(--acc);font-weight:500}
+.map small{display:block;color:var(--muted);font-size:12.5px}
+@media(max-width:700px){.map{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 00 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Mở đầu / 00</div>
+  <h1>AI Product <i>Engineer: lộ trình học</i></h1>
+  <p class="dek">Handbook này dành cho ai, bảy phần nói về gì, và nên đọc theo thứ tự nào nếu bạn đang là Software Engineer muốn làm sản phẩm AI.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 00 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Biết xây AI chưa đủ. Một AI Product Engineer phải tìm đúng vấn đề, chọn kiến trúc hợp lý, chứng minh AI chạy đủ tốt và đo được nó tạo ra giá trị gì.</div>
+  <section id="s1">
+    <span class="num">00.1</span>
+    <h2>Handbook này dành cho ai</h2>
+    <p class="gist">Cho người đã biết viết phần mềm và muốn chịu trách nhiệm cho cả kết quả, không chỉ cho phần code.</p>
+<p>Nếu bạn là Software Engineer và đã từng tham gia làm ứng dụng AI, có lẽ bạn quen với việc nhận task: có ticket, có mô tả, làm xong thì đóng. Làm sản phẩm AI đòi hỏi thêm một số việc nằm trước và sau đoạn code đó: hỏi xem vấn đề có đáng giải không, có cần tới AI không, làm sao biết AI trả lời “đủ tốt”, và sau khi ra mắt thì người dùng có thật sự dùng không.</p>
+    <p>Handbook gom các việc đó lại thành 21 chương, chia làm bảy phần. Nội dung dựa trên ba báo cáo tổng hợp về AI Product Engineering & Management (Phần I, II–III, IV–VII), được biên tập lại; mỗi chương kèm danh sách video YouTube liên quan để học tiếp. Ba vai trò hay được nhắc tới trong sách là <b>AI Product Engineer</b>, <b>AI Product Builder</b> và <b>AI Product Manager</b>. Ranh giới giữa chúng không cứng, và chương 14, 18 sẽ nói kỹ hơn.</p>
+    <div class="take"><small>Ghi nhớ</small>Mục tiêu của handbook là giúp bạn chuyển từ “làm đúng task” sang “chọn đúng task và chứng minh nó có giá trị”.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">00.2</span>
+    <h2>Bảy phần trong một trang</h2>
+    <p class="gist">Đi từ tư duy sản phẩm, qua thiết kế và kỹ thuật, tới đo lường, quản trị và một dự án tổng hợp.</p>
+<p>Phần I và II là nền móng sản phẩm: tìm vấn đề, nghiên cứu người dùng và thị trường, rồi biến nó thành chiến lược, yêu cầu và roadmap. Phần III là chỗ bạn tận dụng được nhiều nhất nền tảng kỹ sư: LLM, kiến trúc hệ thống AI, và đánh giá chất lượng. Phần IV nói về đo lường và tăng trưởng sau khi ra mắt. Phần V là các vấn đề của người dẫn dắt sản phẩm: kinh tế, rủi ro, làm việc với các bên và chiến lược dài hạn. Phần VI là phần tra cứu, không cần đọc theo thứ tự. Phần VII ghép mọi thứ lại thành một dự án.</p>
+    <figure>
+      <div class="fig"><div class="map" id="map"></div></div>
+      <figcaption><b>Hình 1</b>Bản đồ 21 chương. Chọn một chương để mở.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s3">
+    <span class="num">00.3</span>
+    <h2>Nên đọc theo thứ tự nào</h2>
+    <p class="gist">Với nền tảng kỹ sư, ưu tiên năm chương giúp bạn đổi cách nghĩ trước, rồi mới mở rộng.</p>
+<p>Không cần đọc tuần tự từ chương 1. Gợi ý dưới đây chia theo ba mức ưu tiên, dành cho người đã quen làm phần mềm và từng đụng tới ứng dụng AI.</p>
+    <table class="tbl">
+      <tr><th>Mức</th><th>Chương</th><th>Lý do</th></tr>
+      <tr><td>P1</td><td>02 · Problem Discovery & User Research</td><td>Chuyển từ thói quen nhận task sang chủ động tìm đúng vấn đề.</td></tr>
+      <tr><td>P1</td><td>05 · Vision, Strategy & Positioning</td><td>Hiểu vì sao sản phẩm nên được xây và nó tạo ra giá trị gì.</td></tr>
+      <tr><td>P1</td><td>06 · Requirements, Prioritization & Roadmapping</td><td>Nối tư duy kỹ thuật với quyết định về phạm vi và thứ tự làm.</td></tr>
+      <tr><td>P1</td><td>09 · AI Evaluation & Reliability</td><td>Năng lực cần có để làm ra sản phẩm AI đáng tin.</td></tr>
+      <tr><td>P1</td><td>10 · Product Analytics</td><td>Đo tác động, thay vì đếm số tính năng đã làm xong.</td></tr>
+      <tr><td>P2</td><td>03, 04, 11, 12, 14</td><td>Bổ sung nghiên cứu thị trường, UX, growth, kinh doanh và giao tiếp.</td></tr>
+      <tr><td>P3</td><td>13, 15–20</td><td>Tư duy chiến lược và bộ tài liệu tra cứu lâu dài.</td></tr>
+    </table>
+    <p>Trang mục lục có nút lọc theo ba mức này, để bạn thấy ngay chương nào nên mở trước.</p>
+    <div class="take"><small>Ghi nhớ</small>P1 trước: 02 → 05 → 06 → 09 → 10. Phần tra cứu (16–20) để dành lúc làm dự án.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">00.4</span>
+    <h2>Cách dùng video và audio</h2>
+    <p class="gist">Video để học sâu thêm sau khi đọc; chọn một đến ba video mỗi chương là đủ.</p>
+<p>Cuối mỗi chương có khối “Video liên quan”. Phần lớn video bằng tiếng Anh; bạn có thể bật phụ đề tự động và dịch sang tiếng Việt trên YouTube. Có hai loại liên kết:</p>
+    <ul>
+      <li><b>Video cụ thể</b>: bấm để phát ngay trong trang. Tiêu đề hiển thị là tiêu đề thật của video trên YouTube.</li>
+      <li><b>Tìm trên YouTube</b>: mở trang kết quả tìm kiếm với từ khóa đã chọn sẵn. Kết quả sẽ có nhiều video; hãy chọn một video hợp trình độ và thời lượng, ưu tiên bài giảng sâu hoặc workshop có ví dụ thật thay vì video giải thích thuật ngữ ngắn.</li>
+    </ul>
+    <p>Trang mục lục có thêm tám audio tổng quan do AI tạo từ cùng chủ đề. Nghe khi đi đường thì tiện, nhưng đừng coi đó là nguồn chính xác tuyệt đối.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Với chương 21, đừng chỉ xem rồi làm theo</span></summary><div>
+      <p>Chương capstone có video hướng dẫn dựng sản phẩm AI từ đầu. Chúng hữu ích để thấy toàn cảnh, nhưng giá trị thật nằm ở việc tự làm: chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</p>
+    </div></details>
+  </section>
+
+  <a class="next-ch" href="/blog/ai-product-handbook/01"><span><small>Chương tiếp theo</small><b>01 · Product Thinking & Product Development Lifecycle</b></span><span>→</span></a>
+
+  <div class="end"><p>Thứ tự ưu tiên P1–P3 là gợi ý cho người có nền tảng Software Engineering, không phải lộ trình bắt buộc.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const MAP = [['01', 'Product Thinking & Lifecycle', 'Phần I'], ['02', 'Problem Discovery & User Research', 'Phần I'], ['03', 'Market Research & Opportunity', 'Phần I'],
+ ['04', 'Product Design & UX cho AI', 'Phần II'], ['05', 'Vision, Strategy & Positioning', 'Phần II'], ['06', 'Requirements & Roadmapping', 'Phần II'],
+ ['07', 'AI & LLM Fundamentals', 'Phần III'], ['08', 'AI System Architecture', 'Phần III'], ['09', 'AI Evaluation & Responsible AI', 'Phần III'],
+ ['10', 'Product Analytics', 'Phần IV'], ['11', 'Launch, Adoption & Growth', 'Phần IV'],
+ ['12', 'Product Economics', 'Phần V'], ['13', 'Risk & Governance', 'Phần V'], ['14', 'Stakeholders & Leadership', 'Phần V'], ['15', 'Advanced Strategy', 'Phần V'],
+ ['16', 'Product Management Glossary', 'Phần VI'], ['17', 'AI Engineering Glossary', 'Phần VI'], ['18', 'Builder & FDE Glossary', 'Phần VI'], ['19', 'Frameworks Cheat Sheet', 'Phần VI'], ['20', 'Documentation Reference', 'Phần VI'],
+ ['21', 'Capstone: từ vấn đề đến launch', 'Phần VII']];
+document.getElementById('map').innerHTML = MAP.map(([n, t, p]) => `<a href="/blog/ai-product-handbook/${n}"><b>${n}</b><span>${t}<small>${p}</small></span></a>`).join('');
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip00",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/01",
+  "n": "01",
+  "t": "Product Thinking & Product Development Lifecycle"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "00.1",
+   "t": "Handbook này dành cho ai",
+   "sum": [
+    "Dành cho Software Engineer muốn làm sản phẩm AI.",
+    "21 chương, bảy phần, dựa trên ba báo cáo tổng hợp.",
+    "Mỗi chương có video liên quan để học tiếp."
+   ],
+   "terms": [
+    "pm",
+    "builder"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "00.2",
+   "t": "Bảy phần trong một trang",
+   "sum": [
+    "I–II: vấn đề, người dùng, chiến lược, yêu cầu.",
+    "III: LLM, kiến trúc, đánh giá.",
+    "IV–V: đo lường, kinh tế, rủi ro, lãnh đạo; VI tra cứu; VII dự án."
+   ],
+   "terms": [
+    "roadmap",
+    "llm"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "00.3",
+   "t": "Nên đọc theo thứ tự nào",
+   "sum": [
+    "Không cần đọc tuần tự.",
+    "P1: 02, 05, 06, 09, 10.",
+    "P2: 03, 04, 11, 12, 14; P3: 13, 15–20."
+   ],
+   "terms": []
+  },
+  {
+   "id": "s4",
+   "n": "00.4",
+   "t": "Cách dùng video và audio",
+   "sum": [
+    "Video cụ thể phát được ngay trong trang.",
+    "Link tìm kiếm cần tự chọn video phù hợp.",
+    "Audio tổng quan do AI tạo, chỉ để tham khảo."
+   ],
+   "terms": []
+  }
+ ],
+ "terms": {
+  "pm": [
+   "AI Product Manager",
+   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
+   "Người chọn đích đến và giải thích vì sao đi đường này."
+  ],
+  "builder": [
+   "AI Product Builder",
+   "Người tự đi từ vấn đề đến sản phẩm AI chạy được: discovery, prototype, tích hợp, đo kết quả.",
+   "Thợ cả vừa vẽ được bản vẽ vừa tự dựng được nhà mẫu."
+  ],
+  "roadmap": [
+   "roadmap",
+   "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
+   "Bản đồ chặng đường, không phải lịch trình từng phút."
+  ],
+  "llm": [
+   "LLM",
+   "Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.",
+   "Người đã đọc gần hết thư viện, nói gì cũng trôi chảy nhưng không phải lúc nào cũng đúng."
+  ]
+ },
+ "alias": {
+  "pm": [
+   "AI Product Manager",
+   "AI PM"
+  ],
+  "builder": [
+   "AI Product Builder"
+  ],
+  "roadmap": [
+   "roadmap",
+   "Roadmap"
+  ],
+  "llm": [
+   "LLM"
+  ]
+ },
+ "rel": {},
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Theo chương này, điều gì phân biệt người làm sản phẩm AI với người chỉ nhận task?",
+   "o": [
+    "Viết code nhanh hơn",
+    "Chịu trách nhiệm cả việc chọn đúng vấn đề và chứng minh giá trị",
+    "Biết nhiều framework hơn",
+    "Không cần đọc tài liệu kỹ thuật"
+   ],
+   "a": 1,
+   "ex": "Người làm sản phẩm AI hỏi vấn đề có đáng giải không, AI có cần không, làm sao biết đủ tốt và người dùng có dùng không."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Phần nào tận dụng nhiều nhất nền tảng Software Engineer?",
+   "o": [
+    "Phần I: Product Foundations",
+    "Phần III: AI Product Engineering",
+    "Phần VI: Glossary",
+    "Phần V: Leadership"
+   ],
+   "a": 1,
+   "ex": "Phần III nói về LLM, kiến trúc hệ thống AI và đánh giá chất lượng, gần nhất với kinh nghiệm kỹ sư."
+  },
+  {
+   "id": "my3",
+   "s": 2,
+   "type": "multi",
+   "q": "Những chương nào nằm trong nhóm ưu tiên P1?",
+   "o": [
+    "02 · Problem Discovery",
+    "09 · AI Evaluation",
+    "16 · PM Glossary",
+    "10 · Product Analytics"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "P1 gồm 02, 05, 06, 09, 10. Chương 16 thuộc nhóm tra cứu P3.",
+   "why": {
+    "2": "Glossary dùng để tra cứu, xếp P3."
+   }
+  },
+  {
+   "id": "my4",
+   "s": 3,
+   "type": "one",
+   "q": "Khi một link là trang tìm kiếm YouTube, nên làm gì?",
+   "o": [
+    "Xem hết mọi video trong kết quả",
+    "Chọn một video hợp trình độ, ưu tiên bài giảng sâu hoặc workshop có ví dụ thật",
+    "Bỏ qua vì không có video cụ thể",
+    "Chỉ xem video ngắn nhất"
+   ],
+   "a": 1,
+   "ex": "Một đến ba video chất lượng mỗi chương là đủ; ưu tiên nội dung có ví dụ thực tế."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

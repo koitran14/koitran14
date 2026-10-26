@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>19 · Product Frameworks &amp; Decision-Making Cheat Sheet · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 19 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 19</div>
+  <h1>Framework <i>và bảng tra quyết định</i></h1>
+  <p class="dek">JTBD, Opportunity Solution Tree, RICE/ICE/MoSCoW, Business Model Canvas, và ba cặp quyết định hay gặp trong sản phẩm AI: RAG hay fine-tuning, precision hay recall, ai chịu trách nhiệm bảo mật.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 19 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Framework giúp nghĩ có hệ thống và nói chung một ngôn ngữ. Nó không quyết định thay bạn.</div>
+  <section id="s1">
+    <span class="num">19.1</span>
+    <h2>Khám phá và mô hình kinh doanh</h2>
+    <p class="gist">Ba framework cho câu hỏi “làm gì, cho ai, kiếm tiền thế nào”.</p>
+<div class="cmp">
+      <div><b>Jobs to Be Done</b>Khách hàng “thuê” sản phẩm để làm một việc có mặt chức năng, cảm xúc, xã hội. Dùng khi phỏng vấn và viết problem statement. Xem chương 02.</div>
+      <div><b>Opportunity Solution Tree</b>Cây của Teresa Torres: gốc là một outcome, các nhánh là cơ hội (nhu cầu, điểm đau), lá là giải pháp và thử nghiệm. Dùng để không nhảy thẳng từ mục tiêu tới giải pháp.</div>
+      <div><b>Business Model Canvas</b>Chín ô của Strategyzer: phân khúc khách hàng, giá trị, kênh, quan hệ, dòng doanh thu, nguồn lực, hoạt động, đối tác, cấu trúc chi phí. Với AI, ô chi phí phải có chi phí suy luận.</div>
+    </div>
+  </section>
+
+  <section id="s2">
+    <span class="num">19.2</span>
+    <h2>RICE, ICE và MoSCoW</h2>
+    <p class="gist">Ba cách ưu tiên backlog, từ chấm điểm chi tiết tới chia ngăn nhanh.</p>
+<figure>
+      <div class="fig">
+        <div class="figbar"><span>Tính điểm RICE và ICE cho một hạng mục</span></div>
+        <div class="calc">
+          <label>Reach (người / quý)<input type="number" id="rR" value="2000" min="0"></label>
+          <label>Impact (0,25 – 3)<input type="number" id="rI" value="1" min="0.25" max="3" step="0.25"></label>
+          <label>Confidence (%)<input type="number" id="rC" value="50" min="0" max="100"></label>
+          <label>Effort (người-tháng)<input type="number" id="rE" value="2" min="0.5" step="0.5"></label>
+          <label>Ease (1–10, cho ICE)<input type="number" id="rS" value="6" min="1" max="10"></label>
+        </div>
+        <div class="out" id="rO"></div>
+      </div>
+      <figcaption><b>Hình 1</b>RICE = Reach × Impact × Confidence / Effort. ICE = Impact × Confidence × Ease (ở đây Impact và Confidence quy về thang 10).</figcaption>
+    </figure>
+    <p>MoSCoW chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này). Hợp khi cần chốt phạm vi một bản phát hành với stakeholder, hơn là xếp hạng một backlog dài. Với tính năng AI, giữ Confidence thấp cho tới khi có số đo trên eval set.</p>
+  </section>
+
+  <section id="s3">
+    <span class="num">19.3</span>
+    <h2>Ba cặp quyết định trong sản phẩm AI</h2>
+    <p class="gist">Bảng tra nhanh cho những quyết định lặp lại nhiều nhất.</p>
+<table class="tbl">
+      <tr><th>Quyết định</th><th>Chọn bên trái khi</th><th>Chọn bên phải khi</th></tr>
+      <tr><td>RAG / Fine-tuning</td><td>Tri thức thay đổi liên tục, cần trích nguồn, chi phí ban đầu thấp</td><td>Cần cố định định dạng đầu ra (JSON, schema), đổi hẳn văn phong, hoặc giảm token trong prompt</td></tr>
+      <tr><td>Precision / Recall</td><td>False positive gây thiệt hại tài chính hoặc uy tín nghiêm trọng</td><td>False negative đe dọa an toàn, tính mạng hoặc pháp lý</td></tr>
+      <tr><td>Bảo mật của cloud / trong cloud</td><td>Phần cứng GPU, datacenter, hypervisor: nhà cung cấp cloud lo</td><td>Dữ liệu PII, quyền IAM, mã hóa, guardrails: doanh nghiệp lo</td></tr>
+    </table>
+    <div class="take"><small>Ghi nhớ</small>Ghi quyết định đã chọn và lý do vào decision log, kể cả khi quyết định có vẻ hiển nhiên.</div>
+  </section>
+
+  <div class="vids" data-videos="19"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/20"><span><small>Chương tiếp theo</small><b>20 · Product Documentation & Communication Reference</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+function rice() {const R = +rR.value || 0, I = +rI.value || 0, C = (+rC.value || 0) / 100, E = Math.max(0.5, +rE.value || 0.5), S = +rS.value || 0;
+ rO.innerHTML = `<div><small>RICE</small><b>${Math.round(R * I * C / E).toLocaleString('en-US')}</b></div><div><small>ICE</small><b>${Math.round(I / 3 * 10 * C * 10 * S)}</b></div>`}
+[rR, rI, rC, rE, rS].forEach(x => x.oninput = rice); rice();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip19",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/20",
+  "n": "20",
+  "t": "Product Documentation & Communication Reference"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "19.1",
+   "t": "Khám phá và mô hình kinh doanh",
+   "sum": [
+    "JTBD: việc khách hàng cần làm.",
+    "Opportunity Solution Tree: outcome → cơ hội → giải pháp.",
+    "Business Model Canvas: chín ô, nhớ chi phí suy luận."
+   ],
+   "terms": [
+    "jtbd",
+    "ost",
+    "bmc"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "19.2",
+   "t": "RICE, ICE và MoSCoW",
+   "sum": [
+    "RICE: Reach × Impact × Confidence / Effort.",
+    "ICE: Impact × Confidence × Ease, nhanh hơn.",
+    "MoSCoW: chốt phạm vi một bản phát hành."
+   ],
+   "terms": [
+    "rice",
+    "ice",
+    "moscow"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "19.3",
+   "t": "Ba cặp quyết định trong sản phẩm AI",
+   "sum": [
+    "RAG khi tri thức đổi; fine-tuning khi cần định dạng, văn phong.",
+    "Precision khi báo nhầm đắt; recall khi bỏ sót đắt.",
+    "Cloud lo hạ tầng; doanh nghiệp lo dữ liệu, quyền, guardrails."
+   ],
+   "terms": [
+    "rag",
+    "finetune",
+    "precision",
+    "recall",
+    "shared"
+   ]
+  }
+ ],
+ "terms": {
+  "jtbd": [
+   "Jobs to Be Done",
+   "Khung nhìn coi khách hàng “thuê” sản phẩm để hoàn thành một việc; việc đó có mặt chức năng, cảm xúc và xã hội.",
+   "Người ta không cần mũi khoan, người ta cần cái lỗ trên tường."
+  ],
+  "ost": [
+   "Opportunity Solution Tree",
+   "Cây của Teresa Torres nối một outcome với các cơ hội (nhu cầu, điểm đau) rồi tới giải pháp và thử nghiệm.",
+   "Sơ đồ cây: gốc là mục tiêu, cành là cơ hội, lá là giải pháp."
+  ],
+  "bmc": [
+   "Business Model Canvas",
+   "Khung chín ô mô tả mô hình kinh doanh: khách hàng, giá trị, kênh, quan hệ, doanh thu, nguồn lực, hoạt động, đối tác, chi phí.",
+   "Bản vẽ một trang của cả cỗ máy kiếm tiền."
+  ],
+  "rice": [
+   "RICE",
+   "Reach × Impact × Confidence / Effort: điểm ưu tiên cho một hạng mục trong backlog.",
+   "Chấm điểm việc nào đáng làm trước bằng bốn câu hỏi."
+  ],
+  "ice": [
+   "ICE",
+   "Impact × Confidence × Ease: cách chấm ưu tiên nhanh hơn RICE.",
+   "RICE bản rút gọn, dùng khi cần quyết nhanh."
+  ],
+  "moscow": [
+   "MoSCoW",
+   "Chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này).",
+   "Bốn ngăn trong vali: bắt buộc mang, nên mang, mang nếu còn chỗ, để ở nhà."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
+   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+  ],
+  "precision": [
+   "precision",
+   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+  ],
+  "recall": [
+   "recall",
+   "Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
+   "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
+  ],
+  "shared": [
+   "shared responsibility model",
+   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật CỦA đám mây, khách hàng lo bảo mật TRONG đám mây.",
+   "Chủ tòa nhà lo cửa chính và thang máy; khóa cửa căn hộ là việc của bạn."
+  ]
+ },
+ "alias": {
+  "jtbd": [
+   "Jobs to Be Done",
+   "JTBD"
+  ],
+  "ost": [
+   "Opportunity Solution Tree"
+  ],
+  "bmc": [
+   "Business Model Canvas"
+  ],
+  "rice": [
+   "RICE"
+  ],
+  "ice": [
+   "ICE"
+  ],
+  "moscow": [
+   "MoSCoW"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Fine-tuning"
+  ],
+  "precision": [
+   "precision",
+   "Precision"
+  ],
+  "recall": [
+   "recall",
+   "Recall"
+  ],
+  "shared": [
+   "shared responsibility model",
+   "Shared Responsibility Model"
+  ]
+ },
+ "rel": {
+  "rice": [
+   "ice",
+   "moscow"
+  ],
+  "rag": [
+   "finetune"
+  ],
+  "finetune": [
+   "rag"
+  ],
+  "precision": [
+   "recall"
+  ],
+  "recall": [
+   "precision"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Opportunity Solution Tree giúp tránh điều gì?",
+   "o": [
+    "Viết code sai",
+    "Nhảy thẳng từ mục tiêu tới giải pháp mà bỏ qua cơ hội",
+    "Tốn chi phí cloud",
+    "Lỗi bảo mật"
+   ],
+   "a": 1,
+   "ex": "Cây buộc đi qua tầng cơ hội trước khi chọn giải pháp."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Reach 1.000, Impact 2, Confidence 50%, Effort 2. RICE bằng bao nhiêu?",
+   "o": [
+    "500",
+    "1.000",
+    "2.000",
+    "250"
+   ],
+   "a": 0,
+   "ex": "1.000 × 2 × 0,5 / 2 = 500."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "MoSCoW hợp nhất với việc gì?",
+   "o": [
+    "Xếp hạng backlog 200 mục",
+    "Chốt phạm vi một bản phát hành với stakeholder",
+    "Tính chi phí token",
+    "Đo retention"
+   ],
+   "a": 1,
+   "ex": "Chia ngăn Must/Should/Could/Won’t giúp chốt phạm vi nhanh."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "one",
+   "q": "Cần model luôn trả JSON đúng schema nội bộ. Nên nghiêng về?",
+   "o": [
+    "RAG",
+    "Fine-tuning"
+   ],
+   "a": 1,
+   "ex": "Cố định định dạng đầu ra là điểm mạnh của fine-tuning."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

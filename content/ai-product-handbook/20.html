@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>20 · Product Documentation &amp; Communication Reference · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 20 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 20</div>
+  <h1>Tài liệu <i>và giao tiếp sản phẩm</i></h1>
+  <p class="dek">Checklist PRD cho tính năng AI, cách viết roadmap, và mẫu decision log, product review để kỹ thuật và kinh doanh đọc cùng một trang.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 20 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Tài liệu tốt giúp kỹ thuật và kinh doanh không hiểu lệch nhau. Với AI, tài liệu phải nói rõ những con số mà “đủ tốt” dựa vào.</div>
+  <section id="s1">
+    <span class="num">20.1</span>
+    <h2>Checklist PRD cho tính năng AI</h2>
+    <p class="gist">Sáu mục, mỗi mục một câu hỏi phải trả lời được trước khi build.</p>
+<figure>
+      <div class="fig">
+        <ul class="chk" id="prdC">
+          <li><label><input type="checkbox"><span><b>Mục tiêu và bài toán</b>Giá trị tạo ra là gì, và vì sao cần AI xác suất thay vì phần mềm quy tắc?</span></label></li>
+          <li><label><input type="checkbox"><span><b>Phạm vi tự động hóa và handoff</b>Tác vụ nào AI tự xử lý; luồng chuyển cho người khi độ tin cậy thấp ra sao?</span></label></li>
+          <li><label><input type="checkbox"><span><b>Eval criteria</b>Đường dẫn tới eval set đại diện; ngưỡng precision, recall, latency bắt buộc để ra mắt.</span></label></li>
+          <li><label><input type="checkbox"><span><b>Guardrails và bảo mật</b>Quy tắc chặn prompt injection, lọc nội dung độc hại, quy trình PII redaction.</span></label></li>
+          <li><label><input type="checkbox"><span><b>Ngân sách suy luận và TCO</b>Chi phí tối đa cho mỗi tác vụ thành công ($/task).</span></label></li>
+          <li><label><input type="checkbox"><span><b>Hồ sơ tuân thủ</b>Mức rủi ro theo EU AI Act; thông điệp minh bạch trên giao diện.</span></label></li>
+        </ul>
+        <div class="meter"><b id="prdM"></b></div>
+      </div>
+      <figcaption><b>Hình 1</b>Đánh dấu các mục PRD của bạn đã có. Trạng thái không được lưu.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Một PRD AI thiếu mục eval criteria thì chưa thể bắt đầu build.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">20.2</span>
+    <h2>Roadmap dễ đọc</h2>
+    <p class="gist">Roadmap là công cụ giao tiếp, không phải lịch trình chi tiết.</p>
+<p>Roadmap tốt trả lời được: đang giải vấn đề gì, theo thứ tự nào, vì sao. Với sản phẩm AI, thêm một cột “điều kiện đi tiếp”: ngưỡng chất lượng hoặc chi phí phải đạt trước khi chuyển sang mốc sau (chương 06). Tách roadmap cho người ngoài đội (theo outcome, theo quý) khỏi kế hoạch chi tiết của đội (theo task, theo sprint), vì hai nhóm người đọc cần mức chi tiết khác nhau.</p>
+  </section>
+
+  <section id="s3">
+    <span class="num">20.3</span>
+    <h2>Decision log và product review</h2>
+    <p class="gist">Hai loại tài liệu nhỏ giúp tổ chức nhớ và học.</p>
+<p>Decision log ghi bối cảnh, giả định, dữ liệu lúc đó và lý do chấp nhận rủi ro (mẫu ở chương 14). Product review là buổi xem lại định kỳ: so outcome thật với giả định trong PRD, xem eval có còn đại diện cho người dùng hiện tại không, và quyết định tiếp tục, điều chỉnh hay dừng.</p>
+    <div class="code"><pre>## Product review · Trợ lý tra quy trình · Quý 4
+Giả định trong PRD:  Thời gian tra giảm từ 8 phút xuống dưới 1 phút.
+Kết quả đo được:     …
+Eval còn đại diện?   …  (tỷ lệ câu hỏi mới chưa có trong golden dataset)
+Chi phí $/task:       …
+Quyết định:          Tiếp tục / Điều chỉnh / Dừng · Lý do: …</pre></div>
+  </section>
+
+  <div class="vids" data-videos="20"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/21"><span><small>Chương tiếp theo</small><b>21 · Capstone: From Problem Discovery to AI Product Launch</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+function prdm() {const all = prdC.querySelectorAll('input'), ok = [...all].filter(x => x.checked).length; prdM.style.width = ok / all.length * 100 + '%'}
+prdC.onchange = prdm; prdm();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip20",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/21",
+  "n": "21",
+  "t": "Capstone: From Problem Discovery to AI Product Launch"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "20.1",
+   "t": "Checklist PRD cho tính năng AI",
+   "sum": [
+    "Mục tiêu, phạm vi, handoff.",
+    "Eval criteria, guardrails, bảo mật.",
+    "Ngân sách $/task, hồ sơ tuân thủ EU AI Act."
+   ],
+   "terms": [
+    "prd",
+    "handoff",
+    "evalset",
+    "guardrails",
+    "injection",
+    "redaction",
+    "cpst",
+    "euaiact"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "20.2",
+   "t": "Roadmap dễ đọc",
+   "sum": [
+    "Nói rõ vấn đề, thứ tự, lý do.",
+    "Thêm điều kiện đi tiếp theo ngưỡng chất lượng.",
+    "Tách roadmap đối ngoại khỏi kế hoạch chi tiết."
+   ],
+   "terms": [
+    "roadmap"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "20.3",
+   "t": "Decision log và product review",
+   "sum": [
+    "Decision log cho từng quyết định.",
+    "Product review so outcome với giả định.",
+    "Kiểm eval còn đại diện, quyết định tiếp tục hay dừng."
+   ],
+   "terms": [
+    "decisionlog",
+    "golden"
+   ]
+  }
+ ],
+ "terms": {
+  "prd": [
+   "PRD",
+   "Product Requirements Document: tài liệu nêu vấn đề, mục tiêu, phạm vi, luồng và tiêu chí thành công.",
+   "Bản đề bài chung cho cả đội."
+  ],
+  "handoff": [
+   "handoff",
+   "Chuyển cuộc hội thoại hoặc tác vụ từ AI sang người, kèm ngữ cảnh để người dùng không phải kể lại.",
+   "Bàn giao ca trực kèm sổ ghi chép."
+  ],
+  "evalset": [
+   "eval set",
+   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
+   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "injection": [
+   "prompt injection",
+   "Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.",
+   "Lá thư giả mạo kẹp trong xấp hồ sơ, ghi “hãy chuyển tiền cho người cầm thư”."
+  ],
+  "redaction": [
+   "PII redaction",
+   "Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.",
+   "Bôi đen thông tin cá nhân trước khi photo hồ sơ."
+  ],
+  "cpst": [
+   "cost per successful task",
+   "Tổng chi phí chia cho số tác vụ được giải quyết trọn vẹn (đã trừ câu trả lời sai, phải thử lại).",
+   "Giá mỗi chiếc bánh bán được, đã tính cả những mẻ hỏng."
+  ],
+  "euaiact": [
+   "EU AI Act",
+   "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
+   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+  ],
+  "roadmap": [
+   "roadmap",
+   "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
+   "Bản đồ chặng đường, không phải lịch trình từng phút."
+  ],
+  "decisionlog": [
+   "decision log",
+   "Nhật ký ghi lại quyết định quan trọng: bối cảnh, giả định, dữ liệu lúc đó, lý do chấp nhận rủi ro.",
+   "Sổ tay thuyền trưởng."
+  ],
+  "golden": [
+   "golden dataset",
+   "Bộ dữ liệu đánh giá được chuyên gia gán đáp án chuẩn, dùng làm mốc so sánh cố định giữa các phiên bản.",
+   "Bộ đề thi có đáp án mẫu, dùng chấm mọi lứa học sinh."
+  ]
+ },
+ "alias": {
+  "prd": [
+   "PRD"
+  ],
+  "handoff": [
+   "handoff",
+   "Handoff"
+  ],
+  "evalset": [
+   "eval set",
+   "eval sets"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "injection": [
+   "prompt injection",
+   "Prompt injection"
+  ],
+  "redaction": [
+   "PII redaction"
+  ],
+  "cpst": [
+   "cost per successful task"
+  ],
+  "euaiact": [
+   "EU AI Act"
+  ],
+  "roadmap": [
+   "roadmap",
+   "Roadmap"
+  ],
+  "decisionlog": [
+   "decision log",
+   "Decision log"
+  ],
+  "golden": [
+   "golden dataset",
+   "Golden dataset"
+  ]
+ },
+ "rel": {
+  "prd": [
+   "evalset"
+  ],
+  "evalset": [
+   "golden"
+  ],
+  "guardrails": [
+   "injection"
+  ],
+  "injection": [
+   "guardrails"
+  ],
+  "golden": [
+   "evalset"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "multi",
+   "q": "Checklist PRD AI gồm những mục nào?",
+   "o": [
+    "Eval criteria",
+    "Ngân sách $/task",
+    "Hồ sơ tuân thủ",
+    "Danh sách đối thủ"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Danh sách đối thủ thuộc nghiên cứu thị trường, không nằm trong checklist này."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Cột nào nên thêm vào roadmap sản phẩm AI?",
+   "o": [
+    "Tên người làm",
+    "Điều kiện đi tiếp theo ngưỡng chất lượng hoặc chi phí",
+    "Số dòng code",
+    "Màu sắc"
+   ],
+   "a": 1,
+   "ex": "Mốc AI nên gắn với ngưỡng đo được."
+  },
+  {
+   "id": "my3",
+   "s": 2,
+   "type": "one",
+   "q": "Product review nên so sánh điều gì?",
+   "o": [
+    "Code cũ và mới",
+    "Outcome thật với giả định trong PRD",
+    "Lương các thành viên",
+    "Số commit"
+   ],
+   "a": 1,
+   "ex": "Review giúp quyết định tiếp tục, điều chỉnh hay dừng."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

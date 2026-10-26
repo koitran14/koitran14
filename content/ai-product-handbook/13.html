@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 · AI Product Risk &amp; Governance · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;margin-top:6px}
+.tl:before{content:"";position:absolute;left:12px;right:12px;top:15px;border-top:1px dashed var(--line)}
+.tl button{position:relative;display:grid;justify-items:start;gap:4px;border:0;background:none;cursor:pointer;text-align:left;font:500 13px var(--sans);color:var(--body);padding:0 6px}
+.tl button i{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font:normal 500 11px var(--mono);color:var(--muted)}
+.tl button.on i{border-color:var(--acc);background:var(--acc);color:var(--bg)}
+.tl button small{font:400 12px var(--mono);color:var(--muted)}
+@media(max-width:700px){.tl{grid-template-columns:1fr 1fr;gap:14px}.tl:before{display:none}}
+.srm{display:grid;gap:8px;margin:14px 0}
+.srm div{padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.srm div:first-child{border-color:var(--acc)}
+.srm b{font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.srm div:first-child b{color:var(--acc)}
+.srm ul{margin:8px 0 0;padding-left:18px;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 13 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 13</div>
+  <h1>Rủi ro <i>và quản trị sản phẩm AI</i></h1>
+  <p class="dek">Các loại rủi ro mới của AI, lộ trình EU AI Act theo báo cáo nguồn, shared responsibility model trên AWS, và các lớp bảo vệ dữ liệu: PII redaction, Macie, PrivateLink, mã hóa, IAM, Bedrock Guardrails.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 13 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Governance không phải phanh làm chậm sản phẩm. Nó là hệ thống phanh tốt giúp chạy nhanh mà không lao xuống vực.</div>
+  <section id="s1">
+    <span class="num">13.1</span>
+    <h2>Các loại rủi ro mới</h2>
+    <p class="gist">Hallucination, bias, lộ PII và vi phạm khung pháp lý: những rủi ro phần mềm thường ít gặp.</p>
+<p>AI PM phải bảo vệ doanh nghiệp trước một nhóm rủi ro mới: model bịa thông tin (hallucination), thiên lệch thuật toán (bias), rò rỉ dữ liệu cá nhân (PII leakage), và không tuân thủ các khung pháp lý đang được siết chặt trên toàn cầu. Mỗi rủi ro cần một chủ sở hữu, một cách đo, và một biện pháp giảm thiểu được ghi vào roadmap, không để tới lúc audit mới làm.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">13.2</span>
+    <h2>Lộ trình EU AI Act</h2>
+    <p class="gist">Có hiệu lực từ 01/08/2024, áp dụng dần theo mức rủi ro.</p>
+<figure>
+      <div class="fig"><div class="tl" id="tl"></div><div class="panel" id="tlP"></div></div>
+      <figcaption><b>Hình 1</b>Các mốc theo báo cáo nguồn. Chọn một mốc để xem chi tiết.</figcaption>
+    </figure>
+    <p>Báo cáo nguồn nhắc tới một khung bổ trợ gọi là “AI Omnibus” (có hiệu lực từ tháng 07/2026) làm thay đổi lộ trình tuân thủ cho hệ thống rủi ro cao. Phần này chưa được đối chiếu với văn bản chính thức; hãy kiểm tra trên EUR-Lex trước khi dùng cho kế hoạch thật. Với hệ thống rủi ro cao, các yêu cầu được nhắc tới gồm hồ sơ kiểm toán dữ liệu, minh bạch thuật toán và cơ chế giám sát của con người.</p>
+    <div class="take"><small>Ghi nhớ</small>Phân loại mức rủi ro theo EU AI Act ngay từ lúc thẩm định cơ hội, nếu sản phẩm có thể có người dùng ở châu Âu.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">13.3</span>
+    <h2>Shared responsibility model</h2>
+    <p class="gist">AWS lo bảo mật CỦA đám mây; khách hàng lo bảo mật TRONG đám mây.</p>
+<div class="srm">
+      <div><b>Khách hàng · Security IN the cloud</b><ul><li>Dữ liệu khách hàng và PII redaction</li><li>Quản lý truy cập IAM, cấu hình model</li><li>Tường lửa, mã hóa (KMS), Bedrock Guardrails</li></ul></div>
+      <div><b>AWS · Security OF the cloud</b><ul><li>Hạ tầng điện toán, GPU/TPU vật lý</li><li>Bảo mật trung tâm dữ liệu, lớp ảo hóa (hypervisor)</li><li>An toàn của các dịch vụ managed (Bedrock, SageMaker)</li></ul></div>
+    </div>
+    <p>Ranh giới này có trên mọi cloud lớn, chỉ khác tên dịch vụ. Hiểu sai ranh giới là nguồn gốc của nhiều sự cố: dữ liệu bị lộ không phải vì cloud yếu, mà vì bucket cấu hình sai hoặc guardrails chưa bật.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">13.4</span>
+    <h2>Các lớp bảo vệ dữ liệu</h2>
+    <p class="gist">Gắn thẳng vào kiến trúc, không để thành tài liệu chính sách nằm trong ngăn kéo.</p>
+<ul class="chk-plain">
+      <li><b>PII redaction</b>: tự phát hiện và che CCCD, số thẻ, email, số điện thoại trước khi dữ liệu vào tập huấn luyện hay kho vector.</li>
+      <li><b>Amazon Macie</b>: dùng machine learning quét S3 bucket để phát hiện PII hoặc dữ liệu nhạy cảm bị lộ.</li>
+      <li><b>AWS PrivateLink</b>: truy vấn giữa ứng dụng và dịch vụ AI (như Bedrock) đi trong mạng nội bộ AWS, không qua internet công cộng.</li>
+      <li><b>Mã hóa và phân quyền</b>: mã hóa dữ liệu lúc lưu (AWS KMS) và lúc truyền (TLS 1.3), phân quyền tối thiểu qua AWS IAM.</li>
+      <li><b>Bedrock Guardrails</b>: lớp rào chắn ngay trên model, phát hiện hallucination, chặn prompt injection, lọc nội dung độc hại và thiên lệch.</li>
+    </ul>
+  </section>
+
+  <div class="vids" data-videos="13"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/14"><span><small>Chương tiếp theo</small><b>14 · Stakeholder Management & Communication</b></span><span>→</span></a>
+
+  <div class="end"><p>Các mốc sau 01/08/2024 và phần “AI Omnibus” lấy theo báo cáo nguồn, chưa đối chiếu văn bản chính thức. Đây là thông tin chung, không phải tư vấn pháp lý.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const TL = [['01/08/2024', 'Có hiệu lực', 'EU AI Act (Regulation (EU) 2024/1689) chính thức có hiệu lực, quản lý theo mức rủi ro.'],
+ ['02/08/2026', 'Thực thi xử phạt', 'Theo báo cáo nguồn, Văn phòng AI (AI Office) và cơ quan quốc gia bắt đầu thực thi quyền xử phạt tài chính.'],
+ ['02/12/2027', 'Hệ thống rủi ro cao', 'Theo báo cáo nguồn, áp dụng đầy đủ nghĩa vụ cho AI rủi ro cao: tuyển dụng và quản trị nhân sự, nhận diện và phân loại sinh trắc học, hạ tầng thiết yếu, đánh giá giáo dục. Yêu cầu hồ sơ kiểm toán dữ liệu, minh bạch thuật toán, giám sát của con người.'],
+ ['02/08/2028', 'AI trong sản phẩm quy chuẩn', 'Theo báo cáo nguồn, áp dụng cho AI gắn như thành phần an toàn trong các sản phẩm thuộc diện luật chuyên ngành của EU.']];
+tl.innerHTML = TL.map((t, i) => `<button data-i="${i}"><i>${i + 1}</i>${t[1]}<small>${t[0]}</small></button>`).join('');
+tl.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; tl.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); const t = TL[+b.dataset.i]; tlP.innerHTML = `<h5>${t[0]} · ${t[1]}</h5>${t[2]}`};
+tl.querySelector('button').click();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip13",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/14",
+  "n": "14",
+  "t": "Stakeholder Management & Communication"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "13.1",
+   "t": "Các loại rủi ro mới",
+   "sum": [
+    "Hallucination, bias, lộ PII, không tuân thủ.",
+    "Mỗi rủi ro cần chủ sở hữu, cách đo, biện pháp.",
+    "Đưa vào roadmap từ đầu."
+   ],
+   "terms": [
+    "halluc",
+    "bias",
+    "pii",
+    "governance"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "13.2",
+   "t": "Lộ trình EU AI Act",
+   "sum": [
+    "01/08/2024: có hiệu lực.",
+    "02/08/2026: bắt đầu thực thi xử phạt.",
+    "Theo báo cáo: 02/12/2027 rủi ro cao; 02/08/2028 sản phẩm có luật chuyên ngành."
+   ],
+   "terms": [
+    "euaiact",
+    "hitl"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "13.3",
+   "t": "Shared responsibility model",
+   "sum": [
+    "AWS: hạ tầng, datacenter, hypervisor, dịch vụ managed.",
+    "Khách hàng: dữ liệu, IAM, cấu hình, mã hóa, guardrails.",
+    "Sự cố thường do cấu hình phía khách hàng."
+   ],
+   "terms": [
+    "shared",
+    "redaction",
+    "guardrails"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "13.4",
+   "t": "Các lớp bảo vệ dữ liệu",
+   "sum": [
+    "PII redaction trước khi vào model, log, vector DB.",
+    "Macie quét S3; PrivateLink tránh internet công cộng.",
+    "KMS, TLS 1.3, IAM; Bedrock Guardrails trên model."
+   ],
+   "terms": [
+    "redaction",
+    "injection",
+    "ml"
+   ]
+  }
+ ],
+ "terms": {
+  "halluc": [
+   "hallucination",
+   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
+   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+  ],
+  "bias": [
+   "bias",
+   "Thiên lệch có hệ thống trong dữ liệu hoặc model khiến kết quả bất lợi cho một nhóm.",
+   "Cân bị lệch từ trước khi đặt hàng lên."
+  ],
+  "pii": [
+   "PII",
+   "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
+   "Những thứ đủ để người lạ biết đó là bạn."
+  ],
+  "governance": [
+   "AI governance",
+   "Chính sách, quy trình và vai trò để quản lý rủi ro, trách nhiệm và tuân thủ khi dùng AI.",
+   "Nội quy và người trực ban của một xưởng máy."
+  ],
+  "euaiact": [
+   "EU AI Act",
+   "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
+   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+  ],
+  "shared": [
+   "shared responsibility model",
+   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật CỦA đám mây, khách hàng lo bảo mật TRONG đám mây.",
+   "Chủ tòa nhà lo cửa chính và thang máy; khóa cửa căn hộ là việc của bạn."
+  ],
+  "redaction": [
+   "PII redaction",
+   "Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.",
+   "Bôi đen thông tin cá nhân trước khi photo hồ sơ."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "injection": [
+   "prompt injection",
+   "Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.",
+   "Lá thư giả mạo kẹp trong xấp hồ sơ, ghi “hãy chuyển tiền cho người cầm thư”."
+  ],
+  "ml": [
+   "machine learning",
+   "Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.",
+   "Học nấu ăn bằng cách nếm nhiều món, không phải đọc từng công thức."
+  ]
+ },
+ "alias": {
+  "halluc": [
+   "hallucination",
+   "Hallucination"
+  ],
+  "bias": [
+   "bias"
+  ],
+  "pii": [
+   "PII"
+  ],
+  "governance": [
+   "AI governance",
+   "governance"
+  ],
+  "euaiact": [
+   "EU AI Act"
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Human-in-the-loop"
+  ],
+  "shared": [
+   "shared responsibility model",
+   "Shared Responsibility Model"
+  ],
+  "redaction": [
+   "PII redaction"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "injection": [
+   "prompt injection",
+   "Prompt injection"
+  ],
+  "ml": [
+   "machine learning",
+   "Machine learning"
+  ]
+ },
+ "rel": {
+  "pii": [
+   "redaction"
+  ],
+  "redaction": [
+   "pii"
+  ],
+  "guardrails": [
+   "injection",
+   "pii"
+  ],
+  "injection": [
+   "guardrails"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "multi",
+   "q": "Rủi ro nào là “thế hệ mới” với sản phẩm AI?",
+   "o": [
+    "Hallucination",
+    "Bias thuật toán",
+    "Rò rỉ PII qua model",
+    "Lỗi chính tả trong UI"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Lỗi chính tả là rủi ro phần mềm thông thường."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "Theo báo cáo nguồn, từ ngày nào áp dụng nghĩa vụ cho hệ thống AI rủi ro cao?",
+   "o": [
+    "01/08/2024",
+    "02/08/2026",
+    "02/12/2027",
+    "02/08/2028"
+   ],
+   "a": 2,
+   "ex": "Mốc này cần đối chiếu văn bản chính thức."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "multi",
+   "q": "Lĩnh vực nào được nêu là rủi ro cao?",
+   "o": [
+    "Tuyển dụng, nhân sự",
+    "Sinh trắc học",
+    "Gợi ý bài hát",
+    "Giáo dục"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "Gợi ý bài hát không nằm trong danh sách."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "one",
+   "q": "Theo shared responsibility model, ai chịu trách nhiệm cấu hình IAM?",
+   "o": [
+    "AWS",
+    "Khách hàng",
+    "Nhà cung cấp model",
+    "Cả hai không ai"
+   ],
+   "a": 1,
+   "ex": "IAM thuộc bảo mật TRONG đám mây."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "AWS PrivateLink giải quyết vấn đề gì?",
+   "o": [
+    "Che PII",
+    "Giữ lưu lượng tới dịch vụ AI trong mạng nội bộ AWS",
+    "Giảm chi phí token",
+    "Chấm điểm model"
+   ],
+   "a": 1,
+   "ex": "Dữ liệu không đi qua internet công cộng."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

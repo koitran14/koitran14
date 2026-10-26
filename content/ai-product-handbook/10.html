@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 · Product Analytics &amp; Decision-Making · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+input[type=range]{width:100%;accent-color:var(--acc)}
+.cm{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:12px}
+.cm div{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-size:13px}
+.cm div b{display:block;font:500 20px var(--mono);color:var(--fg)}
+.cm div.g b{color:var(--acc)}.cm div.r b{color:var(--bad)}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 10 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần IV / 10</div>
+  <h1>Product analytics <i>và quyết định dựa trên dữ liệu</i></h1>
+  <p class="dek">Đo sản phẩm AI khác đo phần mềm thường ra sao, cân precision với recall, giữ chất lượng model qua vòng đời ML, và khung đánh giá bốn bước. Kèm North Star Metric, cohort và funnel.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 10 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Đo sản phẩm AI là đo liên tục: chất lượng có trôi không, latency và chi phí trên mỗi truy vấn ra sao, và người dùng có thật sự được lợi không.</div>
+  <section id="s1">
+    <span class="num">10.1</span>
+    <h2>Đo phần mềm thường và đo sản phẩm AI</h2>
+    <p class="gist">Phần mềm thường đo luồng đúng/sai. Sản phẩm AI đo tỷ lệ trả lời đúng trong không gian đầu ra mở, và theo dõi nó thay đổi theo thời gian.</p>
+<p>Với phần mềm truyền thống, sản phẩm chạy đúng thiết kế hoặc có bug; chỉ số chính là uptime, tỷ lệ lỗi HTTP, số bug, thời gian tải trang. Với sản phẩm AI, cần theo dõi thêm: tỷ lệ phản hồi chính xác khi đầu ra là văn bản mở; drift của model khi dữ liệu đầu vào hoặc ý nghĩa của dữ liệu thay đổi (data drift, concept drift); latency suy luận; và chi phí điện toán trên mỗi tác vụ thành công.</p>
+    <p>Ở tầng sản phẩm, các khái niệm analytics quen thuộc vẫn cần: <b>North Star Metric</b> là một chỉ số phản ánh giá trị người dùng nhận được (ví dụ số ticket được giải quyết đúng nhờ AI mỗi tuần); <b>funnel</b> cho thấy người dùng rơi ở bước nào; <b>cohort analysis</b> theo dõi từng nhóm người dùng bắt đầu cùng thời điểm, để biết retention của người mới tháng này có tốt hơn tháng trước không.</p>
+    <div class="take"><small>Ghi nhớ</small>Chỉ số kỹ thuật (độ chính xác, latency) và chỉ số sản phẩm (retention, North Star) phải đặt cạnh nhau trên cùng một dashboard.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">10.2</span>
+    <h2>Precision hay recall</h2>
+    <p class="gist">Hai chỉ số kéo ngược nhau. Chọn ưu tiên bên nào là quyết định về chi phí của mỗi loại sai.</p>
+<p>Precision = TP / (TP + FP): trong những lần model báo “có”, bao nhiêu lần đúng. Ưu tiên precision khi false positive đắt: tự duyệt khoản vay, phát hiện gian lận giao dịch lớn, tự ký hợp đồng. Đổi lại, hệ thống bỏ sót nhiều hơn và cần quy trình thủ công dự phòng.</p>
+    <p>Recall = TP / (TP + FN): trong những trường hợp “có” thật, model bắt được bao nhiêu. Ưu tiên recall khi false negative nghiêm trọng: chẩn đoán tổn thương qua ảnh y khoa, quét mã độc, lọc nội dung vi phạm pháp luật. Đổi lại, cảnh báo giả tăng và cần thêm người rà soát.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Kéo ngưỡng quyết định của model</span><span id="thV"></span></div>
+        <input type="range" id="th" min="5" max="95" value="50" aria-label="Ngưỡng">
+        <div class="cm" id="cm"></div>
+        <div class="out" id="pr"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Bộ dữ liệu giả lập 200 mẫu, 40 mẫu dương tính thật. Ngưỡng cao: ít báo nhầm, sót nhiều. Ngưỡng thấp: bắt được nhiều, báo nhầm tăng.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Trước khi chỉnh ngưỡng, hỏi: một false positive tốn bao nhiêu, một false negative tốn bao nhiêu?</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">10.3</span>
+    <h2>Giữ chất lượng qua vòng đời ML</h2>
+    <p class="gist">Model cần dữ liệu gán nhãn liên tục và vòng phản hồi để cập nhật khi thực tế thay đổi.</p>
+<p>Để giữ hiệu năng model qua thời gian, cần thu và gán nhãn dữ liệu ở quy mô lớn. Báo cáo nguồn lấy ví dụ AWS SageMaker Ground Truth: quy trình gán nhãn tự động kết hợp người (human-in-the-loop), giúp đội dựng dữ liệu huấn luyện và đánh giá chất lượng cao, và lập feedback loop để cập nhật model mỗi khi phát hiện lệch so với dữ liệu thực tế.</p>
+    <p>Ở phía sản phẩm, feedback loop có thể đơn giản như nút thích/không thích, hoặc cho người dùng sửa câu trả lời ngay trong giao diện. Mỗi lần sửa là một mẫu dữ liệu có nhãn.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">10.4</span>
+    <h2>Khung đánh giá model bốn bước</h2>
+    <p class="gist">Eval set đại diện, tiêu chí tường minh, đo tự động qua mỗi phiên bản, và chuyên gia chấm định kỳ.</p>
+<ol>
+      <li><b>Eval set đại diện.</b> Bộ benchmark phản ánh đúng phân phối dữ liệu người dùng thật, bắt buộc có edge case nguy hiểm và adversarial prompt.</li>
+      <li><b>Tiêu chí tường minh.</b> Thay chỉ số chung chung bằng bộ tiêu chí nhiều chiều cho mỗi câu trả lời: factuality, completeness, latency, format compliance, tone & style, hallucination rate.</li>
+      <li><b>Đo tự động qua phiên bản.</b> Dựng pipeline CI/CD cho AI để tự chạy bộ eval (LLM-as-a-judge hoặc test tự động) mỗi khi đổi model nền, prompt, hoặc cấu hình kho tri thức RAG.</li>
+      <li><b>Chuyên gia chấm định kỳ.</b> Domain expert rà các câu trả lời có confidence thấp hoặc thuộc chủ đề nhạy cảm, làm căn cứ hiệu chỉnh lại bộ chấm tự động.</li>
+    </ol>
+    <div class="take"><small>Ghi nhớ</small>Đổi prompt cũng là một lần release. Chạy eval trước khi merge, như chạy unit test.</div>
+  </section>
+
+  <div class="vids" data-videos="10"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/11"><span><small>Chương tiếp theo</small><b>11 · Experimentation, Launch & Growth</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+// 200 synthetic cases: 40 positives scored high-ish, 160 negatives scored low-ish, overlapping in the middle
+const rnd = (s => () => (s = (s * 16807) % 2147483647) / 2147483647)(7);
+const CASES = [...Array(40)].map(() => [1, Math.min(99, 35 + rnd() * 60)]).concat([...Array(160)].map(() => [0, Math.max(1, rnd() * 70)]));
+function cmu() {const t = +th.value, c = {tp: 0, fp: 0, fn: 0, tn: 0};
+ CASES.forEach(([y, s]) => c[s >= t ? (y ? 'tp' : 'fp') : (y ? 'fn' : 'tn')]++);
+ thV.textContent = 'ngưỡng ' + t;
+ cm.innerHTML = `<div class="g"><b>${c.tp}</b>True positive · bắt đúng</div><div class="r"><b>${c.fp}</b>False positive · báo nhầm</div><div class="r"><b>${c.fn}</b>False negative · bỏ sót</div><div class="g"><b>${c.tn}</b>True negative · bỏ qua đúng</div>`;
+ const p = c.tp + c.fp ? c.tp / (c.tp + c.fp) : 0, r = c.tp / (c.tp + c.fn);
+ pr.innerHTML = `<div><small>Precision</small><b>${Math.round(p * 100)}%</b></div><div><small>Recall</small><b>${Math.round(r * 100)}%</b></div>`}
+th.oninput = cmu; cmu();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip10",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/11",
+  "n": "11",
+  "t": "Experimentation, Launch & Growth"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "10.1",
+   "t": "Đo phần mềm thường và đo sản phẩm AI",
+   "sum": [
+    "Phần mềm thường: uptime, lỗi, bug.",
+    "AI: độ chính xác đầu ra mở, drift, latency, chi phí mỗi tác vụ.",
+    "North Star, funnel, cohort vẫn cần."
+   ],
+   "terms": [
+    "drift",
+    "nsm",
+    "funnel",
+    "cohort",
+    "retention"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "10.2",
+   "t": "Precision hay recall",
+   "sum": [
+    "Precision = TP / (TP + FP).",
+    "Recall = TP / (TP + FN).",
+    "Ngưỡng quyết định dịch chuyển cán cân giữa hai chỉ số."
+   ],
+   "terms": [
+    "precision",
+    "recall",
+    "fp",
+    "fn"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "10.3",
+   "t": "Giữ chất lượng qua vòng đời ML",
+   "sum": [
+    "Gán nhãn quy mô lớn, có người tham gia.",
+    "Feedback loop để cập nhật khi có drift.",
+    "Nút đánh giá, ô sửa câu trả lời là nguồn dữ liệu."
+   ],
+   "terms": [
+    "hitl",
+    "drift"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "10.4",
+   "t": "Khung đánh giá model bốn bước",
+   "sum": [
+    "Eval set đại diện, có edge case.",
+    "Tiêu chí: factuality, completeness, latency, format, tone, hallucination.",
+    "CI/CD chạy eval mỗi lần đổi; chuyên gia hiệu chỉnh định kỳ."
+   ],
+   "terms": [
+    "evalset",
+    "edge",
+    "judge",
+    "confidence"
+   ]
+  }
+ ],
+ "terms": {
+  "drift": [
+   "drift",
+   "Chất lượng mô hình giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
+   "Bản đồ in năm ngoái, đường đã mở thêm vài lối mới."
+  ],
+  "nsm": [
+   "North Star Metric",
+   "Một chỉ số cốt lõi phản ánh giá trị sản phẩm mang lại cho người dùng, dùng để định hướng cả đội.",
+   "Sao Bắc Đẩu: đi đâu cũng nhìn về nó để chỉnh hướng."
+  ],
+  "funnel": [
+   "funnel",
+   "Chuỗi bước người dùng cần đi qua để đạt một mục tiêu, kèm tỷ lệ rơi rớt ở mỗi bước.",
+   "Cái phễu: miệng rộng, đáy hẹp."
+  ],
+  "cohort": [
+   "cohort analysis",
+   "Phân tích theo nhóm người dùng bắt đầu cùng thời điểm để xem hành vi của họ thay đổi ra sao theo thời gian.",
+   "Theo dõi từng khóa học sinh thay vì cả trường."
+  ],
+  "retention": [
+   "retention",
+   "Tỷ lệ người dùng còn quay lại sau một khoảng thời gian.",
+   "Bao nhiêu khách quay lại quán tuần sau."
+  ],
+  "precision": [
+   "precision",
+   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+  ],
+  "recall": [
+   "recall",
+   "Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
+   "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
+  ],
+  "fp": [
+   "false positive",
+   "Mô hình báo dương tính nhưng thực tế âm tính (cảnh báo giả).",
+   "Chuông báo cháy kêu khi chỉ có người nướng bánh."
+  ],
+  "fn": [
+   "false negative",
+   "Mô hình báo âm tính nhưng thực tế dương tính (bỏ sót).",
+   "Nhà cháy mà chuông không kêu."
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+  ],
+  "evalset": [
+   "eval set",
+   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
+   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+  ],
+  "edge": [
+   "edge case",
+   "Tình huống hiếm, nằm ở rìa của đầu vào, dễ làm hệ thống hỏng.",
+   "Khách gọi món không có trong thực đơn."
+  ],
+  "judge": [
+   "LLM-as-a-judge",
+   "Dùng một LLM chấm điểm câu trả lời của model khác theo tiêu chí cho trước.",
+   "Nhờ một giám khảo chấm bài theo barem."
+  ],
+  "confidence": [
+   "confidence score",
+   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Câu “chắc 90%” của một người bạn."
+  ]
+ },
+ "alias": {
+  "drift": [
+   "drift"
+  ],
+  "nsm": [
+   "North Star Metric"
+  ],
+  "funnel": [
+   "funnel"
+  ],
+  "cohort": [
+   "cohort"
+  ],
+  "retention": [
+   "retention",
+   "Retention"
+  ],
+  "precision": [
+   "precision",
+   "Precision"
+  ],
+  "recall": [
+   "recall",
+   "Recall"
+  ],
+  "fp": [
+   "false positive"
+  ],
+  "fn": [
+   "false negative"
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Human-in-the-loop"
+  ],
+  "evalset": [
+   "eval set",
+   "eval sets"
+  ],
+  "edge": [
+   "edge case"
+  ],
+  "judge": [
+   "LLM-as-a-judge"
+  ],
+  "confidence": [
+   "confidence score",
+   "confidence"
+  ]
+ },
+ "rel": {
+  "retention": [
+   "cohort"
+  ],
+  "precision": [
+   "recall",
+   "fp"
+  ],
+  "recall": [
+   "precision",
+   "fn"
+  ],
+  "fp": [
+   "precision"
+  ],
+  "fn": [
+   "recall"
+  ],
+  "evalset": [
+   "edge"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "multi",
+   "q": "Chỉ số nào đặc thù cho sản phẩm AI so với phần mềm thường?",
+   "o": [
+    "Drift của model",
+    "Chi phí điện toán trên mỗi tác vụ thành công",
+    "Tỷ lệ phản hồi đúng trong đầu ra mở",
+    "Thời gian tải trang"
+   ],
+   "a": [
+    0,
+    1,
+    2
+   ],
+   "ex": "Thời gian tải trang là chỉ số phần mềm thường."
+  },
+  {
+   "id": "my2",
+   "s": 1,
+   "type": "one",
+   "q": "TP = 30, FP = 10, FN = 20. Precision là bao nhiêu?",
+   "o": [
+    "60%",
+    "75%",
+    "50%",
+    "40%"
+   ],
+   "a": 1,
+   "ex": "30 / (30 + 10) = 75%."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Cùng số liệu TP = 30, FN = 20, recall là bao nhiêu?",
+   "o": [
+    "60%",
+    "75%",
+    "50%",
+    "40%"
+   ],
+   "a": 0,
+   "ex": "30 / (30 + 20) = 60%."
+  },
+  {
+   "id": "my4",
+   "s": 1,
+   "type": "one",
+   "q": "Quét mã độc nên ưu tiên chỉ số nào?",
+   "o": [
+    "Precision",
+    "Recall"
+   ],
+   "a": 1,
+   "ex": "Bỏ sót mã độc nguy hiểm hơn báo nhầm."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "Khi nào pipeline CI/CD cho AI nên chạy lại eval?",
+   "o": [
+    "Chỉ khi đổi model nền",
+    "Khi đổi model nền, prompt, hoặc cấu hình RAG",
+    "Mỗi tháng một lần",
+    "Khi người dùng phàn nàn"
+   ],
+   "a": 1,
+   "ex": "Cả ba loại thay đổi đều có thể làm chất lượng đổi."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

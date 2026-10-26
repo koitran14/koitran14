@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Product Design &amp; UX cho sản phẩm AI · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+input[type=range]{width:100%;accent-color:var(--acc)}
+.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.lanes div{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:13.5px;line-height:1.45;color:var(--muted);transition:all .25s}
+.lanes div b{display:block;font:500 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.lanes div.on{border-color:var(--acc);color:var(--fg);background:var(--acc-soft)}
+@media(max-width:700px){.lanes{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 04 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần II / 04</div>
+  <h1>Product Design <i>và UX cho sản phẩm AI</i></h1>
+  <p class="dek">Thiết kế cho một hệ thống không lúc nào cũng đúng: kiến trúc thông tin theo xác suất, user flow có fallback, design thinking để lọc bài toán, human-in-the-loop và trust calibration.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 04 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>UX của sản phẩm AI chủ yếu là quản lý sự không chắc chắn: đặt đúng kỳ vọng, cho người dùng sửa và từ chối, và xử lý lúc AI sai một cách an toàn.</div>
+  <section id="s1">
+    <span class="num">04.1</span>
+    <h2>UX khi đầu ra không cố định</h2>
+    <p class="gist">Phần mềm thường được kiểm thử đúng/sai. Tính năng AI được đo bằng tỷ lệ câu trả lời chấp nhận được trên một tập mẫu.</p>
+<table class="tbl">
+      <tr><th></th><th>Tính năng truyền thống</th><th>Tính năng AI</th></tr>
+      <tr><td>Cách chạy</td><td>Deterministic: chạy theo logic viết sẵn, phản hồi nhất quán</td><td>Probabilistic: dự đoán hoặc sinh nội dung từ dữ liệu, đầu ra có độ biến thiên</td></tr>
+      <tr><td>Hành vi</td><td>Cùng thao tác luôn ra cùng kết quả</td><td>Phản hồi khác nhau theo ngữ cảnh, có thể đổi khi model được cập nhật</td></tr>
+      <tr><td>Kiểm thử</td><td>Pass/fail</td><td>Tỷ lệ câu trả lời đúng hoặc chấp nhận được trên một tập mẫu</td></tr>
+    </table>
+    <p>Khác biệt này đi thẳng vào information architecture và interaction design. Kiến trúc thông tin không thể giả định một luồng dữ liệu tuyến tính; nó phải hiển thị kết quả dự đoán theo lớp, kèm tín hiệu về độ tin cậy. Thiết kế tương tác phải cho người dùng đánh giá, sửa, duyệt hoặc từ chối kết quả, thay vì buộc họ chấp nhận nguyên văn những gì máy đưa ra.</p>
+    <div class="take"><small>Ghi nhớ</small>Mỗi đầu ra AI trên màn hình nên đi kèm một cách để người dùng sửa hoặc bỏ nó.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">04.2</span>
+    <h2>User flow, wireframe và prototype</h2>
+    <p class="gist">User flow của tính năng AI phải vẽ sẵn nhánh “AI sai” và nhánh “AI không chắc”.</p>
+<p>Một user flow cho tính năng AI có ba phần đặc thù:</p>
+    <ol>
+      <li><b>Điểm nhập và đầu vào.</b> Giao diện thu thập yêu cầu: prompt gợi ý, bộ lọc ngữ cảnh, các trường dữ liệu rõ ràng để model dễ xử lý.</li>
+      <li><b>Nhánh fallback.</b> Khi confidence của model xuống dưới ngưỡng an toàn, hệ thống chuyển sang câu trả lời dự phòng, hỏi thêm thông tin, hoặc chuyển sang xử lý thủ công, thay vì đưa ra thông tin bịa.</li>
+      <li><b>Điểm duyệt cho dữ liệu nhạy cảm.</b> Với giao dịch tài chính, dữ liệu y tế, thông tin cá nhân, đặt một review checkpoint rõ ràng để người kiểm tra trước khi hệ thống thực hiện hành động.</li>
+    </ol>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Kéo để đổi confidence của câu trả lời</span><span id="cfV"></span></div>
+        <input type="range" id="cf" min="0" max="100" value="82" aria-label="Confidence">
+        <div class="lanes" id="cfL"></div>
+        <div class="panel" id="cfP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Một luồng có ngưỡng: trên 75% hiển thị kèm nguồn, 50–75% hỏi lại người dùng, dưới 50% chuyển cho người. Các ngưỡng chỉ là ví dụ.</figcaption>
+    </figure>
+    <p>Ở giai đoạn đầu, dựng prototype sớm bằng công cụ no-code hoặc gọi thẳng API của nhà cung cấp model. AI PM và designer tự tay thử, thấy được tính khả thi, phát hiện edge case và giới hạn của model trước khi bỏ nhiều nguồn lực để làm thật.</p>
+    <div class="take"><small>Ghi nhớ</small>Vẽ nhánh lỗi trước nhánh thành công. Nhánh lỗi mới quyết định người dùng có tin sản phẩm không.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">04.3</span>
+    <h2>Design thinking như một bộ lọc</h2>
+    <p class="gist">Dùng design thinking để loại những chỗ AI không tạo thêm giá trị so với quy tắc cố định.</p>
+<p>Trong sản phẩm AI, design thinking giúp chặn việc gắn AI tràn lan. Có hai bộ lọc. Thứ nhất, phân biệt bài toán thật sự cần năng lực học máy hay sinh nội dung với bài toán chỉ cần rule-based: nếu IF-THEN giải được với chi phí thấp và đúng 100%, AI là thừa. Thứ hai, thấu cảm bằng dữ liệu thật: đọc support ticket, phỏng vấn sâu để tìm tác vụ lặp lại. Báo cáo nguồn lấy ví dụ đặt lại mật khẩu hay tải hóa đơn: phổ biến, lặp lại nhiều, hợp để tự động hóa bằng AI.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">04.4</span>
+    <h2>Human-in-the-loop và trust calibration</h2>
+    <p class="gist">Thiết kế để người dùng tin AI vừa đủ: không quá tin mà chủ quan, không quá nghi mà bỏ dùng.</p>
+<p>Trust calibration là căn chỉnh niềm tin. Quá tin, người dùng bỏ qua lỗi; quá nghi, họ thôi dùng. Hai công cụ chính:</p>
+    <p><b>Human-in-the-loop.</b> Với kịch bản rủi ro cao hoặc dữ liệu nhạy cảm, không trao toàn quyền tự động cho AI. Ví dụ với yêu cầu hoàn tiền hay phê duyệt truy cập dữ liệu cá nhân, AI phân tích, tổng hợp và đề xuất; quyết định cuối cùng là của người.</p>
+    <p><b>Minh bạch và cảnh báo.</b> Nói rõ người dùng đang làm việc với AI. Với phản hồi mang tính dự đoán, hiển thị mức confidence hoặc nhắc người dùng kiểm tra lại thông tin quan trọng trước khi dùng. Bộ People + AI Guidebook của Google PAIR có thêm nhiều mẫu thiết kế cho phần này.</p>
+    <div class="take"><small>Ghi nhớ</small>AI đề xuất, người quyết định, ở mọi chỗ mà một lần sai là quá đắt.</div>
+  </section>
+
+  <div class="vids" data-videos="04"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/05"><span><small>Chương tiếp theo</small><b>05 · Product Vision, Strategy & Positioning</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const LANE = [['≥ 75%', 'Hiển thị câu trả lời', 'Kèm trích nguồn để người dùng tự kiểm.'], ['50–75%', 'Hỏi lại người dùng', 'Đề nghị làm rõ câu hỏi hoặc chọn một trong vài cách hiểu.'], ['< 50%', 'Chuyển cho người', 'Tóm tắt ngữ cảnh, handoff cho nhân viên, không đoán.']];
+cfL.innerHTML = LANE.map(l => `<div><b>${l[0]}</b>${l[1]}</div>`).join('');
+function cfu() {const v = +cf.value, k = v >= 75 ? 0 : v >= 50 ? 1 : 2; cfV.textContent = 'confidence ' + v + '%';
+ [...cfL.children].forEach((d, i) => d.classList.toggle('on', i === k)); cfP.innerHTML = `<h5>${LANE[k][1]}</h5>${LANE[k][2]}`}
+cf.oninput = cfu; cfu();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip04",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/05",
+  "n": "05",
+  "t": "Product Vision, Strategy & Positioning"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "04.1",
+   "t": "UX khi đầu ra không cố định",
+   "sum": [
+    "Tính năng AI đo bằng tỷ lệ chấp nhận được, không phải pass/fail.",
+    "Hiển thị kết quả kèm tín hiệu độ tin cậy.",
+    "Cho người dùng đánh giá, sửa, duyệt, từ chối."
+   ],
+   "terms": [
+    "deterministic",
+    "probabilistic"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "04.2",
+   "t": "User flow, wireframe và prototype",
+   "sum": [
+    "Ba phần đặc thù: đầu vào, fallback, điểm duyệt.",
+    "Dưới ngưỡng confidence thì hỏi thêm hoặc chuyển cho người.",
+    "Prototype sớm bằng no-code hoặc API để tìm edge case."
+   ],
+   "terms": [
+    "fallback",
+    "confidence",
+    "prototype",
+    "edge",
+    "halluc"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "04.3",
+   "t": "Design thinking như một bộ lọc",
+   "sum": [
+    "Lọc 1: cần AI hay quy tắc là đủ.",
+    "Lọc 2: dữ liệu thật từ ticket và phỏng vấn.",
+    "Tác vụ lặp lại, rủi ro thấp là ứng viên tốt."
+   ],
+   "terms": []
+  },
+  {
+   "id": "s4",
+   "n": "04.4",
+   "t": "Human-in-the-loop và trust calibration",
+   "sum": [
+    "Trust calibration: tin vừa đủ.",
+    "Human-in-the-loop cho quyết định rủi ro cao.",
+    "Nói rõ là AI, hiển thị confidence, nhắc kiểm tra lại."
+   ],
+   "terms": [
+    "trust",
+    "hitl",
+    "confidence"
+   ]
+  }
+ ],
+ "terms": {
+  "deterministic": [
+   "deterministic",
+   "Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.",
+   "Máy bán nước: bấm nút số 3 lần nào cũng ra đúng lon số 3."
+  ],
+  "probabilistic": [
+   "probabilistic",
+   "Hệ thống đưa ra dự đoán hoặc sinh nội dung theo xác suất; cùng một đầu vào có thể cho những đầu ra khác nhau.",
+   "Hỏi một người bạn cùng một câu hai lần, ý giống nhau nhưng câu chữ mỗi lần một khác."
+  ],
+  "fallback": [
+   "fallback",
+   "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
+   "Kế hoạch B khi kế hoạch A trục trặc."
+  ],
+  "confidence": [
+   "confidence score",
+   "Mức tự tin mô hình gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
+   "Câu “chắc 90%” của một người bạn."
+  ],
+  "prototype": [
+   "prototype",
+   "Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.",
+   "Mô hình giấy của căn nhà."
+  ],
+  "edge": [
+   "edge case",
+   "Tình huống hiếm, nằm ở rìa của đầu vào, dễ làm hệ thống hỏng.",
+   "Khách gọi món không có trong thực đơn."
+  ],
+  "halluc": [
+   "hallucination",
+   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
+   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+  ],
+  "trust": [
+   "trust calibration",
+   "Thiết kế để người dùng tin AI đúng mức: không tin mù quáng, cũng không bỏ hẳn.",
+   "Biết khi nào nên nghe GPS, khi nào nên nhìn biển báo."
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+  ]
+ },
+ "alias": {
+  "deterministic": [
+   "deterministic"
+  ],
+  "probabilistic": [
+   "probabilistic",
+   "xác suất"
+  ],
+  "fallback": [
+   "fallback",
+   "Fallback"
+  ],
+  "confidence": [
+   "confidence score",
+   "confidence"
+  ],
+  "prototype": [
+   "prototype",
+   "Prototype"
+  ],
+  "edge": [
+   "edge case"
+  ],
+  "halluc": [
+   "hallucination",
+   "Hallucination"
+  ],
+  "trust": [
+   "trust calibration",
+   "Trust calibration"
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Human-in-the-loop"
+  ]
+ },
+ "rel": {
+  "deterministic": [
+   "probabilistic"
+  ],
+  "probabilistic": [
+   "deterministic",
+   "halluc"
+  ],
+  "fallback": [
+   "hitl",
+   "confidence"
+  ],
+  "hitl": [
+   "fallback",
+   "trust"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Chất lượng tính năng AI được đo thế nào?",
+   "o": [
+    "Pass/fail như phần mềm thường",
+    "Tỷ lệ câu trả lời đúng hoặc chấp nhận được trên một tập mẫu",
+    "Số dòng code",
+    "Số lần demo thành công"
+   ],
+   "a": 1,
+   "ex": "Vì đầu ra biến thiên, cần đo theo tỷ lệ trên tập mẫu."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "one",
+   "q": "Interaction design cho nội dung AI sinh ra nên làm gì?",
+   "o": [
+    "Buộc người dùng chấp nhận nguyên văn",
+    "Cho người dùng đánh giá, sửa, duyệt hoặc từ chối",
+    "Ẩn hoàn toàn việc có AI",
+    "Chỉ hiển thị khi đúng 100%"
+   ],
+   "a": 1,
+   "ex": "Người dùng cần quyền kiểm soát đầu ra của máy."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Khi confidence xuống dưới ngưỡng an toàn, hệ thống nên làm gì?",
+   "o": [
+    "Vẫn trả lời cho nhanh",
+    "Trả lời dự phòng, hỏi thêm, hoặc chuyển sang xử lý thủ công",
+    "Tắt tính năng",
+    "Tăng temperature"
+   ],
+   "a": 1,
+   "ex": "Đây là nhánh fallback, tránh đưa thông tin bịa."
+  },
+  {
+   "id": "my4",
+   "s": 1,
+   "type": "one",
+   "q": "Vì sao nên dựng prototype sớm bằng no-code hoặc API?",
+   "o": [
+    "Để khỏi phải viết code production",
+    "Để thấy tính khả thi, edge case và giới hạn model trước khi đầu tư lớn",
+    "Để thay thế user research",
+    "Để demo cho nhà đầu tư"
+   ],
+   "a": 1,
+   "ex": "Prototype sớm giảm rủi ro trước khi bỏ nguồn lực làm thật."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "Trust calibration nhắm tới điều gì?",
+   "o": [
+    "Người dùng tin AI tuyệt đối",
+    "Người dùng tin AI đúng mức, không chủ quan cũng không bỏ dùng",
+    "Giấu lỗi của AI",
+    "Luôn hiển thị cảnh báo đỏ"
+   ],
+   "a": 1,
+   "ex": "Quá tin thì bỏ qua lỗi, quá nghi thì thôi dùng."
+  },
+  {
+   "id": "my6",
+   "s": 3,
+   "type": "one",
+   "q": "Với yêu cầu hoàn tiền, vai trò hợp lý của AI là gì?",
+   "o": [
+    "Tự quyết và chuyển tiền",
+    "Phân tích, tổng hợp, đề xuất; người duyệt cuối",
+    "Không được tham gia",
+    "Chỉ gửi email xin lỗi"
+   ],
+   "a": 1,
+   "ex": "Rủi ro cao thì dùng human-in-the-loop."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

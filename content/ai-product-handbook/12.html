@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12 · Product Economics &amp; Business Strategy · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 12 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 12</div>
+  <h1>Kinh tế học <i>của sản phẩm AI</i></h1>
+  <p class="dek">Vì sao chi phí biên của AI không về 0, bốn thành phần chi phí cần theo dõi, ba cách tối ưu token, khung Build vs. Buy vs. Partner, và bức tranh thu nhập AI PM trong báo cáo nguồn.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 12 / 21</span><span>6 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>SaaS thường có chi phí biên gần 0. Sản phẩm AI trả tiền cho mỗi lượt dùng, nên một sản phẩm được yêu thích vẫn có thể lỗ nếu không quản lý token và TCO.</div>
+  <section id="s1">
+    <span class="num">12.1</span>
+    <h2>Chi phí biên không về 0</h2>
+    <p class="gist">Mỗi truy vấn của người dùng là một hóa đơn nhỏ. Tăng trưởng mà không kiểm soát chi phí có thể làm lỗ nặng hơn.</p>
+<p>Bốn thành phần chi phí cần theo dõi:</p>
+    <ul>
+      <li><b>Inference cost</b>: tiền trả cho GPU/TPU hoặc nhà cung cấp API (như Amazon Bedrock) mỗi lần model xử lý và sinh kết quả.</li>
+      <li><b>Cost per successful task</b>: tổng chi phí hạ tầng và dữ liệu chia cho số tác vụ được giải quyết trọn vẹn, đã loại câu sai, câu bịa, lần phải thử lại. Đây là chỉ số tài chính thật.</li>
+      <li><b>Chi phí ngữ cảnh</b>: duy trì context window, tạo embedding, lưu và truy vấn vector DB.</li>
+      <li><b>TCO</b>: tổng chi phí sở hữu, gồm CapEx/OpEx hạ tầng, gán nhãn dữ liệu, tuyển và vận hành đội kỹ sư AI, kiểm định an toàn, bảo hiểm rủi ro pháp lý.</li>
+    </ul>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Chi phí mỗi tác vụ thành công</span></div>
+        <div class="calc">
+          <label>Chi phí mỗi lần gọi (USD)<input type="number" id="kC" value="0.01" min="0" step="0.001"></label>
+          <label>Tỷ lệ trả lời dùng được (%)<input type="number" id="kS" value="70" min="1" max="100"></label>
+          <label>Số lần gọi trung bình mỗi tác vụ<input type="number" id="kT" value="1.5" min="1" step="0.1"></label>
+        </div>
+        <div class="out" id="kO"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Giá mỗi lần gọi rẻ chưa chắc tác vụ rẻ: tỷ lệ thành công thấp và phải gọi lại nhiều lần đều làm giá thật tăng. Số liệu là giả định.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Đo chi phí trên mỗi tác vụ thành công, không phải trên mỗi lần gọi API.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">12.2</span>
+    <h2>Ba cách tối ưu token</h2>
+    <p class="gist">Nén prompt, cache, và định tuyến model theo độ khó.</p>
+<ol>
+      <li><b>Prompt compression.</b> Bỏ chữ thừa, sắp lại cấu trúc prompt để giảm token đầu vào mà không mất ngữ cảnh.</li>
+      <li><b>Embedding và prompt caching.</b> Lưu sẵn phản hồi hoặc embedding của câu hỏi phổ biến, trả từ cache thay vì gọi lại LLM.</li>
+      <li><b>Model routing.</b> Dùng model nhỏ, đã tinh chỉnh cho việc đơn giản (như phân loại intent), chỉ chuyển câu hỏi phức tạp lên foundation model lớn.</li>
+    </ol>
+    <p>Ba cách này cộng dồn được. Một hệ thống CSKH điển hình có nhiều câu hỏi lặp lại, nên cache thường cho hiệu quả lớn nhất với ít công sức nhất; routing cần eval cẩn thận để model nhỏ không làm tụt chất lượng ở những câu khó bị phân loại nhầm là dễ.</p>
+  </section>
+
+  <section id="s3">
+    <span class="num">12.3</span>
+    <h2>Build, buy hay partner</h2>
+    <p class="gist">Mua API để ra mắt nhanh; tự xây khi cần tùy biến sâu, quy mô lớn hoặc kiểm soát dữ liệu tuyệt đối.</p>
+<p><b>Buy / partner (ví dụ Amazon Bedrock).</b> Dùng ngay các foundation model hàng đầu qua API, không phải quản lý phần cứng. Hợp với giai đoạn validation, POC, hoặc tính năng không phải lợi thế cạnh tranh cốt lõi.</p>
+    <p><b>Build (ví dụ tự triển khai model mã nguồn mở trên Amazon SageMaker AI).</b> Tự quản lý GPU, huấn luyện và triển khai. Đổi lại được kiểm soát dữ liệu, tùy biến trọng số và có thể rẻ hơn khi lưu lượng rất lớn, nhưng tốn CapEx ban đầu và cần đội MLOps giỏi.</p>
+    <p>Một cách nghĩ hay dùng: bắt đầu bằng buy để học nhanh, đo lưu lượng và chi phí thật, rồi mới quyết định có đáng build cho những phần đã ổn định và tốn nhiều tiền nhất hay không.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">12.4</span>
+    <h2>Thu nhập AI PM trong báo cáo nguồn</h2>
+    <p class="gist">Báo cáo nguồn dẫn một loạt số liệu lương. Chúng chưa được kiểm chứng và nên đọc như tín hiệu thị trường.</p>
+<table class="tbl">
+      <tr><th>Thị trường / công ty</th><th>Mức trong báo cáo (năm 2026)</th></tr>
+      <tr><td>Mỹ (tổng quan)</td><td>ZipRecruiter: trung bình 159.405 USD; Glassdoor: trung vị 200.000 USD</td></tr>
+      <tr><td>OpenAI</td><td>300.000 – 860.000+ USD</td></tr>
+      <tr><td>Anthropic</td><td>500.000 – 590.000+ USD</td></tr>
+      <tr><td>Meta</td><td>172.000 – 945.000+ USD</td></tr>
+      <tr><td>Google</td><td>200.000 – 700.000+ USD</td></tr>
+      <tr><td>Microsoft</td><td>179.000 – 500.000+ USD</td></tr>
+      <tr><td>Netflix</td><td>300.000 – 650.000 USD</td></tr>
+      <tr><td>Châu Âu / Pháp (Bluecoders)</td><td>Product nói chung: trung vị 60.000 EUR (55.000 – 80.000); Deeptech / AI / Data: trung vị 75.000 EUR</td></tr>
+    </table>
+    <p>Báo cáo tự ghi chú rằng mức trung vị 60.000 EUR của Bluecoders dựa trên mẫu rất hẹp (5 hợp đồng). Nó cũng cho rằng ứng viên kết hợp tư duy sản phẩm với hiểu biết kỹ thuật ở mức model thường thương lượng được mức cao hơn. Thông điệp đáng giữ là thị trường đang trả cao cho người nối được hai phía, chứ không phải con số chính xác.</p>
+  </section>
+
+  <div class="vids" data-videos="12"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/13"><span><small>Chương tiếp theo</small><b>13 · AI Product Risk & Governance</b></span><span>→</span></a>
+
+  <div class="end"><p>Toàn bộ số liệu lương ở mục 12.4 lấy từ báo cáo nguồn và chưa được kiểm chứng độc lập. Số trong Hình 1 là giả định.</p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+function kpu() {const c = +kC.value || 0, s = Math.max(1, +kS.value || 1) / 100, t = Math.max(1, +kT.value || 1), per = c * t / s;
+ kO.innerHTML = `<div><small>Chi phí mỗi tác vụ thành công</small><b>$${per.toFixed(4)}</b></div><div><small>Gấp mấy lần giá mỗi lần gọi</small><b>${c ? (per / c).toFixed(1) : '–'}×</b></div>`}
+[kC, kS, kT].forEach(x => x.oninput = kpu); kpu();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip12",
+ "minutes": 6,
+ "next": {
+  "href": "/blog/ai-product-handbook/13",
+  "n": "13",
+  "t": "AI Product Risk & Governance"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "12.1",
+   "t": "Chi phí biên không về 0",
+   "sum": [
+    "Inference cost tăng theo lượt dùng.",
+    "Cost per successful task là chỉ số thật.",
+    "TCO gồm cả dữ liệu, nhân sự, kiểm định, pháp lý."
+   ],
+   "terms": [
+    "inference",
+    "cpst",
+    "tco",
+    "embedding",
+    "unitecon"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "12.2",
+   "t": "Ba cách tối ưu token",
+   "sum": [
+    "Prompt compression giảm token đầu vào.",
+    "Caching tránh gọi lại cho câu phổ biến.",
+    "Model routing: nhỏ cho việc dễ, lớn cho việc khó."
+   ],
+   "terms": [
+    "cache",
+    "routing",
+    "token",
+    "fm"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "12.3",
+   "t": "Build, buy hay partner",
+   "sum": [
+    "Buy: nhanh, không lo phần cứng, hợp POC.",
+    "Build: kiểm soát, tùy biến, rẻ ở quy mô lớn, cần MLOps.",
+    "Bắt đầu bằng buy, đo rồi mới cân nhắc build."
+   ],
+   "terms": [
+    "buildbuy",
+    "poc",
+    "lockin"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "12.4",
+   "t": "Thu nhập AI PM trong báo cáo nguồn",
+   "sum": [
+    "Số liệu lương lấy từ báo cáo, chưa kiểm chứng.",
+    "Mẫu Bluecoders rất hẹp.",
+    "Thị trường trả cao cho người nối được sản phẩm và kỹ thuật."
+   ],
+   "terms": [
+    "pm"
+   ]
+  }
+ ],
+ "terms": {
+  "inference": [
+   "inference cost",
+   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+  ],
+  "cpst": [
+   "cost per successful task",
+   "Tổng chi phí chia cho số tác vụ được giải quyết trọn vẹn (đã trừ câu trả lời sai, phải thử lại).",
+   "Giá mỗi chiếc bánh bán được, đã tính cả những mẻ hỏng."
+  ],
+  "tco": [
+   "TCO",
+   "Total Cost of Ownership: tổng chi phí sở hữu gồm hạ tầng, dữ liệu, gán nhãn, nhân sự, kiểm định, tuân thủ.",
+   "Giá xe cộng xăng, bảo hiểm, bảo dưỡng và chỗ đậu."
+  ],
+  "embedding": [
+   "embedding",
+   "Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.",
+   "Tọa độ trên bản đồ ý nghĩa: hai câu cùng ý thì đứng gần nhau."
+  ],
+  "unitecon": [
+   "unit economics",
+   "Doanh thu và chi phí tính trên một đơn vị (một người dùng, một khách hàng, một tác vụ) để xem mỗi đơn vị lời hay lỗ.",
+   "Bán một ly cà phê lãi bao nhiêu sau khi trừ hạt, sữa, ly."
+  ],
+  "cache": [
+   "prompt caching",
+   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
+   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+  ],
+  "routing": [
+   "model routing",
+   "Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.",
+   "Phòng khám: cảm cúm gặp bác sĩ đa khoa, ca khó mới lên chuyên gia."
+  ],
+  "token": [
+   "token",
+   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
+   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+  ],
+  "fm": [
+   "foundation model",
+   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
+   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+  ],
+  "buildbuy": [
+   "build vs. buy",
+   "Quyết định tự xây (ví dụ tự host model mã nguồn mở) hay mua dịch vụ có sẵn (managed API), hoặc hợp tác.",
+   "Tự nấu hay gọi đồ ăn ngoài."
+  ],
+  "poc": [
+   "POC",
+   "Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.",
+   "Thử xem đất có đóng cọc được không."
+  ],
+  "lockin": [
+   "vendor lock-in",
+   "Phụ thuộc vào một nhà cung cấp tới mức đổi sang bên khác rất tốn kém.",
+   "Mua máy in chỉ nhận mực chính hãng."
+  ],
+  "pm": [
+   "AI Product Manager",
+   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
+   "Người chọn đích đến và giải thích vì sao đi đường này."
+  ]
+ },
+ "alias": {
+  "inference": [
+   "inference cost",
+   "chi phí suy luận"
+  ],
+  "cpst": [
+   "cost per successful task"
+  ],
+  "tco": [
+   "TCO"
+  ],
+  "embedding": [
+   "embedding"
+  ],
+  "unitecon": [
+   "unit economics",
+   "Unit economics"
+  ],
+  "cache": [
+   "prompt caching",
+   "caching",
+   "cache"
+  ],
+  "routing": [
+   "model routing",
+   "Model routing"
+  ],
+  "token": [
+   "token"
+  ],
+  "fm": [
+   "foundation model"
+  ],
+  "buildbuy": [
+   "build vs. buy",
+   "Build vs. Buy"
+  ],
+  "poc": [
+   "POC"
+  ],
+  "lockin": [
+   "vendor lock-in"
+  ],
+  "pm": [
+   "AI Product Manager",
+   "AI PM"
+  ]
+ },
+ "rel": {
+  "inference": [
+   "token",
+   "tco"
+  ],
+  "cpst": [
+   "tco"
+  ],
+  "tco": [
+   "cpst",
+   "inference"
+  ],
+  "token": [
+   "inference"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Vì sao sản phẩm AI khác SaaS thường về chi phí biên?",
+   "o": [
+    "AI không cần server",
+    "Mỗi lượt dùng tốn chi phí suy luận, tăng tuyến tính theo lưu lượng",
+    "SaaS thường đắt hơn",
+    "Không khác gì"
+   ],
+   "a": 1,
+   "ex": "Chi phí biên của SaaS gần 0; AI trả tiền theo token hoặc GPU."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "one",
+   "q": "Mỗi lần gọi 0,01 USD, trung bình 2 lần gọi mỗi tác vụ, 50% tác vụ thành công. Chi phí mỗi tác vụ thành công?",
+   "o": [
+    "0,01 USD",
+    "0,02 USD",
+    "0,04 USD",
+    "0,005 USD"
+   ],
+   "a": 2,
+   "ex": "0,01 × 2 / 0,5 = 0,04 USD."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Kỹ thuật nào chuyển câu hỏi đơn giản sang model nhỏ?",
+   "o": [
+    "Prompt compression",
+    "Caching",
+    "Model routing",
+    "Fine-tuning"
+   ],
+   "a": 2,
+   "ex": "Model routing định tuyến theo độ khó."
+  },
+  {
+   "id": "my4",
+   "s": 2,
+   "type": "one",
+   "q": "Giai đoạn POC nên ưu tiên phương án nào?",
+   "o": [
+    "Build: tự host model",
+    "Buy: dùng managed API",
+    "Không dùng AI",
+    "Tự huấn luyện từ đầu"
+   ],
+   "a": 1,
+   "ex": "Managed API giúp thử nhanh, không phải quản lý phần cứng."
+  },
+  {
+   "id": "my5",
+   "s": 3,
+   "type": "one",
+   "q": "Nên đọc bảng lương trong báo cáo nguồn thế nào?",
+   "o": [
+    "Là số chính xác để đàm phán",
+    "Là tín hiệu thị trường, chưa kiểm chứng, mẫu có khi rất hẹp",
+    "Là số của chính phủ",
+    "Bỏ qua hoàn toàn"
+   ],
+   "a": 1,
+   "ex": "Báo cáo tự ghi chú mẫu Bluecoders chỉ có 5 hợp đồng."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

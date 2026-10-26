@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.wire .w1{top:110px;width:min(280px,calc(50% - 476px));right:max(12px,calc((50% - 440px - 280px) / 2))}
+.wire .w2{top:auto;bottom:90px;left:max(12px,calc((50% - 440px - 170px) / 2));right:auto}
+/* audio playlist */
+.media{display:grid;gap:14px;margin-top:32px}
+.aud{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:12px}
+.pp{width:44px;height:44px;border-radius:50%;border:0;background:var(--fg);color:var(--bg);display:grid;place-items:center;cursor:pointer}
+.pp svg{width:16px;height:16px}
+.aud-t{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--fg);margin-bottom:6px}
+.aud-t span{color:var(--muted);font:400 12px var(--mono);white-space:nowrap}
+.aud-t b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scrub{position:relative;height:28px;display:flex;align-items:center;gap:2px;cursor:pointer;overflow:hidden}
+.scrub i{flex:1;background:var(--line);border-radius:1px;min-width:1px}.scrub i.on{background:var(--acc)}
+.chip{font:500 12px var(--mono);border:1px solid var(--line);background:transparent;border-radius:6px;padding:4px 8px;cursor:pointer;color:var(--fg)}
+.eps{list-style:none;margin:0;padding:0;grid-column:1/-1;display:grid;grid-template-columns:repeat(2,1fr);gap:0 24px;font-size:14px;counter-reset:e}
+.eps li{counter-increment:e;border-top:1px solid var(--line)}
+.eps button{display:grid;grid-template-columns:28px 1fr auto;gap:8px;width:100%;padding:7px 0;border:0;background:none;text-align:left;cursor:pointer;color:var(--body);font:400 14px var(--sans)}
+.eps button:before{content:counter(e,decimal-leading-zero);font:400 12px/1.7 var(--mono);color:var(--muted)}
+.eps button.on{color:var(--acc)}.eps button.on:before{color:var(--acc)}
+.eps em{font:normal 400 11px var(--mono);color:var(--muted)}
+@media(max-width:700px){.eps{grid-template-columns:1fr}}
+/* routes */
+.routes{margin-top:72px}
+.routes .pills{margin-top:6px}
+.route-note{font-size:15px;color:var(--muted);margin:12px 0 0;min-height:24px}
+.notes{display:grid;grid-template-columns:150px 1fr;gap:10px 20px;margin:18px 0 8px;font-size:15px;line-height:1.6;color:var(--body)}
+.notes dt{font:500 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.notes dd{margin:0}
+#srcList h3{font-size:18px;margin:22px 0 4px}
+@media(max-width:700px){.notes{grid-template-columns:1fr;gap:2px}.notes dd{margin-bottom:10px}}
+/* chapter path, grouped by part */
+.path{list-style:none;margin:28px 0 0;padding:0;position:relative}
+.path:before{content:"";position:absolute;left:21px;top:24px;bottom:24px;border-left:1px dashed var(--line)}
+.path .part{position:relative;margin:28px 0 0 64px;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transition:opacity .3s}
+.path.filtered .part{opacity:.35}
+.ch{position:relative;display:grid;grid-template-columns:44px 1fr;gap:18px;padding:18px 0;transition:opacity .3s}
+.ch .no{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:grid;place-items:center;font:500 13px var(--mono);color:var(--fg)}
+.ch.hot .no{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.ch .no em{position:absolute;top:-6px;right:-8px;font:normal 500 10px var(--mono);background:var(--acc);color:var(--bg);border-radius:999px;padding:1px 5px}
+.path.filtered .ch:not(.hot){opacity:.35}
+.ch h3{margin:6px 0 2px;font-size:25px}
+.ch h3 a{color:var(--fg);text-decoration:none}.ch h3 a:hover{color:var(--acc)}
+.ch .why{margin:0 0 10px;font-size:16px;color:var(--body)}
+.ch .facts{display:flex;flex-wrap:wrap;gap:6px 16px;font:400 12px var(--mono);color:var(--muted)}
+.ch .facts .lvl{color:var(--acc)}
+.ch .bar{height:3px;background:var(--line);border-radius:2px;margin-top:10px;max-width:260px}.ch .bar b{display:block;height:100%;background:var(--acc);border-radius:2px}
+.ch details{margin-top:10px}
+.ch summary{cursor:pointer;font-size:13px;color:var(--muted);list-style:none}
+.ch summary::-webkit-details-marker{display:none}
+.ch summary:before{content:"+ ";font-family:var(--mono)}.ch details[open] summary:before{content:"− "}
+.ch ol{margin:8px 0 0;padding-left:0;list-style:none;font-size:14px;columns:2;column-gap:24px}
+.ch ol li{padding:3px 0;break-inside:avoid;color:var(--body)}
+.ch ol li b{font:400 11px var(--mono);color:var(--muted);margin-right:6px;font-weight:400}
+.ch .go{display:inline-flex;gap:6px;align-items:center;margin-top:12px;font:500 13px var(--sans);color:var(--bg);background:var(--fg);border-radius:8px;padding:7px 14px;text-decoration:none}
+@media(max-width:700px){.ch ol{columns:1}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true">
+ <svg class="w1" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg>
+ <svg class="w2" viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/></g></svg>
+</div>
+<div class="progress" id="prog"></div>
+
+<article>
+  <div class="crumb"><b>Learning</b> / Product / AI Product Engineering</div>
+  <h1>AI Product <i>Engineering & Management</i></h1>
+  <p class="dek">Hai mươi mốt chương cho Software Engineer muốn trở thành AI Product Engineer, AI Product Builder hoặc AI Product Manager: từ tìm đúng vấn đề, thiết kế và đánh giá hệ thống AI, tới đo lường, kinh tế và một dự án tổng hợp. Mỗi chương kèm video liên quan và câu hỏi tự kiểm tra.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span id="mCount"></span><span id="mTime"></span></div></div>
+
+  <div class="media">
+    <div class="aud" id="aud">
+      <button class="pp" id="pp" aria-label="Phát"></button>
+      <div style="min-width:0"><div class="aud-t"><b id="atitle" style="font-weight:500"></b><span id="atime">0:00</span></div><div class="scrub" id="scrub"></div></div>
+      <button class="chip" id="rate">1×</button>
+      <ol class="eps" id="eps"></ol>
+      <span class="note" style="grid-column:1/-1;font-size:12px;margin:0">Tám audio tổng quan do AI tạo, chưa gắn vào từng mục của chương. Nghe để có bức tranh chung; có thể còn lỗi phát âm hoặc diễn đạt chưa chính xác.</span>
+      <audio id="au" preload="metadata"></audio>
+    </div>
+  </div>
+
+  <div class="routes">
+    <span class="label">Bắt đầu từ đâu?</span>
+    <div class="pills" id="routes"></div>
+    <p class="route-note" id="rnote"></p>
+  </div>
+
+  <ol class="path" id="path"></ol>
+
+  <section class="end" id="sources">
+    <h2 style="font-size:28px">Nguồn và lưu ý khi đọc</h2>
+    <dl class="notes">
+      <dt>Tính chất tài liệu</dt><dd>Đây là handbook cá nhân về làm sản phẩm AI, viết để học và chia sẻ. Các tên công ty, sản phẩm và dịch vụ được nhắc tới (AWS, Google, OpenAI, Anthropic…) là thương hiệu của chủ sở hữu tương ứng; không bên nào liên kết, tài trợ hay xác nhận nội dung này.</dd>
+      <dt>Cách biên soạn</dt><dd>Mục lục 21 chương và danh sách video theo chương được soạn với sự hỗ trợ của AI. Nội dung chương dựa trên ba báo cáo tổng hợp (Phần I; Phần II–III; Phần IV–VII), cũng do AI hỗ trợ soạn. Handbook được draft với Claude, sau đó biên tập lại cho dễ đọc; các khẳng định đáng ngờ trong báo cáo được ghi chú ở cuối từng chương.</dd>
+      <dt>Số liệu</dt><dd>Mức lương, giá token, mốc pháp lý, con số thị trường và KPI trong dự án mẫu lấy từ báo cáo nguồn và chưa được kiểm chứng độc lập. Các máy tính trong chương (chi phí token, SOM, RICE…) dùng số giả định; hãy điền số của bạn.</dd>
+      <dt>Pháp lý</dt><dd>Phần về EU AI Act là thông tin chung, không phải tư vấn pháp lý. Lộ trình áp dụng có thể đã thay đổi; hãy đọc văn bản chính thức trên <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">EUR-Lex</a>.</dd>
+      <dt>Video</dt><dd><p>Video có ID cụ thể được nhúng từ YouTube; tiêu đề hiển thị là tiêu đề thật, kiểm tra ngày 26/10/2026. Link video “Product Management Fundamentals (full course)” trong danh sách gốc không còn tồn tại, nên được thay bằng trang tìm kiếm. Các link còn lại là trang tìm kiếm YouTube; hãy tự chọn video phù hợp.</p><p>Video thuộc tác giả; handbook không tải xuống hay đăng lại video nào.</p></dd>
+      <dt>Câu hỏi ôn tập</dt><dd>Câu hỏi cuối mỗi mục được soạn theo nội dung chương với sự hỗ trợ của AI và đã được rà soát.</dd>
+      <dt>Góp ý và phản hồi</dt><dd>Nếu phát hiện nội dung chưa chính xác, thiếu nguồn hoặc cần bổ sung, bạn có thể gửi feedback qua email <a href="mailto:tndkhoi.work@gmail.com"><b>tndkhoi.work@gmail.com</b></a>. Mình sẽ xem xét và cập nhật handbook khi cần.</dd>
+    </dl>
+    <div id="srcList"></div>
+  </section>
+</article>
+
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script>
+srcList.innerHTML = [...new Set(SOURCES.map(x => x.g))].map(g => `<h3>${g}</h3><ol class="src">${SOURCES.filter(x => x.g === g).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title} · <span>${x.by}</span></li>`).join('')}</ol>`).join('');
+</script>
+<script>
+const CHS = [{"n": "00","t": "Lộ trình học","vi": "Handbook này dành cho ai, bảy phần nói về gì, và nên đọc theo thứ tự nào nếu bạn đang là Software Engineer muốn làm sản phẩm AI.","part": "Mở đầu","p": "","min": 6,"q": 4,"s": ["Handbook này dành cho ai","Bảy phần trong một trang","Nên đọc theo thứ tự nào","Cách dùng video và audio"]},{"n": "01","t": "Product Thinking & Product Development Lifecycle","vi": "Sản phẩm, dự án, tính năng và dịch vụ AI khác nhau ở đâu; vì sao phải đo outcome thay vì output; và vòng đời năm giai đoạn của một sản phẩm AI.","part": "Phần I","p": "","min": 9,"q": 6,"s": ["Product, project, feature và service","Từ output đến outcome và impact","Sống chung với sự không chắc chắn","Vòng đời sản phẩm AI và đội ngũ"]},{"n": "02","t": "Problem Discovery & User Research","vi": "Tránh bẫy “có AI rồi mới đi tìm bài toán”: đóng khung vấn đề, dùng Jobs to Be Done, persona, customer journey, và viết problem statement trước khi nghĩ tới giải pháp.","part": "Phần I","p": "P1","min": 7,"q": 6,"s": ["Bẫy công nghệ đi tìm bài toán","Launch readiness bắt đầu từ discovery","Jobs to Be Done","Persona, customer journey và pain point","Problem statement và cơ hội tạo giá trị"]},{"n": "03","t": "Market Research & Opportunity Assessment","vi": "Giải đúng vấn đề vẫn có thể thất bại nếu thị trường quá nhỏ, rào cản pháp lý quá cao hoặc chi phí suy luận vượt giá trị thu về. ICP, TAM/SAM/SOM, moat và ba câu hỏi desirability, feasibility, viability.","part": "Phần I","p": "P2","min": 9,"q": 6,"s": ["Phân khúc, ICP và buyer persona","TAM, SAM và SOM","Đối thủ, moat và Value Proposition Canvas","Desirability, feasibility, viability"]},{"n": "04","t": "Product Design & UX cho sản phẩm AI","vi": "Thiết kế cho một hệ thống không lúc nào cũng đúng: kiến trúc thông tin theo xác suất, user flow có fallback, design thinking để lọc bài toán, human-in-the-loop và trust calibration.","part": "Phần II","p": "P2","min": 6,"q": 6,"s": ["UX khi đầu ra không cố định","User flow, wireframe và prototype","Design thinking như một bộ lọc","Human-in-the-loop và trust calibration"]},{"n": "05","t": "Product Vision, Strategy & Positioning","vi": "Ai trả lời “cái gì, tại sao”, ai trả lời “làm thế nào”; AI PM khác AI Engineer ra sao; value proposition; và tam giác đánh đổi chất lượng, chi phí, latency.","part": "Phần II","p": "P1","min": 7,"q": 5,"s": ["Vision, mission và chia việc","AI Product Manager và AI Engineer","Value proposition","Chất lượng, chi phí và latency"]},{"n": "06","t": "Requirements, Prioritization & Roadmapping","vi": "PRD cho tính năng AI cần thêm gì, POC khác prototype, MVP và pilot ra sao, cách ưu tiên backlog khi có rủi ro dữ liệu và model, và lộ trình phát hành Alpha → Beta → GA.","part": "Phần II","p": "P1","min": 6,"q": 6,"s": ["PRD cho tính năng AI","POC, prototype, MVP và pilot","Ưu tiên backlog","Roadmap và phạm vi phát hành"]},{"n": "07","t": "AI & LLM Fundamentals","vi": "Các tầng AI, machine learning, deep learning và foundation model; token, embedding, context window; prompt engineering; RAG, fine-tuning, tool calling, agent và model routing.","part": "Phần III","p": "","min": 8,"q": 6,"s": ["AI, machine learning, deep learning, foundation model","Token, embedding và context window","Prompt engineering và context engineering","RAG, fine-tuning, tool calling, agent"]},{"n": "08","t": "AI System Architecture & Production Engineering","vi": "Bốn lớp của một hệ thống AI production, model gateway với fallback khi nhà cung cấp lỗi, orchestration, hạ tầng cloud, và các chỉ số vận hành: TTFT, throughput, error rate, uptime.","part": "Phần III","p": "","min": 8,"q": 5,"s": ["Bốn lớp kiến trúc","Model gateway và orchestration","API, database, queue và tích hợp","Observability, latency và mở rộng"]},{"n": "09","t": "AI Evaluation, Reliability & Responsible AI","vi": "Xây golden dataset, chọn offline evaluation, online evaluation hay LLM-as-a-judge, đo hallucination, groundedness, faithfulness; guardrails, prompt injection, EU AI Act và shared responsibility model.","part": "Phần III","p": "P1","min": 6,"q": 6,"s": ["Eval set và golden dataset","Offline, online và LLM-as-a-judge","Hallucination, groundedness, faithfulness","Guardrails, prompt injection và trách nhiệm"]},{"n": "10","t": "Product Analytics & Decision-Making","vi": "Đo sản phẩm AI khác đo phần mềm thường ra sao, cân precision với recall, giữ chất lượng model qua vòng đời ML, và khung đánh giá bốn bước. Kèm North Star Metric, cohort và funnel.","part": "Phần IV","p": "P1","min": 6,"q": 5,"s": ["Đo phần mềm thường và đo sản phẩm AI","Precision hay recall","Giữ chất lượng qua vòng đời ML","Khung đánh giá model bốn bước"]},{"n": "11","t": "Experimentation, Launch & Growth","vi": "Đưa AI từ POC ra thật: khoanh phạm vi tự động hóa, guardrails cho handoff, chọn RAG hay fine-tuning khi ra mắt, ba cơ chế UX giúp người dùng chấp nhận, và đo tăng trưởng bằng A/B test, AARRR.","part": "Phần IV","p": "P2","min": 6,"q": 5,"s": ["Khoanh phạm vi và handoff","RAG hay fine-tuning khi ra mắt","Ba cơ chế giúp người dùng chấp nhận","Thử nghiệm và đo tăng trưởng"]},{"n": "12","t": "Product Economics & Business Strategy","vi": "Vì sao chi phí biên của AI không về 0, bốn thành phần chi phí cần theo dõi, ba cách tối ưu token, khung Build vs. Buy vs. Partner, và bức tranh thu nhập AI PM trong báo cáo nguồn.","part": "Phần V","p": "P2","min": 6,"q": 5,"s": ["Chi phí biên không về 0","Ba cách tối ưu token","Build, buy hay partner","Thu nhập AI PM trong báo cáo nguồn"]},{"n": "13","t": "AI Product Risk & Governance","vi": "Các loại rủi ro mới của AI, lộ trình EU AI Act theo báo cáo nguồn, shared responsibility model trên AWS, và các lớp bảo vệ dữ liệu: PII redaction, Macie, PrivateLink, mã hóa, IAM, Bedrock Guardrails.","part": "Phần V","p": "P3","min": 6,"q": 5,"s": ["Các loại rủi ro mới","Lộ trình EU AI Act","Shared responsibility model","Các lớp bảo vệ dữ liệu"]},{"n": "14","t": "Stakeholder Management & Communication","vi": "Dẫn dắt không cần quyền lực, chia vai AI PM và AI Engineer theo bài “The Rise of the AI Engineer”, cách làm việc với từng nhóm stakeholder, và decision log.","part": "Phần V","p": "P2","min": 6,"q": 5,"s": ["Ảnh hưởng không cần quyền lực","AI PM và AI Engineer theo swyx","Làm việc với từng nhóm","Decision log"]},{"n": "15","t": "Advanced Product Strategy","vi": "Khi có nhiều sản phẩm AI: platform strategy với năng lực dùng chung, bản đồ dịch vụ AI trên AWS, và công thức điểm ưu tiên cân giá trị với chi phí, latency, độ phức tạp.","part": "Phần V","p": "P3","min": 6,"q": 4,"s": ["Platform strategy","Bản đồ dịch vụ AI trên AWS","Ưu tiên danh mục"]},{"n": "16","t": "Product Management Glossary","vi": "Các thuật ngữ sản phẩm dùng xuyên suốt handbook, kèm lưu ý riêng khi áp dụng cho sản phẩm AI.","part": "Phần VI","p": "P3","min": 8,"q": 3,"s": ["Chiến lược và thị trường","Yêu cầu, lộ trình và giao hàng","Đo lường và tăng trưởng"]},{"n": "17","t": "AI Engineering Glossary","vi": "Từ machine learning tới prompt injection: các thuật ngữ kỹ thuật dùng trong handbook, nhóm theo chủ đề.","part": "Phần VI","p": "P3","min": 8,"q": 3,"s": ["Model và cách học","Dữ liệu, ngữ cảnh và kiến trúc","Chất lượng, vận hành và an toàn"]},{"n": "18","t": "AI Product Builder & Forward Deployed Engineer Glossary","vi": "Hai vai trò đang được nhắc nhiều, và sáu thuật ngữ mô tả cách họ làm việc: từ customer discovery tới outcome measurement.","part": "Phần VI","p": "P3","min": 7,"q": 3,"s": ["Hai vai trò","Sáu thuật ngữ trong vòng làm việc"]},{"n": "19","t": "Product Frameworks & Decision-Making Cheat Sheet","vi": "JTBD, Opportunity Solution Tree, RICE/ICE/MoSCoW, Business Model Canvas, và ba cặp quyết định hay gặp trong sản phẩm AI: RAG hay fine-tuning, precision hay recall, ai chịu trách nhiệm bảo mật.","part": "Phần VI","p": "P3","min": 6,"q": 4,"s": ["Khám phá và mô hình kinh doanh","RICE, ICE và MoSCoW","Ba cặp quyết định trong sản phẩm AI"]},{"n": "20","t": "Product Documentation & Communication Reference","vi": "Checklist PRD cho tính năng AI, cách viết roadmap, và mẫu decision log, product review để kỹ thuật và kinh doanh đọc cùng một trang.","part": "Phần VI","p": "P3","min": 6,"q": 3,"s": ["Checklist PRD cho tính năng AI","Roadmap dễ đọc","Decision log và product review"]},{"n": "21","t": "Capstone: From Problem Discovery to AI Product Launch","vi": "Một dự án mẫu ghép mọi chương lại: hệ thống IDP và trợ lý CSKH cho một tập đoàn tài chính – bảo hiểm trên AWS, đi qua bốn giai đoạn. Cuối chương là checklist để bạn tự làm dự án của mình.","part": "Phần VII","p": "","min": 7,"q": 4,"s": ["Giai đoạn 1: Discovery và định nghĩa sản phẩm","Giai đoạn 2: Kiến trúc","Giai đoạn 3 và 4: Đánh giá, rủi ro, triển khai","Tự làm dự án của bạn"]}].map(c => ({...c, href: '/blog/ai-product-handbook/' + c.n, key: 'aip' + c.n}));
+const ROUTES = [['Ưu tiên P1', ['02', '05', '06', '09', '10'], 'Năm chương giúp đổi cách nghĩ nhiều nhất: tìm đúng vấn đề, chiến lược, yêu cầu và ưu tiên, đánh giá AI, đo tác động.'],
+ ['Mở rộng P2', ['03', '04', '11', '12', '14'], 'Bổ sung nghiên cứu thị trường, UX, growth, kinh tế sản phẩm và giao tiếp với các bên.'],
+ ['Chiến lược và tra cứu P3', ['13', '15', '16', '17', '18', '19', '20'], 'Rủi ro, chiến lược dài hạn và bộ tài liệu tra cứu dùng khi làm dự án.'],
+ ['Phần kỹ thuật', ['07', '08', '09'], 'Phần tận dụng nhiều nhất nền tảng kỹ sư: LLM, kiến trúc production và đánh giá chất lượng.'],
+ ['Làm dự án', ['00', '21', '20'], 'Chương 00 cho bức tranh chung, chương 21 là dự án mẫu và checklist, chương 20 có mẫu PRD và product review.']];
+const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
+const sum = f => CHS.reduce((a, c) => a + f(c), 0);
+mCount.textContent = `${CHS.length - 1} chương + lộ trình · ${sum(c => c.s.length)} mục`;
+mTime.textContent = `khoảng ${Math.round(sum(c => c.min) / 60 * 2) / 2} giờ đọc · ${sum(c => c.q)} câu tự kiểm tra`;
+function renderPath(hot) {
+ path.className = 'path' + (hot ? ' filtered' : '');
+ let part = '';
+ path.innerHTML = CHS.map(c => {
+  const ans = Object.values(store.get('ans:' + c.key, {})), ok = ans.filter(a => a.ok).length, order = hot ? hot.indexOf(c.n) : -1;
+  const head = c.part !== part ? `<li class="part">${part = c.part}</li>` : '';
+  return head + `<li class="ch${order >= 0 ? ' hot' : ''}" id="ch${c.n}"><div class="no">${c.n}${order >= 0 && hot.length > 1 ? `<em>${order + 1}</em>` : ''}</div><div>
+   <h3><a href="${c.href}">${c.t}</a></h3><p class="why">${c.vi}</p>
+   <div class="facts">${c.p ? `<span class="lvl">${c.p}</span>` : ''}<span>${c.s.length} mục</span><span>${c.min} phút</span><span>${c.q} câu tự kiểm tra</span>${(VIDEOS[c.n] || []).length ? `<span>${VIDEOS[c.n].length} video</span>` : ''}</div>
+   <div class="bar" title="Câu đúng"><b style="width:${ok / c.q * 100}%"></b></div>
+   <details><summary>Xem ${c.s.length} mục</summary><ol>${c.s.map((s, i) => `<li><b>${c.n}.${i + 1}</b>${s}</li>`).join('')}</ol></details>
+   <a class="go" href="${c.href}">${ok ? 'Đọc tiếp' : 'Bắt đầu đọc'} →</a></div></li>`}).join('')}
+routes.innerHTML = ROUTES.map((r, i) => `<button data-r="${i}">${r[0]}</button>`).join('');
+routes.onclick = e => {const b = e.target.closest('[data-r]'); if (!b) return; const on = !b.classList.contains('on');
+ routes.querySelectorAll('button').forEach(x => x.classList.toggle('on', on && x === b)); rnote.textContent = on ? ROUTES[+b.dataset.r][2] : ''; renderPath(on ? ROUTES[+b.dataset.r][1] : null)};
+renderPath(null);
+
+// audio: one native element, a playlist of episodes, custom controls
+const PLAY = '<svg viewBox="0 0 16 16"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>', PAUSE = '<svg viewBox="0 0 16 16"><path d="M3 2h4v12H3zM9 2h4v12H9z" fill="currentColor"/></svg>';
+const fmt = s => isFinite(s) ? Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2, '0') : '–:––';
+scrub.innerHTML = Array.from({length: 72}, (_, i) => `<i style="height:${30 + Math.round(60 * Math.abs(Math.sin(i * 1.7) * Math.cos(i * .43)))}%"></i>`).join('');
+const bars = [...scrub.children];
+let ep = 0;
+eps.innerHTML = AUDIO.map((a, i) => `<li><button data-e="${i}"><span>${a.title}</span></button></li>`).join('');
+function pick(i, play) {ep = i; au.src = AUDIO[i].src; atitle.textContent = AUDIO[i].title; eps.querySelectorAll('button').forEach(b => b.classList.toggle('on', +b.dataset.e === i)); if (play) au.play().catch(() => {})}
+eps.onclick = e => {const b = e.target.closest('[data-e]'); if (!b) return; +b.dataset.e === ep && !au.paused ? au.pause() : +b.dataset.e === ep && au.src ? au.play() : pick(+b.dataset.e, true)};
+function aui() {pp.innerHTML = au.paused ? PLAY : PAUSE; pp.setAttribute('aria-label', au.paused ? 'Phát' : 'Tạm dừng');
+ atime.textContent = `${fmt(au.currentTime)} / ${fmt(au.duration)}`; const k = au.currentTime / au.duration || 0; bars.forEach((b, i) => b.classList.toggle('on', i / bars.length < k))}
+pp.onclick = () => {au.paused ? au.play() : au.pause()};
+scrub.onclick = e => {const r = scrub.getBoundingClientRect(); if (au.duration) au.currentTime = (e.clientX - r.left) / r.width * au.duration};
+rate.onclick = () => {au.playbackRate = {1: 1.25, 1.25: 1.5, 1.5: 2, 2: 1}[au.playbackRate]; rate.textContent = au.playbackRate + '×'; au.defaultPlaybackRate = au.playbackRate};
+au.addEventListener('ended', () => {if (ep < AUDIO.length - 1) pick(ep + 1, true)});
+['play', 'pause', 'timeupdate', 'loadedmetadata'].forEach(ev => au.addEventListener(ev, aui));
+pick(0, false); aui();
+// stop the audio when the reader leaves the page (the page wrapper aborts this signal)
+window.__hbSignal?.addEventListener('abort', () => au.pause());
+
+// progress + rotation
+addEventListener('scroll', () => {const h = document.documentElement; prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+ document.querySelectorAll('.wire svg').forEach((v, i) => v.style.transform = `rotate(${(i ? -1 : 1) * scrollY * .08}deg)`)}, {passive: true, signal: window.__hbSignal});
+</script>
+</body>
+</html>

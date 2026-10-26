@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · Product Thinking &amp; Product Development Lifecycle · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.flow button small{display:block;font:400 11px var(--mono);color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 01 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần I / 01</div>
+  <h1>Product Thinking <i>và vòng đời sản phẩm AI</i></h1>
+  <p class="dek">Sản phẩm, dự án, tính năng và dịch vụ AI khác nhau ở đâu; vì sao phải đo outcome thay vì output; và vòng đời năm giai đoạn của một sản phẩm AI.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 01 / 21</span><span>9 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Phần mềm truyền thống chạy theo quy tắc cố định. Sản phẩm AI chạy theo xác suất, nên người làm sản phẩm phải quản lý sự không chắc chắn và đo kết quả, không chỉ đếm thứ đã bàn giao.</div>
+  <section id="s1">
+    <span class="num">01.1</span>
+    <h2>Product, project, feature và service</h2>
+    <p class="gist">Coi AI là một dự án ngắn hạn hay một tính năng phụ thường dẫn tới thất bại, vì chi phí và chất lượng của AI thay đổi liên tục sau khi ra mắt.</p>
+<p>Phần mềm truyền thống là deterministic (chạy theo quy tắc cố định): cùng đầu vào, luôn cùng đầu ra. Sản phẩm AI là probabilistic (đưa ra dự đoán theo xác suất): đầu ra thay đổi theo ngữ cảnh và dữ liệu, độ chính xác cũng vậy. Khác biệt này làm bốn khái niệm quen thuộc mang nghĩa mới.</p>
+    <table class="tbl">
+      <tr><th>Khái niệm</th><th>Mục tiêu</th><th>Chi phí, rủi ro</th><th>Đo thành công bằng</th></tr>
+      <tr><td>AI product</td><td>Giải quyết liên tục một vấn đề thật bằng năng lực AI</td><td>Inference cost và latency phát sinh liên tục theo lưu lượng; rủi ro hallucination, drift</td><td>Adoption, mức hài lòng, retention, tác động kinh doanh (ROI, LTV, doanh thu)</td></tr>
+      <tr><td>AI project</td><td>Triển khai, tích hợp AI trong thời gian, ngân sách, phạm vi xác định</td><td>Chi phí cố định cho huấn luyện, gán nhãn, hạ tầng ban đầu; rủi ro trễ hạn</td><td>Bàn giao đúng hạn, đúng ngân sách, đạt KPI đã cam kết</td></tr>
+      <tr><td>AI feature</td><td>Một thành phần nhỏ trong sản phẩm (tìm kiếm RAG, trích xuất văn bản)</td><td>Chi phí theo từng lượt gọi API; phải giữ latency để không làm chậm cả luồng</td><td>Độ chính xác tác vụ, tần suất dùng, số thao tác thủ công giảm được</td></tr>
+      <tr><td>AI service</td><td>Cung cấp hạ tầng hoặc model dạng API (Amazon Bedrock, SageMaker, Textract)</td><td>Tính tiền theo mức dùng; cần cam kết SLA</td><td>Uptime, latency thấp, API ổn định, giá mỗi lượt suy luận</td></tr>
+    </table>
+    <p>Điểm cần để ý là cột chi phí. Một dự án kết thúc khi bàn giao; một sản phẩm AI tiếp tục tốn tiền mỗi lần có người dùng nó, và chất lượng của nó có thể trôi đi theo thời gian.</p>
+    <div class="take"><small>Ghi nhớ</small>Nếu chỉ coi AI là một dự án cần bàn giao, bạn sẽ bỏ qua chi phí vận hành, latency và việc chất lượng giảm dần sau ra mắt.</div>
+  </section>
+
+  <section id="s2">
+    <span class="num">01.2</span>
+    <h2>Từ output đến outcome và impact</h2>
+    <p class="gist">Bàn giao xong một model chưa phải là thành công. Thành công là người dùng làm việc tốt hơn và doanh nghiệp thu về giá trị.</p>
+<p>Có ba tầng để đánh giá một việc đã làm. Output là thứ bàn giao: một LLM được tích hợp, một luồng API, một eval set, một PRD. Outcome là thay đổi ở hệ thống và người dùng: độ chính xác, latency, tỷ lệ tác vụ được tự động hoàn thành, mức hài lòng. Impact là giá trị dài hạn: retention, doanh thu định kỳ (ARR), chi phí hỗ trợ thủ công giảm, ROI.</p>
+    <figure>
+      <div class="fig"><div id="ooi"></div></div>
+      <figcaption><b>Hình 1</b>Mỗi câu là output, outcome hay impact?</figcaption>
+    </figure>
+    <p>Với bài toán phân loại hay phát hiện, outcome thường phải đào sâu tới chuyện đánh đổi giữa precision và recall. Precision là tỷ lệ dự đoán dương tính mà đúng thật (giảm false positive). Recall là tỷ lệ trường hợp dương tính thật mà mô hình bắt được (giảm false negative). Chọn ưu tiên cái nào là quyết định kinh doanh: hệ thống phát hiện gian lận hay chẩn đoán y tế không được bỏ sót, nên ưu tiên recall; hệ thống tự duyệt tiền thưởng hay gắn nhãn spam không được khóa nhầm người tốt, nên ưu tiên precision. Chương 10 quay lại chủ đề này kỹ hơn.</p>
+    <div class="take"><small>Ghi nhớ</small>Hỏi “người dùng làm được gì tốt hơn” trước khi hỏi “mình đã làm xong cái gì”.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">01.3</span>
+    <h2>Sống chung với sự không chắc chắn</h2>
+    <p class="gist">AI không bao giờ đúng 100%. Việc của người làm sản phẩm là quyết định sai đến mức nào thì chấp nhận được.</p>
+<p>Vì đầu ra của model không bao giờ đúng tuyệt đối, AI Product Manager phải viết ra hướng dẫn đánh giá: lỗi nào chấp nhận được với tác vụ thông thường, lỗi nào không chấp nhận được với tác vụ nhạy cảm. Song song đó là quản lý kỳ vọng của các bên: nói rõ giới hạn của công nghệ, thiết kế guardrails, và có quy trình fallback hoặc chuyển cho người (human-in-the-loop) khi AI không chắc.</p>
+    <p>Ví dụ, một trợ lý tra cứu hướng dẫn nội bộ trả lời sai một lần trong năm mươi câu có thể vẫn hữu ích, miễn là có trích nguồn để người dùng tự kiểm. Một hệ thống tự quyết định hoàn tiền thì một lỗi đã là quá nhiều; ở đó AI chỉ nên đề xuất, người duyệt.</p>
+    <div class="take"><small>Ghi nhớ</small>Ngưỡng lỗi chấp nhận được là một quyết định sản phẩm, phải viết ra trước khi build, không phải phát hiện sau khi ra mắt.</div>
+  </section>
+
+  <section id="s4">
+    <span class="num">01.4</span>
+    <h2>Vòng đời sản phẩm AI và đội ngũ</h2>
+    <p class="gist">Năm giai đoạn lặp lại, và một đội nhiều vai trò, với AI PM đứng giữa nối kỹ thuật với mục tiêu kinh doanh.</p>
+<p>Vòng đời sản phẩm AI có năm giai đoạn lặp lại: Ideation (tìm điểm đau và cơ hội dùng AI), Discovery (khảo sát dữ liệu, đánh giá tính khả thi, đóng khung bài toán), Evaluation (tinh chỉnh prompt, chấm model trên eval set, cân đối chi phí, latency và độ chính xác), Deployment (tích hợp vào quy trình thật, làm giao diện phù hợp) và Monitoring (theo dõi hiệu năng, phát hiện drift, thu phản hồi để cải tiến). Monitoring đưa dữ liệu ngược về Ideation, nên vòng này không có điểm kết thúc.</p>
+    <figure>
+      <div class="fig"><div class="figbar"><span>Chọn một giai đoạn</span></div><div class="flow" id="lc"></div><div class="panel" id="lcP"></div></div>
+      <figcaption><b>Hình 2</b>Năm giai đoạn của vòng đời sản phẩm AI.</figcaption>
+    </figure>
+    <p>Đội làm sản phẩm AI thường gồm: AI PM (định hướng, đóng khung vấn đề, đặt tiêu chuẩn thành công); AI/ML Engineer và Data Scientist (xây, tinh chỉnh, tích hợp model); Data Engineer (thu thập, làm sạch, gán nhãn dữ liệu); UX Designer (thiết kế giao diện cho đầu ra không chắc chắn); và nhóm pháp lý, bảo mật (PII, tuân thủ). AI PM là người dịch kỳ vọng kinh doanh thành tiêu chí đánh giá đo được, và giữ cho cả đội hướng về một sản phẩm an toàn, hữu ích.</p>
+    <div class="take"><small>Ghi nhớ</small>Vòng đời AI là vòng tròn: Monitoring cấp dữ liệu cho lần Ideation tiếp theo.</div>
+  </section>
+
+  <div class="vids" data-videos="01"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/02"><span><small>Chương tiếp theo</small><b>02 · Problem Discovery & User Research</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+// a statement sorter: data = [[statement, right layer index, why]], labels = layer names
+function sorter(box, data, labels) {
+ let i = 0;
+ box.innerHTML = `<div class="figbar"><span data-n></span><button class="pri" data-next>Câu khác →</button></div><div class="stmt" data-q></div><div class="lay" style="grid-template-columns:repeat(${labels.length},1fr)">${labels.map((l, j) => `<button data-l="${j}">${l}</button>`).join('')}</div><div class="panel" data-p></div>`;
+ const $ = s => box.querySelector(s);
+ const show = () => {$('[data-q]').textContent = '“' + data[i][0] + '”'; $('[data-n]').textContent = `Câu ${i + 1}/${data.length}`; $('[data-p]').innerHTML = '<h5>Chọn một ô</h5>Câu này thuộc nhóm nào?'; box.querySelectorAll('[data-l]').forEach(b => b.className = '')};
+ box.onclick = e => {
+  if (e.target.closest('[data-next]')) {i = (i + 1) % data.length; return show()}
+  const b = e.target.closest('[data-l]'); if (!b) return; const ok = +b.dataset.l === data[i][1];
+  box.querySelectorAll('[data-l]').forEach(x => x.className = +x.dataset.l === data[i][1] ? 'right' : x === b ? 'wrong' : '');
+  $('[data-p]').innerHTML = `<h5>${ok ? 'Đúng.' : 'Chưa đúng.'}</h5>${data[i][2]}`};
+ show()}
+
+sorter(document.getElementById('ooi'), [
+ ['Đội đã tích hợp xong API của một LLM vào app hỗ trợ khách hàng.', 0, 'Đây là output: một thứ đã bàn giao. Nó chưa nói gì về việc người dùng có được lợi không.'],
+ ['Tỷ lệ yêu cầu hỗ trợ được AI tự giải quyết tăng từ 20% lên 45%.', 1, 'Outcome: thay đổi đo được trong hiệu quả hệ thống và hành vi người dùng.'],
+ ['Chi phí vận hành bộ phận hỗ trợ giảm và tỷ lệ gia hạn hợp đồng tăng sau hai quý.', 2, 'Impact: giá trị kinh doanh dài hạn mà outcome mang lại.'],
+ ['Hoàn thành eval set 300 câu cho trợ lý tra cứu.', 0, 'Output: eval set là một sản phẩm bàn giao của đội, giúp đo outcome nhưng tự nó chưa là outcome.'],
+ ['Thời gian nhân viên tra quy trình giảm từ 8 phút xuống dưới 1 phút.', 1, 'Outcome: thay đổi trực tiếp trong cách người dùng làm việc.'],
+ ['ARR tăng nhờ khách hàng doanh nghiệp mua thêm gói có trợ lý AI.', 2, 'Impact: doanh thu định kỳ của doanh nghiệp.']], ['Output', 'Outcome', 'Impact']);
+const LC = [['Ideation', 'Phát hiện điểm đau chuyên biệt và định hình cơ hội dùng AI.'], ['Discovery', 'Khảo sát dữ liệu, đánh giá tính khả thi kỹ thuật, đóng khung bài toán.'],
+ ['Evaluation', 'Tinh chỉnh prompt, chấm model trên eval set, cân đối chi phí suy luận, latency và độ chính xác.'], ['Deployment', 'Tích hợp model vào quy trình thật và làm giao diện phù hợp.'],
+ ['Monitoring', 'Theo dõi hiệu năng thực tế, phát hiện drift, thu phản hồi rồi quay lại Ideation.']];
+const lc = document.getElementById('lc'), lcP = document.getElementById('lcP');
+lc.innerHTML = LC.map((s, i) => `<button data-i="${i}"><small>${i + 1}</small>${s[0]}</button>${i < 4 ? '<i>→</i>' : '<i>↺</i>'}`).join('');
+lc.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; lc.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); lcP.innerHTML = `<h5>${LC[+b.dataset.i][0]}</h5>${LC[+b.dataset.i][1]}`};
+lc.querySelector('button').click();
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip01",
+ "minutes": 9,
+ "next": {
+  "href": "/blog/ai-product-handbook/02",
+  "n": "02",
+  "t": "Problem Discovery & User Research"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "01.1",
+   "t": "Product, project, feature và service",
+   "sum": [
+    "Phần mềm truyền thống deterministic, AI probabilistic.",
+    "Product, project, feature, service khác nhau ở mục tiêu, chi phí và cách đo.",
+    "Sản phẩm AI tốn chi phí suy luận liên tục và có thể drift."
+   ],
+   "terms": [
+    "deterministic",
+    "probabilistic",
+    "inference",
+    "latency",
+    "drift",
+    "halluc"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "01.2",
+   "t": "Từ output đến outcome và impact",
+   "sum": [
+    "Output là thứ bàn giao; outcome là thay đổi; impact là giá trị dài hạn.",
+    "Precision giảm báo nhầm, recall giảm bỏ sót.",
+    "Chọn ưu tiên precision hay recall dựa trên cái giá của mỗi loại sai."
+   ],
+   "terms": [
+    "output",
+    "outcome",
+    "impact",
+    "precision",
+    "recall",
+    "fp",
+    "fn"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "01.3",
+   "t": "Sống chung với sự không chắc chắn",
+   "sum": [
+    "Không có model đúng 100%.",
+    "Viết rõ ngưỡng lỗi chấp nhận được cho từng loại tác vụ.",
+    "Guardrails, fallback và human-in-the-loop là cách sống chung với lỗi."
+   ],
+   "terms": [
+    "guardrails",
+    "fallback",
+    "hitl",
+    "pm"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "01.4",
+   "t": "Vòng đời sản phẩm AI và đội ngũ",
+   "sum": [
+    "Ideation → Discovery → Evaluation → Deployment → Monitoring, rồi lặp.",
+    "Đội gồm PM, ML Engineer, Data Engineer, UX, pháp lý và bảo mật.",
+    "AI PM dịch kỳ vọng kinh doanh thành tiêu chí đo được."
+   ],
+   "terms": [
+    "evalset",
+    "drift",
+    "pii"
+   ]
+  }
+ ],
+ "terms": {
+  "deterministic": [
+   "deterministic",
+   "Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.",
+   "Máy bán nước: bấm nút số 3 lần nào cũng ra đúng lon số 3."
+  ],
+  "probabilistic": [
+   "probabilistic",
+   "Hệ thống đưa ra dự đoán hoặc sinh nội dung theo xác suất; cùng một đầu vào có thể cho những đầu ra khác nhau.",
+   "Hỏi một người bạn cùng một câu hai lần, ý giống nhau nhưng câu chữ mỗi lần một khác."
+  ],
+  "inference": [
+   "inference cost",
+   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+  ],
+  "latency": [
+   "latency",
+   "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
+   "Thời gian chờ món sau khi gọi."
+  ],
+  "drift": [
+   "drift",
+   "Chất lượng mô hình giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
+   "Bản đồ in năm ngoái, đường đã mở thêm vài lối mới."
+  ],
+  "halluc": [
+   "hallucination",
+   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
+   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+  ],
+  "output": [
+   "output",
+   "Thứ đội làm ra và bàn giao: model, API, eval set, PRD, tính năng.",
+   "Số viên gạch đã xây."
+  ],
+  "outcome": [
+   "outcome",
+   "Thay đổi trong hành vi người dùng hoặc hiệu năng hệ thống mà output tạo ra: độ chính xác, latency, tỷ lệ hoàn thành tác vụ, mức hài lòng.",
+   "Ngôi nhà có ở được không."
+  ],
+  "impact": [
+   "impact",
+   "Giá trị kinh doanh dài hạn: retention, doanh thu, chi phí vận hành giảm, ROI.",
+   "Gia đình sống trong nhà có khá lên không."
+  ],
+  "precision": [
+   "precision",
+   "Trong các trường hợp mô hình báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
+   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+  ],
+  "recall": [
+   "recall",
+   "Trong các trường hợp dương tính thật, mô hình bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
+   "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
+  ],
+  "fp": [
+   "false positive",
+   "Mô hình báo dương tính nhưng thực tế âm tính (cảnh báo giả).",
+   "Chuông báo cháy kêu khi chỉ có người nướng bánh."
+  ],
+  "fn": [
+   "false negative",
+   "Mô hình báo âm tính nhưng thực tế dương tính (bỏ sót).",
+   "Nhà cháy mà chuông không kêu."
+  ],
+  "guardrails": [
+   "guardrails",
+   "Các lớp chặn và lọc quanh mô hình: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
+   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+  ],
+  "fallback": [
+   "fallback",
+   "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
+   "Kế hoạch B khi kế hoạch A trục trặc."
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hành động được thực hiện.",
+   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+  ],
+  "pm": [
+   "AI Product Manager",
+   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
+   "Người chọn đích đến và giải thích vì sao đi đường này."
+  ],
+  "evalset": [
+   "eval set",
+   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
+   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+  ],
+  "pii": [
+   "PII",
+   "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
+   "Những thứ đủ để người lạ biết đó là bạn."
+  ]
+ },
+ "alias": {
+  "deterministic": [
+   "deterministic"
+  ],
+  "probabilistic": [
+   "probabilistic",
+   "xác suất"
+  ],
+  "inference": [
+   "inference cost",
+   "chi phí suy luận"
+  ],
+  "latency": [
+   "latency",
+   "Latency"
+  ],
+  "drift": [
+   "drift"
+  ],
+  "halluc": [
+   "hallucination",
+   "Hallucination"
+  ],
+  "output": [
+   "output"
+  ],
+  "outcome": [
+   "outcome"
+  ],
+  "impact": [
+   "impact"
+  ],
+  "precision": [
+   "precision",
+   "Precision"
+  ],
+  "recall": [
+   "recall",
+   "Recall"
+  ],
+  "fp": [
+   "false positive"
+  ],
+  "fn": [
+   "false negative"
+  ],
+  "guardrails": [
+   "guardrails",
+   "guardrail",
+   "Guardrails"
+  ],
+  "fallback": [
+   "fallback",
+   "Fallback"
+  ],
+  "hitl": [
+   "human-in-the-loop",
+   "Human-in-the-loop"
+  ],
+  "pm": [
+   "AI Product Manager",
+   "AI PM"
+  ],
+  "evalset": [
+   "eval set",
+   "eval sets"
+  ],
+  "pii": [
+   "PII"
+  ]
+ },
+ "rel": {
+  "deterministic": [
+   "probabilistic"
+  ],
+  "probabilistic": [
+   "deterministic",
+   "halluc"
+  ],
+  "output": [
+   "outcome"
+  ],
+  "outcome": [
+   "output",
+   "impact"
+  ],
+  "impact": [
+   "outcome"
+  ],
+  "precision": [
+   "recall",
+   "fp"
+  ],
+  "recall": [
+   "precision",
+   "fn"
+  ],
+  "fp": [
+   "precision"
+  ],
+  "fn": [
+   "recall"
+  ],
+  "guardrails": [
+   "pii"
+  ],
+  "fallback": [
+   "hitl"
+  ],
+  "hitl": [
+   "fallback"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Điểm khác cốt lõi giữa phần mềm truyền thống và sản phẩm AI là gì?",
+   "o": [
+    "AI luôn nhanh hơn",
+    "Phần mềm truyền thống deterministic, AI probabilistic",
+    "AI không cần kiểm thử",
+    "Phần mềm truyền thống không tốn chi phí vận hành"
+   ],
+   "a": 1,
+   "ex": "Cùng đầu vào, phần mềm quy tắc cho cùng đầu ra; AI đưa ra dự đoán có độ chính xác biến thiên."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "one",
+   "q": "Vì sao coi AI như một “dự án” ngắn hạn dễ dẫn tới thất bại?",
+   "o": [
+    "Vì dự án luôn trễ hạn",
+    "Vì bỏ qua chi phí suy luận liên tục, latency và việc chất lượng thay đổi theo thời gian",
+    "Vì dự án không có ngân sách",
+    "Vì AI không thể tích hợp"
+   ],
+   "a": 1,
+   "ex": "Sản phẩm AI tiếp tục tốn tiền mỗi lượt dùng và có thể drift; dự án chỉ đo việc bàn giao."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "“Retention tăng 10% sau hai quý nhờ tính năng AI” thuộc tầng nào?",
+   "o": [
+    "Output",
+    "Outcome",
+    "Impact"
+   ],
+   "a": 2,
+   "ex": "Retention, doanh thu, ROI là giá trị kinh doanh dài hạn, tức impact."
+  },
+  {
+   "id": "my4",
+   "s": 1,
+   "type": "one",
+   "q": "Hệ thống phát hiện gian lận tài chính nên ưu tiên chỉ số nào?",
+   "o": [
+    "Precision, vì báo nhầm gây phiền",
+    "Recall, vì bỏ sót gian lận gây thiệt hại nghiêm trọng",
+    "Không cần chọn",
+    "Latency"
+   ],
+   "a": 1,
+   "ex": "Khi false negative (bỏ sót) đắt, ưu tiên recall.",
+   "why": {
+    "0": "Precision quan trọng khi báo nhầm đắt hơn bỏ sót, ví dụ khóa nhầm tài khoản."
+   }
+  },
+  {
+   "id": "my5",
+   "s": 2,
+   "type": "multi",
+   "q": "Cách nào giúp sản phẩm sống chung với lỗi của AI?",
+   "o": [
+    "Viết rõ ngưỡng lỗi chấp nhận được",
+    "Thiết kế guardrails và fallback",
+    "Hứa với khách hàng AI luôn đúng",
+    "Chuyển cho người khi AI không chắc"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "Ngưỡng lỗi, guardrails, fallback và human-in-the-loop là các công cụ chính.",
+   "why": {
+    "2": "Hứa quá mức làm vỡ kỳ vọng và mất niềm tin."
+   }
+  },
+  {
+   "id": "my6",
+   "s": 3,
+   "type": "one",
+   "q": "Giai đoạn nào đưa dữ liệu ngược về đầu vòng đời?",
+   "o": [
+    "Ideation",
+    "Discovery",
+    "Deployment",
+    "Monitoring"
+   ],
+   "a": 3,
+   "ex": "Monitoring phát hiện drift và thu phản hồi, làm đầu vào cho vòng Ideation tiếp theo."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

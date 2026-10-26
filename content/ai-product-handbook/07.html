@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · AI &amp; LLM Fundamentals · AI Product Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.nest .ring{border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:10px 12px 12px;cursor:pointer;font:500 13px var(--sans);color:var(--body)}
+.nest .ring .ring{margin-top:8px}
+.nest .ring.on{border-color:var(--acc);color:var(--acc)}
+.nest .ring.on .ring{color:var(--body)}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><rect x="-38" y="-38" width="76" height="76" rx="10"/><rect x="-28" y="-28" width="56" height="56" rx="6" stroke-dasharray="2 2"/><path d="M-14 6l10-14 8 10 12-16"/><circle cx="16" cy="-14" r="1.8" fill="currentColor"/><path d="M38 38L52 52"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 07 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần III / 07</div>
+  <h1>AI và LLM <i>từ nền tảng</i></h1>
+  <p class="dek">Các tầng AI, machine learning, deep learning và foundation model; token, embedding, context window; prompt engineering; RAG, fine-tuning, tool calling, agent và model routing.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 07 / 21</span><span>8 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Hiểu cơ chế bên dưới giúp đặt kỳ vọng đúng: biết LLM làm được gì, tốn bao nhiêu, và khi nào nên dùng RAG thay vì fine-tuning.</div>
+  <section id="s1">
+    <span class="num">07.1</span>
+    <h2>AI, machine learning, deep learning, foundation model</h2>
+    <p class="gist">Bốn tầng lồng nhau, từ khái niệm rộng nhất tới loại model các sản phẩm hiện nay hay dùng.</p>
+<figure>
+      <div class="fig"><div class="nest" id="nest"></div><div class="panel" id="nestP"></div></div>
+      <figcaption><b>Hình 1</b>Chọn một tầng để xem định nghĩa.</figcaption>
+    </figure>
+    <p>Machine learning có ba kiểu học chính. Supervised learning học từ dữ liệu đã gán nhãn (biết trước đáp án). Unsupervised learning tự tìm cấu trúc ẩn trong dữ liệu chưa gán nhãn. Reinforcement learning tối ưu hành vi bằng thưởng, phạt khi tương tác với môi trường. LLM thuộc nhóm foundation model: được huấn luyện trước trên dữ liệu khổng lồ, rồi dùng lại cho nhiều tác vụ.</p>
+  </section>
+
+  <section id="s2">
+    <span class="num">07.2</span>
+    <h2>Token, embedding và context window</h2>
+    <p class="gist">Token là đơn vị tính tiền và giới hạn; embedding là cách máy “hiểu” nghĩa; context window là mặt bàn làm việc.</p>
+<p><b>Tokenization</b> chia văn bản thành token: một từ, một phần của từ hoặc một ký tự. LLM tính chi phí và giới hạn đầu vào, đầu ra theo số token, nên số token ảnh hưởng trực tiếp tới tiền API và latency. Với tiếng Anh, khoảng 1.000 token tương đương 750 từ; tiếng Việt thường tốn nhiều token hơn cho cùng lượng chữ.</p>
+    <p><b>Embedding</b> chuyển văn bản thành vector số nhiều chiều; các đoạn gần nghĩa nằm gần nhau. Vector database lưu các vector này để tìm kiếm theo nghĩa (semantic search) thay vì khớp từ khóa.</p>
+    <p><b>Context window</b> là số token tối đa model nhận và xử lý trong một lần gọi, tính cả prompt và câu trả lời. Quản lý bộ nhớ hội thoại và sắp xếp nội dung trong context window là việc kỹ thuật quan trọng để model không “quên” ngữ cảnh trong tương tác dài.</p>
+    <div class="take"><small>Ghi nhớ</small>Token là đơn vị tiền tệ của LLM. Quản lý token là quản lý chi phí sản phẩm.</div>
+  </section>
+
+  <section id="s3">
+    <span class="num">07.3</span>
+    <h2>Prompt engineering và context engineering</h2>
+    <p class="gist">Điều khiển đầu ra của model bằng lời dặn và dữ liệu đưa vào, không đụng tới trọng số.</p>
+<ul>
+      <li><b>System prompt và vai trò.</b> Chỉ thị nền: vai trò, văn phong, và các quy tắc cấm model làm những điều không mong muốn.</li>
+      <li><b>Few-shot prompting.</b> Đưa một vài ví dụ đầu vào – đầu ra ngay trong prompt để định hình cấu trúc và định dạng.</li>
+      <li><b>Context injection.</b> Chèn thêm thông tin động (dữ liệu người dùng, tài liệu tra cứu) vào prompt trước khi gửi, giúp giảm hallucination.</li>
+    </ul>
+    <p>Context engineering mở rộng ý cuối: không chỉ viết câu lệnh hay, mà chọn đúng thông tin nào được đưa vào context window, theo thứ tự nào, cắt bớt cái gì. Với sản phẩm thật, phần này thường quyết định chất lượng nhiều hơn câu chữ của prompt.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">07.4</span>
+    <h2>RAG, fine-tuning, tool calling, agent</h2>
+    <p class="gist">RAG khi tri thức thay đổi và cần trích nguồn; fine-tuning khi cần cố định định dạng hoặc văn phong.</p>
+<table class="tbl" id="rft">
+      <tr><th>Tiêu chí</th><th>RAG</th><th>Fine-tuning</th></tr>
+      <tr><td>Dữ liệu thay đổi</td><td>Rất thường xuyên (tin tức, tài liệu nội bộ cập nhật hằng ngày)</td><td>Ít thay đổi (văn phong công ty, thuật ngữ y khoa, pháp lý cố định)</td></tr>
+      <tr><td>Truy nguồn</td><td>Trích được nguồn, trang, đoạn làm căn cứ</td><td>Kiến thức nằm trong trọng số, không trích nguồn cụ thể được</td></tr>
+      <tr><td>Định dạng, văn phong</td><td>Trung bình, dựa vào prompt và few-shot</td><td>Rất tốt cho cấu trúc đầu ra phức tạp (JSON đặc thù, giọng thương hiệu)</td></tr>
+      <tr><td>Chi phí, độ phức tạp</td><td>Thấp – trung bình: lưu vector DB và token</td><td>Cao: GPU để huấn luyện lại và bảo trì phiên bản model</td></tr>
+    </table>
+    <figure>
+      <div class="fig"><div id="rftQ"></div></div>
+      <figcaption><b>Hình 2</b>Tình huống nào hợp RAG, tình huống nào hợp fine-tuning?</figcaption>
+    </figure>
+    <p>Bên cạnh hai hướng trên có thêm hai mẫu kiến trúc. <b>Tool calling</b> (function calling) cho model quyết định gọi API bên ngoài để làm việc thật: truy vấn SQL, gửi email, tạo hóa đơn. <b>AI agent và model routing</b>: hệ thống tự điều hướng từng tác vụ tới model phù hợp, dùng model nhỏ, rẻ cho việc đơn giản và chỉ chuyển sang model lớn khi cần suy luận phức tạp.</p>
+    <div class="take"><small>Ghi nhớ</small>Câu hỏi đầu tiên khi chọn RAG hay fine-tuning: tri thức có thay đổi hằng tuần không, và người dùng có cần thấy nguồn không?</div>
+  </section>
+
+  <div class="vids" data-videos="07"></div>
+  <a class="next-ch" href="/blog/ai-product-handbook/08"><span><small>Chương tiếp theo</small><b>08 · AI System Architecture & Production Engineering</b></span><span>→</span></a>
+
+  <div class="end"><p></p></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+// a statement sorter: data = [[statement, right layer index, why]], labels = layer names
+function sorter(box, data, labels) {
+ let i = 0;
+ box.innerHTML = `<div class="figbar"><span data-n></span><button class="pri" data-next>Câu khác →</button></div><div class="stmt" data-q></div><div class="lay" style="grid-template-columns:repeat(${labels.length},1fr)">${labels.map((l, j) => `<button data-l="${j}">${l}</button>`).join('')}</div><div class="panel" data-p></div>`;
+ const $ = s => box.querySelector(s);
+ const show = () => {$('[data-q]').textContent = '“' + data[i][0] + '”'; $('[data-n]').textContent = `Câu ${i + 1}/${data.length}`; $('[data-p]').innerHTML = '<h5>Chọn một ô</h5>Câu này thuộc nhóm nào?'; box.querySelectorAll('[data-l]').forEach(b => b.className = '')};
+ box.onclick = e => {
+  if (e.target.closest('[data-next]')) {i = (i + 1) % data.length; return show()}
+  const b = e.target.closest('[data-l]'); if (!b) return; const ok = +b.dataset.l === data[i][1];
+  box.querySelectorAll('[data-l]').forEach(x => x.className = +x.dataset.l === data[i][1] ? 'right' : x === b ? 'wrong' : '');
+  $('[data-p]').innerHTML = `<h5>${ok ? 'Đúng.' : 'Chưa đúng.'}</h5>${data[i][2]}`};
+ show()}
+
+const NEST = [['Artificial Intelligence', 'Khái niệm rộng nhất: hệ thống máy tính làm được những việc vốn cần trí thông minh của con người.'],
+ ['Machine learning', 'Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay.'],
+ ['Deep learning', 'Nhánh của ML dùng mạng neural nhiều lớp để xử lý dữ liệu phi cấu trúc như ảnh, âm thanh, văn bản.'],
+ ['Foundation model', 'Model deep learning quy mô lớn, huấn luyện trước trên dữ liệu khổng lồ, dùng lại cho nhiều tác vụ mà không phải huấn luyện từ đầu. LLM nằm ở đây.']];
+// nested buttons are invalid html, so the rings are divs styled as buttons
+nest.innerHTML = NEST.reduceRight((inner, [t], i) => `<div class="ring" data-i="${i}" tabindex="0" role="button">${t}${inner}</div>`, '');
+nest.onclick = e => {const r = e.target.closest('.ring'); if (!r) return; nest.querySelectorAll('.ring').forEach(x => x.classList.toggle('on', x === r));
+ nestP.innerHTML = `<h5>${NEST[+r.dataset.i][0]}</h5>${NEST[+r.dataset.i][1]}`};
+nest.querySelector('[data-i="3"]').click();
+sorter(document.getElementById('rftQ'), [
+ ['Trợ lý trả lời theo chính sách bảo hiểm, chính sách đổi mỗi quý và cần trích điều khoản.', 0, 'Tri thức thay đổi và cần truy nguồn: RAG.'],
+ ['Model luôn phải trả về JSON theo một schema nội bộ phức tạp.', 1, 'Cố định định dạng đầu ra là điểm mạnh của fine-tuning.'],
+ ['Chatbot tra tin tức nội bộ cập nhật hằng ngày.', 0, 'Dữ liệu đổi liên tục; fine-tuning sẽ lạc hậu ngay.'],
+ ['Viết mô tả sản phẩm đúng giọng thương hiệu, giảm token trong prompt để nhanh hơn.', 1, 'Văn phong cố định và cắt bớt prompt dài là lý do hợp lý để fine-tune.'],
+ ['Tra cứu tài liệu kỹ thuật, người dùng muốn bấm vào nguồn để kiểm.', 0, 'Trích nguồn là thế mạnh của RAG.']], ['RAG', 'Fine-tuning']);
+
+// ---- chapter data for kit.js ----
+window.CH = {
+ "key": "aip07",
+ "minutes": 8,
+ "next": {
+  "href": "/blog/ai-product-handbook/08",
+  "n": "08",
+  "t": "AI System Architecture & Production Engineering"
+ },
+ "sections": [
+  {
+   "id": "s1",
+   "n": "07.1",
+   "t": "AI, machine learning, deep learning, foundation model",
+   "sum": [
+    "AI ⊃ ML ⊃ deep learning ⊃ foundation model.",
+    "ML: supervised, unsupervised, reinforcement.",
+    "LLM là foundation model chuyên về ngôn ngữ."
+   ],
+   "terms": [
+    "ml",
+    "dl",
+    "fm",
+    "llm"
+   ]
+  },
+  {
+   "id": "s2",
+   "n": "07.2",
+   "t": "Token, embedding và context window",
+   "sum": [
+    "Token quyết định chi phí và latency.",
+    "Embedding và vector database cho semantic search.",
+    "Context window tính cả prompt và câu trả lời."
+   ],
+   "terms": [
+    "token",
+    "embedding",
+    "vectordb",
+    "context"
+   ]
+  },
+  {
+   "id": "s3",
+   "n": "07.3",
+   "t": "Prompt engineering và context engineering",
+   "sum": [
+    "System prompt đặt vai trò và quy tắc.",
+    "Few-shot cho ví dụ mẫu.",
+    "Context injection đưa dữ liệu động, giảm hallucination."
+   ],
+   "terms": [
+    "prompt",
+    "fewshot",
+    "halluc"
+   ]
+  },
+  {
+   "id": "s4",
+   "n": "07.4",
+   "t": "RAG, fine-tuning, tool calling, agent",
+   "sum": [
+    "RAG: dữ liệu thay đổi, cần trích nguồn, chi phí thấp hơn.",
+    "Fine-tuning: cố định định dạng, văn phong, tốn GPU.",
+    "Tool calling và model routing mở rộng năng lực hệ thống."
+   ],
+   "terms": [
+    "rag",
+    "finetune",
+    "toolcall",
+    "agent",
+    "routing"
+   ]
+  }
+ ],
+ "terms": {
+  "ml": [
+   "machine learning",
+   "Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.",
+   "Học nấu ăn bằng cách nếm nhiều món, không phải đọc từng công thức."
+  ],
+  "dl": [
+   "deep learning",
+   "Nhánh của machine learning dùng mạng neural nhiều lớp, mạnh với ảnh, âm thanh, văn bản.",
+   "Nhiều tầng lọc chồng lên nhau, mỗi tầng nhận ra một chi tiết."
+  ],
+  "fm": [
+   "foundation model",
+   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
+   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+  ],
+  "llm": [
+   "LLM",
+   "Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.",
+   "Người đã đọc gần hết thư viện, nói gì cũng trôi chảy nhưng không phải lúc nào cũng đúng."
+  ],
+  "token": [
+   "token",
+   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
+   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+  ],
+  "embedding": [
+   "embedding",
+   "Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.",
+   "Tọa độ trên bản đồ ý nghĩa: hai câu cùng ý thì đứng gần nhau."
+  ],
+  "vectordb": [
+   "vector database",
+   "Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).",
+   "Thủ thư xếp sách theo nội dung, không theo tên."
+  ],
+  "context": [
+   "context window",
+   "Số token tối đa model nhận và sinh trong một lần gọi, tính cả prompt lẫn câu trả lời.",
+   "Mặt bàn làm việc: rộng tới đâu thì bày được tới đó."
+  ],
+  "prompt": [
+   "prompt engineering",
+   "Thiết kế câu lệnh và ngữ cảnh đưa vào model (system prompt, few-shot, chèn dữ liệu) để điều khiển đầu ra mà không đổi trọng số.",
+   "Giao việc cho người mới: nói rõ vai trò, cho ví dụ, đưa tài liệu."
+  ],
+  "fewshot": [
+   "few-shot prompting",
+   "Đưa vài ví dụ đầu vào – đầu ra mẫu ngay trong prompt để model bắt chước định dạng.",
+   "Cho xem hai bài giải mẫu trước khi làm bài thứ ba."
+  ],
+  "halluc": [
+   "hallucination",
+   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
+   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+  ],
+  "rag": [
+   "RAG",
+   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
+   "Thi được mở sách: tra đúng trang rồi mới viết."
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
+   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+  ],
+  "toolcall": [
+   "tool calling",
+   "Khả năng model quyết định gọi hàm hoặc API bên ngoài (truy vấn SQL, gửi email…) thay vì chỉ trả văn bản.",
+   "Trợ lý biết nhấc máy gọi phòng kế toán thay vì đoán số liệu."
+  ],
+  "agent": [
+   "AI agent",
+   "Ứng dụng dựa trên LLM tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.",
+   "Trợ lý được giao cả việc, tự chia bước và tự cầm dụng cụ."
+  ],
+  "routing": [
+   "model routing",
+   "Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.",
+   "Phòng khám: cảm cúm gặp bác sĩ đa khoa, ca khó mới lên chuyên gia."
+  ]
+ },
+ "alias": {
+  "ml": [
+   "machine learning",
+   "Machine learning"
+  ],
+  "dl": [
+   "deep learning",
+   "Deep learning"
+  ],
+  "fm": [
+   "foundation model"
+  ],
+  "llm": [
+   "LLM"
+  ],
+  "token": [
+   "token"
+  ],
+  "embedding": [
+   "embedding"
+  ],
+  "vectordb": [
+   "vector database",
+   "vector DB"
+  ],
+  "context": [
+   "context window"
+  ],
+  "prompt": [
+   "prompt engineering",
+   "Prompt engineering"
+  ],
+  "fewshot": [
+   "few-shot"
+  ],
+  "halluc": [
+   "hallucination",
+   "Hallucination"
+  ],
+  "rag": [
+   "RAG"
+  ],
+  "finetune": [
+   "fine-tuning",
+   "Fine-tuning"
+  ],
+  "toolcall": [
+   "tool calling",
+   "Tool calling"
+  ],
+  "agent": [
+   "AI agent",
+   "agent"
+  ],
+  "routing": [
+   "model routing",
+   "Model routing"
+  ]
+ },
+ "rel": {
+  "llm": [
+   "fm",
+   "token"
+  ],
+  "token": [
+   "context"
+  ],
+  "embedding": [
+   "vectordb",
+   "rag"
+  ],
+  "rag": [
+   "embedding",
+   "finetune"
+  ],
+  "finetune": [
+   "rag"
+  ],
+  "agent": [
+   "toolcall"
+  ]
+ },
+ "quiz": [
+  {
+   "id": "my1",
+   "s": 0,
+   "type": "one",
+   "q": "Thứ tự lồng nhau đúng là gì?",
+   "o": [
+    "ML ⊃ AI ⊃ deep learning",
+    "AI ⊃ ML ⊃ deep learning ⊃ foundation model",
+    "Deep learning ⊃ ML ⊃ AI",
+    "Foundation model ⊃ AI"
+   ],
+   "a": 1,
+   "ex": "AI rộng nhất, foundation model là tầng trong cùng."
+  },
+  {
+   "id": "my2",
+   "s": 0,
+   "type": "one",
+   "q": "Học từ dữ liệu đã gán nhãn là kiểu học nào?",
+   "o": [
+    "Supervised",
+    "Unsupervised",
+    "Reinforcement"
+   ],
+   "a": 0,
+   "ex": "Supervised learning biết trước đáp án trong dữ liệu huấn luyện."
+  },
+  {
+   "id": "my3",
+   "s": 1,
+   "type": "one",
+   "q": "Context window gồm những gì?",
+   "o": [
+    "Chỉ prompt đầu vào",
+    "Cả prompt đầu vào và câu trả lời đầu ra",
+    "Chỉ câu trả lời",
+    "Toàn bộ dữ liệu huấn luyện"
+   ],
+   "a": 1,
+   "ex": "Giới hạn tính cả hai chiều."
+  },
+  {
+   "id": "my4",
+   "s": 1,
+   "type": "one",
+   "q": "Vector database dùng để làm gì?",
+   "o": [
+    "Lưu ảnh",
+    "Lưu embedding và tìm theo nghĩa",
+    "Thay thế SQL",
+    "Huấn luyện model"
+   ],
+   "a": 1,
+   "ex": "Semantic search dựa trên độ gần giữa các vector."
+  },
+  {
+   "id": "my5",
+   "s": 2,
+   "type": "one",
+   "q": "Kỹ thuật nào giảm hallucination bằng cách đưa tài liệu tra cứu vào prompt?",
+   "o": [
+    "Few-shot",
+    "Context injection",
+    "Tăng temperature",
+    "Fine-tuning"
+   ],
+   "a": 1,
+   "ex": "Context injection cho model dữ liệu thật để dựa vào."
+  },
+  {
+   "id": "my6",
+   "s": 3,
+   "type": "one",
+   "q": "Khi nào nên chọn fine-tuning thay vì RAG?",
+   "o": [
+    "Khi dữ liệu thay đổi hằng ngày",
+    "Khi cần trích nguồn",
+    "Khi cần cố định định dạng đầu ra phức tạp hoặc văn phong",
+    "Khi muốn chi phí ban đầu thấp nhất"
+   ],
+   "a": 2,
+   "ex": "Các trường hợp khác hợp RAG hơn."
+  }
+ ]
+};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="videos.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>
