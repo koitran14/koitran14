@@ -17,7 +17,7 @@
 <article>
   <div class="crumb"><a href="/blog/rea-handbook"><b>Learning</b> / REA Handbook</a> / 03</div>
   <h1>Quy trình: từ bằng chứng <i>đến tái tạo</i></h1>
-  <p class="dek">REA giúp agent đi từ một tệp không có mã nguồn đến một bản cài đặt mới có kiểm thử. Chương này đi qua từng pha, xem một kết quả có bằng chứng trông ra sao, rồi đọc kỹ ví dụ nút phần trăm của Windows Calculator.</p>
+  <p class="dek">REA giúp agent đi từ một tệp không có mã nguồn đến một bản cài đặt mới có kiểm thử. Chương này đi qua từng bước, xem một kết quả có bằng chứng trông ra sao, rồi đọc kỹ ví dụ nút phần trăm của Windows Calculator.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 03 / 10</span><span>16 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
@@ -26,17 +26,17 @@
 
   <section id="s1">
     <span class="num">03.1</span>
-    <h2>Ba pha: Decompile, Understand, Recreate</h2>
+    <h2>Ba bước: Decompile, Understand, Recreate</h2>
     <p class="gist">Trích xuất dữ liệu, hiểu hành vi, rồi viết lại có kiểm thử.</p>
-    <p>Tài liệu nguồn mô tả quy trình của REA thành ba pha nối tiếp nhau. Agent không nhảy thẳng từ câu hỏi đến mã mới. Agent đi qua từng pha, và pha nào cũng phải giữ lại bằng chứng cho pha sau. Báo cáo nguồn thêm một bước thứ tư ở cuối: đối chiếu bản mới với bản gốc.</p>
+    <p>Tài liệu nguồn chia quy trình của REA thành ba bước nối tiếp nhau. Agent không nhảy thẳng từ câu hỏi đến mã mới. Agent làm lần lượt, xong việc nào cũng phải để lại bằng chứng cho việc tiếp theo. Báo cáo nguồn thêm một bước thứ tư ở cuối: đối chiếu bản mới với bản gốc.</p>
     <figure>
       <div class="fig">
         <div id="ph"></div>
       </div>
-      <figcaption><b>Hình 1</b>Bốn pha nối tiếp; chọn một pha để xem việc cần làm và thứ phải giữ lại cho pha sau.</figcaption>
+      <figcaption><b>Hình 1</b>Bốn bước nối tiếp nhau. Chọn một bước để xem việc cần làm và những gì phải giữ lại cho phần sau.</figcaption>
     </figure>
-    <p>Điểm quan trọng là vòng lặp. Trong video thử nghiệm của Nick Saraev, agent liên tục gọi REA, đọc kết quả, đặt câu hỏi tiếp, rồi lại gọi REA, cho đến khi dựng xong ứng dụng. Pha Understand thường lặp nhiều lần nhất, vì mỗi câu trả lời lại mở ra một nhánh cần kiểm tra.</p>
-    <div class="take"><small>Ghi nhớ</small>Recreate không phải pha cuối. Bản viết lại chỉ đáng tin khi đã chạy song song với bản gốc trên cùng bộ đầu vào.</div>
+    <p>Điểm quan trọng là vòng lặp. Trong video thử nghiệm của Nick Saraev, agent liên tục gọi REA, đọc kết quả, đặt câu hỏi tiếp, rồi lại gọi REA, cho đến khi dựng xong ứng dụng. Bước Understand thường lặp nhiều lần nhất, vì mỗi câu trả lời lại mở ra một nhánh cần kiểm tra.</p>
+    <div class="take"><small>Ghi nhớ</small>Recreate chưa phải bước cuối. Bản viết lại chỉ đáng tin khi đã chạy song song với bản gốc trên cùng bộ đầu vào.</div>
   </section>
 
   <section id="s2">
@@ -130,10 +130,10 @@ const PH = [['Decompile / Extract', 'Mở tệp mục tiêu bằng engine phù h
  ['Understand', 'Lần theo luồng điều khiển, đồ thị gọi hàm, tham chiếu chéo (xrefs), dữ liệu vào ra và điều kiện rẽ nhánh. So giả thuyết với bằng chứng.', 'Ghi lại các điểm còn mơ hồ vào danh sách unknowns.'],
  ['Recreate', 'Viết lại hành vi cần thiết bằng ngôn ngữ và framework của dự án đích, ví dụ C, TypeScript hay Python.', 'Ghi rõ phần nào tương đương hành vi, phần nào là thiết kế mới.'],
  ['Verification', 'Xây bộ test dựa trên quan sát thực tế, chạy song song bản mới và bản gốc, kiểm tra các trường hợp biên.', 'Lưu kết quả test làm bằng chứng tương đương.']];
-DG.steps(document.getElementById('ph'), {unit: 'Pha', start: 0,
+DG.steps(document.getElementById('ph'), {unit: 'Bước', start: 0,
  steps: PH.map((p, i) => ({t: p[0], sub: ['trích xuất', 'hiểu hành vi', 'tái tạo', 'kiểm chứng'][i], group: ['Phân tích', '', 'Xây dựng', ''][i],
   body: `${p[1]}<p class="note" style="margin:8px 0 0">Giữ lại: ${p[2]}</p>`})),
- loop: {at: 1, text: 'pha này thường lặp nhiều lần trước khi sang Recreate'}});
+ loop: {at: 1, text: 'bước này thường lặp nhiều lần trước khi sang Recreate'}});
 // Hình 2: each JSON line carries the field it shows
 const EV = [['{', ''], ['  "claim": "Phím % rẽ nhánh theo toán tử trước",', 'claim'], ['  "address": "0x180124945",', 'addr'], ['  "digest": "sha256:…",', 'digest'], ['  "code": "CMP EAX, 0x5c ; IDC_MUL …",', 'code'], ['  "coverage": { "status": "complete" },', 'cov'], ['  "list_unknowns": [', 'unk'], ['    "chưa xác định nhánh khi nhập số âm"', 'unk'], ['  ]', 'unk'], ['}', '']];
 const EVI = {claim: ['Kết luận', 'Điều agent khẳng định. Riêng trường này chưa chứng minh được gì; giá trị nằm ở các trường bên dưới.'],
@@ -181,7 +181,7 @@ one('#rc', 'r', rcShow); rcShow(0);
 window.CH = {key: 'rea03', minutes: 16,
  next: {href: '/blog/rea-handbook/04', n: '04', t: 'REA dùng được vào việc gì?'},
  sections: [
-  {id: 's1', n: '03.1', t: 'Ba pha', sum: ['Decompile lấy dữ liệu, Understand lần theo hành vi, Recreate viết lại.', 'Bước Verification so bản mới với bản gốc.', 'Pha Understand thường lặp nhiều lần nhất.'], terms: ['decompile', 'controlflow', 'xref', 'recreate', 'rea']},
+  {id: 's1', n: '03.1', t: 'Ba bước', sum: ['Decompile lấy dữ liệu, Understand lần theo hành vi, Recreate viết lại.', 'Bước Verification so bản mới với bản gốc.', 'Bước Understand thường lặp nhiều lần nhất.'], terms: ['decompile', 'controlflow', 'xref', 'recreate', 'rea']},
   {id: 's2', n: '03.2', t: 'Kết quả có bằng chứng', sum: ['Kết quả gồm địa chỉ, digest, mã thô, coverage và unknowns.', 'Tên trường theo báo cáo nguồn, có thể đổi theo phiên bản.', 'complete chỉ áp dụng cho phạm vi đã khảo sát.'], terms: ['evidence', 'digest', 'coverage', 'unknowns']},
   {id: 's3', n: '03.3', t: 'Nút % trong Calculator', sum: ['Hai phép so sánh và hằng số 100 quyết định nhánh.', 'Cộng, trừ: phần trăm của số thứ nhất; nhân, chia: đổi sang thập phân.', 'Một ví dụ chưa đủ cho mọi phiên bản.'], terms: ['assembly', 'controlflow']},
   {id: 's4', n: '03.4', t: 'Ba case study', sum: ['Chrome Dino qua CDP, DX-Ball và Touhou 4 khớp từng byte.', 'Các con số do nguồn công bố, chưa kiểm chứng lại.'], terms: ['cdp', 'bytematch', 'ida']},
@@ -190,7 +190,7 @@ window.CH = {key: 'rea03', minutes: 16,
   ida: ['IDA Pro', 'Disassembler và decompiler thương mại, có từ thập niên 1990. REA có thể gọi IDA Pro như một engine; phần mềm này giữ giấy phép riêng.', 'Bộ đồ nghề lâu năm, phải trả phí, dùng để đọc mã máy của chương trình.'],
   rea: ['REA', 'Reverse Engineer Anything: dự án mã nguồn mở gồm CLI và MCP server (gói npm rea-agents) cung cấp cho AI agent một giao diện thống nhất tới nhiều công cụ phân tích phần mềm.', 'Một tổng đài viên: agent chỉ cần gọi một số, tổng đài tự nối máy tới đúng chuyên gia (Ghidra, JADX, trình duyệt…) cho từng loại tệp.'],
   decompile: ['decompile', 'Bước trích xuất từ tệp nhị phân hoặc bytecode: pseudocode, assembly, chuỗi ký tự, symbols và cấu trúc tệp, dùng làm dữ liệu đầu vào cho phân tích.', 'Tháo một món đồ ra để xem các linh kiện bên trong, chưa cần hiểu chúng phối hợp với nhau thế nào.'],
-  recreate: ['recreate', 'Pha viết lại hành vi đã hiểu được thành một cài đặt mới trong công nghệ của dự án đích, kèm test chứng minh tương đương.', 'Nấu lại một món đã nếm, bằng bếp và nguyên liệu nhà mình, rồi cho người khác nếm thử xem có giống không.'],
+  recreate: ['recreate', 'Bước viết lại hành vi đã hiểu được thành một cài đặt mới trong công nghệ của dự án đích, kèm test chứng minh tương đương.', 'Nấu lại một món đã nếm, bằng bếp và nguyên liệu nhà mình, rồi cho người khác nếm thử xem có giống không.'],
   controlflow: ['control flow', 'Thứ tự thực thi các lệnh trong chương trình, gồm các nhánh rẽ, vòng lặp và lời gọi hàm.', 'Sơ đồ đường đi trong một tòa nhà: từ cửa này rẽ trái hay rẽ phải tùy điều kiện.'],
   xref: ['xrefs', 'Cross-references: danh sách các vị trí trong chương trình tham chiếu đến một hàm, biến hoặc chuỗi, dùng để lần ngược ai gọi ai.', 'Mục “xem thêm” ở cuối sách: cho biết những trang nào nhắc tới cùng một tên.'],
   evidence: ['Evidence v2', 'Định dạng kết quả mà báo cáo nguồn mô tả: mỗi kết luận đi kèm địa chỉ, digest, mã thô, trạng thái coverage và danh sách unknowns.', 'Biên bản có chữ ký và ảnh chụp hiện trường, thay vì một lời kể miệng.'],
@@ -210,10 +210,10 @@ window.CH = {key: 'rea03', minutes: 16,
   {id: 'nb2', s: 0, type: 'one', q: 'Quy trình 3 bước cốt lõi mà REA cung cấp cho AI agent để nghiên cứu và tái tạo một tính năng là gì?', o: ['Scan → Patch → Deploy', 'Isolate → Execute → Clean', 'Decompile → Understand → Recreate', 'Capture → Encrypt → Transmit'], a: 2,
    ex: 'Đây là quy trình chuẩn của REA: giải mã hoặc kiểm tra ứng dụng, theo dõi luồng mã để hiểu cơ chế kèm bằng chứng, sau đó viết lại tính năng cho dự án mới.',
    why: {0: 'Đây là quy trình quản lý lỗ hổng và triển khai phần mềm, không phải quy trình dịch ngược tính năng của REA.', 1: 'Đây là các bước trong phân tích mã độc ở môi trường động, không phải quy trình tìm hiểu và xây dựng lại của REA.', 3: 'Đây là quy trình xử lý dữ liệu mạng hoặc bảo mật truyền thông, không phản ánh các bước phân tích của REA.'}},
-  {id: 'my1', s: 0, type: 'one', q: 'Sau pha Recreate, bước nào giúp chứng minh bản viết lại tương đương bản gốc?', o: ['Đổi tên biến cho giống bản gốc', 'Chạy bộ test song song trên bản mới và bản gốc', 'Hỏi lại agent xem nó có chắc không', 'Tăng mức bao phủ lên complete'], a: 1,
+  {id: 'my1', s: 0, type: 'one', q: 'Sau Recreate, bước nào giúp chứng minh bản viết lại tương đương bản gốc?', o: ['Đổi tên biến cho giống bản gốc', 'Chạy bộ test song song trên bản mới và bản gốc', 'Hỏi lại agent xem nó có chắc không', 'Tăng mức bao phủ lên complete'], a: 1,
    ex: 'Bước Verification chạy cùng bộ đầu vào trên cả hai bản và so kết quả. Đó là bằng chứng tương đương.', why: {0: 'Tên biến không nói gì về hành vi.', 2: 'Sự tự tin của mô hình không phải bằng chứng.', 3: 'Coverage nói về phạm vi đã phân tích, không chứng minh bản mới đúng.'}},
-  {id: 'my2', s: 0, type: 'multi', q: 'Trong pha Understand, agent thường làm những việc nào?', o: ['Lần theo luồng điều khiển và đồ thị gọi hàm', 'Tìm tham chiếu chéo (xrefs)', 'Ghi lại các điểm còn mơ hồ', 'Đóng gói bản build để phát hành'], a: [0, 1, 2],
-   ex: 'Understand là pha lần theo hành vi và so giả thuyết với bằng chứng; phát hành không thuộc pha này.', why: {3: 'Đóng gói phát hành nằm ngoài quy trình phân tích.'}},
+  {id: 'my2', s: 0, type: 'multi', q: 'Ở bước Understand, agent thường làm những việc nào?', o: ['Lần theo luồng điều khiển và đồ thị gọi hàm', 'Tìm tham chiếu chéo (xrefs)', 'Ghi lại các điểm còn mơ hồ', 'Đóng gói bản build để phát hành'], a: [0, 1, 2],
+   ex: 'Understand là bước lần theo hành vi và so giả thuyết với bằng chứng; phát hành không thuộc bước này.', why: {3: 'Đóng gói phát hành nằm ngoài quy trình phân tích.'}},
   {id: 'my3', s: 1, type: 'multi', q: 'Theo báo cáo nguồn, một kết quả Evidence v2 kèm những thông tin nào?', o: ['Địa chỉ bộ nhớ chính xác', 'Digest của tệp nhị phân', 'Trạng thái coverage', 'Mã nguồn gốc có comment của tác giả'], a: [0, 1, 2],
    ex: 'Kết quả gồm địa chỉ, digest, mã hàm thô, coverage và danh sách unknowns.', why: {3: 'Comment và tên biến gốc đã mất khi biên dịch, không thể có trong kết quả.'}},
   {id: 'my4', s: 1, type: 'one', q: 'Trạng thái coverage.status = complete cho biết điều gì?', o: ['Toàn bộ ứng dụng đã được hiểu', 'Phạm vi đã khảo sát được đọc hết', 'Không còn lỗi bảo mật nào', 'Bản viết lại đã khớp từng byte'], a: 1,
