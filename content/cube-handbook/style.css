@@ -193,12 +193,14 @@ body.kw-off .kw{background:none!important;text-decoration:none!important;color:i
 .yt-box{margin:0 0 26px}
 .yt-box iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
 .yt-box .note{margin:8px 0 0;font-size:13px}
-.mdock{position:fixed;left:50%;bottom:84px;transform:translate(-50%,12px);opacity:0;visibility:hidden;pointer-events:none;width:min(560px,calc(100% - 32px));z-index:60;display:grid;grid-template-columns:36px 1fr auto;gap:12px;align-items:center;padding:8px 10px 8px 8px;border:1px solid var(--line);border-radius:999px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.1);transition:transform .25s,opacity .25s,visibility .25s}
+.mdock{position:fixed;left:50%;bottom:84px;transform:translate(-50%,12px);opacity:0;visibility:hidden;pointer-events:none;width:min(560px,calc(100% - 32px));z-index:60;display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:12px;align-items:center;padding:8px 10px 8px 8px;border:1px solid var(--line);border-radius:999px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.1);transition:transform .25s,opacity .25s,visibility .25s}
 .mdock.show{transform:translate(-50%,0);opacity:1;visibility:visible;pointer-events:auto}
 .mdock .pp,.mpanel .pp{width:36px;height:36px;border-radius:50%;border:0;background:var(--fg);color:var(--bg);display:grid;place-items:center;cursor:pointer}
 .mdock .pp svg,.mpanel .pp svg{width:13px;height:13px}
-.mdock .ttl{font-size:13px;color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mdock .ttl span{color:var(--muted);font:400 12px var(--mono);margin-left:8px}
+/* a long section title truncates; the play time beside it always stays visible */
+.mdock .ttl{display:flex;align-items:baseline;gap:8px;font-size:13px;color:var(--fg);white-space:nowrap}
+.mdock .ttl .t{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.mdock .ttl span:not(.t){flex:none;color:var(--muted);font:400 12px var(--mono)}
 .mdock .bar{height:3px;background:var(--line);border-radius:2px;margin-top:6px;overflow:hidden}.mdock .bar b{display:block;height:100%;background:var(--acc);width:0}
 .mdock .x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 6px}
 .mmap{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;font:400 11px var(--mono);color:var(--bad)}

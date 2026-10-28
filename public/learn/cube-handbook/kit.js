@@ -146,7 +146,7 @@ if (M) {
  function dockUI() {
   dock.querySelector('.pp').innerHTML = au.paused ? PLAY : PAUSE;
   const s = seg && SEC.find(x => x.n === seg.n), a = seg ? seg.at : 0, b = seg ? seg.end : au.duration;
-  dock.querySelector('.ttl').innerHTML = `${s ? s.n + ' · ' + s.t : M.audio.title}<span>audio AI · </span><span>${fmt(au.currentTime)} / ${seg ? fmt(seg.end) : fmt(au.duration)}</span>`;
+  dock.querySelector('.ttl').innerHTML = `<span class="t">${s ? s.n + ' · ' + s.t : M.audio.title}</span><span>audio AI · ${fmt(au.currentTime)} / ${seg ? fmt(seg.end) : fmt(au.duration)}</span>`;
   dock.querySelector('.bar b').style.width = Math.min(100, Math.max(0, (au.currentTime - a) / (b - a) * 100)) + '%';
   $$('[data-m=aud]').forEach(x => x.classList.toggle('on', !au.paused && seg?.n === x.dataset.n))}
  // sit just above whatever the site pins to the bottom of the screen (its toolbar, toasts)
