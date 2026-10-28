@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 · Access Control · Cube.dev Handbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* figures used only in this chapter */
+.figbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;font-size:13px;color:var(--muted)}
+.seg{flex-wrap:wrap}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0 28px}
+.cmp.two{grid-template-columns:repeat(2,1fr)}
+.cmp div{padding:14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:14px;line-height:1.55}
+.cmp div b{display:block;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cmp div:first-child{border-color:var(--acc)}.cmp div:first-child b{color:var(--acc)}
+.jt{width:100%;border-collapse:collapse;font:13px var(--mono);background:var(--bg);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.jt th,.jt td{padding:7px 10px;border-top:1px solid var(--line);text-align:left}
+.jt th{font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-top:0}
+.jt tr.out td{color:var(--muted)}
+.jt td.mask{color:var(--bad)}
+.jt td.real{color:var(--fg)}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:12px;font-size:14px;color:var(--muted)}
+.total b{font:400 30px var(--serif);color:var(--fg)}
+.total b.bad{color:var(--bad)}
+.flow{display:grid;gap:8px}
+.flow div{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:start;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.flow div b{font:500 11px/1.9 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.flow div code{white-space:pre-wrap;word-break:break-word}
+.flow div.warn{border-color:var(--bad)}.flow div.warn b{color:var(--bad)}
+.flow div.ok{border-color:var(--acc)}.flow div.ok b{color:var(--acc)}
+/* Hình 1: request pipeline */
+.pipe{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px}
+.pipe button{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);cursor:pointer;font:500 12px/1.3 var(--sans);color:var(--body)}
+.pipe button small{font:500 10px var(--mono);color:var(--muted);word-break:break-word}
+.pipe button i{font:normal 500 9.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pipe button.on{border-color:var(--acc);background:var(--acc-soft);color:var(--fg)}
+.pipe button.on small{color:var(--acc)}
+.panel dl{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;margin:10px 0 0;font-size:13.5px}
+.panel dt{font:500 10.5px/1.9 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.panel dd{margin:0}
+/* Hình 2: JWT playground */
+.jwt{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.jwt textarea{width:100%;min-height:210px;resize:vertical;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);font:13px/1.55 var(--mono)}
+.jwt textarea:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.jwt .flow div{grid-template-columns:1fr;gap:2px;padding:10px 14px}
+/* Hình 3: member access per group */
+.mem{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.mem div{padding:12px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:13px var(--mono);text-align:center;transition:opacity .25s,border-color .25s,background .25s}
+.mem div small{display:block;margin-top:4px;font:400 11px var(--sans);color:var(--muted)}
+.mem div.on{border-color:var(--acc);background:var(--acc-soft);color:var(--fg)}
+.mem div.off{opacity:.4;border-style:dashed}
+/* Hình 4: access policy grid, members × rows */
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{font:500 12px var(--mono);padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--muted);cursor:pointer}
+.chips button.on{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.ap{display:grid;grid-template-columns:96px repeat(3,1fr);gap:4px;font:13px var(--mono)}
+.ap > span{padding:6px 8px;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.ap .cell{min-height:52px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);transition:opacity .25s,background .25s,border-color .25s}
+.ap .cell i{display:inline-block;margin:0 4px 4px 0;padding:1px 6px;border-radius:4px;font:normal 500 10px var(--mono);border:1px solid var(--acc);color:var(--acc)}
+.ap .cell i.f{border-style:dashed;border-color:var(--fg);color:var(--fg)}
+.ap .cell.dim{opacity:.35}
+.ap .cell.hit{background:var(--acc-soft);border-color:var(--acc)}
+.ap .rh{display:flex;flex-direction:column;justify-content:center;padding:6px 8px;color:var(--fg)}
+.ap .rh small{color:var(--muted);font-size:11px}
+.steps{display:grid;gap:6px;margin-top:16px;font-size:14px}
+.steps div{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.steps div b{font:500 11px/1.9 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.steps div.warn{border-color:var(--bad)}.steps div.warn b{color:var(--bad)}
+/* Hình 6: multitenancy isolation grid */
+.iso{display:grid;grid-template-columns:200px 1fr 1fr;gap:6px;font-size:13px}
+.iso > span{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 2px}
+.iso .rl{padding:10px 4px;color:var(--fg)}
+.iso .sh{grid-column:span 2;padding:10px 14px;border:1px dashed var(--muted);border-radius:8px;color:var(--muted);text-align:center;background:var(--bg)}
+.iso .own{padding:10px 14px;border:1px solid var(--acc);border-radius:8px;background:var(--acc-soft);color:var(--fg);font:12px var(--mono)}
+.memo{margin-top:14px;font-size:13.5px;color:var(--muted)}
+.memo b{color:var(--fg);font-weight:500}
+@media(max-width:700px){.cmp,.cmp.two,.jwt{grid-template-columns:1fr}.pipe,.mem{grid-template-columns:repeat(2,1fr)}.flow div,.steps div,.panel dl{grid-template-columns:1fr}.ap{grid-template-columns:64px repeat(3,1fr)}.iso{grid-template-columns:110px 1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M0-50V0M0 0L43 25M0 0L-43 25" stroke-dasharray="2 2"/><path d="M-43-25L0 0 43-25"/><path d="M0 0V50"/><circle cx="0" cy="-50" r="1.6" fill="currentColor"/><circle cx="43" cy="25" r="1.6" fill="currentColor"/><circle cx="-43" cy="25" r="1.6" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Chương 08 · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article>
+  <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 08</div>
+  <h1>Access <i>Control</i></h1>
+  <p class="dek">Ai được gọi Cube, và gọi rồi thì thấy được dữ liệu nào: xác thực, security context, access policy, data masking và multitenancy.</p>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 08 / 08</span><span>22 phút đọc</span></div>
+    <div class="tools"><button data-tool="kw"></button></div></div>
+  <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
+
+  <div class="idea"><small>Ý chính của chương</small>Mặc định mọi thứ trong data model đều public. Kiểm soát truy cập là thu hẹp dần phạm vi đó: JWT cho biết người gọi là ai, access policy quyết định họ thấy cột nào, dòng nào và giá trị nào bị che, còn queryRewrite giữ những luật chung cho cả hệ thống.</div>
+
+  <section id="s1">
+    <span class="num">08.1</span>
+    <h2>Bức tranh tổng thể</h2>
+    <p class="gist">Xác thực quyết định ai được vào Cube. Phân quyền quyết định người đó thấy dữ liệu nào.</p>
+    <p>Data model là lớp mặt tiền đặt trước data warehouse. Mặc định mọi cube, view và member đều public, mọi dòng đều trả về. Mỗi request đi qua một chuỗi hook, hook nào cũng đọc securityContext. Docs của Cube khuyên dùng access policy làm cách phân quyền chính, còn query_rewrite dành cho trường hợp nâng cao. Chọn từng bước để xem hook nào chạy và cấu hình ở đâu.</p>
+    <figure>
+      <div class="fig">
+        <div class="pipe" id="pipe"></div>
+        <div class="panel" id="pipeP"></div>
+      </div>
+      <figcaption><b>Hình 1</b>Hành trình một request qua các lớp kiểm soát truy cập. Docs không quy định thứ tự giữa query_rewrite và access policy, chỉ nói cả hai đều được áp.</figcaption>
+    </figure>
+  </section>
+
+  <section id="s2">
+    <span class="num">08.2</span>
+    <h2>Xác thực</h2>
+    <p class="gist">Cube kiểm tra chữ ký JWT rồi lấy payload làm securityContext.</p>
+    <p>Cube xác minh JWT bằng secret chung (<code>CUBEJS_API_SECRET</code>) hoặc bằng JWKS (<code>CUBEJS_JWK_URL</code>), có thể kiểm thêm audience, issuer và subject. Token nên có <code>exp</code> để giới hạn thời hạn. Sửa payload bên trái để xem Cube xử lý ra sao.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Payload mẫu</span>
+          <div class="seg" id="jp"><button data-j="0" class="on">Core</button><button data-j="1">Cube Cloud</button><button data-j="2">Hết hạn</button><button data-j="3">Không phải object</button></div></div>
+        <div class="jwt">
+          <textarea id="jwtIn" spellcheck="false" aria-label="JWT payload"></textarea>
+          <div class="flow" id="jwtOut"></div>
+        </div>
+      </div>
+      <figcaption><b>Hình 2</b>Mô phỏng: giả định chữ ký hợp lệ, chỉ kiểm tra payload.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Dev mode (<code>CUBEJS_DEV_MODE=true</code>) bỏ qua yêu cầu token và cho Playground tự ký token với securityContext tùy ý. Chỉ bật trên máy cá nhân, không bật trên production.</div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Cấu hình JWT, check_auth và SQL API</span></summary><div>
+      <p>Khi dùng identity provider, khai báo JWKS và các trường cần kiểm. Cube cache JWKS và tải lại khi có key rotation (khóa ký được thay mới).</p>
+      <div class="code"><pre>module.exports = {
+  jwt: {
+    jwkUrl: "&lt;URL_TO_JWKS_JSON&gt;",
+    audience: "&lt;AUDIENCE_FROM_IDENTITY_PROVIDER&gt;",
+    issuer: ["&lt;ISSUER_FROM_IDENTITY_PROVIDER&gt;"],
+    subject: "&lt;SUBJECT_FROM_IDENTITY_PROVIDER&gt;",
+    claimsNamespace: "my-custom-namespace"
+  }
+}</pre></div>
+      <p>Muốn tự viết logic xác minh thì dùng <code>check_auth</code>: hàm kiểm token và trả về securityContext. SQL API không dùng JWT mà đăng nhập bằng user và password qua <code>checkSqlAuth</code>:</p>
+      <div class="code"><pre>module.exports = {
+  checkSqlAuth: async (req, username) =&gt; {
+    if (username === "fooUser") {
+      return { password: "mypassword", securityContext: {} }
+    }
+    throw new Error("Incorrect user name or password")
+  }
+}</pre></div>
+      <p>User khai báo trong <code>CUBEJS_SQL_SUPER_USER</code> được đổi securityContext cho từng truy vấn bằng bộ lọc ảo <code>WHERE __user = 'anotheruser'</code>. Quy tắc chi tiết hơn đặt trong <code>canSwitchSqlUser</code>.</p>
+    </div></details>
+  </section>
+
+  <section id="s3">
+    <span class="num">08.3</span>
+    <h2>Security context</h2>
+    <p class="gist">Một object chứa các claim đã xác minh; mọi quy tắc truy cập đều đọc từ đây.</p>
+    <p>securityContext phải là object, thường lồng nhau (ví dụ <code>user_id</code>, <code>location.country</code>). Key <code>cubeCloud</code> dành riêng cho tính năng của Cube Cloud, không dùng vào việc khác. securityContext có mặt trong <code>query_rewrite</code>, <code>extend_context</code> và trong data model qua <code>COMPILE_CONTEXT.securityContext</code>.</p>
+    <p><code>extend_context</code> bổ sung trường mới trước khi Cube đánh giá các quy tắc truy cập. Data model dùng tiếp được trường suy ra này:</p>
+    <div class="code"><div class="h"><span>cube.js</span><span>JavaScript</span></div><pre>module.exports = {
+  extendContext: ({ securityContext }) =&gt; ({
+    securityContext: {
+      ...securityContext,
+      isFinance: securityContext.department === 'finance'
+    }
+  })
+};</pre></div>
+    <div class="code" style="margin-top:12px"><div class="h"><span>model/views/finance_view.yml</span><span>YAML</span></div><pre>views:
+  - name: finance_view
+    public: {{ COMPILE_CONTEXT['securityContext']['isFinance'] }}</pre></div>
+    <p>Cube Cloud và Cube Core lấy group và thuộc tính người dùng từ hai nguồn khác nhau:</p>
+    <div class="cmp two">
+      <div><b>Cube Core</b>Group do hàm <code>context_to_groups</code> trả về từ securityContext. Trong policy, giá trị theo người dùng viết là <code>"{ securityContext.country }"</code>.</div>
+      <div><b>Cube Cloud</b>Group và user attributes quản lý trong tài khoản Cube Cloud. Trong policy viết <code>"{ userAttributes.country }"</code>. Gọi Core Data API trực tiếp thì đặt chúng trong JWT dưới key <code>cubeCloud</code>: <code>{"cubeCloud": {"groups": [...], "userAttributes": {...}}}</code>.</div>
+    </div>
+    <p>Khi phát triển, Developer Playground cho nhập JWT hoặc dựng token từ một object JSON, nên có thể thử quy tắc truy cập với từng securityContext.</p>
+  </section>
+
+  <section id="s4">
+    <span class="num">08.4</span>
+    <h2>Member-level security</h2>
+    <p class="gist">member_level quyết định group nào được truy vấn member nào.</p>
+    <p>Trong mỗi policy, <code>member_level</code> nhận <code>includes</code> (danh sách được phép) hoặc <code>excludes</code> (danh sách bị cấm); <code>"*"</code> nghĩa là mọi member. Khi đã khai báo policy cho một số group, các group còn lại tự động bị từ chối, không cần policy chặn riêng.</p>
+    <div class="code"><div class="h"><span>model/views/orders_view.yml</span><span>YAML</span></div><pre>access_policy:
+  # Managers can access all members except for `count`
+  - group: manager
+    member_level:
+      excludes: [count]
+  # Observers can access all members except for `count` and `count_7d`
+  - group: observer
+    member_level:
+      excludes: [count, count_7d]
+  # Guests can only access the `count_30d` measure
+  - group: guest
+    member_level:
+      includes: [count_30d]</pre></div>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Group của user</span>
+          <div class="seg" id="mg"><button data-g="0" class="on">manager</button><button data-g="1">observer</button><button data-g="2">guest</button><button data-g="3">group khác</button></div></div>
+        <div class="mem" id="mem"></div>
+        <p class="note" id="memN"></p>
+      </div>
+      <figcaption><b>Hình 3</b>Member của orders_view mà mỗi group truy vấn được, theo ví dụ trong docs.</figcaption>
+    </figure>
+    <p>Access policy cũng tính tới tham số <code>public</code> trên cube, view và member: member phải vừa public vừa được policy cho phép. Khi truy vấn qua view, Cube chỉ áp <code>member_level</code> khai báo trên view và bỏ qua <code>member_level</code> trên các cube bên dưới. Docs cũng ghi rằng policy thường được đặt trên view.</p>
+  </section>
+
+  <section id="s5">
+    <span class="num">08.5</span>
+    <h2>Row-level security</h2>
+    <p class="gist">row_level thêm bộ lọc dòng, giá trị lấy từ securityContext của người gọi.</p>
+    <p>Mặc định không có bộ lọc nào, mọi dòng đều public. <code>row_level.filters</code> gồm các bộ lọc có <code>member</code>, <code>operator</code>, <code>values</code>; có thể kết hợp nhiều bộ lọc bằng <code>and</code> và <code>or</code>. Giá trị theo người dùng viết dạng template:</p>
+    <div class="code"><div class="h"><span>model/cubes/orders.yml</span><span>YAML</span></div><pre>cubes:
+  - name: orders
+    access_policy:
+      - group: manager
+        row_level:
+          filters:
+            - member: country
+              operator: equals
+              values: [ "{ securityContext.country }" ]</pre></div>
+    <p>Trong ví dụ trên, manager chỉ thấy đơn của nước mình. Mọi group khác không thấy dòng nào, vì không có policy nào cho họ. Bản JavaScript viết trực tiếp <code>values: [ securityContext.country ]</code>. Row-level cũng làm được bằng query_rewrite (mục 08.8); khi có cả hai, Cube áp cả hai bộ lọc.</p>
+  </section>
+
+  <section id="s6">
+    <span class="num">08.6</span>
+    <h2>Gộp nhiều policy</h2>
+    <p class="gist">Member gộp theo OR giữa các policy; dòng phải được phép với mọi member trong truy vấn.</p>
+    <p>Một user có thể thuộc nhiều group nên khớp nhiều policy. Hãy hình dung quyền như một lưới: cột là member, hàng là dòng dữ liệu, mỗi policy phủ một hình chữ nhật trên lưới. Cube gộp các hình chữ nhật theo hai quy tắc. Member được truy vấn nếu <b>bất kỳ</b> policy nào cho phép. Dòng chỉ được trả về khi được phép với <b>mọi</b> member có trong truy vấn.</p>
+    <div class="code"><div class="h"><span>model/views/orders_view.yml</span><span>YAML</span></div><pre>access_policy:
+  - group: support
+    member_level:
+      includes: [status, count]
+    row_level:
+      filters:
+        - member: region
+          operator: equals
+          values: [US]
+  - group: finance
+    member_level:
+      includes: [count, revenue]
+    row_level:
+      filters:
+        - member: region
+          operator: equals
+          values: [EU]</pre></div>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Group của user</span>
+          <div class="seg" id="apG"><button data-g="s">support</button><button data-g="f">finance</button><button data-g="sf" class="on">support + finance</button></div></div>
+        <div class="figbar"><span>Member trong truy vấn</span>
+          <div class="chips" id="apM"><button data-m="status" class="on">status</button><button data-m="count" class="on">count</button><button data-m="revenue" class="on">revenue</button></div></div>
+        <div class="ap" id="apGrid"></div>
+        <div class="steps" id="apSteps"></div>
+        <div class="total"><span id="apNote"></span><b id="apOut"></b></div>
+      </div>
+      <figcaption><b>Hình 4</b>Mỗi ô ghi policy nào cho phép ô đó. Ô tô xanh là dữ liệu trả về.</figcaption>
+    </figure>
+    <p>Với một user thuộc cả hai group, bốn truy vấn sau cho kết quả khác nhau:</p>
+    <table class="jt">
+      <tr><th>Member truy vấn</th><th>Dòng trả về</th><th>Lý do</th></tr>
+      <tr><td>status, count</td><td>US</td><td>chỉ support cho phép status</td></tr>
+      <tr><td>count, revenue</td><td>EU</td><td>chỉ finance cho phép revenue</td></tr>
+      <tr><td>count</td><td>US + EU</td><td>cả hai policy cho phép count, gộp hai bộ lọc</td></tr>
+      <tr class="out"><td>status, count, revenue</td><td>rỗng</td><td>US ∩ EU không có dòng nào</td></tr>
+    </table>
+    <div class="take"><small>Ghi nhớ</small>Access policy mặc định từ chối: member không được policy nào cho phép thì truy vấn trả về rỗng. Docs chỉ ghi “an empty result”, không nói Cube có báo lỗi kèm theo hay không.</div>
+  </section>
+
+  <section id="s7">
+    <span class="num">08.7</span>
+    <h2>Data masking</h2>
+    <p class="gist">Thay vì chặn member, trả về giá trị đã che.</p>
+    <p>Member nằm trong <code>member_level</code> trả giá trị thật. Member chỉ nằm trong <code>member_masking</code> trả giá trị che. Member không nằm trong danh sách nào thì bị từ chối. Cube Core hỗ trợ masking từ v1.6.23.</p>
+    <p>Giá trị che lấy từ tham số <code>mask</code> của member: số tĩnh như <code>-1</code>, hoặc biểu thức SQL. Không khai báo <code>mask</code> thì giá trị che là <code>NULL</code>. Muốn đổi mặc định theo kiểu dữ liệu, đặt các biến <code>CUBEJS_ACCESS_POLICY_MASK_STRING</code>, <code>_NUMBER</code>, <code>_BOOLEAN</code>, <code>_TIME</code>.</p>
+    <div class="code"><div class="h"><span>model/cubes/customers.yml</span><span>YAML</span></div><pre>dimensions:
+  - name: email
+    sql: email
+    type: string
+    mask:
+      sql: "CONCAT(LEFT({CUBE}.email, 2), '***')"
+  - name: revenue
+    sql: revenue
+    type: number
+    mask: -1
+access_policy:
+  - group: support
+    member_level:
+      includes: [name, region]
+    member_masking:
+      includes: "*"
+  - group: finance_eu
+    member_level:
+      includes: "*"
+    row_level:
+      filters:
+        - member: region
+          operator: equals
+          values: [EU]
+  - group: finance
+    member_level:
+      includes: "*"</pre></div>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Group của user</span>
+          <div class="seg" id="mk"><button data-k="0" class="on">support</button><button data-k="1">support + finance_eu</button><button data-k="2">support + finance</button></div></div>
+        <table class="jt" id="mkT"></table>
+        <div class="flow" id="mkS" style="margin-top:12px"></div>
+      </div>
+      <figcaption><b>Hình 5</b>Chữ màu cam là giá trị bị che. Ô “SQL cho revenue” là biểu thức Cube sinh ra.</figcaption>
+    </figure>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Giới hạn của masking</span></summary><div>
+      <p>Cube không áp mask SQL trên measure cho truy vấn ungrouped (không có GROUP BY), ví dụ <code>SELECT *</code> qua SQL API. Mask tĩnh như <code>mask: -1</code>, <code>mask: 0</code> thì luôn được áp. Muốn che động một measure trong truy vấn ungrouped, tạo dimension có mask SQL rồi truy vấn dimension đó.</p>
+      <p>Với measure, masking có điều kiện chỉ chạy khi truy vấn group theo các member dùng trong bộ lọc dòng. Nếu không, cả measure trả về giá trị che (mặc định <code>NULL</code>).</p>
+    </div></details>
+  </section>
+
+  <section id="s8">
+    <span class="num">08.8</span>
+    <h2>queryRewrite</h2>
+    <p class="gist">Hàm chạy ở mọi request, sửa query hoặc chặn hẳn truy vấn.</p>
+    <p>Cube gọi queryRewrite ở mọi request, ngay trước khi biên dịch truy vấn. Hàm nhận query dạng JSON (measures, dimensions, filters) cùng securityContext rồi trả về query mới. Trong hàm có thể thêm bộ lọc, sửa query, hoặc ném lỗi để chặn truy vấn. Hàm trả query nguyên vẹn thì truy vấn vẫn chạy, nên mặc định của queryRewrite là cho qua.</p>
+    <div class="code"><div class="h"><span>cube.js</span><span>JavaScript</span></div><pre>module.exports = {
+  queryRewrite: (query, { securityContext }) =&gt; {
+    // thiếu role thì chặn truy vấn
+    if (!securityContext.role) throw new Error('Thiếu role trong securityContext');
+    // bộ lọc bắt buộc cho mọi truy vấn
+    query.filters.push({
+      member: 'orders.created_at',
+      operator: 'afterDate',
+      values: ['2019-12-30']
+    });
+    return query;
+  }
+};</pre></div>
+    <div class="cmp">
+      <div><b>queryRewrite</b>Viết code trong <code>cube.js</code>, áp cho mọi cube. Chỉ lọc được dòng hoặc chặn cả truy vấn. Mặc định cho qua. Hợp với luật chung cho toàn hệ thống: cách ly tenant, bắt buộc có claim, chặn truy vấn bất thường.</div>
+      <div><b>access_policy</b>Khai báo trong YAML của từng cube hoặc view, theo group. Quy định cột (member), dòng (row) và giá trị bị che (masking). Group không có policy thì bị từ chối. Hợp với phân quyền theo vai trò.</div>
+      <div><b>Dùng cùng nhau</b>queryRewrite giữ ranh giới tenant và từ chối token thiếu thông tin. Access policy chia quyền giữa các vai trò trong một tenant. Bộ lọc của cả hai đều nằm trong SQL gửi tới data warehouse.</div>
+    </div>
+  </section>
+
+  <section id="s9">
+    <span class="num">08.9</span>
+    <h2>Multitenancy</h2>
+    <p class="gist">Mỗi tùy chọn cấu hình tách thêm một lớp tài nguyên cho từng tenant.</p>
+    <p>Cách đơn giản nhất là mọi tenant dùng chung database và queryRewrite lọc theo <code>tenant_id</code>. Khi tenant cần model, bảng hoặc database riêng, thêm dần các tùy chọn bên dưới. Mỗi ID riêng tốn từ vài MB đến vài chục MB bộ nhớ, nên với nhiều tenant cần gom tenant vào ít ID hoặc chia ra nhiều node Cube.</p>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Mức cách ly</span>
+          <div class="seg" id="mt"><button data-t="0" class="on">1 · queryRewrite</button><button data-t="1">2 · + app_id</button><button data-t="2">3 · + pre_aggregations_schema</button><button data-t="3">4 · + orchestrator_id</button></div></div>
+        <div class="iso" id="iso"></div>
+        <div class="code" style="margin-top:14px"><pre id="isoC"></pre></div>
+        <p class="memo" id="isoN"></p>
+      </div>
+      <figcaption><b>Hình 6</b>Khung nét đứt là tài nguyên dùng chung giữa tenant acme và globex, khung xanh là tài nguyên riêng.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Multitenancy khác nhiều data source. Một data model đọc từ nhiều nguồn thì dùng thuộc tính <code>data_source</code> của cube; các tenant không liên quan, cần bộ dữ liệu khác nhau, mới dùng các tùy chọn multitenancy.</div>
+  </section>
+
+  <section id="s10">
+    <span class="num">08.10</span>
+    <h2>Case study: SaaS bán lẻ</h2>
+    <p class="gist">queryRewrite giữ ranh giới tenant, access policy chia quyền theo vai trò.</p>
+    <p>Một công ty SaaS nhúng dashboard bán hàng cho nhiều chuỗi bán lẻ, mỗi chuỗi là một tenant. Trong một chuỗi có ba vai trò. Nhân viên cửa hàng chỉ xem đơn của cửa hàng mình và không thấy doanh thu. Quản lý vùng xem đủ số liệu của vùng mình, nhưng email khách hàng bị che. Phòng tài chính xem toàn bộ dữ liệu của chuỗi. Backend của công ty ký JWT cho từng người dùng, trong đó có các claim <code>tenant_id</code>, <code>roles</code>, <code>store_id</code>, <code>region</code>.</p>
+    <div class="code"><div class="h"><span>cube.js</span><span>JavaScript</span></div><pre>module.exports = {
+  // roles trong JWT trở thành group cho access policy
+  contextToGroups: ({ securityContext }) =&gt; securityContext.roles || [],
+
+  // luật chung: không có tenant_id thì chặn, có thì khóa vào tenant đó
+  queryRewrite: (query, { securityContext }) =&gt; {
+    if (!securityContext.tenant_id) throw new Error('Token thiếu tenant_id');
+    query.filters.push({
+      member: 'orders_view.tenant_id',
+      operator: 'equals',
+      values: [securityContext.tenant_id]
+    });
+    return query;
+  }
+};</pre></div>
+    <div class="code" style="margin-top:12px"><div class="h"><span>model/views/orders_view.yml (phần access_policy)</span><span>YAML</span></div><pre>access_policy:
+  - group: store_staff
+    member_level:
+      includes: [status, created_at, count]
+    row_level:
+      filters:
+        - member: store_id
+          operator: equals
+          values: ["{ securityContext.store_id }"]
+  - group: manager
+    member_level:
+      excludes: [customer_email]
+    member_masking:
+      includes: [customer_email]
+    row_level:
+      filters:
+        - member: region
+          operator: equals
+          values: ["{ securityContext.region }"]
+  - group: finance
+    member_level:
+      includes: "*"</pre></div>
+    <figure>
+      <div class="fig">
+        <div class="figbar"><span>Người gọi</span>
+          <div class="seg" id="psn"><button data-p="0" class="on">Nhân viên</button><button data-p="1">Quản lý vùng</button><button data-p="2">Tài chính</button><button data-p="3">Thực tập sinh</button><button data-p="4">Thiếu tenant_id</button></div></div>
+        <div class="flow" id="pflow"></div>
+      </div>
+      <figcaption><b>Hình 7</b>Cùng một view, năm người gọi.</figcaption>
+    </figure>
+    <div class="take"><small>Ghi nhớ</small>Luật “ai thuộc tenant nào” đặt ở queryRewrite, vì queryRewrite áp cho mọi cube và chặn được token thiếu claim. Luật “vai trò nào xem cột nào, dòng nào” đặt ở access policy, vì policy nằm cạnh model, dễ đọc và mặc định từ chối.</div>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Access policy gộp với các lớp khác</span></summary><div>
+      <table>
+        <tr><th>Kết hợp</th><th>Cách gộp</th></tr>
+        <tr><td><code>row_level</code> và queryRewrite</td><td>AND: cả hai bộ lọc cùng áp vào truy vấn.</td></tr>
+        <tr><td><code>member_level</code> và <code>public</code></td><td>AND: member phải vừa public vừa được policy cho phép.</td></tr>
+        <tr><td>Policy trên view và trên cube</td><td><code>member_level</code> chỉ lấy của view. <code>row_level</code> và masking lấy cả hai.</td></tr>
+        <tr><td>Kiểm tra policy đang có</td><td>Cube Cloud có Access Policies Viewer liệt kê policy theo từng group: member được xem, bộ lọc dòng, masking. Bản Core không có màn hình này. <a href="https://www.youtube.com/watch?v=UV42452Ra-Q" target="_blank" rel="noopener">Xem demo 5:42 ↗</a></td></tr>
+      </table>
+    </div></details>
+    <a class="next-ch" href="/blog/cube-handbook"><span><small>Kết thúc chương cuối</small><b>Về trang tổng</b></span><span>→</span></a>
+  </section>
+
+  <div class="end"></div>
+</article>
+
+<script>
+// ---- chapter figures ----
+const one = (sel, attr, fn) => {const box = document.querySelector(sel); box.onclick = e => {const b = e.target.closest(`[data-${attr}]`); if (!b) return; box.querySelectorAll(`[data-${attr}]`).forEach(x => x.classList.toggle('on', x === b)); fn(+b.dataset[attr])}; return box};
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// Hình 1: request pipeline; step = [label, hook, title, what, config, in, out]
+const PIPE = [
+ ['Request', 'API', 'Client gửi request', 'Client gọi REST, GraphQL hoặc SQL API. REST và GraphQL gửi JWT trong header Authorization; SQL API đăng nhập bằng user và password.', '-', 'query JSON hoặc SQL, kèm token', 'request chưa xác thực'],
+ ['Xác thực', 'check_auth', 'Xác minh danh tính', 'Cube kiểm chữ ký JWT bằng CUBEJS_API_SECRET hoặc JWKS, kiểm audience, issuer, exp. Muốn tự viết logic thì dùng check_auth; SQL API dùng checkSqlAuth.', 'biến môi trường CUBEJS_*, check_auth, check_sql_auth', 'token', 'securityContext (payload của JWT)'],
+ ['Bổ sung', 'extend_context', 'Làm giàu securityContext', 'Thêm trường suy ra từ claim, ví dụ isFinance = department == "finance", trước khi Cube đánh giá các quy tắc truy cập.', 'extend_context trong cube.js / cube.py', 'securityContext', 'securityContext đã bổ sung'],
+ ['Group', 'context_to_groups', 'Xác định group', 'Trả về danh sách group của người gọi. Access policy chọn policy áp dụng theo danh sách này. Cube Cloud lấy group từ tài khoản người dùng.', 'context_to_groups (Core)', 'securityContext', '["manager", ...]'],
+ ['Chọn model', 'context_to_app_id', 'Chọn bản model đã biên dịch', 'Mỗi app ID có một bản data model biên dịch riêng, nên COMPILE_CONTEXT có thể sinh model khác nhau cho từng tenant. Không cấu hình thì mọi người gọi dùng chung một bản model.', 'context_to_app_id, COMPILE_CONTEXT', 'securityContext', 'data model của tenant'],
+ ['Phân quyền', 'policy + rewrite', 'Thu hẹp truy vấn', 'Access policy quyết định member, dòng và masking theo group. query_rewrite sửa query hoặc ném lỗi. Cube AND bộ lọc của hai bên.', 'access_policy trong YAML, query_rewrite trong cube.js', 'query + groups + securityContext', 'query đã thêm bộ lọc'],
+ ['Biên dịch', 'SQL', 'Sinh SQL và thực thi', 'Schema Compiler sinh SQL đã chứa mọi bộ lọc và biểu thức masking, rồi gửi tới Cube Store hoặc data warehouse.', '-', 'query đã thu hẹp', 'kết quả trả về client']];
+pipe.innerHTML = PIPE.map((p, i) => `<button data-p="${i}" class="${i ? '' : 'on'}"><i>Bước ${i + 1}</i>${p[0]}<small>${p[1]}</small></button>`).join('');
+const pipeShow = i => {const p = PIPE[i]; pipeP.innerHTML = `<h5>${p[2]}</h5>${p[3]}<dl><dt>Cấu hình</dt><dd>${p[4]}</dd><dt>Đầu vào</dt><dd>${p[5]}</dd><dt>Đầu ra</dt><dd>${p[6]}</dd></dl>`};
+one('#pipe', 'p', pipeShow); pipeShow(0);
+// Hình 2: JWT payload → securityContext → groups
+const NOW = Math.floor(Date.now() / 1000);
+const JP = [
+ JSON.stringify({sub: 'u_17', tenant_id: 'acme', roles: ['manager'], region: 'North', exp: NOW + 86400}, null, 2),
+ JSON.stringify({sub: 'u_17', cubeCloud: {groups: ['marketing'], userAttributes: {country: 'United States'}}, exp: NOW + 86400}, null, 2),
+ JSON.stringify({sub: 'u_17', tenant_id: 'acme', roles: ['manager'], exp: NOW - 3600}, null, 2),
+ '"acme"'];
+function jwtShow() {
+ let p; const rows = [];
+ try {p = JSON.parse(jwtIn.value)} catch {jwtOut.innerHTML = '<div class="warn"><b>Payload</b><span>JSON không hợp lệ.</span></div>'; return}
+ if (p === null || typeof p !== 'object' || Array.isArray(p)) {
+  jwtOut.innerHTML = '<div class="warn"><b>securityContext</b><span>securityContext phải là object. Cube báo lỗi:</span><code>Cannot create proxy with a non-object as target or handler</code></div>'; return}
+ rows.push('<div class="ok"><b>Chữ ký</b><span>Hợp lệ (giả định), ký bằng CUBEJS_API_SECRET</span></div>');
+ if (!('exp' in p)) rows.push('<div class="warn"><b>exp</b><span>Không có exp: token không bao giờ hết hạn. Docs khuyên luôn đặt exp.</span></div>');
+ else if (p.exp < NOW) {rows.push(`<div class="warn"><b>exp</b><span>Hết hạn ${Math.round((NOW - p.exp) / 60)} phút trước. Cube từ chối request.</span></div>`); jwtOut.innerHTML = rows.join(''); return}
+ else rows.push(`<div><b>exp</b><span>Còn hạn ${Math.round((p.exp - NOW) / 3600)} giờ.</span></div>`);
+ rows.push(`<div><b>securityContext</b><code>${esc(JSON.stringify(p))}</code></div>`);
+ if (p.cubeCloud) {
+  rows.push(`<div class="ok"><b>Group (Cloud)</b><code>${esc(JSON.stringify(p.cubeCloud.groups || []))}</code></div>`);
+  rows.push(`<div><b>userAttributes</b><code>${esc(JSON.stringify(p.cubeCloud.userAttributes || {}))}</code><span>Dùng trong policy: "{ userAttributes.country }"</span></div>`);
+ } else {
+  const g = Array.isArray(p.roles) ? p.roles : [];
+  rows.push(`<div class="${g.length ? 'ok' : 'warn'}"><b>contextToGroups</b><code>${esc(JSON.stringify(g))}</code><span>${g.length ? 'Ví dụ trả về securityContext.roles.' : 'Không có group nào: mọi view có access policy đều từ chối user này.'}</span></div>`);
+ }
+ jwtOut.innerHTML = rows.join('')}
+one('#jp', 'j', i => {jwtIn.value = JP[i]; jwtShow()});
+jwtIn.oninput = jwtShow; jwtIn.value = JP[0]; jwtShow();
+// Hình 3: member access per group (docs example)
+const MV = ['status', 'created_at', 'count', 'count_7d', 'count_30d'];
+const MG = [[m => m !== 'count', 'manager: mọi member trừ count.'], [m => !['count', 'count_7d'].includes(m), 'observer: mọi member trừ count và count_7d.'],
+ [m => m === 'count_30d', 'guest: chỉ count_30d.'], [() => false, 'Group không có policy nào trên view này nên bị từ chối toàn bộ, không cần policy chặn riêng.']];
+const memShow = g => {mem.innerHTML = MV.map(m => `<div class="${MG[g][0](m) ? 'on' : 'off'}">${m}<small>${MG[g][0](m) ? 'được truy vấn' : 'bị từ chối'}</small></div>`).join(''); memN.textContent = MG[g][1]};
+one('#mg', 'g', memShow); memShow(0);
+// Hình 4: rows allowed for a member = union of the row filters of matching policies that grant it; visible rows = intersection over queried members
+{
+ const AP = {s: {n: 'support', m: ['status', 'count'], r: 'US'}, f: {n: 'finance', m: ['count', 'revenue'], r: 'EU'}};
+ const MEM = ['status', 'count', 'revenue'], ROWS = [['#101', 'US'], ['#102', 'US'], ['#103', 'EU'], ['#104', 'EU']];
+ let gs = ['s', 'f'], q = [...MEM];
+ const set = s => s.size ? [...s].join(' + ') : 'không có';
+ function apShow() {
+  const allowed = m => new Set(gs.filter(g => AP[g].m.includes(m)).map(g => AP[g].r));
+  const denied = q.filter(m => !allowed(m).size);
+  let vis = denied.length || !q.length ? new Set() : new Set(['US', 'EU']);
+  q.forEach(m => {const a = allowed(m); vis = new Set([...vis].filter(r => a.has(r)))});
+  apGrid.innerHTML = '<span></span>' + MEM.map(m => `<span>${m}</span>`).join('') + ROWS.map(([id, reg]) =>
+   `<div class="rh">${id}<small>region = ${reg}</small></div>` + MEM.map(m =>
+    `<div class="cell ${!q.includes(m) ? 'dim' : vis.has(reg) ? 'hit' : ''}">${gs.filter(g => AP[g].m.includes(m) && AP[g].r === reg).map(g => `<i class="${g}">${AP[g].n}</i>`).join('')}</div>`).join('')).join('');
+  apSteps.innerHTML = q.map(m => {const a = allowed(m);
+   return `<div class="${a.size ? '' : 'warn'}"><b>${m}</b><span>${a.size ? `${gs.filter(g => AP[g].m.includes(m)).map(g => AP[g].n).join(', ')} cho phép · dòng ${set(a)}` : 'không policy nào cho phép · bị từ chối'}</span></div>`}).join('') +
+   (q.length > 1 && !denied.length ? `<div><b>Giao các member</b><span>${q.map(m => `{${[...allowed(m)].join(', ')}}`).join(' ∩ ')} = ${vis.size ? `{${[...vis].join(', ')}}` : 'rỗng'}</span></div>` : '');
+  apOut.textContent = vis.size ? `${ROWS.filter(r => vis.has(r[1])).length} dòng` : 'rỗng'; apOut.className = vis.size ? '' : 'bad';
+  apNote.textContent = !q.length ? 'Chọn ít nhất một member.' : denied.length ? `${denied.join(', ')} không thuộc policy nào của user.`
+   : vis.size ? `Trả về dòng ${set(vis)}.` : 'Mỗi member được phép ở một vùng dòng khác nhau, phần giao rỗng.'}
+ apG.onclick = e => {const b = e.target.closest('[data-g]'); if (!b) return; apG.querySelectorAll('[data-g]').forEach(x => x.classList.toggle('on', x === b)); gs = b.dataset.g.split(''); apShow()};
+ apM.onclick = e => {const b = e.target.closest('[data-m]'); if (!b) return; b.classList.toggle('on'); q = MEM.filter(m => apM.querySelector(`[data-m="${m}"]`).classList.contains('on')); apShow()};
+ apShow();
+}
+// Hình 5: masking per group combination
+const CU = [['An', 'an@acme.vn', 'EU', 1200], ['Bình', 'binh@acme.vn', 'US', 800], ['Chi', 'chi@acme.vn', 'EU', 450]];
+function mkShow(k) {
+ // k=0: support only; k=1: + finance_eu, full access only on EU rows; k=2: + finance, unconditional full access
+ const real = r => k === 2 || (k === 1 && r[2] === 'EU');
+ mkT.innerHTML = '<tr><th>name</th><th>region</th><th>email</th><th>revenue</th></tr>' + CU.map(r => {const ok = real(r);
+  return `<tr><td class="real">${r[0]}</td><td class="real">${r[2]}</td><td class="${ok ? 'real' : 'mask'}">${ok ? r[1] : r[1].slice(0, 2) + '***'}</td><td class="${ok ? 'real' : 'mask'}">${ok ? r[3] : -1}</td></tr>`}).join('');
+ const sql = ['-1', "CASE WHEN region = 'EU' THEN revenue ELSE -1 END", 'revenue'][k];
+ const why = ['support chỉ có name, region trong member_level; email và revenue nằm trong member_masking nên bị che.',
+  'finance_eu cho quyền đầy đủ nhưng kèm row_level, nên Cube che có điều kiện: dòng EU thấy giá trị thật, dòng khác vẫn bị che.',
+  'finance cho quyền đầy đủ không điều kiện. Quyền đầy đủ thắng masking của support.'][k];
+ mkS.innerHTML = `<div><b>SQL cho revenue</b><code>${esc(sql)}</code></div><div><b>Vì sao</b><span>${why}</span></div>` +
+  (k === 1 ? '<div class="warn"><b>Measure</b><span>Measure total_revenue chỉ che có điều kiện khi truy vấn group theo region. Không group theo region thì cả measure bị che (NULL).</span></div>' : '')}
+one('#mk', 'k', mkShow); mkShow(0);
+// Hình 6: what each multitenancy option separates (levels are cumulative)
+const RES = [['Data model đã biên dịch', 1], ['Bảng pre-aggregation', 2], ['Kết nối, query queue, result cache', 3], ['Database nguồn', 3]];
+const ISO_CODE = [
+ "queryRewrite: (query, { securityContext }) => {\n  query.filters.push({ member: 'orders.tenant_id', operator: 'equals',\n    values: [securityContext.tenant_id] });\n  return query;\n}",
+ "contextToAppId: ({ securityContext }) =>\n  `CUBE_APP_${securityContext.tenant_id}`,\n// trong model: sql_table: \"{COMPILE_CONTEXT.security_context.tenant_id}.orders\"",
+ "preAggregationsSchema: ({ securityContext }) =>\n  `pre_aggregations_${securityContext.tenant_id}`",
+ "contextToOrchestratorId: ({ securityContext }) =>\n  `CUBE_APP_${securityContext.tenant_id}`,\ndriverFactory: ({ securityContext }) => ({\n  type: 'postgres',\n  database: `shop_${securityContext.tenant_id}`\n})"];
+const ISO_NOTE = [
+ '<b>Hợp khi</b> mọi tenant chung một database và chung cấu trúc bảng. Queue, cache và pre-aggregation dùng chung, nên rẻ nhất.',
+ '<b>Hợp khi</b> mỗi tenant có schema hoặc bảng riêng. Cube chỉ tách phần biên dịch model; tenant sinh cùng SQL vẫn dùng chung queue, cache và bảng pre-aggregation.',
+ '<b>Thêm khi</b> bảng pre-aggregation của các tenant không được phép nằm chung. Thiếu tùy chọn này, bảng pre-aggregation vẫn dùng chung dù đã có app ID riêng.',
+ '<b>Thêm khi</b> mỗi tenant có database riêng. Mỗi orchestrator ID có kết nối, queue, result cache riêng. Docs cảnh báo: thiếu các ID này, model hoặc dữ liệu của tenant này có thể bị trả cho tenant khác.'];
+function isoShow(t) {
+ iso.innerHTML = '<span></span><span>acme</span><span>globex</span>' + RES.map(([n, lv]) =>
+  `<div class="rl">${n}</div>` + (t >= lv ? '<div class="own">riêng acme</div><div class="own">riêng globex</div>' : '<div class="sh">dùng chung</div>')).join('');
+ isoC.innerHTML = esc(ISO_CODE.slice(0, t + 1).join('\n\n'));
+ isoN.innerHTML = ISO_NOTE[t] + (t ? ' Nếu có scheduled refresh cho pre-aggregation, cần cấu hình scheduled_refresh_contexts, nếu không securityContext của job refresh là undefined.' : '')}
+one('#mt', 't', isoShow); isoShow(0);
+// Hình 7: one caller per button, each row is a step from JWT to SQL
+const PSN = [
+ {jwt: '{tenant_id: "acme", roles: ["store_staff"], store_id: "S01"}', g: '["store_staff"]', qr: "thêm tenant_id = 'acme'",
+  mem: 'status, created_at, count (truy vấn có revenue không trả dữ liệu)', row: "store_id = 'S01'", mask: 'không', sql: "WHERE tenant_id = 'acme' AND store_id = 'S01'"},
+ {jwt: '{tenant_id: "acme", roles: ["manager"], region: "North"}', g: '["manager"]', qr: "thêm tenant_id = 'acme'",
+  mem: 'mọi member, riêng customer_email chỉ có bản che', row: "region = 'North'", mask: 'customer_email trả về NULL', sql: "WHERE tenant_id = 'acme' AND region = 'North'"},
+ {jwt: '{tenant_id: "acme", roles: ["finance"]}', g: '["finance"]', qr: "thêm tenant_id = 'acme'",
+  mem: 'status, created_at, count, revenue, region, store_id, customer_email', row: 'không có, thấy mọi dòng trong tenant', mask: 'không', sql: "WHERE tenant_id = 'acme'"},
+ {jwt: '{tenant_id: "acme", roles: ["intern"]}', g: '["intern"]', qr: "thêm tenant_id = 'acme'",
+  mem: 'không policy nào khớp group intern', row: '-', mask: '-', sql: 'Không trả dữ liệu: access policy mặc định từ chối', deny: 'mem'},
+ {jwt: '{roles: ["finance"]}', g: '["finance"]', qr: "ném lỗi 'Token thiếu tenant_id'",
+  mem: '-', row: '-', mask: '-', sql: 'Truy vấn dừng ở queryRewrite, Cube không gửi SQL nào', deny: 'qr'}];
+function psnShow(i) {
+ const p = PSN[i], w = k => p.deny === k ? ' class="warn"' : '';
+ pflow.innerHTML = `<div><b>JWT</b><code>${esc(p.jwt)}</code></div><div><b>contextToGroups</b><code>${esc(p.g)}</code></div>` +
+  `<div${w('qr')}><b>queryRewrite</b><span>${p.qr}</span></div><div${w('mem')}><b>Policy · member</b><span>${p.mem}</span></div>` +
+  `<div><b>Policy · row</b><span>${p.row}</span></div><div><b>Policy · masking</b><span>${p.mask}</span></div>` +
+  `<div class="${p.deny ? 'warn' : 'ok'}"><b>Kết quả</b><code>${p.sql}</code></div>`}
+one('#psn', 'p', psnShow); psnShow(0);
+
+// ---- chapter data for kit.js ----
+window.CH = {key: 'ch08', minutes: 22,
+ next: {href: '/blog/cube-handbook', n: '', t: 'Về trang tổng'},
+ sections: [
+  {id: 's1', n: '08.1', t: 'Tổng quan', sum: ['Authentication quyết định ai được vào Cube; authorization quyết định thấy dữ liệu nào.', 'Mặc định mọi member và mọi dòng đều public.', 'Request đi qua: xác thực → extend_context → context_to_groups → context_to_app_id → access policy + query_rewrite → SQL.'], terms: ['jwt', 'seccontext', 'accesspolicy', 'queryrewrite']},
+  {id: 's2', n: '08.2', t: 'Xác thực', sum: ['JWT ký bằng CUBEJS_API_SECRET hoặc xác minh qua JWKS; nên có exp.', 'check_auth cho logic riêng; SQL API dùng checkSqlAuth.', 'Dev mode bỏ qua token, không bật trên production.'], terms: ['jwt', 'jwks', 'checkauth', 'devmode']},
+  {id: 's3', n: '08.3', t: 'Security context', sum: ['securityContext phải là object; key cubeCloud dành riêng.', 'extend_context bổ sung trường trước khi đánh giá quy tắc.', 'Core: context_to_groups + securityContext; Cloud: groups + userAttributes.'], terms: ['seccontext', 'extendctx', 'compilectx', 'ctxgroups', 'userattr']},
+  {id: 's4', n: '08.4', t: 'Member-level', sum: ['member_level nhận includes hoặc excludes, "*" là mọi member.', 'Group không có policy bị từ chối tự động.', 'Qua view, chỉ member_level của view được áp.'], terms: ['accesspolicy', 'public']},
+  {id: 's5', n: '08.5', t: 'Row-level', sum: ['row_level.filters thêm bộ lọc dòng; giá trị lấy từ "{ securityContext.x }".', 'Mặc định mọi dòng public; có policy thì group khác không thấy dòng nào.'], terms: ['rls', 'accesspolicy']},
+  {id: 's6', n: '08.6', t: 'Gộp policy', sum: ['Member gộp theo OR giữa các policy.', 'Dòng: OR trong từng member, rồi giao giữa các member.', 'Không member nào được phép thì kết quả rỗng.'], terms: ['accesspolicy', 'rls']},
+  {id: 's7', n: '08.7', t: 'Data masking', sum: ['member_masking trả giá trị che thay vì từ chối; mask tĩnh hoặc SQL, mặc định NULL.', 'Quyền đầy đủ thắng masking; quyền đầy đủ có row_level thì che theo từng dòng.', 'Mask SQL trên measure không áp cho truy vấn ungrouped.'], terms: ['masking', 'ungrouped']},
+  {id: 's8', n: '08.8', t: 'queryRewrite', sum: ['Chạy ở mọi request, thêm bộ lọc, sửa query hoặc ném lỗi.', 'Mặc định cho qua, khác access policy mặc định từ chối.', 'Bộ lọc của queryRewrite và row_level được AND.'], terms: ['queryrewrite', 'accesspolicy']},
+  {id: 's9', n: '08.9', t: 'Multitenancy', sum: ['Mức 1: queryRewrite lọc theo tenant, dùng chung mọi thứ.', 'context_to_app_id tách model; pre_aggregations_schema tách bảng rollup; context_to_orchestrator_id + driver_factory tách kết nối, cache, database.', 'Mỗi ID tốn bộ nhớ; cần scheduled_refresh_contexts cho refresh nền.'], terms: ['appid', 'orchid', 'preagg', 'compilectx']},
+  {id: 's10', n: '08.10', t: 'Case study', sum: ['queryRewrite giữ ranh giới tenant và chặn token thiếu claim.', 'Access policy chia quyền theo store_staff, manager, finance.', 'Group không có policy (intern) không nhận dữ liệu.'], terms: ['ctxgroups', 'queryrewrite', 'accesspolicy', 'masking']}],
+ terms: {
+  jwt: ['JWT', 'JSON Web Token: chuỗi gồm header, payload và chữ ký số, cho phép bên nhận kiểm tra nguồn gốc và tính toàn vẹn của các claims (như tenant_id, role, user_id). Cube đọc JWT từ header Authorization.', 'Giống tấm vé có dấu niêm phong: ghi rõ người giữ vé là ai, thuộc công ty nào; chỉ cần một chữ trên vé bị sửa, con dấu sẽ không còn khớp.'],
+  jwks: ['JWKS', 'JSON Web Key Set: tập khóa công khai do identity provider công bố, dùng để xác minh chữ ký JWT. Cube đọc qua CUBEJS_JWK_URL hoặc CUBEJS_JWT_KEY, cache lại và tải mới khi khóa được xoay vòng.', 'Bảng mẫu con dấu mà cơ quan cấp vé công bố: người soát vé so con dấu trên vé với bảng này thay vì giữ một con dấu riêng.'],
+  checkauth: ['check_auth', 'Hook cấu hình (checkAuth trong cube.js, check_auth trong cube.py) thay logic xác minh token mặc định; hàm kiểm tra token rồi đặt securityContext cho request.', 'Thay người soát vé mặc định bằng người soát vé của riêng bạn, tự quyết định loại vé nào hợp lệ.'],
+  devmode: ['dev mode', 'Chế độ phát triển bật bằng CUBEJS_DEV_MODE=true: bỏ yêu cầu token và cho Playground ký token với securityContext tùy ý. Chỉ dùng trên máy cá nhân.', 'Cửa sau mở sẵn cho thợ sửa nhà: tiện khi đang thi công, nhưng phải khóa trước khi có người dọn vào ở.'],
+  seccontext: ['securityContext', 'Đối tượng Cube gắn vào mỗi request, chứa các claims trong JWT đã được giải mã và xác thực chữ ký; query_rewrite, extend_context và COMPILE_CONTEXT đọc đối tượng này để áp quy tắc truy cập.', 'Giống tấm thẻ tên Cube cấp cho người hỏi sau khi soát vé: ghi rõ người này thuộc công ty nào, giữ vai trò gì, để các bước sau xác định phạm vi dữ liệu được phép xem.'],
+  extendctx: ['extend_context', 'Hook cấu hình bổ sung trường mới vào securityContext (ví dụ cờ isFinance suy ra từ department) trước khi các quy tắc truy cập được đánh giá.', 'Người soát vé ghi thêm lên thẻ tên một dòng tóm tắt, như “thuộc phòng tài chính”, để các bước sau khỏi phải tự suy ra.'],
+  compilectx: ['COMPILE_CONTEXT', 'Biến toàn cục có giá trị khi biên dịch data model, chứa securityContext; dùng để sinh model khác nhau theo người gọi, ví dụ đổi sql_table hoặc public theo tenant.', 'Mỗi khách hàng nhận một bản model riêng được tạo từ cùng một bản mẫu, chỉ khác phần tên khách.'],
+  ctxgroups: ['contextToGroups', 'Hook cấu hình (contextToGroups trong cube.js, context_to_groups trong cube.py) nhận securityContext và trả về danh sách group của người gọi; Cube dùng danh sách này để chọn access policy áp cho request.', 'Người soát vé đọc thẻ tên rồi xếp người hỏi vào đúng tổ, để bảng phân công biết áp quy tắc của tổ nào.'],
+  userattr: ['userAttributes', 'Thuộc tính người dùng quản lý trong Cube Cloud (ví dụ country), dùng trong access policy dạng "{ userAttributes.country }". Cube Core không có userAttributes, dùng securityContext thay thế.', 'Các dòng thông tin in sẵn trên thẻ nhân viên, như chi nhánh hay quốc gia, mà quy tắc trong kho đọc để quyết định cho xem gì.'],
+  accesspolicy: ['access policy', 'Quy tắc phân quyền khai báo trong data model (access_policy trên cube hoặc view), gắn với một group. Gồm member_level (member được truy vấn), row_level (bộ lọc dòng) và member_masking (member chỉ thấy giá trị che). Group không có policy thì bị từ chối.', 'Bảng phân công trong kho: mỗi tổ được ghi rõ mở được những tủ nào và lấy hàng ở kệ nào; tổ không có tên trong bảng thì không được vào kho.'],
+  public: ['public', 'Tham số boolean trên cube, view, measure và dimension, quyết định thành phần đó có được công khai qua các API hay không; mặc định là true. Access policy chỉ cho truy vấn member vừa public vừa được policy cho phép.', 'Công tắc “cho khách xem” gắn trên từng món: tắt đi thì dù có trong bảng phân công, khách vẫn không gọi được món đó.'],
+  rls: ['Row-Level Security', 'Cơ chế kiểm soát truy cập ở mức dòng: cùng một truy vấn, mỗi người dùng chỉ nhận các dòng thỏa điều kiện gắn với danh tính của họ. Trong Cube làm bằng row_level của access policy hoặc query_rewrite.', 'Cùng một bảng lương, nhưng mỗi trưởng phòng mở ra chỉ thấy nhân viên thuộc phòng đó; các dòng còn lại như được che đi.'],
+  masking: ['data masking', 'Trả về giá trị đã che (NULL, số tĩnh hoặc biểu thức SQL khai báo trong mask) thay vì từ chối member. Khai báo bằng member_masking trong access policy; có ở Cube Core từ v1.6.23.', 'Bảng lương vẫn có cột số tài khoản, nhưng người không đủ quyền chỉ thấy dãy dấu sao.'],
+  ungrouped: ['ungrouped query', 'Truy vấn không có GROUP BY, trả từng dòng gốc (ví dụ SELECT * qua SQL API). Mask SQL trên measure không được áp cho loại truy vấn này.', 'Xin xem từng hóa đơn lẻ thay vì bảng tổng theo tháng.'],
+  queryrewrite: ['query_rewrite', 'Hook cấu hình (queryRewrite trong cube.js, query_rewrite trong cube.py) nhận truy vấn cùng securityContext và trả về truy vấn đã sửa trước khi biên dịch; thường dùng để chèn bộ lọc theo tenant hoặc từ chối truy vấn không hợp lệ.', 'Người gác cửa đọc thẻ tên của người hỏi rồi ghi thêm vào phiếu yêu cầu dòng “chỉ lấy dữ liệu của công ty acme” trước khi chuyển phiếu vào trong.'],
+  appid: ['context_to_app_id', 'Hook trả về app ID từ securityContext; mỗi app ID có bản data model biên dịch và SQL compile cache riêng. Chỉ tách phần biên dịch model, các tầng bên dưới vẫn dùng chung.', 'Mỗi khách có một cuốn thực đơn in riêng, nhưng vẫn nấu chung một bếp.'],
+  orchid: ['context_to_orchestrator_id', 'Hook trả về orchestrator ID; mỗi ID có kết nối database, query queue, result cache và cache bảng pre-aggregation riêng. Thường đi cùng driver_factory để trỏ mỗi tenant tới database riêng.', 'Mỗi khách có bếp, tủ lạnh và người phục vụ riêng.'],
+  preagg: ['pre-aggregation', 'Bảng tổng hợp Cube tính sẵn theo tập measures, dimensions và granularity định trước, lưu trong Cube Store. Mặc định các tenant dùng chung bảng, tách bằng pre_aggregations_schema.', 'Như quán ăn ninh sẵn nồi nước dùng từ sáng: khách gọi món là có thể phục vụ, không phải hầm xương lại từ đầu cho từng bát.']},
+ alias: {jwt: ['JWT'], jwks: ['JWKS'], checkauth: ['check_auth', 'checkSqlAuth'], devmode: ['dev mode', 'Dev mode'], seccontext: ['securityContext'], extendctx: ['extend_context', 'extendContext'],
+  compilectx: ['COMPILE_CONTEXT'], ctxgroups: ['contextToGroups', 'context_to_groups'], userattr: ['userAttributes', 'user attributes'], accesspolicy: ['access policy', 'Access policy', 'access_policy'],
+  public: ['public'], rls: ['Row-level security', 'Row-Level Security', 'RLS'], masking: ['data masking', 'masking', 'member_masking'], ungrouped: ['ungrouped'],
+  queryrewrite: ['queryRewrite', 'query_rewrite'], appid: ['context_to_app_id', 'app ID'], orchid: ['context_to_orchestrator_id', 'orchestrator ID'], preagg: ['pre-aggregation']},
+ rel: {jwt: ['jwks', 'seccontext'], jwks: ['jwt'], checkauth: ['jwt', 'seccontext'], devmode: ['jwt'], seccontext: ['jwt', 'extendctx', 'ctxgroups'], extendctx: ['seccontext', 'compilectx'],
+  compilectx: ['seccontext', 'appid'], ctxgroups: ['seccontext', 'accesspolicy'], userattr: ['accesspolicy', 'seccontext'], accesspolicy: ['ctxgroups', 'rls', 'masking', 'queryrewrite'],
+  public: ['accesspolicy'], rls: ['accesspolicy', 'queryrewrite'], masking: ['accesspolicy', 'ungrouped'], ungrouped: ['masking'], queryrewrite: ['seccontext', 'rls', 'accesspolicy'],
+  appid: ['compilectx', 'orchid'], orchid: ['appid', 'preagg'], preagg: ['orchid']},
+ quiz: [
+  {id: 'ch08_q1', s: 0, type: 'one', q: 'Một cube chưa khai báo access_policy, cũng không có query_rewrite. Người gọi đã xác thực thấy được gì?', o: ['Mọi member public và mọi dòng.', 'Không thấy gì cho tới khi có policy.', 'Chỉ dimensions, không thấy measures.', 'Chỉ dữ liệu của tenant trong JWT.'], a: 0,
+   ex: 'Docs mô tả data model là lớp mặt tiền: mặc định mọi member public và mọi dòng đều trả về. Kiểm soát truy cập là thu hẹp dần phạm vi này.', why: {1: 'Từ chối mặc định chỉ áp cho group khi đã có policy cho group khác.', 2: 'Không có quy tắc nào phân biệt measure và dimension.', 3: 'Không có gì tự lọc theo tenant nếu không cấu hình.'}},
+  {id: 'ch08_q2', s: 1, type: 'multi', q: 'Cube có thể xác minh chữ ký JWT bằng những cách nào?', o: ['Secret chung CUBEJS_API_SECRET.', 'JWKS qua CUBEJS_JWK_URL hoặc CUBEJS_JWT_KEY.', 'Hàm check_auth tự viết.', 'Đọc mật khẩu data warehouse trong header.'], a: [0, 1, 2],
+   ex: 'Hai cách có sẵn là secret chung và JWKS; check_auth thay thế logic mặc định.', why: {3: 'Người gọi không bao giờ gửi mật khẩu data warehouse; Cube tự giữ kết nối.'}},
+  {id: 'ch08_q3', s: 1, type: 'one', q: 'Vì sao không bật CUBEJS_DEV_MODE=true trên production?', o: ['Dev mode bỏ yêu cầu token và cho Playground ký token với securityContext tùy ý.', 'Dev mode tắt mọi pre-aggregation.', 'Dev mode chỉ chạy với SQLite.', 'Dev mode làm JWT hết hạn ngay.'], a: 0,
+   ex: 'Ở dev mode, ai cũng gọi được API mà không cần token hợp lệ, và có thể tự tạo securityContext bất kỳ.', why: {1: 'Dev mode không liên quan tới pre-aggregation.', 2: 'Dev mode không giới hạn loại database.', 3: 'Dev mode không đổi thời hạn token.'}},
+  {id: 'ch08_q4', s: 2, type: 'one', q: 'Payload JWT là chuỗi "acme" thay vì object. Điều gì xảy ra?', o: ['Cube báo lỗi “Cannot create proxy with a non-object as target or handler”.', 'Cube dùng "acme" làm tenant_id.', 'Cube bỏ qua payload và cho qua.', 'Cube tự bọc thành {value: "acme"}.'], a: 0,
+   ex: 'securityContext phải là object; payload không phải object gây lỗi này.', why: {1: 'Cube không tự gán tên trường.', 2: 'Payload sai kiểu gây lỗi, không bị bỏ qua.', 3: 'Không có cơ chế tự bọc.'}},
+  {id: 'ch08_q5', s: 2, type: 'one', q: 'Trên Cube Core, access policy biết user thuộc group nào bằng cách nào?', o: ['Hàm context_to_groups trả về danh sách group từ securityContext.', 'Cube đọc bảng users trong data warehouse.', 'Cube Core tự lấy group từ tài khoản Cube Cloud.', 'Group là tên của view.'], a: 0,
+   ex: 'Cube Cloud quản lý group trong tài khoản; Cube Core cần context_to_groups.', why: {1: 'Không có bước đọc bảng users.', 2: 'Đó là cách của Cube Cloud.', 3: 'Group và view là hai khái niệm khác nhau.'}},
+  {id: 'ch08_q6', s: 3, type: 'one', q: 'orders_view có policy cho manager, observer, guest. User thuộc group analyst truy vấn view này. Kết quả?', o: ['Bị từ chối, vì có policy cho group khác thì group không có policy bị từ chối tự động.', 'Thấy mọi member như khi chưa có policy.', 'Thấy giống guest.', 'Cube báo lỗi cấu hình vì thiếu policy chặn.'], a: 0,
+   ex: 'Docs: khai báo policy cho một số group thì các group còn lại tự động mất quyền truy cập.', why: {1: 'Mặc định public chỉ đúng khi view chưa có policy nào.', 2: 'Không có cơ chế chọn policy gần nhất.', 3: 'Không cần policy chặn riêng.'}},
+  {id: 'ch08_q7', s: 3, type: 'one', q: 'Cube orders có member_level cho phép revenue, nhưng view orders_view chỉ cho phép count. Truy vấn qua view thì revenue thế nào?', o: ['Bị từ chối, vì qua view chỉ member_level của view được áp.', 'Được phép, vì policy của cube và view gộp theo OR.', 'Được phép nếu truy vấn có group by.', 'Trả về NULL.'], a: 0,
+   ex: 'member_level trên view không gộp với member_level trên cube; chỉ rule của view áp cho request.', why: {1: 'OR áp giữa các policy khớp group, không gộp rule của view với cube.', 2: 'Group by không ảnh hưởng member_level.', 3: 'NULL là masking, cần member_masking.'}},
+  {id: 'ch08_q8', s: 5, type: 'one', q: 'User thuộc cả group support (status, count; dòng US) và finance (count, revenue; dòng EU) truy vấn status, count, revenue. Kết quả là gì?', o: ['Rỗng, vì dòng phải được phép với mọi member: US ∩ EU không có dòng nào.', 'Dòng US với status, count và dòng EU với count, revenue.', 'Mọi dòng, vì hai policy gộp theo OR.', 'Cube bỏ qua policy và trả toàn bộ dữ liệu.'], a: 0,
+   ex: 'Member gộp theo OR giữa các policy, còn dòng được giao giữa các member trong truy vấn. status chỉ thấy US, revenue chỉ thấy EU, nên phần giao rỗng.', why: {1: 'Cube không ghép kết quả theo từng vùng; mỗi dòng phải hợp lệ với mọi member.', 2: 'OR áp cho member, không áp cho dòng giữa các member khác nhau.', 3: 'Access policy luôn được áp khi có policy khớp.'}},
+  {id: 'ch08_q9', s: 6, type: 'one', q: 'User thuộc support (revenue chỉ trong member_masking) và finance (member_level: "*", không row_level). revenue trả về gì?', o: ['Giá trị thật, vì quyền đầy đủ thắng masking.', 'Giá trị che, vì masking được ưu tiên.', 'NULL ở mọi dòng.', 'Truy vấn bị từ chối.'], a: 0,
+   ex: 'Nếu bất kỳ policy khớp nào cho quyền đầy đủ không điều kiện, giá trị thật được hiển thị.', why: {1: 'Ngược lại: full access wins.', 2: 'NULL là mask mặc định, chỉ áp khi không có quyền đầy đủ.', 3: 'revenue được finance cho phép.'}},
+  {id: 'ch08_q10', s: 6, type: 'one', q: 'Measure total_revenue có mask SQL. Truy vấn SELECT * qua SQL API (ungrouped) thì sao?', o: ['Mask SQL trên measure không được áp; cần dimension có mask SQL hoặc dùng mask tĩnh.', 'Mask SQL vẫn áp bình thường.', 'Cube từ chối mọi truy vấn ungrouped.', 'Measure luôn trả về 0.'], a: 0,
+   ex: 'Docs: mask SQL trên measure không áp cho truy vấn ungrouped; mask tĩnh luôn áp.', why: {1: 'Đây đúng là giới hạn docs nêu.', 2: 'Truy vấn ungrouped vẫn chạy.', 3: '0 chỉ là mask tĩnh nếu khai báo.'}},
+  {id: 'ch08_q11', s: 7, type: 'one', q: 'queryRewrite trả query nguyên vẹn khi JWT thiếu tenant_id. Hệ quả?', o: ['Truy vấn chạy không có bộ lọc tenant; nên ném lỗi trong trường hợp này.', 'Cube tự từ chối.', 'Cube tự gán tenant mặc định.', 'Kết quả luôn rỗng.'], a: 0,
+   ex: 'Mặc định của queryRewrite là cho qua. Muốn chặn phải tự ném lỗi.', why: {1: 'queryRewrite không tự từ chối.', 2: 'Không có tenant mặc định.', 3: 'Không có bộ lọc thì thấy mọi dòng.'}},
+  {id: 'ch08_q12', s: 8, type: 'multi', q: 'Mỗi tenant có database riêng. Cần cấu hình những gì để tách hẳn kết nối, cache và bảng pre-aggregation?', o: ['context_to_orchestrator_id', 'driver_factory', 'pre_aggregations_schema', 'Chỉ cần queryRewrite lọc tenant_id'], a: [0, 1, 2],
+   ex: 'driver_factory trỏ tới database riêng; orchestrator ID tách kết nối, queue, cache; pre_aggregations_schema tách bảng rollup.', why: {3: 'queryRewrite chỉ hợp khi mọi tenant chung một database.'}},
+  {id: 'ch08_q13', s: 9, type: 'one', q: 'Trong case study, thực tập sinh có JWT hợp lệ với tenant_id và roles: ["intern"]. Vì sao không nhận được dữ liệu?', o: ['orders_view không có policy cho group intern, nên access policy từ chối.', 'queryRewrite ném lỗi vì thiếu tenant_id.', 'contextToGroups trả về mảng rỗng.', 'Token đã hết hạn.'], a: 0,
+   ex: 'queryRewrite vẫn thêm bộ lọc tenant bình thường; chặn nằm ở access policy vì group intern không có policy nào.', why: {1: 'Token có tenant_id.', 2: 'contextToGroups trả về ["intern"].', 3: 'Đề bài nói JWT hợp lệ.'}}]};
+</script>
+<script src="sources.js"></script>
+<script src="media.js"></script>
+<script src="kit.js"></script>
+</body>
+</html>

@@ -69,7 +69,7 @@
   <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 04</div>
   <h1>Engineering <i>Deep Dives</i></h1>
   <p class="dek">Mười chủ đề kỹ thuật bên trong Cube: đặt tên model, chọn relationship cho join, context variables, cache, phân quyền, multi-tenancy và một benchmark về AI Agent.</p>
-  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 04 / 07</span><span>24 phút đọc</span></div>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 04 / 08</span><span>24 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
@@ -289,6 +289,8 @@
   }
 };</pre></div>
     </div></details>
+
+    <p>queryRewrite là một trong hai cơ chế phân quyền của Cube. Cơ chế còn lại là access policy, khai báo trong data model theo group, quyết định member, dòng và giá trị bị che. <a href="/blog/cube-handbook/08">Chương 08</a> đi chi tiết cả hai, cùng xác thực JWT, data masking và các mức cách ly multitenancy.</p>
   </section>
 
   <section id="s9">
@@ -437,7 +439,7 @@ window.CH = {key: 'ch04', minutes: 24,
   {id: 's5', n: '04.5', t: 'Context Variables', sum: ['CUBE, FILTER_PARAMS, FILTER_GROUP, convertTz, COMPILE_CONTEXT, SECURITY_CONTEXT.', 'FILTER_PARAMS chỉ cho predicate pushdown; nhiều FILTER_PARAMS thì bọc FILTER_GROUP.', 'SECURITY_CONTEXT đã deprecated, dùng query_rewrite.'], terms: ['filterparams', 'filtergroup', 'pushdown', 'compilectx', 'queryrewrite', 'dbt']},
   {id: 's6', n: '04.6', t: 'Caching', sum: ['Tầng 1: Query Result Cache theo TTL.', 'Tầng 2: pre-aggregations trong Cube Store, làm mới theo refresh_key.'], terms: ['resultcache', 'preagg', 'cubestore']},
   {id: 's7', n: '04.7', t: 'Pre-aggregations', sum: ['Rollup là kiểu khuyến nghị, lưu trong Cube Store.', 'measures, dimensions, granularity quyết định truy vấn nào khớp với rollup.', 'refresh_key cân bằng giữa độ tươi dữ liệu và chi phí.'], terms: ['preagg', 'rollup', 'cubestore', 'refreshkey', 'yaml']},
-  {id: 's8', n: '04.8', t: 'Auth & Multi-tenancy', sum: ['JWT → securityContext → queryRewrite → SQL có bộ lọc RLS.', 'Khi thiếu claim tenant, ví dụ không áp bộ lọc nào; cần chặn trường hợp này.'], terms: ['jwt', 'seccontext', 'queryrewrite', 'rls']},
+  {id: 's8', n: '04.8', t: 'Auth & Multi-tenancy', sum: ['JWT → securityContext → queryRewrite → SQL có bộ lọc RLS.', 'Khi thiếu claim tenant, ví dụ không áp bộ lọc nào; cần chặn trường hợp này.', 'Access policy và các cơ chế phân quyền khác: xem chương 08.'], terms: ['jwt', 'seccontext', 'queryrewrite', 'rls', 'accesspolicy']},
   {id: 's9', n: '04.9', t: 'Source Code', sum: ['Meta API trả về model đang chạy.', 'Hook queryRewrite, extendContext nằm trong cube.js hoặc cube.py.'], terms: ['metaapi', 'queryrewrite']},
   {id: 's10', n: '04.10', t: 'Experiments', sum: ['Theo benchmark trong handbook: 55–60% với schema thô, 80–85% qua semantic layer.', 'Thiếu chi tiết phương pháp nên chỉ xem là xu hướng.'], terms: ['semantic', 'semsql', 'rls']}],
  terms: {
@@ -455,7 +457,8 @@ window.CH = {key: 'ch04', minutes: 24,
   seccontext: ['securityContext', 'Đối tượng Cube gắn vào mỗi request, chứa các claims trong JWT đã được giải mã và xác thực chữ ký; các hook như queryRewrite và COMPILE_CONTEXT đọc đối tượng này để áp quy tắc truy cập.', 'Giống tấm thẻ tên Cube cấp cho người hỏi sau khi soát vé: ghi rõ người này thuộc công ty nào, giữ vai trò gì, để các bước sau xác định phạm vi dữ liệu được phép xem.'],
   queryrewrite: ['query_rewrite', 'Hook cấu hình (queryRewrite trong cube.js, query_rewrite trong cube.py) nhận truy vấn cùng securityContext và trả về truy vấn đã sửa trước khi biên dịch; thường dùng để chèn bộ lọc theo tenant hoặc từ chối truy vấn không hợp lệ.', 'Người gác cửa đọc thẻ tên của người hỏi rồi ghi thêm vào phiếu yêu cầu dòng "chỉ lấy dữ liệu của công ty acme" trước khi chuyển phiếu vào trong.'],
   jwt: ['JWT', 'JSON Web Token: chuỗi gồm header, payload và chữ ký số, cho phép bên nhận kiểm tra nguồn gốc và tính toàn vẹn của các claims (như tenant_id, role, user_id). Cube đọc JWT từ header Authorization.', 'Giống tấm vé có dấu niêm phong: ghi rõ người giữ vé là ai, thuộc công ty nào; chỉ cần một chữ trên vé bị sửa, con dấu sẽ không còn khớp.'],
-  rls: ['Row-Level Security', 'Cơ chế kiểm soát truy cập ở mức dòng: cùng một truy vấn, mỗi người dùng chỉ nhận các dòng thỏa điều kiện gắn với danh tính của họ. Trong Cube, RLS thường làm bằng query_rewrite chèn bộ lọc lấy từ securityContext.', 'Cùng một bảng lương, nhưng mỗi trưởng phòng mở ra chỉ thấy nhân viên thuộc phòng đó; các dòng còn lại như được che đi.'],
+  rls: ['Row-Level Security', 'Cơ chế kiểm soát truy cập ở mức dòng: cùng một truy vấn, mỗi người dùng chỉ nhận các dòng thỏa điều kiện gắn với danh tính của họ. Trong Cube, RLS làm bằng query_rewrite chèn bộ lọc lấy từ securityContext, hoặc bằng row_level trong access policy.', 'Cùng một bảng lương, nhưng mỗi trưởng phòng mở ra chỉ thấy nhân viên thuộc phòng đó; các dòng còn lại như được che đi.'],
+  accesspolicy: ['access policy', 'Quy tắc phân quyền khai báo trong data model (access_policy trên cube hoặc view), gắn với một group. Gồm member_level (member được truy vấn), row_level (bộ lọc dòng) và member_masking (member chỉ thấy giá trị che). Group không có policy thì bị từ chối.', 'Bảng phân công trong kho: mỗi tổ được ghi rõ mở được những tủ nào và lấy hàng ở kệ nào; tổ không có tên trong bảng thì không được vào kho.'],
   preagg: ['pre-aggregation', 'Bảng tổng hợp Cube tính sẵn từ một cube theo tập measures, dimensions và granularity định trước, mặc định lưu trong Cube Store và làm mới theo refresh_key; Cube định tuyến truy vấn khớp tới bảng này thay vì data warehouse.', 'Như quán ăn ninh sẵn nồi nước dùng từ sáng: khách gọi món là có thể phục vụ, không phải hầm xương lại từ đầu cho từng bát.'],
   rollup: ['rollup', 'Kiểu pre-aggregation được khuyến nghị từ v0.28: lưu kết quả đã group by theo danh sách measures, dimensions và một time dimension ở granularity xác định.', 'Là bản tóm tắt sổ bán hàng, mỗi ngày một dòng tổng. Để tính doanh số cả năm, chỉ cần cộng 365 dòng thay vì duyệt hàng triệu hóa đơn.'],
   cubestore: ['Cube Store', 'Engine lưu trữ và truy vấn phân tán của Cube, chuyên cho pre-aggregation: thực thi dạng cột bằng Apache Arrow DataFusion, giữ metadata trong RocksDB và dữ liệu trong file Parquet nén.', 'Giống tủ lạnh riêng của Cube để cất các món đã chuẩn bị sẵn, xếp theo từng loại nguyên liệu, nên cần món nào chỉ mở đúng ngăn chứa món đó.'],
@@ -466,11 +469,12 @@ window.CH = {key: 'ch04', minutes: 24,
   dw: ['data warehouse', 'Hệ cơ sở dữ liệu phân tích (Snowflake, BigQuery, Redshift, Postgres...) chứa dữ liệu nguồn; Cube gửi SQL đã biên dịch tới đây, nên chi phí và độ trễ của truy vấn trực tiếp phụ thuộc vào nó.', 'Giống kho lớn chứa toàn bộ dữ liệu gốc của công ty. Mỗi lần mở kho đều tốn thời gian và chi phí, nên Cube tìm cách mở kho ít nhất có thể.']},
  alias: {yaml: ['YAML'], dbt: ['dbt'], public: ['public'], cdistinct: ['count_distinct'], granularity: ['granularity'], fanout: ['fanout'], semsql: ['Semantic SQL'],
   filterparams: ['FILTER_PARAMS'], filtergroup: ['FILTER_GROUP'], pushdown: ['predicate pushdown'], compilectx: ['COMPILE_CONTEXT'], seccontext: ['securityContext'],
-  queryrewrite: ['query_rewrite', 'queryRewrite'], jwt: ['JWT'], rls: ['RLS', 'Row-Level Security'], preagg: ['pre-aggregations', 'pre-aggregation'], rollup: ['rollup'], cubestore: ['Cube Store'],
+  queryrewrite: ['query_rewrite', 'queryRewrite'], accesspolicy: ['access policy', 'access_policy'], jwt: ['JWT'], rls: ['RLS', 'Row-Level Security'], preagg: ['pre-aggregations', 'pre-aggregation'], rollup: ['rollup'], cubestore: ['Cube Store'],
   refreshkey: ['refresh_key'], resultcache: ['Query Result Cache'], metaapi: ['Meta API'], semantic: ['semantic layer'], dw: ['data warehouse']},
  rel: {public: ['metaapi'], cdistinct: ['granularity'], granularity: ['cdistinct', 'preagg'], fanout: ['cdistinct'], semsql: ['semantic', 'metaapi'], filterparams: ['pushdown', 'filtergroup'],
-  filtergroup: ['filterparams'], pushdown: ['filterparams', 'dw'], compilectx: ['seccontext'], seccontext: ['jwt', 'queryrewrite'], queryrewrite: ['seccontext', 'rls'], jwt: ['seccontext'],
-  rls: ['queryrewrite'], preagg: ['rollup', 'cubestore', 'refreshkey'], rollup: ['preagg', 'granularity'], cubestore: ['preagg'], refreshkey: ['preagg'], resultcache: ['preagg'], metaapi: ['public'],
+  filtergroup: ['filterparams'], pushdown: ['filterparams', 'dw'], compilectx: ['seccontext'], seccontext: ['jwt', 'queryrewrite'], queryrewrite: ['seccontext', 'rls', 'accesspolicy'], jwt: ['seccontext'],
+  accesspolicy: ['rls', 'queryrewrite'],
+  rls: ['queryrewrite', 'accesspolicy'], preagg: ['rollup', 'cubestore', 'refreshkey'], rollup: ['preagg', 'granularity'], cubestore: ['preagg'], refreshkey: ['preagg'], resultcache: ['preagg'], metaapi: ['public'],
   semantic: ['semsql', 'rls'], dw: ['pushdown', 'preagg']},
  // ids starting with nb come from the Gemini Notebook quiz; ch04_q* are added to cover the other sections
  quiz: [

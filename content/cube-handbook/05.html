@@ -56,7 +56,7 @@
   <div class="crumb"><a href="/blog/cube-handbook"><b>Learning</b> / Cube.dev Handbook</a> / 05</div>
   <h1>Production Engineering: <i>vận hành</i> Cube</h1>
   <p class="dek">Triển khai thành nhiều node, cấu hình biến môi trường, bảo mật, giám sát, xử lý sự cố và phát hành an toàn.</p>
-  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 05 / 07</span><span>12 phút đọc</span></div>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 05 / 08</span><span>12 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
@@ -115,7 +115,7 @@ CUBEJS_ROLLUP_ONLY=true</pre></div>
     <span class="num">05.3</span>
     <h2>Xác thực và bảo mật</h2>
     <p class="gist">Ba lớp bảo vệ: secret ký JWT đủ mạnh, TLS, và giới hạn nguồn được phép gọi API.</p>
-    <p>Cube dùng CUBEJS_API_SECRET để kiểm tra chữ ký JWT trong mỗi request. Nếu secret yếu, bất kỳ ai cũng có thể tự ký token và mạo danh tenant khác. Hai lớp còn lại là TLS cho mọi API và giới hạn nguồn truy cập: CORS chỉ chấp nhận các domain trong whitelist, SQL API chỉ mở cho dải IP nội bộ.</p>
+    <p>Cube dùng CUBEJS_API_SECRET để kiểm tra chữ ký JWT trong mỗi request; <a href="/blog/cube-handbook/08">chương 08</a> trình bày chi tiết cách xác minh JWT và phân quyền dữ liệu. Nếu secret yếu, bất kỳ ai cũng có thể tự ký token và mạo danh tenant khác. Hai lớp còn lại là TLS cho mọi API và giới hạn nguồn truy cập: CORS chỉ chấp nhận các domain trong whitelist, SQL API chỉ mở cho dải IP nội bộ.</p>
     <figure>
       <div class="fig">
         <div class="pills" id="sec"></div>

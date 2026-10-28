@@ -75,7 +75,7 @@
   <div class="crumb"><b>Learning</b> / Data / Semantic layer</div>
   <h1>Cube.dev <i>Engineering Handbook</i></h1>
   <p class="dek">Tài liệu gồm tám chương, trình bày từ câu hỏi “Cube là gì” đến triển khai trên production. Mỗi chương có thể đọc trọn trong một buổi, kèm audio, video và câu hỏi tự kiểm tra.</p>
-  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>8 chương · 58 mục</span><span>khoảng 2 giờ đọc · 104 câu tự kiểm tra</span></div>
+  <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>9 chương · 68 mục</span><span>hơn 2 giờ đọc · 117 câu tự kiểm tra</span></div>
     </div>
 
   <div class="media">
@@ -127,7 +127,8 @@
 <script>
 // one row per demo moment, linked to every handbook section it illustrates
 const mm = {};
-Object.entries(MEDIA.demo).forEach(([n, clips]) => clips.forEach(c => {(mm[c[0]] ??= {t: c[0], label: c[2], secs: []}).secs.push(n)}));
+// clips with a 4th field belong to another video in MEDIA.vids, not the workshop listed here
+Object.entries(MEDIA.demo).forEach(([n, clips]) => clips.filter(c => !c[3]).forEach(c => {(mm[c[0]] ??={t: c[0], label: c[2], secs: []}).secs.push(n)}));
 const fmtT = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
 moments.innerHTML = Object.values(mm).sort((a, b) => a.t - b.t).map(m => `<li><b>${fmtT(m.t)}</b><span><a href="/blog/cube-handbook/${m.secs[0].slice(0, 2)}#s${+m.secs[0].split('.')[1]}">${m.label}</a><small>Mục ${m.secs.join(', ')}</small></span></li>`).join('');
 srcList.innerHTML = [...new Set(SOURCES.map(x => x.g))].map(g => `<h3>${g}</h3><ol class="src">${SOURCES.filter(x => x.g === g).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title} · <span>${x.by}</span></li>`).join('')}</ol>`).join('');
@@ -149,10 +150,12 @@ const CHS = [
  {n: '06', href: '/blog/cube-handbook/06', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tra nhanh khi viết code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
   s: ['Configuration Reference', 'API & Query Examples', 'Common Patterns and Code Snippets', 'Error Messages & Solutions', 'Troubleshooting Checklist', 'Glossary', 'Useful Commands & Tools', 'External References']},
  {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Applied Case Studies', vi: 'Dùng Cube cho một bài toán cụ thể và ghi lại kết quả kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
-  s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']}];
+  s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']},
+ {n: '08', href: '/blog/cube-handbook/08', key: 'ch08', t: 'Access Control', vi: 'Ai được gọi Cube và thấy được dữ liệu nào: JWT, security context, access policy, masking, multitenancy.', lvl: 'Nâng cao', min: 22, q: 13,
+  s: ['Big Picture', 'Authentication', 'Security Context', 'Member-Level Security', 'Row-Level Security', 'Combining Policies', 'Data Masking', 'queryRewrite', 'Multitenancy', 'Case Study: Retail SaaS']}];
 const ROUTES = [['Người mới tìm hiểu', ['00', '01', '02', '03'], 'Đọc chương 00 trước để thấy Cube xử lý một câu hỏi cụ thể ra sao; sau đó đọc 01 → 02 → 03 để nắm khái niệm, kiến trúc và dựng một bản chạy được.'],
  ['Bắt đầu thực hành', ['03', '06'], 'Vào thẳng chương 03 để cài đặt và viết model đầu tiên; mở chương 06 bên cạnh để tra cú pháp.'],
- ['Chuẩn bị production', ['04', '05', '07'], 'Chương 04 nói về cache, join và phân quyền; chương 05 về vận hành; chương 07 là một ví dụ đầy đủ.'],
+ ['Chuẩn bị production', ['04', '08', '05', '07'], 'Chương 04 nói về cache và join; chương 08 về xác thực và phân quyền; chương 05 về vận hành; chương 07 là một ví dụ đầy đủ.'],
  ['Tra cứu', ['06'], 'Chương 06 gom cấu hình, ví dụ API, thông báo lỗi và các lệnh hay dùng.']];
 const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
 function renderPath(hot) {

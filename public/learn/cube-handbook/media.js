@@ -1,10 +1,12 @@
 // Media mapped onto handbook sections (keyed by section number, e.g. '02.3').
 // demo: clips of Cube's own workshop video; the workshop runs on Cube Cloud, so some steps differ from the self-hosted path in the handbook.
+// a clip with a 4th field plays that key of `vids` instead of the workshop.
 // audio: start/end (seconds) inside the overview audio; filled in with the mapping tool (add ?map=1 to a chapter URL).
 window.MEDIA = {
  yt: {id: '7ZQGGepDjUQ', title: 'Building Agentic Analytics with Cube (workshop, 39 phút)',
   note: 'trong buổi workshop của Cube. Bản demo chạy trên Cube Cloud, do đó một số bước khác với cách self-host được mô tả trong tài liệu. Video thuộc Cube Dev, Inc., nhúng từ kênh YouTube chính thức của Cube.',
-  credit: 'Các đoạn demo trích từ buổi workshop chính thức của Cube trên YouTube; bản quyền video thuộc Cube Dev, Inc.'},
+  credit: 'Các đoạn demo trích từ buổi workshop và video demo chính thức của Cube trên YouTube; bản quyền video thuộc Cube Dev, Inc.'},
+ vids: {ap: {id: 'yJfnYB27wSQ', note: 'trong video “Data access policies + LDAP integration” (7:37) của Cube. Demo chạy trên Cube Cloud.'}},
  audio: {src: '/learn/cube-handbook/media/overview.m4a', title: 'Kiến trúc tầng ngữ nghĩa Cube', marks: {
   // from a Whisper transcript of the overview; the audio is a discussion, so it covers the conceptual sections and skips the hands-on ones
   '00.1': [92, 210], '00.2': [638, 721], '00.4': [436, 594],
@@ -37,5 +39,8 @@ window.MEDIA = {
   '05.7': [[940, 1042, 'Commit, merge, deploy không downtime'], [1601, 1641, 'Version cho model và dashboard']],
   '07.1': [[1641, 1762, 'Ứng dụng nhúng'], [2200, 2281, 'Hỏi số liệu từ Slack']],
   '07.4': [[2281, 2338, 'Tổng kết: từ Snowflake tới Slack, Claude, embedded']],
-  '07.5': [[1920, 2200, 'Cấu hình MCP và hỏi dữ liệu từ Claude']]}
+  '07.5': [[1920, 2200, 'Cấu hình MCP và hỏi dữ liệu từ Claude']],
+  '08.3': [[84, 193, 'Thử quyền với từng securityContext', 'ap']],
+  '08.4': [[0, 84, 'Khai báo access policy theo group', 'ap']],
+  '08.10': [[1762, 1880, 'External ID, nhóm và RLS cho người dùng nhúng']]}
 };

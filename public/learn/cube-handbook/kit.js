@@ -172,9 +172,9 @@ if (M) {
  function closeYT() {$$('.yt-box').forEach(b => b.remove()); $$('[data-m=yt]').forEach(x => x.classList.remove('on'))}
  function openYT(btn) {
   const was = btn.classList.contains('on'); closeYT(); if (was) return;
-  const c = M.demo[btn.dataset.n][+btn.dataset.i], box = document.createElement('div'); box.className = 'yt-box';
-  box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${M.yt.id}?start=${c[0]}&end=${c[1]}&autoplay=1&rel=0" title="${c[2]}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>` +
-   `<p class="note">${fmt(c[0])}–${fmt(c[1])} ${M.yt.note} <a href="https://www.youtube.com/watch?v=${M.yt.id}&t=${c[0]}s" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p>`;
+  const c = M.demo[btn.dataset.n][+btn.dataset.i], v = c[3] ? M.vids[c[3]] : M.yt, box = document.createElement('div'); box.className = 'yt-box';
+  box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${v.id}?start=${c[0]}&end=${c[1]}&autoplay=1&rel=0" title="${c[2]}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>` +
+   `<p class="note">${fmt(c[0])}–${fmt(c[1])} ${v.note} <a href="https://www.youtube.com/watch?v=${v.id}&t=${c[0]}s" target="_blank" rel="noopener">Mở trên YouTube ↗</a></p>`;
   btn.closest('.mrow').after(box); btn.classList.add('on'); au.pause()}
  // mapping tool: play the overview, stop where a section starts or ends, press the button on that section
  let panel = null;

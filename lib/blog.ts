@@ -34,6 +34,7 @@ export const SERIES = [
       "Production Engineering",
       "Reference & Engineering Notes",
       "Applied Case Studies",
+      "Access Control",
     ].map((title, i) => {
       const n = String(i).padStart(2, "0");
       return { n, title, key: `ch${n}`, href: `/blog/cube-handbook/${n}` };
