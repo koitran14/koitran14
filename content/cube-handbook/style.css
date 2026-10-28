@@ -87,7 +87,7 @@ details.deep th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:up
 @media(max-width:1279px){.toc-side{display:none}.toc-inline{display:block}}
 
 /* D: right-margin study card with tabs */
-.card{position:fixed;top:110px;left:calc(50% + 460px);width:min(260px,calc(50% - 484px));max-height:calc(100vh - 140px);overflow:auto;scrollbar-width:none;font-size:13px;line-height:1.55;color:var(--body);border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg)}
+.card{position:fixed;top:110px;left:calc(50% + 460px);width:min(480px,calc(50% - 484px));max-height:calc(100vh - 140px);overflow:auto;scrollbar-width:none;font-size:13px;line-height:1.55;color:var(--body);border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg)}
 @media(max-width:1279px){.card{display:none}}
 .card .hd{display:flex;justify-content:space-between;align-items:center}
 .card .hd i{width:20px;color:var(--acc)}
