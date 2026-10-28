@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Be_Vietnam_Pro, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
 import { SERIES, getPosts, isAdmin } from "@/lib/blog";
 import { Reveal } from "@/components/reveal";
+import { bookViews, getAllViews } from "@/lib/views";
 import { Notes, ReadingNotice, type Entry } from "./notes";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,9 @@ const minutes = (s: string) => Math.max(1, Math.round(s.trim().split(/\s+/).leng
 
 export default async function BlogPage() {
   const admin = isAdmin();
+  // one read for the whole list; posts show their own count, workbooks the sum over their chapters
+  const all = await getAllViews();
+  const views = all && { ...all, ...Object.fromEntries(SERIES.map((s) => [s.slug, bookViews(all, s.slug)])) };
   const entries: Entry[] = (await getPosts())
     .filter((p) => admin || p.published)
     .map((p) => ({
@@ -67,7 +71,7 @@ export default async function BlogPage() {
         <ReadingNotice />
       </Reveal>
 
-      <Notes entries={entries} series={SERIES} admin={admin} />
+      <Notes entries={entries} series={SERIES} views={views} admin={admin} />
     </div>
   );
 }

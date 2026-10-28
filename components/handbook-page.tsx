@@ -56,7 +56,7 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
     return () => io.disconnect();
   }, [page]);
 
-  // "/blog/cube-handbook/01" -> "cube-handbook/01"; the hub page has no chapter, so the server ignores it
+  // "/blog/cube-handbook/01" -> "cube-handbook/01"; the hub page ("cube-handbook") gets the book's total instead
   const views = useViews(usePathname().replace(/^\/blog\//, ""));
 
   // the meta row lives in the page's raw HTML, so the count is appended to it rather than rendered by React

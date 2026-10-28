@@ -21,6 +21,17 @@ export async function getViews(slug: string): Promise<number | null> {
   return rows ? Number(rows[0]?.views ?? 0) : null;
 }
 
+/** Every counted page, keyed by slug: posts as "<slug>", handbook chapters as "<book>/<chapter>". */
+export async function getAllViews(): Promise<Record<string, number> | null> {
+  const rows: { slug: string; views: number }[] | null = await supabase("post_views?select=slug,views");
+  return rows && Object.fromEntries(rows.map((r) => [r.slug, Number(r.views)]));
+}
+
+/** A whole handbook's views: the sum over its chapters. */
+export function bookViews(all: Record<string, number>, book: string) {
+  return Object.entries(all).reduce((sum, [slug, n]) => (slug.startsWith(`${book}/`) ? sum + n : sum), 0);
+}
+
 export async function incrementView(slug: string): Promise<number | null> {
   const n = await supabase("rpc/increment_view", { method: "POST", body: JSON.stringify({ p_slug: slug }) });
   return n == null ? null : Number(n);

@@ -41,6 +41,8 @@ type Series = (typeof SERIES)[number];
 type Tab = "all" | keyof typeof TYPES;
 
 const mono = { fontFamily: "var(--font-notes-mono)" };
+// " · 1.234 LƯỢT XEM" for the mono meta row; nothing while the counter is unavailable
+const viewsLabel = (n: number | null | undefined) => (n == null ? "" : ` · ${n.toLocaleString("vi-VN")} LƯỢT XEM`);
 const serif = { fontFamily: "var(--font-notes-serif)" };
 
 /** Marks anything published in the last 7 calendar days. Age is read on the reader's clock after mount, so the server render (no badge) and hydration agree. */
@@ -166,7 +168,7 @@ export function ReadingNotice() {
   );
 }
 
-function Workbook({ s }: { s: Series }) {
+function Workbook({ s, views }: { s: Series; views: number | null }) {
   const read = useReadChapters(s);
   const done = read.filter(Boolean).length;
   const next = read.indexOf(false); // -1 once every chapter is read
@@ -177,7 +179,7 @@ function Workbook({ s }: { s: Series }) {
     <div className="mt-7 grid grid-cols-[minmax(0,1fr)_22px] sm:grid-cols-[minmax(0,1fr)_30px]">
       <div className="relative z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#131315] shadow-[0_1px_2px_rgba(24,24,27,0.06),0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none px-5 py-5 sm:px-6">
         <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
-          <span className={TINT.workbook.text}>WORKBOOK</span> · {s.chapters.length} CHƯƠNG
+          <span className={TINT.workbook.text}>WORKBOOK</span> · {s.chapters.length} CHƯƠNG{viewsLabel(views)}
           <NewBadge at={s.createdAt} />
         </div>
         {/* first word plain, the rest in italic accent, like the handbook's own cover */}
@@ -235,7 +237,18 @@ function Workbook({ s }: { s: Series }) {
   );
 }
 
-export function Notes({ entries, series, admin }: { entries: Entry[]; series: Series[]; admin: boolean }) {
+export function Notes({
+  entries,
+  series,
+  views,
+  admin,
+}: {
+  entries: Entry[];
+  series: Series[];
+  /** by post slug and series slug; null when the counter is down */
+  views: Record<string, number> | null;
+  admin: boolean;
+}) {
   const [tab, setTab] = useState<Tab>("all");
   const count = (t: Tab) => (t === "all" ? entries.length + series.length : t === "workbook" ? series.length : entries.filter((e) => e.type === t).length);
   // only tabs that have something in them
@@ -298,7 +311,7 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
                   <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
                     <span className={TINT[e.type].text}>{TYPES[e.type].toUpperCase()}</span>
                     {e.type !== "note" && ` · ${e.minutes} PHÚT`}
-                    {!e.published && <span className="text-amber-600 dark:text-amber-400"> · NHÁP</span>}
+                    {e.published ? viewsLabel(views && (views[e.slug] ?? 0)) : <span className="text-amber-600 dark:text-amber-400"> · NHÁP</span>}
                     <NewBadge at={e.createdAt} />
                     {admin && (
                       <form action={togglePublished.bind(null, e.slug)} className="inline">
@@ -335,7 +348,7 @@ export function Notes({ entries, series, admin }: { entries: Entry[]; series: Se
           </ul>
         ) : (
           <Reveal key={b.slug} delay={0.2}>
-            <Workbook s={b} />
+            <Workbook s={b} views={views && (views[b.slug] ?? 0)} />
           </Reveal>
         ),
       )}
