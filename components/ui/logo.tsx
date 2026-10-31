@@ -4,6 +4,7 @@ const Logo = () => (
   <Link
     href="/"
     scroll={false}
+    data-logo
     className="font-semibold tracking-tight text-zinc-900 dark:text-zinc-100"
     style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}
   >

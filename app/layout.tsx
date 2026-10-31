@@ -17,6 +17,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ChatToggler } from "@/components/ui/chat-toggler";
 import { FEATURES } from "@/lib/features";
 import { Backdrop } from "@/components/backdrop";
+import { Intro } from "@/components/intro";
 
 export default function RootLayout({
   children,
@@ -43,8 +44,10 @@ export default function RootLayout({
   }, []);
 
   return (
-    <html lang="en">
+    // the intro's inline script tags <html> before hydration
+    <html lang="en" suppressHydrationWarning>
       <body>
+        <Intro />
         <TooltipProvider>
           <ChakraProvider theme={theme}>
             <Fonts />
