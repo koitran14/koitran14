@@ -32,6 +32,15 @@ export function bookViews(all: Record<string, number>, book: string) {
   return Object.entries(all).reduce((sum, [slug, n]) => (slug.startsWith(`${book}/`) ? sum + n : sum), 0);
 }
 
+/** File downloads share the views table under "download/<book>/<file>"; returns each file's count and the sum. */
+export async function getDownloads(book: string): Promise<{ total: number; files: Record<string, number> } | null> {
+  const prefix = `download/${book}/`;
+  const rows: { slug: string; views: number }[] | null = await supabase(`post_views?slug=like.${encodeURIComponent(prefix)}*&select=slug,views`);
+  if (!rows) return null;
+  const files = Object.fromEntries(rows.map((r) => [r.slug.slice(prefix.length), Number(r.views)]));
+  return { total: Object.values(files).reduce((a, b) => a + b, 0), files };
+}
+
 export async function incrementView(slug: string): Promise<number | null> {
   const n = await supabase("rpc/increment_view", { method: "POST", body: JSON.stringify({ p_slug: slug }) });
   return n == null ? null : Number(n);
