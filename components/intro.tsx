@@ -134,7 +134,8 @@ export function Intro() {
         ref={stage}
         onClick={() => finish.current()}
         aria-hidden
-        className="fixed inset-0 z-[100] grid cursor-pointer place-items-center bg-[#0b0b0b] text-[#f5f3ee]"
+        // dvh, not inset-0: on iOS the fixed box spans behind the browser toolbar and the word sits low
+        className="fixed left-0 top-0 h-[100dvh] w-full z-[100] grid cursor-pointer place-items-center bg-[#0b0b0b] text-[#f5f3ee]"
       >
         <span ref={word} className="whitespace-nowrap text-[clamp(32px,10vw,52px)] leading-none" />
       </div>
