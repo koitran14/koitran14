@@ -151,7 +151,7 @@ const CHS = [
   s: ['Configuration Reference', 'API & Query Examples', 'Common Patterns and Code Snippets', 'Error Messages & Solutions', 'Troubleshooting Checklist', 'Glossary', 'Useful Commands & Tools', 'External References']},
  {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Applied Case Studies', vi: 'Dùng Cube cho một bài toán cụ thể và ghi lại kết quả kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
   s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']},
- {n: '08', href: '/blog/cube-handbook/08', key: 'ch08', t: 'Access Control', vi: 'Ai được gọi Cube và thấy được dữ liệu nào: JWT, security context, access policy, masking, multitenancy.', lvl: 'Nâng cao', min: 22, q: 13,
+ {n: '08', href: '/blog/cube-handbook/08', key: 'ch08', new: '2026-10-28', t: 'Access Control', vi: 'Ai được gọi Cube và thấy được dữ liệu nào: JWT, security context, access policy, masking, multitenancy.', lvl: 'Nâng cao', min: 22, q: 13,
   s: ['Big Picture', 'Authentication', 'Security Context', 'Member-Level Security', 'Row-Level Security', 'Combining Policies', 'Data Masking', 'queryRewrite', 'Multitenancy', 'Case Study: Retail SaaS']}];
 const ROUTES = [['Người mới tìm hiểu', ['00', '01', '02', '03'], 'Đọc chương 00 trước để thấy Cube xử lý một câu hỏi cụ thể ra sao; sau đó đọc 01 → 02 → 03 để nắm khái niệm, kiến trúc và dựng một bản chạy được.'],
  ['Bắt đầu thực hành', ['03', '06'], 'Vào thẳng chương 03 để cài đặt và viết model đầu tiên; mở chương 06 bên cạnh để tra cú pháp.'],
@@ -162,7 +162,7 @@ function renderPath(hot) {
  path.className = 'path' + (hot ? ' filtered' : '');
  path.innerHTML = CHS.map(c => {
   const ans = c.key ? Object.values(store.get('ans:' + c.key, {})) : [], ok = ans.filter(a => a.ok).length, order = hot ? hot.indexOf(c.n) : -1;
-  return `<li class="ch${order >= 0 ? ' hot' : ''}" id="ch${c.n}"><div class="no">${c.n}${order >= 0 && hot.length > 1 ? `<em>${order + 1}</em>` : ''}</div><div>
+  return `<li class="ch${order >= 0 ? ' hot' : ''}" id="ch${c.n}"${c.new ? ` data-new="${c.new}"` : ''}><div class="no">${c.n}${order >= 0 && hot.length > 1 ? `<em>${order + 1}</em>` : ''}</div><div>
    <h3>${c.href ? `<a href="${c.href}">${c.t}</a>` : c.t}</h3><p class="why">${c.vi}</p>
    <div class="facts"><span class="lvl">${c.lvl}</span><span>${c.s.length} mục</span><span>${c.min} phút</span>${c.q ? `<span>${c.q} câu tự kiểm tra</span>` : ''}</div>
    ${c.q ? `<div class="bar" title="Câu đúng"><b style="width:${ok / c.q * 100}%"></b></div>` : ''}

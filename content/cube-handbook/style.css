@@ -1,7 +1,7 @@
 /* Cube handbook mockup: research-note look (D · T1 · H4 · Q1) */
-:root{--bg:#FFFFFF;--fg:#0B0B0C;--body:#2F2F33;--muted:#6B6B73;--line:#E7E7EA;--soft:#F6F6F7;--acc:#2563EB;--acc-soft:#EEF3FF;--bad:#C2410C;--hl:rgba(37,99,235,.14);--hl2:rgba(37,99,235,.3);
+:root{--bg:#FFFFFF;--fg:#0B0B0C;--body:#2F2F33;--muted:#6B6B73;--line:#E7E7EA;--soft:#F6F6F7;--acc:#2563EB;--acc-soft:#EEF3FF;--bad:#C2410C;--new:#059669;--hl:rgba(37,99,235,.14);--hl2:rgba(37,99,235,.3);
 --serif:var(--font-newsreader),Georgia,serif;--sans:var(--font-archivo),system-ui,sans-serif;--mono:var(--font-jbmono),ui-monospace,monospace}
-:root[data-theme=dark]{--bg:#0A0A0B;--fg:#F4F4F5;--body:#C9C9CF;--muted:#8B8B94;--line:#232327;--soft:#121214;--acc:#60A5FA;--acc-soft:#0F1B33;--bad:#FB923C;--hl:rgba(96,165,250,.2);--hl2:rgba(96,165,250,.36)}
+:root[data-theme=dark]{--bg:#0A0A0B;--fg:#F4F4F5;--body:#C9C9CF;--muted:#8B8B94;--line:#232327;--soft:#121214;--acc:#60A5FA;--acc-soft:#0F1B33;--bad:#FB923C;--new:#34D399;--hl:rgba(96,165,250,.2);--hl2:rgba(96,165,250,.36)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;color:var(--body);font:400 18px/1.75 var(--sans);-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit}
@@ -76,6 +76,10 @@ details.deep th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:up
 .toc-list a{display:flex;gap:10px;justify-content:space-between;padding:6px 0 6px 14px;margin-left:-1px;border-left:1px solid transparent;color:var(--muted);text-decoration:none;line-height:1.4}
 .toc-list a:hover{color:var(--fg)}
 .toc-list a.on{color:var(--fg);border-color:var(--fg)}
+.toc-list a.sub{padding-left:26px;font-size:.92em}
+.new-badge{display:inline-flex;align-items:center;gap:6px;margin-left:10px;font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--new);vertical-align:middle;white-space:nowrap}
+.new-badge i,.toc-list .new-dot{width:6px;height:6px;border-radius:50%;background:var(--new);flex:none}
+.toc-list .new-dot{display:inline-block;margin-left:8px;vertical-align:middle}
 .toc-list a b{font:400 11px var(--mono);color:var(--muted);margin-right:6px;font-weight:400}
 .toc-list a i{font:normal 400 11px var(--mono);color:var(--acc);white-space:nowrap;padding-top:2px}
 .toc-side .label{margin-bottom:12px}
@@ -84,6 +88,7 @@ details.deep th{font:500 11px var(--mono);letter-spacing:.08em;text-transform:up
 .toc-inline summary{cursor:pointer;padding:12px 0;font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);list-style:none;display:flex;justify-content:space-between}
 .toc-inline summary:after{content:"+";font-size:14px}.toc-inline[open] summary:after{content:"−"}
 .toc-inline .toc-list{border:0;margin-bottom:12px}.toc-inline .toc-list a{padding-left:0}
+.toc-inline .toc-list a.sub{padding-left:14px}
 @media(max-width:1279px){.toc-side{display:none}.toc-inline{display:block}}
 
 /* D: right-margin study card with tabs */

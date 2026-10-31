@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import type { HandbookPage as Page } from "@/lib/handbook";
 import { useViews } from "@/components/view-count";
 
-// the chapter engine is shared by every handbook
+// the chapter engine and the hub engine are shared by every handbook
 const KIT = "/learn/cube-handbook/kit.js";
+const HUB = "/learn/cube-handbook/hub.js";
 
 // Renders a handbook page inside the site layout, then runs its scripts in order:
-// the book's shared data first, the page's own script, then the chapter engine.
+// the book's shared data first, the page's own script, then the chapter engine (or the hub engine on a book's index).
 export function HandbookPage({ book, page, engine }: { book: string; page: Page; engine: boolean }) {
   useEffect(() => {
     const ctl = new AbortController();
@@ -29,7 +30,7 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
       await run(`/learn/${book}/media.js`);
       for (const lib of page.libs) await run(`/learn/${book}/${lib}`);
       await run(undefined, page.script);
-      if (engine) await run(KIT);
+      await run(engine ? KIT : HUB);
     })();
     return () => { ctl.abort(); added.forEach((s) => s.remove()); };
   }, [book, page, engine]);
