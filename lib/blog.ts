@@ -75,7 +75,7 @@ export const SERIES = [
   {
     slug: "ai-product-handbook",
     title: "AI Product Engineering & Management",
-    summary: "Một góc nhỏ để tui ghi chép và hệ thống hóa những gì học được trên hành trình tìm hiểu cách xây dựng sản phẩm AI. Từ việc tìm đúng vấn đề, thiết kế và đánh giá hệ thống AI, đến đo lường hiệu quả, bài toán kinh tế và quản trị rủi ro. Mỗi chương đều có video tham khảo và câu hỏi ôn tập để việc học không chỉ dừng lại ở lý thuyết mà còn hướng đến thực hành.",
+    summary: "Một góc nhỏ để ghi chép và hệ thống hóa kiến thức trên hành trình học cách xây dựng sản phẩm AI — từ xác định vấn đề, thiết kế hệ thống đến đo lường hiệu quả, kinh tế và quản trị rủi ro. Mỗi chương đều có video tham khảo và câu hỏi ôn tập để kết nối lý thuyết với thực hành.",
     href: "/blog/ai-product-handbook",
     createdAt: "2026-10-26T12:00:00.000Z",
     chapters: [
