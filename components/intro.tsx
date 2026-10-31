@@ -79,20 +79,30 @@ export function Intro() {
           s.style.transform = "scale(1)";
         });
       });
+      // the dot stamps down: huge to normal, then the word shakes and a ring spreads from the dot
       at(2500, () => {
-        w.style.cssText = LOGO;
+        w.style.cssText = `${LOGO};position:relative`;
         const dot = document.createElement("span");
         dot.textContent = ".";
-        dot.style.cssText = "display:inline-block;color:#60a5fa;opacity:0;transform:translateY(-140px)";
+        dot.style.cssText = "display:inline-block;color:#60a5fa;transform-origin:50% 78%;transition:color .9s";
         w.append(dot);
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          dot.style.transition = "transform .55s cubic-bezier(.34,1.8,.5,1),opacity .1s,color .9s";
-          dot.style.transform = "translateY(0)";
-          dot.style.opacity = "1";
-        }));
+        dot.animate([{ transform: "scale(9)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }],
+          { duration: 220, delay: 200, easing: "cubic-bezier(.7,0,1,1)", fill: "backwards" });
+      });
+      at(2920, () => {
+        w.animate([
+          { transform: "none" }, { transform: "translate(-6px,4px) scale(.97)" }, { transform: "translate(5px,-3px)" },
+          { transform: "translate(-3px,2px)" }, { transform: "none" },
+        ], { duration: 320 });
+        const d = w.lastElementChild!.getBoundingClientRect(), o = w.getBoundingClientRect();
+        const ring = document.createElement("span");
+        ring.style.cssText = `position:absolute;width:14px;height:14px;left:${d.left - o.left + d.width / 2 - 7}px;top:${d.top - o.top + d.height * 0.78 - 7}px;border:1.5px solid #60a5fa;border-radius:50%;pointer-events:none;opacity:0`;
+        w.prepend(ring);
+        ring.animate([{ transform: "scale(1)", opacity: 0.9 }, { transform: "scale(14)", opacity: 0 }],
+          { duration: 1000, easing: "cubic-bezier(.16,1,.3,1)" });
       });
       // fly the logo into the navbar logo while the black screen fades
-      at(3500, () => {
+      at(3900, () => {
         st.style.transition = "background-color .9s";
         st.style.backgroundColor = "transparent";
         if (!nav) return;
@@ -105,7 +115,7 @@ export function Intro() {
         const navDot = nav.lastElementChild;
         if (navDot) (w.lastElementChild as HTMLElement).style.color = getComputedStyle(navDot).color;
       });
-      at(4450, () => finish.current());
+      at(4850, () => finish.current());
     };
 
     // wait for the intro fonts, but never longer than 1.5s on a slow network
@@ -134,8 +144,9 @@ export function Intro() {
         ref={stage}
         onClick={() => finish.current()}
         aria-hidden
-        // dvh, not inset-0: on iOS the fixed box spans behind the browser toolbar and the word sits low
-        className="fixed left-0 top-0 h-[100dvh] w-full z-[100] grid cursor-pointer place-items-center bg-[#0b0b0b] text-[#f5f3ee]"
+        // on phones the viewport starts below the status bar, which Safari paints black too, so the true center reads low;
+        // shortcut: lift by a fixed 3dvh, switch to viewport-fit=cover + safe-area padding if it still looks off on some phone
+        className="fixed left-0 top-0 h-[100dvh] w-full z-[100] grid cursor-pointer place-items-center bg-[#0b0b0b] text-[#f5f3ee] max-md:pb-[6dvh]"
       >
         <span ref={word} className="whitespace-nowrap text-[clamp(32px,10vw,52px)] leading-none" />
       </div>
