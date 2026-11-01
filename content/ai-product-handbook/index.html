@@ -86,7 +86,11 @@
 .seg button.on{background:var(--fg);color:var(--bg)}
 .sk-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 #skSteps{padding:0}
-.sk-steps li{border:1px solid var(--line);border-radius:12px;padding:16px}
+#skSteps>li{border:1px solid var(--line);border-radius:12px;padding:16px;margin:0}
+.sk-sub{margin:0;padding:0;list-style:none;counter-reset:s;display:grid;gap:6px;font-size:14px;color:var(--body)}
+.sk-sub li{counter-increment:s;display:flex;gap:10px;align-items:baseline;margin:0;padding:0}
+.sk-sub li:before{content:counter(s);flex-shrink:0;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--soft);font:500 11px var(--mono);color:var(--acc)}
+.sk-sub b{color:var(--fg);font-weight:500}
 .sk-steps .n{font:400 30px/1 var(--serif);color:var(--acc)}
 .sk-steps .t{margin:8px 0 10px;font-size:15px;color:var(--fg)}
 .sk-steps .sk-btn{padding:7px 12px;font-size:13px}
@@ -142,9 +146,10 @@
   <section class="end" id="skills" data-new="2026-10-31">
     <div class="sk-hero">
       <div>
-        <span class="label">Học cùng Claude · 22 skill</span>
-        <h2>Đọc xong, <i>luyện</i> với một người biết hỏi lại.</h2>
-        <p>Mỗi chương là một skill cho Claude: giảng từng mục, ra bài tập theo đúng ví dụ của chương, chấm bằng rubric và chỉ ra chỗ cần ôn. Nội dung chương đã kèm sẵn, tải về là học được.</p>
+        <span class="label">22 skill cho Claude</span>
+        <h2>Học cùng Claude, <i>hiểu bài</i> kỹ hơn.</h2>
+        <p>Mỗi chương đều có một skill riêng để bạn học và thực hành cùng Claude. Bạn có thể hỏi lại những phần chưa hiểu, làm bài tập, kiểm tra kiến thức và nhận góp ý để biết mình cần ôn thêm phần nào.</p>
+        <p>Tất cả nội dung đã được chuẩn bị sẵn. Chỉ cần tải về, cài đặt và bắt đầu học.</p>
         <div class="sk-cta">
           <a class="sk-btn pri" href="/learn/ai-product-handbook/skills/aiph-skills.zip" download><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0L4.5 6.5M8 10l3.5-3.5M2.5 13.5h11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Tải cả bộ</a>
           <a class="sk-btn" href="#sk-steps">Cách cài</a>
@@ -238,7 +243,7 @@ const COPY = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" 
  DONE = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const STEPS = {
  code: [['Tải bộ skill', `<a class="sk-btn pri" href="/learn/ai-product-handbook/skills/aiph-skills.zip" download>${DL}aiph-skills.zip</a>`], ['Giải nén vào', code('~/.claude/skills/')], ['Mở Claude Code và gõ', code('/aiph-00-roadmap')]],
- web: [['Tải chương muốn học', `<a class="sk-btn" href="#skMore" data-open>${DL}Chọn chương</a>`], ['Tải lên ở', code('Settings → Capabilities → Skills')], ['Nhắn cho Claude', code('Học chương 02 với mình')]]};
+ web: [['Tải chương muốn học', `<a class="sk-btn" href="#skMore" data-open>${DL}Chọn chương</a>`], ['Tải lên Claude', '<ol class="sk-sub"><li><span>Mở <b>Settings</b></span></li><li><span>Chọn <b>Capabilities</b></span></li><li><span>Vào <b>Skills</b>, tải file .zip lên</span></li></ol>'], ['Nhắn cho Claude', code('Học chương 02 với mình')]]};
 function showSteps(k) {
  skSteps.innerHTML = STEPS[k].map((x, i) => `<li><div class="n">${i + 1}</div><div class="t">${x[0]}</div>${x[1]}</li>`).join('');
  skSeg.querySelectorAll('button').forEach(b => {b.classList.toggle('on', b.dataset.k === k); b.setAttribute('aria-pressed', b.dataset.k === k)})}
