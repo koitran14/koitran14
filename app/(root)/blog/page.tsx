@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Be_Vietnam_Pro, JetBrains_Mono, Source_Serif_4 } from "next/font/google";
-import { SERIES, getPosts, isAdmin } from "@/lib/blog";
+import { ESSAYS, SERIES, getPosts, isAdmin } from "@/lib/blog";
 import { Reveal } from "@/components/reveal";
 import { bookViews, getAllViews } from "@/lib/views";
 import { Notes, ReadingNotice, type Entry } from "./notes";
@@ -24,7 +24,8 @@ export default async function BlogPage() {
   // one read for the whole list; posts show their own count, workbooks the sum over their chapters
   const all = await getAllViews();
   const views = all && { ...all, ...Object.fromEntries(SERIES.map((s) => [s.slug, bookViews(all, s.slug)])) };
-  const entries: Entry[] = (await getPosts())
+  const date = (iso: string) => new Date(iso).toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" }).replace("/", ".");
+  const posts: Entry[] = (await getPosts())
     .filter((p) => admin || p.published)
     .map((p) => ({
       slug: p.slug,
@@ -34,8 +35,11 @@ export default async function BlogPage() {
       minutes: minutes(p.content),
       published: p.published,
       createdAt: p.createdAt,
-      date: new Date(p.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" }).replace("/", "."),
+      date: date(p.createdAt),
     }));
+  const essays: Entry[] = ESSAYS.map((e) => ({ ...e, type: "article", published: true, date: date(e.createdAt) }));
+  // newest first, so the N° numbering counts up with time across both kinds
+  const entries = [...posts, ...essays].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   return (
     <div className={`${serif.variable} ${sans.variable} ${mono.variable} py-8 pb-24`} style={{ fontFamily: "var(--font-notes-sans)" }}>

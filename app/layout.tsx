@@ -25,8 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  // every handbook route (/blog/<name>-handbook) lays out its own column and side rails
-  const wide = /^\/blog\/[^/]+-handbook(\/|$)/.test(pathname);
+  // Handbooks and this long-form essay lay out their own reading column and side rails.
+  const wide = /^\/blog\/[^/]+-handbook(\/|$)/.test(pathname)
+    || pathname === "/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product";
   // the floating contact toolbar would sit over the article and the audio player while reading
   const reading = pathname.startsWith("/blog");
 

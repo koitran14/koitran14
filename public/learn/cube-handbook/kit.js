@@ -10,6 +10,8 @@ const ICON = {
  moon: '<svg viewBox="0 0 16 16"><path d="M13.4 9.8A5.6 5.6 0 0 1 6.2 2.6a5.6 5.6 0 1 0 7.2 7.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>',
  hex: '<svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width="5"><path d="M0-50L43-25V25L0 50L-43 25V-25Z"/><path d="M-43-25L0 0 43-25M0 0V50"/></g></svg>'};
 const art = $('article'), card = $('#card');
+// a standalone essay (window.CH.essay) reuses the chapter engine; only its wording says "bài" instead of "chương"
+const UNIT = window.CH.essay ? 'bài' : 'chương';
 
 // ---- T1 tools: highlight on/off (the site toggle owns light/dark) ----
 let kwOn = store.get('kw', true);
@@ -28,7 +30,7 @@ function toc() {
  $$('[data-toc]').forEach(ul => ul.innerHTML = SEC.map((s, i) => {const l = qOf(i);
   return `<li><a href="#${s.id}" data-sec="${i}"><span><b>${s.n}</b>${s.t}</span>${l.length ? `<i title="Câu tự kiểm tra đã làm">${done(l)}/${l.length}</i>` : ''}</a></li>`}).join(''));
  const all = QB.length, ok = QB.filter(q => ANS[q.id]?.ok).length;
- $$('[data-stat]').forEach(el => el.innerHTML = `${SEC.length} mục · ${window.CH.minutes} phút đọc<br>Tự kiểm tra: ${ok}/${all} câu đúng`)}
+ $$('[data-stat]').forEach(el => el.innerHTML = `${SEC.length} mục · ${window.CH.minutes} phút đọc${all ? `<br>Tự kiểm tra: ${ok}/${all} câu đúng` : ''}`)}
 
 // ---- keywords (H4): first use of each glossary term per paragraph becomes clickable ----
 const A2T = new Map(Object.entries(ALIAS).flatMap(([k, a]) => a.map(x => [x.toLowerCase(), k])));
@@ -54,7 +56,7 @@ function openKw(el) {
  $$('.kw.on').forEach(x => x.classList.remove('on')); el.classList.add('on'); lit(k);
  kpop.innerHTML = `<div class="kh"><b>${TERMS[k][0]}</b><span>thuật ngữ</span><button class="kx" aria-label="Đóng">×</button></div>${explain(k)}` +
   (REL[k]?.length ? `<div class="kr">Liên quan ${REL[k].map(r => `<button data-go="${r}">${TERMS[r][0]}</button>`).join('')}</div>` : '') +
-  `<div class="kn"><span>Xuất hiện ${all.length} lần trong chương</span>${all.length > 1 ? `<span><button data-step="-1" aria-label="Lần trước">‹</button>${i + 1}/${all.length}<button data-step="1" aria-label="Lần sau">›</button></span>` : ''}</div>`;
+  `<div class="kn"><span>Xuất hiện ${all.length} lần trong ${UNIT}</span>${all.length > 1 ? `<span><button data-step="-1" aria-label="Lần trước">‹</button>${i + 1}/${all.length}<button data-step="1" aria-label="Lần sau">›</button></span>` : ''}</div>`;
  kpop.hidden = false;
  const r = el.getBoundingClientRect(), W = document.documentElement.clientWidth, h = kpop.offsetHeight;
  kpop.style.left = Math.min(Math.max(12, r.left - 16), W - kpop.offsetWidth - 12) + scrollX + 'px';
@@ -92,9 +94,9 @@ function renderCard() {
  const body = tab === 'sum' ? `<ul>${s.sum.map(x => `<li>${x}</li>`).join('')}</ul>`
   : tab === 'terms' ? `<dl class="dl">${s.terms.map(k => `<dt data-t="${k}">${TERMS[k][0]}</dt><dd>${explain(k)}</dd>`).join('')}</dl>`
   : l.length ? `<div class="qscore">${l.filter(q => ANS[q.id]?.ok).length}/${l.length} câu đúng ở mục này</div>` + stepper('card' + i, l) : '<p class="qnote" style="margin:0">Mục này không có câu hỏi.</p>';
- card.innerHTML = `<div class="hd"><span class="label" style="margin:0">Mục ${s.n}</span><i>${ICON.hex}</i></div><h4>${s.t}</h4>` +
-  `<div class="ctabs">${[['sum', 'Tóm tắt'], ['terms', 'Thuật ngữ'], ['quiz', 'Tự kiểm tra']].map(([k, v]) => `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${v}${k === 'quiz' && left ? `<sup>${left}</sup>` : ''}</button>`).join('')}</div>` +
-  body + (nx ? `<a class="next" href="${nx.href || '#' + nx.id}">Tiếp: ${nx.n} ${nx.t} →</a>` : '');
+ card.innerHTML = `<div class="card-head"><div class="hd"><span class="label" style="margin:0">Mục ${s.n}</span><i>${ICON.hex}</i></div><h4>${s.t}</h4>` +
+  `<div class="ctabs">${[['sum', 'Tóm tắt'], ['terms', 'Thuật ngữ'], ['quiz', 'Tự kiểm tra']].filter(([k]) => k !== 'quiz' || QB.length).map(([k, v]) => `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${v}${k === 'quiz' && left ? `<sup>${left}</sup>` : ''}</button>`).join('')}</div>` +
+  `</div>` + body + (nx ? `<a class="next" href="${nx.href || '#' + nx.id}">Tiếp: ${nx.n} ${nx.t} →</a>` : '');
  inline.forEach((d, j) => d && (d.innerHTML = `<span class="label">Tự kiểm tra · ${SEC[j].n}</span>` + stepper('in' + j, qOf(j))));
  fitCube()}
 function refresh() {store.set('ans:' + key, ANS); toc(); renderCard(); onScroll()}
@@ -210,7 +212,7 @@ if (M) {
 const SRC = window.SOURCES || [], mine = (window.CH_SOURCES || {})[key.slice(-2)] || [];
 const notice = document.createElement('aside'); notice.className = 'notice';
 // each book's sources.js sets its own reminder (window.NOTICE)
-notice.innerHTML = `<span class="label">Lưu ý</span>${window.NOTICE} <a href="#credits">Nguồn của chương</a>.`;
+notice.innerHTML = `<span class="label">Lưu ý</span>${window.NOTICE} <a href="#credits">Nguồn của ${UNIT}</a>.`;
 $('.metarow')?.after(notice);
 const end = $('.end');
 if (end) {
@@ -218,12 +220,14 @@ if (end) {
  const extra = end.querySelector('p')?.textContent.trim() || '';
  const nb = QB.filter(q => q.id.startsWith('nb')).length;
  end.id = 'credits';
- end.innerHTML = `<b style="color:var(--fg)">Nguồn của chương</b>` +
+ end.innerHTML = `<b style="color:var(--fg)">Nguồn của ${UNIT}</b>` +
   (mine.length ? `<ol class="src">${mine.map(id => SRC.find(x => x.id === id)).filter(Boolean).map(x => `<li>${x.url ? `<a href="${x.url}" target="_blank" rel="noopener">${x.title}</a>` : x.title}${x.by ? ` · <span>${x.by}</span>` : ''}</li>`).join('')}</ol>` : '') +
   (extra ? `<p><b>Ghi chú.</b> ${extra}</p>` : '') +
-  `<p><b>Tự kiểm tra.</b> ${QB.length} câu: ${nb ? `${nb} câu từ bộ trắc nghiệm do Gemini Notebook (AI) tạo, đã biên tập; ` : ''}${QB.length - nb} câu được soạn bổ sung theo nội dung chương với sự hỗ trợ của AI và đã được rà soát.</p>` +
+  // blog essays carry no self-check, so the card, TOC and this note leave it out
+  (QB.length ? `<p><b>Tự kiểm tra.</b> ${QB.length} câu: ${nb ? `${nb} câu từ bộ trắc nghiệm do Gemini Notebook (AI) tạo, đã biên tập; ` : ''}${QB.length - nb} câu được soạn bổ sung theo nội dung ${UNIT} với sự hỗ trợ của AI và đã được rà soát.</p>` : '') +
   (M ? `<p><b>Media.</b> Audio tổng quan do Gemini Notebook tạo bằng AI từ cùng bộ nguồn và có thể còn điểm chưa chính xác. ${M.yt.credit}</p>` : '') +
-  `<p><a href="${location.pathname.replace(/\/[^/]*$/, '')}#sources">Danh sách nguồn đầy đủ và các lưu ý →</a></p>`;
+  // a standalone essay has no hub page with a full source list
+  (window.CH.essay ? '' : `<p><a href="${location.pathname.replace(/\/[^/]*$/, '')}#sources">Danh sách nguồn đầy đủ và các lưu ý →</a></p>`);
 }
 
 addEventListener('scroll', onScroll, {passive: true, signal: sig}); addEventListener('resize', fitCube, {signal: sig});

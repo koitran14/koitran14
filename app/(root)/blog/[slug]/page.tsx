@@ -1,13 +1,25 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/reveal";
-import { formatDate, getPosts, isAdmin } from "@/lib/blog";
+import { HandbookPage } from "@/components/handbook-page";
+import HandbookLayout from "../cube-handbook/layout";
+import { ESSAYS, formatDate, getPosts, isAdmin } from "@/lib/blog";
+import { loadPage } from "@/lib/handbook";
 import { getViews } from "@/lib/views";
 import { ViewCount } from "@/components/view-count";
 
 export const dynamic = "force-dynamic";
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
+  // HTML essays use the handbook typography and chapter engine (TOC, study card, keywords)
+  if (ESSAYS.some((e) => e.slug === params.slug)) {
+    return (
+      <HandbookLayout>
+        <HandbookPage book="notes" page={await loadPage("notes", params.slug)} engine />
+      </HandbookLayout>
+    );
+  }
+
   const post = (await getPosts()).find((p) => p.slug === params.slug);
   if (!post || (!post.published && !isAdmin())) notFound();
 

@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { ADMIN_COOKIE, adminToken, checkPassword, getPosts, isAdmin, savePosts, slugify, type PostType } from "@/lib/blog";
+import { ADMIN_COOKIE, ESSAYS, adminToken, checkPassword, getPosts, isAdmin, savePosts, slugify, type PostType } from "@/lib/blog";
 import { BOOKS } from "@/lib/handbook";
 import { bookViews, getAllViews, getViews, incrementView } from "@/lib/views";
 
@@ -53,7 +53,7 @@ export async function recordView(slug: string, count = true) {
   }
   const known = ch
     ? Object.hasOwn(BOOKS, book) && BOOKS[book].includes(ch)
-    : (await getPosts()).find((p) => p.slug === slug)?.published;
+    : ESSAYS.some((e) => e.slug === slug) || (await getPosts()).find((p) => p.slug === slug)?.published;
   if (!known) return null;
   return count ? incrementView(slug) : getViews(slug);
 }

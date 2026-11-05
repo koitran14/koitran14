@@ -109,6 +109,19 @@ export const SERIES = [
   },
 ];
 
+// Long-form articles written as HTML (content/notes/<slug>.html) and rendered with the handbook engine at /blog/<slug>.
+// Listed in Notes as articles alongside the posts; not editable from admin.
+export const ESSAYS = [
+  {
+    slug: "khi-ky-su-duoc-ky-vong-co-tu-duy-product",
+    title: "Tư duy Product ở kỹ sư: chủ động thôi đã đủ?",
+    excerpt:
+      "Kỳ vọng kỹ sư có tư duy Product có hợp lý không? Những gì mỗi người có thể tự học và những điều cần thống nhất với tổ chức.",
+    minutes: 20,
+    createdAt: "2026-11-05T00:00:00.000Z",
+  },
+];
+
 // shortcut: posts live in a local JSON file, which does not persist on Vercel; move to a DB before deploying the blog.
 const FILE = path.join(process.cwd(), "data", "posts.json");
 
