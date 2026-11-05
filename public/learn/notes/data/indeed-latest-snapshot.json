@@ -1,0 +1,38 @@
+{
+  "retrieved": "2026-11-06",
+  "source": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/US/job_postings_by_sector_US.csv",
+  "sectors": [
+    {
+      "sector": "Software Development",
+      "date": "2026-10-30",
+      "index": 81.58,
+      "vs_baseline_pct": -18.42,
+      "yoy_pct": 23.77,
+      "comparison_date": "2025-10-30"
+    },
+    {
+      "sector": "IT Systems & Solutions",
+      "date": "2026-10-30",
+      "index": 77.12,
+      "vs_baseline_pct": -22.88,
+      "yoy_pct": 10.46,
+      "comparison_date": "2025-10-30"
+    },
+    {
+      "sector": "IT Infrastructure, Operations & Support",
+      "date": "2026-10-30",
+      "index": 69.33,
+      "vs_baseline_pct": -30.67,
+      "yoy_pct": 7.36,
+      "comparison_date": "2025-10-30"
+    },
+    {
+      "sector": "Data & Analytics",
+      "date": "2026-10-30",
+      "index": 61.75,
+      "vs_baseline_pct": -38.25,
+      "yoy_pct": 3.9,
+      "comparison_date": "2025-10-30"
+    }
+  ]
+}

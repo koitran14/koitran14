@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu? · Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Archivo:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../cube-handbook/style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wire" aria-hidden="true"><svg viewBox="-60 -60 120 120"><g fill="none" stroke="currentColor" stroke-width=".6"><circle r="40"/><circle r="26" stroke-dasharray="2 2"/><path d="M-40 0H40M0-40V40"/><circle cx="18" cy="-18" r="2" fill="currentColor"/></g></svg></div>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Bài viết · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+
+<article class="essay-article">
+  <header class="essay-hero">
+    <div class="crumb"><a href="/blog"><b>Notes</b> / Bài viết</a> / Ghi chép &amp; suy ngẫm</div>
+    <h1>AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu?</h1>
+    <p class="dek">AI đang làm được nhiều việc hơn trong phát triển phần mềm. Điều đó sẽ làm giảm nhu cầu kỹ sư, mở rộng công việc của họ, hay xảy ra cả hai?</p>
+    <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>05.11.2026 · Cập nhật 06.11.2026</span><span>18 phút đọc</span></div><div class="tools"><button data-tool="kw" aria-label="Bật hoặc tắt đánh dấu thuật ngữ"></button></div></div>
+  </header>
+  <details class="toc-inline"><summary>Trong bài viết này</summary><ul class="toc-list" data-toc></ul></details>
+<p class="lead">Một công cụ có thể nhận yêu cầu, sửa code và chạy kiểm thử. Nếu trước đây phần việc đó cần một kỹ sư ngồi làm, câu hỏi AI có thay thế kỹ sư không là một lo lắng có cơ sở. Nói rằng kỹ sư còn làm nhiều việc ngoài code chưa trả lời hết được lo lắng ấy.</p>
+<p>Công ty không nhất thiết phải chờ AI làm được mọi việc mới thay đổi cách tuyển người. Nếu cùng một nhóm làm được nhiều hơn, họ có thể tuyển ít đi. Ngược lại, nếu làm phần mềm rẻ hơn khiến doanh nghiệp thực hiện thêm những dự án trước đây chưa đáng đầu tư, công việc mới cũng có thể xuất hiện.</p>
+<p>Bài viết này đặt hai khả năng đó cạnh nhau: AI đã làm được đến đâu, thị trường đang cho thấy điều gì, và kỹ sư nên dựa vào đâu để chọn hướng phát triển. Những tình huống trong bài là giả định; các nhận định về tương lai là lập luận để thảo luận, không phải dự báo chắc chắn.</p>
+<details class="evidence-map"><summary>Dẫn chứng nào trả lời câu hỏi nào?</summary><ol><li><a href="#s1"><b>Phần 01 · Phần việc và vai trò</b></a><span>ILO: phạm vi công việc có thể chịu tác động.</span></li><li><a href="#evidence-productivity"><b>Phần 02 · Năng suất thực tế</b></a><span>Biểu đồ Cui / METR và video nghiên cứu: làm nhanh hơn trong điều kiện nào?</span></li><li><a href="#evidence-trend"><b>Phần 03 · Thị trường theo thời gian</b></a><span>Chuỗi tuyển dụng tháng/năm, bảng nhóm nghề và Stanford: nhu cầu thay đổi ra sao?</span></li><li><a href="#evidence-business"><b>Phần 04 · Triển khai trong doanh nghiệp</b></a><span>Google / Amazon: tỷ lệ dùng AI và công sức tiết kiệm khác gì số người bị thay?</span></li><li><a href="#video-dora"><b>Phần 05 · Chất lượng bàn giao</b></a><span>Video DORA: tăng tốc cần đi cùng kiểm chứng và vận hành.</span></li><li><a href="#video-industry"><b>Phần 06 · Hướng phát triển</b></a><span>Video Gergely Orosz: góc nhìn ngành về cách công việc thay đổi.</span></li></ol></details>
+<section id="s1"><span class="num">01</span><h2>“Thay thế kỹ sư” là thay phần việc hay thay người?</h2>
+<p>Giả sử một nhóm phải thêm chức năng xuất báo cáo. AI tạo được phần xử lý dữ liệu, giao diện và một số kiểm thử. Công sức viết những phần đó giảm xuống là thay đổi thực tế đối với công việc, ngay cả khi vẫn cần người kiểm tra và triển khai.</p>
+<p>Nhưng từ đó đến việc bỏ hẳn một vị trí còn có những câu hỏi khác. Yêu cầu có đủ rõ để công cụ tự làm không? Kết quả có đúng với dữ liệu thực tế không? Khi lỗi xuất hiện sau khi phát hành, ai phát hiện, xử lý và quyết định có nên quay lại phiên bản cũ?</p>
+<p>Có ba mức cần phân biệt: AI tự làm một nhiệm vụ; một nhóm dùng AI để làm cùng lượng việc với ít người hơn; và AI đảm nhận trọn một vai trò trong thời gian dài. Bằng chứng cho mức đầu chưa tự động chứng minh hai mức sau. Tuy vậy, mức thứ hai đã đủ để gây áp lực lên tuyển dụng mà không cần chờ đến mức cuối.</p>
+<p><a href="https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure">ILO–NASK năm 2025</a> ước tính khoảng một phần tư lao động toàn cầu làm trong nghề có phần việc chịu tác động của GenAI. ILO nhận định thay đổi công việc có khả năng phổ biến hơn tự động hóa toàn bộ nghề. Đây là đánh giá về khả năng chịu tác động, không phải tỷ lệ người đã mất việc, cũng không riêng ngành phần mềm.</p>
+</section>
+<section id="s2"><span class="num">02</span><h2>AI giúp làm nhanh hơn bao nhiêu?</h2>
+<p>Trong <a href="https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/">nghiên cứu của Zheyuan (Kevin) Cui và các tác giả</a>, ba thử nghiệm với tổng cộng 4.867 lập trình viên ghi nhận số công việc hoàn thành tăng 26,08% ở nhóm dùng trợ lý viết code; sai số chuẩn là 10,3%. Kết quả này đo lượng công việc hoàn thành, không phải mức tăng lợi nhuận hay tỷ lệ nhân sự có thể cắt giảm.</p>
+<p>Một nghiên cứu khác của <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR tháng 7/2025</a> ghi nhận 16 lập trình viên giàu kinh nghiệm mất thêm 19% thời gian khi dùng AI để xử lý 246 công việc trên những kho mã nguồn họ đã quen. Đây là kết quả trong điều kiện cụ thể với công cụ đầu năm 2025.</p>
+<p>Hai nghiên cứu dùng công cụ, nhóm người, công việc và cách đo khác nhau. Chúng cho thấy hiệu quả phải được kiểm tra trong công việc thực tế. Một con số tăng tốc không thể áp dụng nguyên vẹn cho mọi nhóm.</p>
+<figure class="evidence-viz" id="evidence-productivity"><h3>AI tăng lượng việc ở một thử nghiệm, nhưng làm tốn thời gian ở thử nghiệm khác</h3><div class="study-contrast"><div><span class="evidence-label">Cui và các tác giả · Lượng việc hoàn thành</span><strong>+26,08%</strong><p>4.867 lập trình viên · ba thử nghiệm. Nhóm dùng trợ lý code hoàn thành nhiều việc hơn.</p><small>Sai số chuẩn 10,3%. Không phải mức giảm thời gian hay nhân sự.</small></div><div><span class="evidence-label">METR đầu 2025 · Thời gian làm việc</span><strong>+19%</strong><p>16 lập trình viên · 246 công việc trên kho mã quen thuộc. Nhóm dùng AI mất nhiều thời gian hơn.</p><small>Công cụ và môi trường khác nghiên cứu bên trái. METR có cập nhật tháng 2/2026.</small></div></div><div class="figure-insight"><b>Điều cần rút ra</b><p>Chọn đúng loại công việc để đo quan trọng hơn tìm một tỷ lệ tăng tốc chung. Khi thử trong nhóm, hãy tính cả thời gian kiểm tra, sửa lỗi và bàn giao, thay vì chỉ đo lúc AI tạo bản đầu.</p></div><figcaption class="figure-caption"><dl><div><dt>Nguồn</dt><dd><a href="https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/">Cui và các tác giả</a> · <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">METR 07/2025</a></dd></div><div><dt>Cách đọc</dt><dd>Hai kết quả thuộc hai thiết kế nghiên cứu khác nhau; không phải so sánh hai công cụ trong cùng điều kiện.</dd></div></dl></figcaption></figure>
+<p>Trong <a href="https://metr.org/blog/2026-02-24-uplift-update/">cập nhật tháng 2/2026</a>, METR cho rằng công cụ mới có thể đã giúp lập trình viên nhanh hơn. Tuy nhiên, việc chọn người tham gia, chọn công việc và đo thời gian làm dữ liệu mới khó diễn giải. Vì thế, nghiên cứu cũ không đủ để khẳng định công cụ hiện nay vẫn làm chậm kỹ sư.</p>
+<p>Với nhóm đang thử AI, câu hỏi hữu ích là tổng thời gian từ nhận yêu cầu đến đưa thay đổi ổn định vào sử dụng đã giảm chưa. Nếu viết bản đầu nhanh hơn nhưng mất thêm thời gian đọc, sửa và xử lý lỗi, phần tiết kiệm thực tế sẽ khác cảm giác lúc công cụ sinh code.</p>
+<aside class="media-context" id="video-research"><b>Đọc cùng phần 02 · Cách đo năng suất</b><p>Từ 10:36: Joel Becker giải thích thử nghiệm dùng AI trên công việc thực tế và kết quả đo năng suất.</p></aside><div class="vids" data-videos="eai-research"></div>
+<aside class="media-context" id="video-product"><b>Đọc cùng phần 02 · Góc nhìn sản phẩm</b><p>Video này bổ sung câu hỏi chọn đúng việc để làm; không phải bằng chứng đo tốc độ hay việc làm.</p></aside><div class="vids" data-videos="ept-s2"></div>
+</section>
+<section id="s3"><span class="num">03</span><h2>Thị trường đang cần ít kỹ sư hơn sao?</h2><p>Nhìn theo tháng giúp phân biệt một đợt giảm kéo dài với biến động tại một thời điểm. Chuỗi dưới đây lấy từ dữ liệu gốc Indeed: chỉ số tin tuyển dụng Software Development tại Mỹ, đã điều chỉnh mùa vụ, với ngày 01/02/2020 bằng 100. Mỗi điểm là trung bình các quan sát hằng ngày trong một tháng đủ dữ liệu.</p><figure class="evidence-viz" id="evidence-trend"><h3>Qua đáy năm 2025, tuyển dụng phục hồi nhưng chưa về mốc 2020</h3><p class="viz-note">Đọc cùng phần 03 · Chỉ số, không phải số việc làm · 01/02/2020 = 100</p><p class="chart-swipe-hint">Vuốt ngang để xem rõ các mốc thời gian.</p><div class="chart-scroll" tabindex="0" role="region" aria-label="Biểu đồ tuyển dụng theo tháng, có thể cuộn ngang"><svg class="time-chart" viewBox="0 0 600 290" role="img" aria-labelledby="trend-title trend-desc"><title id="trend-title">Chỉ số tin tuyển dụng phần mềm theo tháng</title><desc id="trend-desc">Mỹ, từ 2020-02 đến 2026-09, trung bình tháng, mốc 01/02/2020 bằng 100. Bảng dữ liệu nằm ngay dưới biểu đồ.</desc><line x1="48" x2="578" y1="238.0" y2="238.0" class="chart-grid"/><text x="40" y="242.0" text-anchor="end">0</text><line x1="48" x2="578" y1="194.0" y2="194.0" class="chart-grid"/><text x="40" y="198.0" text-anchor="end">50</text><line x1="48" x2="578" y1="150.0" y2="150.0" class="chart-grid"/><text x="40" y="154.0" text-anchor="end">100</text><line x1="48" x2="578" y1="106.0" y2="106.0" class="chart-grid"/><text x="40" y="110.0" text-anchor="end">150</text><line x1="48" x2="578" y1="61.99999999999999" y2="61.99999999999999" class="chart-grid"/><text x="40" y="66.0" text-anchor="end">200</text><line x1="48" x2="578" y1="18.0" y2="18.0" class="chart-grid"/><text x="40" y="22.0" text-anchor="end">250</text><text x="48.0" y="262" text-anchor="middle">2020</text><text x="121.79746835443038" y="262" text-anchor="middle">2021</text><text x="202.30379746835442" y="262" text-anchor="middle">2022</text><text x="282.8101265822785" y="262" text-anchor="middle">2023</text><text x="363.3164556962025" y="262" text-anchor="middle">2024</text><text x="443.82278481012656" y="262" text-anchor="middle">2025</text><text x="524.3291139240507" y="262" text-anchor="middle">2026</text><polyline points="48.00,150.31 54.71,151.57 61.42,169.87 68.13,179.44 74.84,180.58 81.54,178.74 88.25,176.34 94.96,173.81 101.67,169.54 108.38,164.41 115.09,158.82 121.80,155.78 128.51,147.68 135.22,139.22 141.92,132.03 148.63,122.43 155.34,116.98 162.05,109.77 168.76,98.78 175.47,85.22 182.18,74.06 188.89,59.84 195.59,49.83 202.30,47.84 209.01,36.33 215.72,36.72 222.43,40.20 229.14,38.55 235.85,46.27 242.56,60.21 249.27,73.13 255.97,84.95 262.68,96.58 269.39,108.58 276.10,118.97 282.81,126.86 289.52,137.56 296.23,147.77 302.94,151.63 309.65,152.35 316.35,161.50 323.06,164.51 329.77,168.14 336.48,170.00 343.19,171.89 349.90,173.78 356.61,174.22 363.32,174.81 370.03,175.42 376.73,175.73 383.44,176.07 390.15,177.17 396.86,176.51 403.57,176.30 410.28,177.77 416.99,176.95 423.70,177.59 430.41,178.77 437.11,178.67 443.82,178.64 450.53,180.93 457.24,183.18 463.95,182.09 470.66,182.85 477.37,180.48 484.08,180.41 490.78,179.81 497.49,181.02 504.20,180.87 510.91,179.72 517.62,179.10 524.33,178.05 531.04,176.15 537.75,175.04 544.46,173.93 551.16,172.76 557.87,173.63 564.58,172.00 571.29,172.55 578.00,170.15" fill="none" class="chart-series"/><line x1="48" x2="578" y1="150.0" y2="150.0" class="chart-baseline"/><text x="578" y="143.0" text-anchor="end">Mốc 2020 = 100</text><circle cx="209.01" cy="36.33" r="4" class="chart-point"/><text x="209.01" y="23.33" text-anchor="middle" class="chart-annotation">02/2022 · 229,17</text><circle cx="457.24" cy="183.18" r="4" class="chart-point"/><text x="457.24" y="212.18" text-anchor="middle" class="chart-annotation">03/2025 · 62,30</text><circle cx="578.00" cy="170.15" r="4" class="chart-point"/><text x="578.00" y="156.15" text-anchor="end" class="chart-annotation">09/2026 · 77,10</text></svg></div><div class="figure-insight"><b>Đổi chiều chưa có nghĩa phục hồi hoàn toàn</b><p>Từ đáy trung bình tháng 03/2025 (62,30) đến 09/2026 (77,10), chỉ số tăng khoảng 23,76%. Tuy nhiên, tháng 09/2026 vẫn thấp hơn mốc gốc 22,90%. Đỉnh 02/2022 cho thấy độ lớn của đợt tăng trước đó, không phải mức bình thường mà thị trường chắc chắn sẽ quay lại.</p></div><figcaption class="figure-caption"><dl><div><dt>Nguồn</dt><dd><a href="https://github.com/hiring-lab/job_postings_tracker">Indeed Hiring Lab</a> · CC BY 4.0</dd></div><div><dt>Cách tính</dt><dd>Trung bình tháng từ chuỗi gốc. Các mốc lịch sử có thể được nguồn điều chỉnh khi cập nhật.</dd></div></dl></figcaption><details><summary>Xem 24 tháng gần nhất: thay đổi theo tháng và cùng kỳ</summary><div class="data-scroll" tabindex="0" role="region" aria-label="Bảng số liệu, có thể cuộn ngang"><table class="tbl"><thead><tr><th>Tháng</th><th>Chỉ số</th><th>So tháng trước</th><th>So cùng kỳ</th></tr></thead><tbody><tr><th scope="row">2024-10</th><td>68,65</td><td>−1,05%</td><td>−8,63%</td></tr><tr><th scope="row">2024-11</th><td>67,31</td><td>−1,95%</td><td>−7,77%</td></tr><tr><th scope="row">2024-12</th><td>67,42</td><td>+0,16%</td><td>−6,98%</td></tr><tr><th scope="row">2025-01</th><td>67,46</td><td>+0,06%</td><td>−6,06%</td></tr><tr><th scope="row">2025-02</th><td>64,85</td><td>−3,87%</td><td>−8,80%</td></tr><tr><th scope="row">2025-03</th><td>62,30</td><td>−3,93%</td><td>−11,96%</td></tr><tr><th scope="row">2025-04</th><td>63,53</td><td>+1,97%</td><td>−9,72%</td></tr><tr><th scope="row">2025-05</th><td>62,67</td><td>−1,35%</td><td>−9,34%</td></tr><tr><th scope="row">2025-06</th><td>65,36</td><td>+4,29%</td><td>−6,47%</td></tr><tr><th scope="row">2025-07</th><td>65,44</td><td>+0,12%</td><td>−6,66%</td></tr><tr><th scope="row">2025-08</th><td>66,12</td><td>+1,04%</td><td>−3,39%</td></tr><tr><th scope="row">2025-09</th><td>64,75</td><td>−2,07%</td><td>−6,67%</td></tr><tr><th scope="row">2025-10</th><td>64,92</td><td>+0,26%</td><td>−5,43%</td></tr><tr><th scope="row">2025-11</th><td>66,23</td><td>+2,02%</td><td>−1,60%</td></tr><tr><th scope="row">2025-12</th><td>66,93</td><td>+1,06%</td><td>−0,73%</td></tr><tr><th scope="row">2026-01</th><td>68,13</td><td>+1,79%</td><td>+0,99%</td></tr><tr><th scope="row">2026-02</th><td>70,28</td><td>+3,16%</td><td>+8,37%</td></tr><tr><th scope="row">2026-03</th><td>71,55</td><td>+1,81%</td><td>+14,85%</td></tr><tr><th scope="row">2026-04</th><td>72,81</td><td>+1,76%</td><td>+14,61%</td></tr><tr><th scope="row">2026-05</th><td>74,14</td><td>+1,83%</td><td>+18,30%</td></tr><tr><th scope="row">2026-06</th><td>73,15</td><td>−1,34%</td><td>+11,92%</td></tr><tr><th scope="row">2026-07</th><td>75,00</td><td>+2,53%</td><td>+14,61%</td></tr><tr><th scope="row">2026-08</th><td>74,37</td><td>−0,84%</td><td>+12,48%</td></tr><tr><th scope="row">2026-09</th><td>77,10</td><td>+3,67%</td><td>+19,07%</td></tr></tbody></table></div></details><details><summary>Xem trung bình theo năm</summary><table class="tbl"><thead><tr><th>Năm</th><th>Chỉ số</th><th>Phạm vi</th></tr></thead><tbody><tr><th scope="row">2020</th><td>78,91</td><td>11/12 tháng · chưa đủ năm</td></tr><tr><th scope="row">2021</th><td>148,40</td><td>12/12 tháng</td></tr><tr><th scope="row">2022</th><td>195,58</td><td>12/12 tháng</td></tr><tr><th scope="row">2023</th><td>90,39</td><td>12/12 tháng</td></tr><tr><th scope="row">2024</th><td>69,52</td><td>12/12 tháng</td></tr><tr><th scope="row">2025</th><td>65,05</td><td>12/12 tháng</td></tr><tr><th scope="row">2026</th><td>72,96</td><td>9/12 tháng · chưa đủ năm</td></tr></tbody></table><p class="viz-note">Năm 2020 chỉ có từ tháng 2; năm 2026 chỉ tính đến tháng hoàn chỉnh gần nhất. Không so trung bình năm chưa đủ với năm đủ như cùng một kỳ.</p></details><details><summary>Cách tính và tải dữ liệu</summary><p class="viz-note">Chọn US / total postings / Software Development. Trung bình tháng là trung bình số học các chỉ số hằng ngày; trung bình năm tính trên các ngày thuộc tháng hoàn chỉnh. Tỷ lệ thay đổi = (chỉ số kỳ này / kỳ so sánh − 1) × 100. Nguồn gốc dùng trung bình trượt 7 ngày và điều chỉnh mùa vụ; các quan sát liên tiếp không độc lập. Lần tải này có dữ liệu đến 2026-10-30; tháng cuối chưa đủ ngày nên được bỏ khỏi trung bình tháng.</p><p><a href="/learn/notes/data/indeed-software-monthly.csv">CSV theo tháng</a> · <a href="/learn/notes/data/indeed-software-annual.csv">CSV theo năm</a> · <a href="/learn/notes/data/indeed-software-method.json">Phạm vi và phương pháp</a></p></details></figure><p>Trong bản dữ liệu tải ngày 05/11/2026, tháng hoàn chỉnh gần nhất là 09/2026: chỉ số trung bình 77,10, thay đổi +19,07% so với cùng tháng năm trước và −22,90% so với mốc gốc. Đỉnh trung bình tháng trong chuỗi nằm ở 02/2022, đạt 229,17. Đây là diễn biến tuyển dụng trên nền tảng, chưa xác định phần thay đổi do AI.</p>
+<p>Theo <a href="https://github.com/hiring-lab/job_postings_tracker">dữ liệu gốc Indeed Hiring Lab</a>, ngày 30/10/2026 chỉ số tin tuyển dụng Software Development tại Mỹ là 81,58, với mốc 01/02/2020 bằng 100. Mức này tăng 23,77% so với 30/10/2025, nhưng vẫn thấp hơn mốc gốc 18,42%. Đây là chỉ số tin đăng, không phải số việc làm hay tỷ lệ thất nghiệp.</p>
+<figure class="evidence-viz" id="evidence-market"><h3>Cả bốn nhóm đang hồi phục so cùng kỳ, nhưng vẫn dưới mốc 2020</h3><p class="viz-note">Mỹ · tin đăng total postings · thanh thể hiện mức còn thấp hơn 01/02/2020</p><div class="market-row"><span>Software Development</span><div class="metric-track accent"><i style="width:36.84%"></i></div><strong>−18,42%</strong></div><div class="market-row"><span>IT Systems & Solutions</span><div class="metric-track accent"><i style="width:45.76%"></i></div><strong>−22,88%</strong></div><div class="market-row"><span>IT Infrastructure, Operations & Support</span><div class="metric-track accent"><i style="width:61.34%"></i></div><strong>−30,67%</strong></div><div class="market-row"><span>Data & Analytics</span><div class="metric-track accent"><i style="width:76.50%"></i></div><strong>−38,25%</strong></div><figcaption class="figure-caption"><dl><div><dt>Nguồn</dt><dd><a href="https://github.com/hiring-lab/job_postings_tracker">Indeed Hiring Lab</a> · tải 06/11/2026 · CC BY 4.0</dd></div><div><dt>Cách đọc</dt><dd>Các thanh cùng thang đo 0–50% giảm. Bảng bên dưới cho biết mức tăng so cùng kỳ.</dd></div></dl></figcaption><div class="data-scroll" tabindex="0" role="region" aria-label="Bảng số liệu, có thể cuộn ngang"><table class="tbl"><thead><tr><th>Nhóm nghề</th><th>Chỉ số</th><th>So 30/10/2025</th></tr></thead><tbody><tr><th scope="row">Software Development</th><td>81,58</td><td>+23,77%</td></tr><tr><th scope="row">IT Systems & Solutions</th><td>77,12</td><td>+10,46%</td></tr><tr><th scope="row">IT Infrastructure, Operations & Support</th><td>69,33</td><td>+7,36%</td></tr><tr><th scope="row">Data & Analytics</th><td>61,75</td><td>+3,90%</td></tr></tbody></table></div><div class="figure-insight"><b>Đọc hai hướng cùng lúc</b><p>Software Development tăng 23,77% so cùng kỳ, nhanh nhất trong bốn nhóm này, nhưng vẫn thấp hơn mốc 2020 là 18,42%. Vì vậy, “đang hồi phục” và “chưa trở lại mức cũ” có thể cùng đúng. Dữ liệu này chưa xác định phần thay đổi do AI.</p></div></figure>
+<p>Về dài hạn, <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm">BLS hiện dự báo cho giai đoạn 2025–2035</a> số việc làm Software Developer tại Mỹ tăng khoảng 10% (BLS làm tròn), từ 1.717.800 lên 1.892.600. Đây là dự báo theo chu kỳ mới, không phải mức tăng đã xảy ra. Nhóm gộp Developer, QA và Tester có khoảng 106.100 cơ hội việc làm mỗi năm, bao gồm cả thay thế người rời nghề; không phải toàn bộ là việc mới tạo thêm.</p>
+<p>Bức tranh mới nhất là tuyển dụng phần mềm đã tăng so cùng kỳ nhưng chưa trở lại mức gốc, trong khi BLS vẫn dự báo số việc làm tăng về dài hạn. Những thước đo này không tách riêng tác động của AI khỏi chu kỳ kinh tế, đầu tư hay thay đổi cách tổ chức doanh nghiệp. Đà hồi phục cũng chưa đảm bảo cơ hội tăng giống nhau ở mọi cấp kinh nghiệm.</p>
+<details class="evidence-map"><summary>Đọc thêm: đánh giá kỹ năng năm 2025, không phải số đo tuyển dụng hiện tại</summary><p>Để hiểu cách kỹ năng có thể thay đổi, có thể tham khảo đánh giá phương pháp trong <a href="https://hiringlab.indeed.com/2025/09/23/ai-at-work-report-2025-how-genai-is-rewiring-the-dna-of-jobs/">AI at Work Report 2025 của Indeed</a>: 81% kỹ năng được nêu trong một tin tuyển dụng phát triển phần mềm điển hình thuộc nhóm có khả năng thay đổi theo hướng AI làm phần việc thường lệ, con người giám sát và xử lý tình huống khó. Chỉ số này dùng mô hình AI đánh giá kỹ năng trong tin tuyển dụng; nó đo tiềm năng thay đổi, không đo 81% công việc đã được tự động hóa.</p></details>
+<p>Các số liệu ở đây chủ yếu phản ánh Mỹ hoặc nghiên cứu quốc tế. Chưa có cơ sở từ những nguồn này để suy ra tỷ lệ tuyển dụng, lương hay nguy cơ mất việc cụ thể của kỹ sư tại Việt Nam. Chúng hữu ích để nhận diện câu hỏi cần theo dõi, không thay cho dữ liệu thị trường nơi mỗi người làm việc.</p>
+<p>Một nghiên cứu về người mới đi làm giúp bổ sung phần mà tổng số tin tuyển dụng chưa cho thấy. Trong <a href="https://digitaleconomy.stanford.edu/news/canaries-interest-rates-and-timinga-more-on-recent-drivers-of-employment-changes-for-young-workers/">cập nhật tháng 2/2026 của Stanford Digital Economy Lab</a>, nhóm nghiên cứu ghi nhận mức giảm việc làm tương đối khoảng 16% đến tháng 10/2025 ở nhóm lao động 22–25 tuổi thuộc các nghề chịu tác động AI cao nhất, sau khi kiểm soát thay đổi việc làm ở cấp doanh nghiệp theo thời gian.</p><p>Đó không phải tỷ lệ 16% kỹ sư trẻ bị AI thay thế. Phân tích bao gồm nhiều nghề; kết quả phụ thuộc vào mô hình thống kê và dữ liệu quan sát. Chính các tác giả nhấn mạnh AI không phải nguyên nhân duy nhất của biến động việc làm, và phần giảm trước năm 2024 có thể liên quan đến yếu tố khác. Tuy vậy, đây là lý do cần xem riêng cơ hội vào nghề thay vì chỉ nhìn tổng nhu cầu nhân lực.</p>
+</section>
+<section id="s4"><span class="num">04</span><h2>Không cần thay toàn bộ mới ảnh hưởng đến việc làm</h2>
+<p>Giả sử AI giúp một nhóm hoàn thành khối lượng công việc cũ với ít công sức hơn. Doanh nghiệp có thể giữ nguyên người để làm thêm, giảm tốc độ tuyển mới, hoặc giảm quy mô nhóm. Cả ba đều là lựa chọn có thể xảy ra; kết quả phụ thuộc vào nhu cầu sản phẩm và quyết định kinh doanh.</p>
+<p>Trong doanh nghiệp, đã có những trường hợp AI được dùng ở quy mô lớn. Tại <a href="https://abc.xyz/investor/events/event-details/2025/2025-Q1-Earnings-Call/default.aspx">buổi công bố kết quả Q1/2025 của Alphabet</a>, Sundar Pichai nói hơn 30% code được đưa vào kho mã có liên quan đến việc kỹ sư chấp nhận gợi ý từ AI. Chỉ số này cho thấy mức sử dụng trong quy trình; nó không cho biết Google tiết kiệm tương ứng bao nhiêu giờ hay cần ít hơn bao nhiêu kỹ sư.</p><p><a href="https://press.aboutamazon.com/2024/12/new-amazon-q-developer-capabilities-accelerate-large-scale-transformations-of-legacy-workloads">Amazon công bố tháng 12/2024</a> việc dùng Q Developer nâng cấp hơn 30.000 ứng dụng Java giúp tiết kiệm công sức tương đương hơn 4.500 năm phát triển so với cách làm trước đó, cùng 260 triệu USD tiết kiệm chi phí hằng năm nhờ cải thiện hiệu năng. Đây là ước tính do doanh nghiệp công bố cho một loại công việc cụ thể, không phải thử nghiệm độc lập hay số nhân sự đã cắt giảm.</p><p>Hai ví dụ cho thấy cần hỏi doanh nghiệp đang đo gì: tỷ lệ code có AI hỗ trợ, công sức ước tính tiết kiệm hay chi phí vận hành. Những con số đó có ý nghĩa, nhưng không đổi trực tiếp thành số người có thể thay thế.</p>
+<figure class="evidence-viz" id="evidence-business"><h3>Năng suất tăng có làm giảm số kỹ sư cần tuyển?</h3><p class="viz-note">Điều kiện để bắt đầu phân tích: cùng chất lượng đầu ra, mỗi người thực sự bàn giao được nhiều việc hơn.</p><div class="decision-root"><b>Doanh nghiệp làm gì với phần công sức tiết kiệm?</b><span>Đây là quyết định về nhu cầu và tổ chức, không suy ra được từ tỷ lệ code AI tạo ra.</span></div><div class="decision-branches"><div><span class="evidence-label">Giữ khối lượng việc</span><h4>Có thể cần ít công sức hơn</h4><p>Áp lực tuyển thêm có thể giảm. Công sức được tiết kiệm có chuyển thành giảm người hay không còn tùy vai trò, chi phí và cách phân công.</p><small>Cần xem: quy mô nhóm, vị trí tuyển mới, lượng việc đã bàn giao.</small></div><div><span class="evidence-label">Mở rộng khối lượng việc</span><h4>Nhân sự chưa chắc giảm</h4><p>Nhóm nhận thêm sản phẩm, khách hàng hoặc dự án. Số người tăng hay giảm phụ thuộc lượng việc mới tăng nhanh hơn hay chậm hơn năng suất.</p><small>Cần xem: nhu cầu sản phẩm, dự án mới và khối lượng công việc thực tế.</small></div></div><div class="figure-insight"><b>Vì sao Google / Amazon chưa trả lời được câu hỏi nhân sự?</b><p>Tỷ lệ gợi ý code được chấp nhận ở Google đo mức sử dụng. Công sức tiết kiệm khi nâng cấp Java ở Amazon đo một trường hợp triển khai. Cả hai chưa cho biết doanh nghiệp đã giữ nguyên hay tăng khối lượng việc, nên chưa đủ để tính số kỹ sư bị thay.</p></div><figcaption class="figure-caption"><dl><div><dt>Về sơ đồ</dt><dd>Minh họa lập luận của bài, không phải số liệu đo tác động nhân quả.</dd></div><div><dt>Điều kiện</dt><dd>Hai nhánh giả định năng suất đã tăng và chất lượng đầu ra vẫn đạt yêu cầu.</dd></div></dl></figcaption></figure>
+<p>Điều này khiến câu “AI vẫn cần con người kiểm tra” chưa đủ để đảm bảo an toàn nghề nghiệp. Câu hỏi tiếp theo là cần bao nhiêu người kiểm tra, công việc ấy đòi hỏi năng lực gì và doanh nghiệp sẵn sàng trả bao nhiêu cho nó.</p>
+<p>Ở chiều ngược lại, một dự án trước đây quá tốn kém có thể trở nên đáng làm khi chi phí triển khai giảm. Điều đó có thể tạo nhu cầu mới về tích hợp, dữ liệu và vận hành. Nhưng khả năng có thêm dự án chưa đảm bảo số việc mới sẽ bù được phần giảm, hoặc người mất việc có thể chuyển sang ngay.</p>
+<p>Những đoạn trên là các kịch bản kinh tế để thảo luận, chưa phải kết quả được hai nghiên cứu năng suất chứng minh. Để biết thị trường đi theo hướng nào, cần theo dõi cả số việc làm, tuyển mới, quy mô nhóm và loại kỹ năng được yêu cầu qua thời gian.</p>
+</section>
+<section id="s5"><span class="num">05</span><h2>Giá trị của kỹ sư nằm ở những quyết định nào?</h2>
+<p>Quay lại chức năng xuất báo cáo. Viết được đoạn code chạy đúng trên dữ liệu mẫu là một phần công việc. Chọn cách phân quyền, xử lý dữ liệu thiếu, giới hạn tài nguyên và phát hiện sai số sau khi triển khai là những quyết định ảnh hưởng trực tiếp đến người dùng và chi phí vận hành.</p>
+<p>AI có thể hỗ trợ cả các quyết định này. Không nên xem hiểu hệ thống, giao tiếp hay thiết kế là những khả năng con người sẽ giữ độc quyền mãi mãi. Điều đáng kiểm tra là trong hệ thống cụ thể, kết quả nào đã đủ tin cậy để giao cho công cụ và kết quả nào vẫn cần người hiểu bối cảnh xác nhận.</p>
+<p><a href="https://dora.dev/research/2025/dora-report/">DORA 2025</a> mô tả AI là công cụ khuếch đại điểm mạnh và điểm yếu sẵn có của tổ chức. Từ góc nhìn công việc, có thể diễn giải rằng tăng tốc viết code cần đi cùng cách kiểm thử, triển khai và phản hồi phù hợp. Đây là phần liên hệ từ báo cáo, không phải bằng chứng rằng mọi vị trí kiểm tra code sẽ tăng giá trị trên thị trường.</p>
+<p>Một hướng thích nghi là tăng khả năng theo một thay đổi đến lúc sử dụng thực tế: hiểu lý do làm, chọn cách triển khai, chứng minh nó hoạt động và sửa khi nó gây lỗi. Đây là tiêu chí để tự nhìn lại năng lực, không phải lời hứa rằng làm đủ những việc đó sẽ không mất việc.</p>
+<aside class="media-context" id="video-dora"><b>Đọc cùng phần 05 · Chất lượng bàn giao</b><p>Từ 2:55: vì sao AI khuếch đại cách làm việc sẵn có của tổ chức.</p></aside><div class="vids" data-videos="eai-dora"></div>
+<blockquote><p>Video thảo luận thêm: <a href="https://www.youtube.com/watch?v=0Cv5763UX70&amp;t=1925s">Product-minded engineers in an AI-native world</a>, The Pragmatic Engineer, từ 32:05. Dùng cuộc trao đổi để xem xét ranh giới trách nhiệm giữa kỹ sư và người làm sản phẩm; không dùng quan điểm của khách mời như số liệu đại diện toàn ngành.</p></blockquote><aside class="media-context" id="video-ownership"><b>Đọc cùng phần 05 · Phân chia trách nhiệm</b><p>Dùng để bàn về vai trò kỹ sư và PM khi AI hỗ trợ triển khai.</p></aside><div class="vids" data-videos="ept-s5"></div>
+</section>
+<section id="s6"><span class="num">06</span><h2>Engineering có thể phát triển theo những hướng nào?</h2>
+<p>Với người thích kỹ thuật sâu, hướng đi có thể là xây hệ thống đáng tin cậy hơn: hiệu năng, bảo mật, dữ liệu, hạ tầng và vận hành. Trong một hệ thống khó, đánh giá phương án AI đề xuất vẫn cần hiểu nguyên lý và biết đo. Học nền tảng giúp kiểm tra công cụ, ngay cả khi ít tự gõ code hơn.</p>
+<p>Một hướng khác là xây ứng dụng và hệ thống dùng AI. Công việc có thể gồm chuẩn bị dữ liệu, tích hợp mô hình, thiết kế bộ đánh giá, theo dõi chi phí và xử lý khi kết quả sai. Biết gọi API mô hình là bước đầu; biết ứng dụng có đáp ứng yêu cầu thực tế hay không mới cho thấy chất lượng triển khai.</p>
+<p>Với người quan tâm đến lý do làm một tính năng và cách người dùng sử dụng nó, hướng kỹ sư tham gia sâu vào sản phẩm cũng đáng tìm hiểu. Nhưng hiểu nhu cầu không thay cho năng lực kỹ thuật, và một người không nhất thiết phải làm cả vai trò kỹ sư, thiết kế lẫn quản lý sản phẩm.</p>
+<p>Đây là những hướng để cân nhắc từ tính chất công việc, không phải bảng xếp hạng nghề an toàn. Một người có thể kết hợp chúng. Lựa chọn còn phụ thuộc vào sở trường, loại hệ thống muốn làm và cơ hội thực hành đang có, thay vì chỉ chạy theo tên chức danh mới.</p>
+<aside class="media-context" id="video-industry"><b>Đọc cùng phần 06 · Hướng phát triển</b><p>Góc nhìn ngành của Gergely Orosz, bổ sung cho các lựa chọn nghề nghiệp đang bàn.</p></aside><div class="vids" data-videos="eai-industry"></div>
+</section>
+<section id="s7"><span class="num">07</span><h2>Câu hỏi còn lại cho mỗi kỹ sư</h2>
+<p>Câu trả lời thận trọng hiện nay là: AI đã ảnh hưởng đến những phần việc cụ thể và có thể thay đổi số người cần để làm chúng. Các nguồn trong bài chưa đủ để kết luận AI sẽ thay toàn bộ kỹ sư, cũng chưa đủ để đảm bảo tổng nhu cầu nhân lực sẽ tăng cho mọi nhóm kỹ năng.</p>
+<p>Với người đang đi làm, có thể nhìn vào lần bàn giao gần nhất: phần nào AI làm tốt, phần nào mất công sửa, và quyết định nào vẫn cần hiểu hệ thống hoặc người dùng? Ghi nhận những việc ấy sẽ giúp chọn điều cần học sát với công việc hơn một dự đoán chung về tương lai ngành.</p>
+<p>Với người mới, còn một câu hỏi khó: nếu AI làm phần việc đơn giản nhanh hơn, kỹ sư sẽ học cách đọc code, tìm lỗi và hiểu hệ thống bằng cơ hội nào? Đây là vấn đề nhóm cần chủ động giải quyết qua hướng dẫn và công việc thực tế, không thể chỉ yêu cầu người mới lập tức giỏi kiểm tra đầu ra của AI.</p>
+<p>Mình quan tâm đến AI Product Engineer vì muốn nối việc xây hệ thống AI với câu hỏi sản phẩm có thực sự giúp ích hay không. Đó là một lựa chọn cá nhân để tìm hiểu, không phải đáp án chung cho engineering.</p>
+
+
+</section>
+<footer class="article-outro">
+  <aside class="discussion-prompt" aria-labelledby="discussion-title">
+    <span class="outro-label">Cùng thảo luận</span>
+    <h2 id="discussion-title">AI đang thay đổi công việc của bạn ở đâu?</h2>
+    <p>AI đang giảm thời gian viết code, giảm tổng thời gian bàn giao hay làm thay đổi cả số người cần tham gia?</p>
+    <p class="discussion-followup">Ba thay đổi đó có đang diễn ra cùng nhau không?</p>
+  </aside>
+  <a class="next-essay" href="/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product">
+    <span class="outro-label">Bài tiếp theo <span aria-hidden="true">↗</span></span>
+    <h2>Tư duy Product ở kỹ sư: chủ động thôi đã đủ?</h2>
+    <p>Khi kỹ sư được kỳ vọng hiểu vấn đề và chịu trách nhiệm về kết quả, họ tự rèn được gì, và cần nhóm tạo điều kiện gì?</p>
+    <span class="next-essay-action">Đọc bài viết <span aria-hidden="true">→</span></span>
+  </a>
+</footer>
+<div class="end"><p>Bài viết có AI hỗ trợ soạn và biên tập. Số liệu có phạm vi và thời điểm riêng; các tình huống và kịch bản tương lai dùng để thảo luận.</p></div>
+</article>
+<script src="../ai-product-handbook/videos.js"></script>
+<script>window.CH = {
+  "key": "eai02",
+  "essay": true,
+  "minutes": 18,
+  "next": {
+    "href": "/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product",
+    "n": "Đọc tiếp",
+    "t": "Tư duy Product ở kỹ sư"
+  },
+  "sections": [
+    {
+      "id": "s1",
+      "n": "01",
+      "t": "“Thay thế kỹ sư” là thay phần việc hay thay người?",
+      "sum": [
+        "Giả sử một nhóm phải thêm chức năng xuất báo cáo. AI tạo được phần xử lý dữ liệu, giao diện và một số kiểm thử. Công sức viết những phần đó giảm xuống là thay đổi thực tế đối với công việc, ngay cả khi vẫn cần người kiểm tra và triển khai."
+      ],
+      "terms": []
+    },
+    {
+      "id": "s2",
+      "n": "02",
+      "t": "AI giúp làm nhanh hơn bao nhiêu?",
+      "sum": [
+        "Trong nghiên cứu của Zheyuan (Kevin) Cui và các tác giả, ba thử nghiệm với tổng cộng 4.867 lập trình viên ghi nhận số công việc hoàn thành tăng 26,08% ở nhóm dùng trợ lý viết code; sai số chuẩn là 10,3%. Kết quả này đo lượng công việc hoàn thành, không phải mức tăng lợi nhuận hay tỷ lệ nhân sự có thể cắt giảm."
+      ],
+      "terms": []
+    },
+    {
+      "id": "s3",
+      "n": "03",
+      "t": "Thị trường đang cần ít kỹ sư hơn sao?",
+      "sum": [
+        "Indeed Hiring Lab, báo cáo Q3/2025 cho biết đến ngày 10/10/2025, tin tuyển dụng Software Development tại Mỹ giảm 6,7% so với cùng kỳ và thấp hơn 36,4% so với ngày 01/02/2020. Đây là số tin đăng trên một nền tảng, không phải số kỹ sư đang có việc hay số người bị AI thay thế."
+      ],
+      "terms": []
+    },
+    {
+      "id": "s4",
+      "n": "04",
+      "t": "Không cần thay toàn bộ mới ảnh hưởng đến việc làm",
+      "sum": [
+        "Giả sử AI giúp một nhóm hoàn thành khối lượng công việc cũ với ít công sức hơn. Doanh nghiệp có thể giữ nguyên người để làm thêm, giảm tốc độ tuyển mới, hoặc giảm quy mô nhóm. Cả ba đều là lựa chọn có thể xảy ra; kết quả phụ thuộc vào nhu cầu sản phẩm và quyết định kinh doanh."
+      ],
+      "terms": []
+    },
+    {
+      "id": "s5",
+      "n": "05",
+      "t": "Giá trị của kỹ sư nằm ở những quyết định nào?",
+      "sum": [
+        "Quay lại chức năng xuất báo cáo. Viết được đoạn code chạy đúng trên dữ liệu mẫu là một phần công việc. Chọn cách phân quyền, xử lý dữ liệu thiếu, giới hạn tài nguyên và phát hiện sai số sau khi triển khai là những quyết định ảnh hưởng trực tiếp đến người dùng và chi phí vận hành."
+      ],
+      "terms": []
+    },
+    {
+      "id": "s6",
+      "n": "06",
+      "t": "Engineering có thể phát triển theo những hướng nào?",
+      "sum": [
+        "Với người thích kỹ thuật sâu, hướng đi có thể là xây hệ thống đáng tin cậy hơn: hiệu năng, bảo mật, dữ liệu, hạ tầng và vận hành. Trong một hệ thống khó, đánh giá phương án AI đề xuất vẫn cần hiểu nguyên lý và biết đo. Học nền tảng giúp kiểm tra công cụ, ngay cả khi ít tự gõ code hơn."
+      ],
+      "terms": []
+    },
+    {
+      "id": "s7",
+      "n": "07",
+      "t": "Câu hỏi còn lại cho mỗi kỹ sư",
+      "sum": [
+        "Câu trả lời thận trọng hiện nay là: AI đã ảnh hưởng đến những phần việc cụ thể và có thể thay đổi số người cần để làm chúng. Các nguồn trong bài chưa đủ để kết luận AI sẽ thay toàn bộ kỹ sư, cũng chưa đủ để đảm bảo tổng nhu cầu nhân lực sẽ tăng cho mọi nhóm kỹ năng."
+      ],
+      "terms": []
+    }
+  ],
+  "terms": {
+    "swebench": [
+      "SWE-bench",
+      "Bộ bài kiểm thử dùng để đánh giá khả năng AI xử lý yêu cầu sửa lỗi trong các dự án mã nguồn mở. Bài viết nêu các vấn đề về dữ liệu huấn luyện và lỗi trong bộ kiểm thử; cần tính đến những hạn chế đó khi đọc điểm số.",
+      "Một công cụ vượt qua bài kiểm thử sửa lỗi vẫn cần được kiểm tra khi dùng trên hệ thống thật."
+    ],
+    "exposure": [
+      "GenAI exposure",
+      "Mức độ những phần việc trong một nghề có thể chịu tác động của AI tạo sinh, theo ILO–NASK. Chỉ số này không cho biết bao nhiêu người sẽ mất việc.",
+      "Một nghề có vài phần việc AI hỗ trợ được vẫn có thể còn nhiều nhiệm vụ cần con người."
+    ],
+    "coverage": [
+      "effective AI coverage",
+      "Cách Anthropic ước tính phần công việc AI thực sự làm xong và đạt yêu cầu, tính đến thời gian dành cho từng việc và tỷ lệ thành công.",
+      "Có dùng AI cho một việc chưa có nghĩa AI làm xong việc đó."
+    ],
+    "oversight": [
+      "human oversight",
+      "Con người kiểm tra kết quả AI tạo ra, xử lý những trường hợp AI không làm được và xác định ai chịu trách nhiệm khi có lỗi.",
+      "AI đề xuất sửa code; kỹ sư đọc lại, chạy kiểm thử và quyết định có đưa thay đổi vào sử dụng không."
+    ],
+    "pt": [
+      "Product Thinking",
+      "Hiểu người dùng đang vướng ở đâu, chọn cách giải quyết dựa trên thông tin đã có và kiểm tra kết quả sau khi làm.",
+      "Trước yêu cầu làm dashboard, hỏi người dùng cần báo cáo để làm gì và bước nào đang gây chậm."
+    ],
+    "pme": [
+      "product-minded engineer",
+      "Theo Orosz: kỹ sư quan tâm đến sản phẩm, thường hỏi vì sao, góp ý về yêu cầu, tìm hiểu người dùng và theo dõi tính năng sau khi ra mắt.",
+      "Khi làm xong tính năng, kỹ sư tiếp tục xem nó có được dùng và có giúp giải quyết vấn đề ban đầu không."
+    ],
+    "pe": [
+      "Product Engineer",
+      "Kỹ sư tham gia cả việc tìm hiểu nhu cầu, lựa chọn giải pháp và theo dõi kết quả, bên cạnh việc lập trình. Phạm vi cụ thể tùy nơi làm việc.",
+      "Cùng người phụ trách sản phẩm tìm hiểu vấn đề rồi thử một thay đổi nhỏ, thay vì chỉ nhận yêu cầu đã chốt."
+    ],
+    "pm": [
+      "Product Manager",
+      "Người phụ trách mục tiêu và hướng phát triển sản phẩm. Trong mô hình Cagan được dẫn, PM chịu trách nhiệm chính về việc giải pháp có đáp ứng nhu cầu người dùng và có phù hợp với hoạt động kinh doanh hay không.",
+      "Khi cân nhắc một tính năng, PM cần xem cả nhu cầu người dùng, mục tiêu kinh doanh và các cam kết đang có."
+    ],
+    "feature": [
+      "feature team",
+      "Trong cách phân biệt của Cagan, feature team nhận danh sách tính năng cần làm; product team được giao vấn đề và kết quả cần đạt rồi cùng tìm cách giải quyết.",
+      "Nhận yêu cầu “làm dashboard” khác với được giao bài toán “giảm thời gian xử lý báo cáo”."
+    ],
+    "risks": [
+      "Four Big Risks",
+      "Bốn câu hỏi Cagan đề xuất: người dùng có cần không, có biết cách dùng không, nhóm có xây được không và giải pháp có phù hợp với hoạt động kinh doanh không.",
+      "Một tính năng có thể chạy tốt về kỹ thuật nhưng quá khó dùng hoặc quá tốn chi phí vận hành."
+    ],
+    "agent": [
+      "coding agent",
+      "Công cụ AI có thể tự thực hiện nhiều bước lập trình như đọc mã nguồn, sửa tệp, chạy lệnh và kiểm thử.",
+      "Kỹ sư giao một yêu cầu sửa lỗi, công cụ tìm chỗ cần sửa và đề xuất thay đổi để kỹ sư xem lại."
+    ],
+    "discovery": [
+      "product discovery",
+      "Các hoạt động tìm hiểu nhu cầu và kiểm tra ý tưởng: trao đổi với người dùng, quan sát công việc, xem dữ liệu và thử những thay đổi nhỏ.",
+      "Tìm hiểu người dùng mất thời gian ở bước nào trước khi quyết định thêm dashboard."
+    ],
+    "cd": [
+      "continuous discovery",
+      "Theo Torres: nhóm phát triển sản phẩm trao đổi với khách hàng hằng tuần và thực hiện các hoạt động nghiên cứu nhỏ để tiến tới kết quả mong muốn.",
+      "Duy trì việc tìm hiểu người dùng trong quá trình làm sản phẩm, thay vì chỉ khảo sát một lần lúc bắt đầu."
+    ],
+    "trio": [
+      "product trio",
+      "Theo Torres: người phụ trách sản phẩm, người thiết kế và kỹ sư cùng tìm hiểu nhu cầu và lựa chọn cách giải quyết.",
+      "Ba vai trò cùng trao đổi khi vấn đề còn chưa rõ, thay vì lần lượt chuyển yêu cầu từ người này sang người khác."
+    ],
+    "space": [
+      "SPACE",
+      "Khung xem xét năng suất lập trình từ năm mặt: sự hài lòng và sức khỏe; kết quả công việc; hoạt động; giao tiếp và phối hợp; hiệu quả và khả năng làm việc liền mạch. Không thể chỉ dùng một chỉ số để đánh giá.",
+      "Nhiều lần lưu thay đổi mã nguồn chưa đủ cho biết công việc có chất lượng hay nhóm có phối hợp tốt không."
+    ],
+    "ownership": [
+      "Product Ownership",
+      "Trong bài: chịu trách nhiệm về kết quả sản phẩm và được tham gia những quyết định liên quan. Không đồng nhất với chức danh Product Owner trong Scrum.",
+      "Khi nhận trách nhiệm giảm thời gian làm báo cáo, cần biết mình được thay đổi phần nào và ai cùng quyết định."
+    ],
+    "outcome": [
+      "product outcome",
+      "Thay đổi mà sản phẩm tạo ra cho người dùng, như bớt thời gian làm việc hoặc bớt sai sót. Khác với output là phần việc hoặc tính năng đã bàn giao.",
+      "Dashboard được đưa vào sử dụng là output; người dùng làm báo cáo nhanh hơn là outcome cần đo để xác nhận."
+    ],
+    "feasibility": [
+      "technical feasibility",
+      "Khả năng xây được giải pháp với thời gian, con người và công nghệ đang có. Trong mô hình Cagan, kỹ sư phụ trách kỹ thuật chịu trách nhiệm chính về phần này.",
+      "Nhóm cần kiểm tra có xử lý được lượng dữ liệu yêu cầu trong thời gian và ngân sách cho phép không."
+    ],
+    "context": [
+      "Bối cảnh sản phẩm",
+      "Những thông tin cần biết khi quyết định về sản phẩm: vấn đề người dùng, mục tiêu kinh doanh, số liệu hiện tại, ngân sách và các cam kết liên quan.",
+      "Biết dashboard phục vụ công việc nào và có gắn với cam kết khách hàng nào không trước khi đề xuất đổi cách làm."
+    ],
+    "stakeholder": [
+      "stakeholder",
+      "Những người có liên quan hoặc chịu ảnh hưởng bởi một quyết định về sản phẩm, như khách hàng, người quản lý, bộ phận vận hành hoặc pháp chế.",
+      "Đổi cách xuất báo cáo có thể cần trao đổi với cả người dùng và bộ phận phụ trách dữ liệu."
+    ],
+    "ps": [
+      "problem statement",
+      "Bản mô tả ngắn về vấn đề: ai đang gặp khó khăn, trong tình huống nào, đã biết gì và còn thiếu thông tin gì.",
+      "“Người dùng yêu cầu xuất báo cáo nhanh hơn; chưa rõ bước nào gây chậm.”"
+    ],
+    "baseline": [
+      "baseline",
+      "Số liệu ghi nhận trước khi thay đổi để có cơ sở so sánh sau đó.",
+      "Đo thời gian làm báo cáo trước khi sửa tính năng rồi so với thời gian sau khi sửa."
+    ],
+    "dora": [
+      "DORA",
+      "Chương trình nghiên cứu về hiệu quả phát triển và triển khai phần mềm của Google Cloud. Các chỉ số được dùng để tìm chỗ cần cải thiện trong một ứng dụng hoặc dịch vụ và nhóm phụ trách.",
+      "Theo dõi thời gian đưa thay đổi vào sử dụng cùng tỷ lệ triển khai gây lỗi, thay vì chỉ đếm số tính năng đã làm."
+    ],
+    "metr": [
+      "METR",
+      "Tổ chức nghiên cứu độc lập đánh giá năng lực và ảnh hưởng của AI, trong đó có các thí nghiệm về thời gian lập trình viên hoàn thành công việc khi dùng AI.",
+      "Khi đọc kết quả thí nghiệm, cần biết ai tham gia, họ làm công việc gì và dùng công cụ nào."
+    ],
+    "bias": [
+      "Sai lệch trong mẫu nghiên cứu",
+      "Sai lệch xảy ra khi những người hoặc công việc tham gia nghiên cứu khác với nhóm mà nghiên cứu muốn tìm hiểu.",
+      "Nếu người tham gia chỉ đưa vào nghiên cứu những việc họ sẵn sàng làm mà không có AI, kết quả có thể chưa phản ánh đầy đủ công việc hằng ngày."
+    ],
+    "leadtime": [
+      "change lead time",
+      "Chỉ số DORA đo thời gian từ lúc lưu thay đổi mã nguồn vào hệ thống quản lý phiên bản đến khi đưa thay đổi đó vào sử dụng.",
+      "Khoảng thời gian này có thể bao gồm chờ xem xét code, chạy kiểm thử và triển khai."
+    ]
+  },
+  "alias": {
+    "swebench": [
+      "SWE-bench Verified",
+      "SWE-bench Pro",
+      "SWE-bench"
+    ],
+    "exposure": [
+      "mức tiếp xúc"
+    ],
+    "coverage": [
+      "effective AI coverage",
+      "effective coverage",
+      "task coverage"
+    ],
+    "oversight": [
+      "human oversight"
+    ],
+    "pt": [
+      "Product Thinking",
+      "tư duy Product"
+    ],
+    "pme": [
+      "product-minded engineer"
+    ],
+    "pe": [
+      "Product Engineer",
+      "AI Product Engineer"
+    ],
+    "pm": [
+      "Product Manager"
+    ],
+    "feature": [
+      "feature team",
+      "product team"
+    ],
+    "risks": [
+      "Four Big Risks",
+      "bốn rủi ro"
+    ],
+    "agent": [
+      "coding agent",
+      "AI agent"
+    ],
+    "discovery": [
+      "problem discovery",
+      "discovery"
+    ],
+    "cd": [
+      "continuous discovery"
+    ],
+    "trio": [
+      "product trio"
+    ],
+    "space": [
+      "SPACE"
+    ],
+    "ownership": [
+      "Product Ownership",
+      "ownership"
+    ],
+    "outcome": [
+      "product outcome",
+      "business outcome"
+    ],
+    "feasibility": [
+      "technical feasibility",
+      "feasibility"
+    ],
+    "context": [
+      "Product Context",
+      "business context"
+    ],
+    "stakeholder": [
+      "stakeholder"
+    ],
+    "ps": [
+      "problem statement"
+    ],
+    "baseline": [
+      "baseline"
+    ],
+    "dora": [
+      "DORA"
+    ],
+    "metr": [
+      "METR"
+    ],
+    "bias": [
+      "lệch chọn mẫu"
+    ],
+    "leadtime": [
+      "change lead time",
+      "lead time"
+    ]
+  },
+  "rel": {
+    "swebench": [
+      "agent"
+    ],
+    "exposure": [
+      "coverage"
+    ],
+    "coverage": [
+      "exposure",
+      "oversight"
+    ],
+    "oversight": [
+      "coverage",
+      "ownership"
+    ],
+    "pt": [
+      "pme",
+      "discovery",
+      "ownership"
+    ],
+    "pme": [
+      "pt",
+      "pe"
+    ],
+    "pe": [
+      "pme",
+      "pm"
+    ],
+    "pm": [
+      "trio",
+      "risks"
+    ],
+    "feature": [
+      "outcome",
+      "ownership"
+    ],
+    "risks": [
+      "feasibility",
+      "pm"
+    ],
+    "discovery": [
+      "cd",
+      "ps",
+      "baseline"
+    ],
+    "cd": [
+      "trio",
+      "discovery"
+    ],
+    "trio": [
+      "cd",
+      "pm"
+    ],
+    "space": [
+      "outcome",
+      "leadtime"
+    ],
+    "ownership": [
+      "pt",
+      "context"
+    ],
+    "outcome": [
+      "baseline",
+      "feature"
+    ],
+    "feasibility": [
+      "risks",
+      "context"
+    ],
+    "context": [
+      "stakeholder",
+      "ownership"
+    ],
+    "stakeholder": [
+      "context",
+      "pm"
+    ],
+    "ps": [
+      "discovery"
+    ],
+    "baseline": [
+      "outcome"
+    ],
+    "dora": [
+      "leadtime"
+    ],
+    "metr": [
+      "bias"
+    ],
+    "bias": [
+      "metr"
+    ],
+    "leadtime": [
+      "dora"
+    ]
+  },
+  "quiz": []
+};</script>
+</body>
+</html>

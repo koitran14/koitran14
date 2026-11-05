@@ -113,6 +113,13 @@ export const SERIES = [
 // Listed in Notes as articles alongside the posts; not editable from admin.
 export const ESSAYS = [
   {
+    slug: "ai-co-thay-the-ky-su-phan-mem",
+    title: "AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu?",
+    excerpt: "AI đang làm được nhiều việc hơn trong phát triển phần mềm. Điều đó sẽ làm giảm nhu cầu kỹ sư, mở rộng công việc của họ, hay xảy ra cả hai?",
+    minutes: 18,
+    createdAt: "2026-11-05T01:00:00.000Z",
+  },
+  {
     slug: "khi-ky-su-duoc-ky-vong-co-tu-duy-product",
     title: "Tư duy Product ở kỹ sư: chủ động thôi đã đủ?",
     excerpt:

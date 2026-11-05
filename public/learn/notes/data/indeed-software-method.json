@@ -1,0 +1,12 @@
+{
+  "source": "https://raw.githubusercontent.com/hiring-lab/job_postings_tracker/master/US/job_postings_by_sector_US.csv",
+  "retrieved": "2026-11-05",
+  "latest_observation": "2026-10-30",
+  "last_complete_month": "2026-09",
+  "filter": {
+    "jobcountry": "US",
+    "variable": "total postings",
+    "display_name": "Software Development"
+  },
+  "method": "Arithmetic mean of daily seasonally adjusted index, baseline 2020-02-01=100; only full calendar months. Annual means weighted by number of daily observations, partial years labelled."
+}

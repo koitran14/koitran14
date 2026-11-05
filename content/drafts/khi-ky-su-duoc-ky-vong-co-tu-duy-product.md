@@ -1,38 +1,143 @@
 # Tư duy Product ở kỹ sư: chủ động thôi đã đủ?
 
-*Hiểu vấn đề là điều mình có thể học. Chịu trách nhiệm cho kết quả còn cần biết mình được tham gia và quyết định những gì.*
+*Kỹ sư có thể tự rèn luyện tư duy Product từ công việc hằng ngày. Nhưng để chịu trách nhiệm cho kết quả sản phẩm, họ còn cần bối cảnh, cơ hội thực hành và quyền quyết định rõ ràng.*
 
 Trần Ngọc Đăng Khôi · Ghi chép & suy ngẫm · 20 phút đọc · 05.11.2026
 
 URL: https://koitran14.vercel.app/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product
 
-Một yêu cầu làm dashboard có thể rất rõ: cần những bộ lọc nào, hiển thị dữ liệu gì, xuất ra định dạng nào và khi nào phải bàn giao. Nhưng có một câu hỏi đôi khi vẫn chưa có lời đáp: người dùng cần bảng số liệu ấy để làm gì?
+Bài trước: [AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu?](/blog/ai-co-thay-the-ky-su-phan-mem). Bài này đi sâu vào tư duy Product như một hướng phát triển của kỹ sư.
 
-Mình nghĩ đó là một điểm bắt đầu gần gũi để nói về Product Thinking. Kỹ sư không chỉ cần biết làm một tính năng như thế nào, mà còn muốn hiểu vì sao nó đáng làm. Khi AI hỗ trợ ngày càng nhiều phần việc lập trình, kỳ vọng ấy càng đáng để bàn. Dù vậy, hiểu vấn đề và chịu trách nhiệm cho toàn bộ kết quả sản phẩm là hai việc khác nhau.
+Giả sử bạn nhận một ticket (yêu cầu công việc) làm dashboard, tức trang tổng hợp số liệu: thêm bộ lọc, hiển thị vài cột số liệu và cho phép xuất tệp. Yêu cầu đã rõ, ngày bàn giao cũng có. Bạn ước lượng, viết code, kiểm thử rồi bàn giao. Nhưng làm xong từng ấy việc đã đủ để biết người dùng làm báo cáo nhanh hơn chưa?
 
-Mình viết bài này từ góc nhìn một kỹ sư phần mềm đang phát triển theo hướng AI Product Engineer. Điều mình muốn tìm hiểu là: kỳ vọng có tư duy Product hợp lý đến đâu, mình có thể tự học những gì, và phần nào cần được thống nhất với những người cùng làm sản phẩm?
+Đây là chỗ yêu cầu có tư duy Product dễ trở nên khó hiểu. Kỹ sư được mong đợi quan tâm đến kết quả sau khi bàn giao, nhưng không phải lúc nào cũng được gặp người dùng, biết lý do chọn tính năng hay có quyền đổi yêu cầu. Vậy trong phần việc của mình, họ chủ động được đến đâu?
 
-Bài dựa trên tài liệu và suy ngẫm của mình. Dashboard và các tình huống làm việc bên dưới là ví dụ giả định, không phải câu chuyện hay kết quả của một dự án mình đã thực hiện.
+Mình là kỹ sư phần mềm và muốn trở thành AI Product Engineer. Điều mình muốn hiểu là khoảng cách giữa hai việc: làm tốt một tính năng được giao và biết tính năng đó có đáng làm hay không.
+
+Tình huống dashboard và cách phân công công việc trong bài đều là giả định. Các tài liệu được dẫn giúp soi rõ từng bước: hiểu yêu cầu, chọn cách giải quyết, theo dõi kết quả và xác định ai được quyết định điều gì.
 
 ## Mục lục
 
-01. [Ngoài code, kỹ sư còn được kỳ vọng điều gì?](#s1)
-02. [Code nhanh hơn, sản phẩm có tốt hơn?](#s2)
-03. [Làm đúng yêu cầu đã là giải đúng vấn đề?](#s3)
-04. [Tư duy Product bắt đầu từ một ticket](#s4)
-05. [Trách nhiệm sản phẩm cần quyền quyết định nào?](#s5)
-06. [Thiếu năng lực hay thiếu cơ hội thể hiện?](#s6)
-07. [90 ngày để thử, đo và học](#s7)
+01. [Ticket đã rõ, vấn đề đã rõ chưa?](#s1)
+02. [Chưa được đổi yêu cầu, vẫn có việc để làm](#s2)
+03. [Thấy cách tốt hơn, ai được quyền đổi?](#s3)
+04. [Chưa được thử, đã bị đánh giá?](#s4)
+05. [Bắt đầu từ lần nhận việc tiếp theo](#s5)
 
 <a id="s1"></a>
 
-## 01 · Ngoài code, kỹ sư còn được kỳ vọng điều gì?
+## 01 · Ticket đã rõ, vấn đề đã rõ chưa?
 
-Product Thinking không phải ý tưởng chỉ xuất hiện sau coding agent. Từ năm 2019, [Gergely Orosz đã viết về product-minded engineer](https://blog.pragmaticengineer.com/the-product-minded-engineer/): những kỹ sư quan tâm đến sản phẩm, thường hỏi vì sao, góp ý về yêu cầu và theo dõi tính năng sau khi ra mắt.
+Với ticket trên, kỹ sư đã biết cần xây những chức năng nào. Nhưng lý do làm dashboard mới chỉ dừng ở mong muốn xuất báo cáo nhanh hơn. Chưa ai xác định người dùng mất thời gian ở bước nào.
 
-Kỳ vọng ấy cũng có trong mô tả công việc. Khi đối chiếu ngày 05/11/2026, [vị trí Product Engineer của Linear](https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b) yêu cầu kỹ sư cùng làm rõ vấn đề và theo sát tính năng từ ý tưởng đến phát hành. [Tài liệu nội bộ của PostHog](https://posthog.com/handbook/engineering/product-engineering) mô tả cách kỹ sư tìm hiểu nhu cầu, đưa một phần tính năng vào sử dụng rồi dựa vào phản hồi để sửa tiếp.
+Người dùng cần báo cáo để gửi quản lý, tìm dữ liệu sai hay chuyển sang hệ thống khác? Họ mất thời gian lúc tải tệp, đối chiếu số liệu hay chờ phê duyệt? Câu trả lời sẽ quyết định nhóm nên xử lý ở đâu.
 
-Đó là những ví dụ cụ thể, nhưng chưa đại diện cho cả thị trường. Mình chưa có dữ liệu để nói bao nhiêu công ty đang tuyển theo cách này, hay nhu cầu ấy tăng nhanh đến đâu. Các khảo sát về AI và kỹ năng giúp hiểu thêm hoàn cảnh công việc đang thay đổi, nhưng không trả lời thay câu hỏi tuyển dụng đó.
+Giả sử người dùng mất nhiều thời gian đối chiếu hai nguồn dữ liệu. Nếu quan sát thực tế xác nhận điều đó, nhóm có thể cân nhắc làm nổi bật các dòng chênh lệch. Còn nếu họ phải chờ truy vấn hoặc chờ phê duyệt, cách giải quyết sẽ khác. Khi chưa biết nguyên nhân, chưa có cơ sở nói dashboard hay cảnh báo là lựa chọn tốt hơn.
+
+Nếu chỉ hỏi thêm về bộ lọc hay định dạng tệp, nhóm đang hoàn thiện yêu cầu làm dashboard. Hỏi người dùng đang vướng ở đâu mở ra khả năng chọn cách khác. Dashboard vẫn có thể là lựa chọn cuối cùng, nhưng lúc đó nhóm biết nó giải quyết việc gì và sẽ kiểm tra kết quả ra sao.
+
+Trong [Product vs. Feature Teams](https://www.svpg.com/product-vs-feature-teams/), Marty Cagan phân biệt nhóm được giao danh sách tính năng cần làm với nhóm được giao một vấn đề và kết quả cần đạt.
+
+Cả hai nhóm đều có thể dùng ticket để chia việc. Điểm khác nằm ở chỗ nhóm chỉ thực hiện giải pháp đã chốt, hay được tìm hiểu và chọn giải pháp. Muốn lựa chọn, nhóm phải có thông tin về vấn đề và biết giới hạn của những gì được phép thay đổi. Đây là mô hình tổ chức Cagan bàn đến, không phải yêu cầu áp dụng cho mọi nhóm.
+
+> Trong bài này, tư duy Product là cách làm việc bắt đầu từ vấn đề của người dùng: tìm hiểu họ đang vướng ở đâu, chọn cách giải quyết rồi kiểm tra xem cách đó có giúp được họ không.
+
+Làm xong dashboard là bàn giao một tính năng (output). Người dùng làm báo cáo nhanh hơn mà không tăng sai sót mới là kết quả mong muốn (outcome). Muốn biết có đạt kết quả đó hay không, nhóm phải đo sau khi đưa tính năng vào sử dụng. Hoàn thành đúng yêu cầu chưa trả lời được điều này.
+
+<a id="s2"></a>
+
+## 02 · Chưa được đổi yêu cầu, vẫn có việc để làm
+
+Không phải kỹ sư nào cũng được tự bỏ yêu cầu làm dashboard để chọn cách khác. Nhưng ngay trong ticket đang nhận, họ vẫn có thể hỏi vì sao cần tính năng này và ai sẽ dùng nó. Đó là một việc cụ thể để bắt đầu, không cần chờ đổi chức danh.
+
+[Drew Hoskins](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/) gợi ý tìm hiểu nhu cầu qua những nguồn có sẵn: cuộc gọi bán hàng, trao đổi hỗ trợ khách hàng, yêu cầu trên GitHub và dữ liệu sử dụng.
+
+Với ví dụ dashboard, ticket có thể ghi rõ: “Người dùng muốn xuất báo cáo nhanh hơn; chưa rõ bước nào gây chậm.” Ghi rõ điều chưa biết giúp xác định cần hỏi thêm điều gì, thay vì mặc định việc đối chiếu dữ liệu là nguyên nhân.
+
+Để biết bước nào gây chậm, kỹ sư có thể cùng người phụ trách quan sát người dùng làm báo cáo hoặc xin tham gia một buổi trao đổi. Nếu vướng mắc chính là đối chiếu số liệu, nhóm mới có cơ sở thử làm nổi bật các dòng chênh lệch. Trước khi thử, cần thống nhất sẽ đo gì và kết quả nào cho thấy nhận định ban đầu không đúng.
+
+Nhóm có thể đặt vài phương án cạnh nhau: sửa chức năng xuất tệp hiện tại, thêm cảnh báo hoặc làm dashboard. Mỗi phương án tốn bao nhiêu công sức và giải quyết được phần nào của vấn đề? Sau khi đưa vào sử dụng, số liệu và phản hồi sẽ giúp quyết định sửa tiếp hay dừng. Đây là ví dụ minh họa cách áp dụng các gợi ý, chưa phải kết quả thử nghiệm hay một chương trình đào tạo.
+
+Cách suy nghĩ này cũng dùng được khi bảo trì hệ thống. Nếu lỗi xuất báo cáo lặp lại, ngoài sửa lỗi, kỹ sư có thể tìm hiểu ai bị ảnh hưởng, họ phải làm lại những bước nào và làm sao để lỗi ít tái diễn hơn. Với công cụ nội bộ, người dùng có thể là các đồng nghiệp; khó khăn của họ cũng đáng được tìm hiểu.
+
+Hỏi rõ yêu cầu và ghi lại điều chưa biết thường là những việc kỹ sư tự làm được. Còn gặp khách hàng, lấy thêm dữ liệu hay đổi yêu cầu thường cần người phụ trách hỗ trợ. Đề nghị sẽ dễ trao đổi hơn nếu nói rõ muốn biết điều gì, định tìm hiểu bằng cách nào và cần ai tham gia.
+
+> **Video liên quan.** [How to become a product-minded engineer](https://www.youtube.com/watch?v=JtUfbaVdP_M) · Drew Hoskins · The Product Engineers Podcast. Học từ phản hồi và dữ liệu có sẵn trong công việc.
+
+<a id="s3"></a>
+
+## 03 · Thấy cách tốt hơn, ai được quyền đổi?
+
+Giả sử sau khi tìm hiểu, kỹ sư cho rằng chỉ cần sửa chức năng xuất tệp hiện tại. Họ có nên tự bỏ yêu cầu làm dashboard không? Chưa thể quyết định như vậy nếu chưa biết ai đã chốt yêu cầu và vì sao. Đề xuất một phương án khác là phần chủ động của kỹ sư; duyệt thay đổi thuộc về ai là việc nhóm phải thống nhất.
+
+Bài viết dùng **Product Ownership** để nói về việc chịu trách nhiệm cho kết quả sản phẩm, đi cùng quyền tham gia những quyết định ảnh hưởng đến kết quả ấy. Đây không phải chức danh Product Owner trong Scrum.
+
+Trong [The Four Big Risks](https://www.svpg.com/four-big-risks/), Cagan nêu bốn điều cần xem xét: người dùng có cần giải pháp không, có biết cách dùng không, nhóm có đủ khả năng xây dựng giải pháp không và giải pháp có phù hợp với hoạt động kinh doanh không.
+
+Theo cách phân chia của Cagan, người phụ trách sản phẩm (Product Manager, hay PM) chịu trách nhiệm chính về nhu cầu người dùng và sự phù hợp với hoạt động kinh doanh; người thiết kế phụ trách trải nghiệm sử dụng; kỹ sư xem xét khả năng xây dựng giải pháp về mặt kỹ thuật. Các bên vẫn cần phối hợp với nhau.
+
+Chẳng hạn, muốn thay dashboard bằng cách khác, nhóm còn phải biết đã hứa gì với khách hàng, có yêu cầu kiểm toán nào và việc này liên quan đến kế hoạch kinh doanh ra sao. Ví dụ đang xét chưa có các thông tin đó. Phương án ít code hơn chưa chắc đáp ứng được những yêu cầu này.
+
+Nhóm nên thống nhất việc nào kỹ sư được tự quyết, việc nào phải bàn chung và việc nào cần người có thẩm quyền duyệt. Chẳng hạn, kỹ sư có thể tự chọn cách triển khai trong giới hạn đã thỏa thuận. Đổi phạm vi tính năng thường cần bàn với PM và người thiết kế; đổi cam kết hợp đồng hay ngân sách cần người có thẩm quyền quyết định. Mỗi nơi sẽ phân chia khác nhau, kể cả quyền quyết định về kỹ thuật.
+
+Kết quả kinh doanh còn phụ thuộc vào giá bán, cách phân phối, vận hành và thời điểm ra mắt. Những việc này có thể do người khác quyết định dù kỹ sư đã làm tốt phần được giao. Vì thế, khi giao thêm trách nhiệm về sản phẩm, cần nói rõ mục tiêu, những gì kỹ sư được phép thay đổi, ai cùng làm và thời gian dành cho công việc đó.
+
+> **Video liên quan.** [Product-minded engineers in an AI-native world](https://www.youtube.com/watch?v=0Cv5763UX70&t=1925s) · The Pragmatic Engineer · từ 32:05. Trao đổi về vai trò của kỹ sư và Product Manager.
+
+<a id="s4"></a>
+
+## 04 · Chưa được thử, đã bị đánh giá?
+
+Giới hạn này còn ảnh hưởng đến cách đánh giá kỹ sư. Giả sử một nhóm dành phần lớn thời gian vận hành hệ thống cũ và làm những ticket đã chốt giải pháp. Nhóm khác được tìm hiểu nhu cầu, thử ý tưởng cho sản phẩm mới. Sau một thời gian, nhóm vận hành bị nhận xét là chưa thể hiện khả năng chịu trách nhiệm về sản phẩm.
+
+Nhận xét đó có thể đúng, nhưng thông tin hiện có chưa đủ để kết luận. Nhóm vận hành có thể thiếu năng lực, thiếu cơ hội thể hiện hoặc cả hai. Việc giao sản phẩm mới cho nhóm khác cũng có lý do hợp lý: chuyên môn phù hợp hơn, cần kịp hợp đồng hoặc phải để nhóm hiện tại tập trung giữ hệ thống ổn định.
+
+Làm tốt công việc bảo trì cho thấy năng lực trong phần việc đó. Để nhận xét về khả năng tìm hiểu người dùng và chọn giải pháp, cần xem nhóm đã được thử những việc ấy chưa, được quyết định gì và đã làm ra sao. Nếu chưa có cơ hội thử, chưa thể kết luận họ không làm được sản phẩm mới.
+
+Cách chia việc ảnh hưởng đến cơ hội tham gia tìm hiểu người dùng của kỹ sư. [Mô hình product trio của Teresa Torres](https://www.producttalk.org/product-trio/) đề xuất PM, người thiết kế và kỹ sư cùng tìm hiểu nhu cầu.
+
+Trong nghiên cứu về nhóm Scrum, [Verwijs và Russo](https://arxiv.org/abs/2105.12439) xem xét hiệu quả làm việc của nhóm, bao gồm quyền quyết định và sự hỗ trợ từ người quản lý. Hai tác giả dùng khảo sát để kiểm tra mô hình nghiên cứu, với khoảng 5.000 lập trình viên trong 2.000 nhóm. [DORA](https://dora.dev/capabilities/user-centric-focus/) nhấn mạnh việc kỹ sư được đọc phản hồi và xem dữ liệu người dùng.
+
+Các tài liệu này nói về cách làm việc của nhóm, không đủ để giải thích kết quả của từng người. Khi đánh giá một kỹ sư, vẫn cần xem họ có biết mục tiêu, được góp ý trước khi chốt giải pháp và được phép thay đổi những gì. Thời gian dành cho công việc và sự phối hợp của người khác cũng phải được tính đến.
+
+Nếu số người hoặc thời gian giảm mà trách nhiệm tăng, nhóm phải thống nhất việc nào làm gọn, việc nào bớt đi hoặc để sau. AI có bù được phần thiếu hụt hay không cần được đo trong công việc thực tế, tính cả thời gian kiểm tra và sửa những gì AI làm sai.
+
+Một tổ chức có thể để nhóm khác chọn hướng phát triển sản phẩm, còn kỹ sư tập trung thực hiện yêu cầu. Khi đó, việc đánh giá nên dựa vào cách kỹ sư hiểu yêu cầu, triển khai, báo rủi ro và góp ý. Nếu muốn họ chịu trách nhiệm cả về kết quả sản phẩm, tổ chức cũng phải xem lại cách giao việc và quyền tham gia quyết định.
+
+> Chưa được thử không có nghĩa là không làm được. Nhưng thiếu cơ hội cũng không giải thích được mọi kết quả. Đánh giá năng lực cần xem cả công việc đã làm và điều kiện để làm công việc ấy.
+
+<a id="s5"></a>
+
+## 05 · Bắt đầu từ lần nhận việc tiếp theo
+
+Với ticket dashboard tiếp theo, điểm bắt đầu không nhất thiết là một kế hoạch học mới. Trước khi viết code, kỹ sư có thể hỏi người dùng đang mất thời gian ở đâu. Khi bàn giao, nhóm hẹn lúc xem lại họ có làm báo cáo nhanh hơn không. Để làm được thường xuyên, những việc này cần có thời gian và người phối hợp.
+
+[Hoskins](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/) gợi ý viết rõ người dùng sẽ thao tác từng bước như thế nào, tìm những chỗ yêu cầu còn thiếu và đưa tình huống quan trọng vào kiểm thử. Nhờ vậy, nhóm kiểm tra được tính năng theo cách người dùng thực sự thao tác, thay vì chỉ kiểm tra từng chức năng riêng lẻ.
+
+[Teresa Torres](https://www.producttalk.org/glossary-discovery-continuous-discovery/) đề xuất chính nhóm làm sản phẩm trao đổi trực tiếp với khách hàng hằng tuần, qua những hoạt động nghiên cứu nhỏ. Nhóm vẫn phát triển sản phẩm, đồng thời dành thời gian tìm hiểu nhu cầu để có thông tin mới khi quyết định. Lịch hằng tuần là cách làm Torres đề xuất cho nhóm, không phải số buổi dùng để chấm năng lực từng kỹ sư.
+
+Khi tính năng đã được sử dụng, nhóm cần xem người dùng có làm việc thuận lợi hơn không và quá trình triển khai phần mềm có ổn định không.
+
+Về quá trình triển khai, [DORA](https://dora.dev/guides/dora-metrics/) hướng dẫn ghi nhận số liệu trước khi cải tiến, tìm chỗ đang gây khó khăn, thay đổi rồi đo lại. Thời gian đưa thay đổi vào sử dụng và tỷ lệ triển khai gây lỗi là những chỉ số dành cho một ứng dụng hoặc dịch vụ. Nhóm dùng các chỉ số này để theo dõi tốc độ và độ ổn định, không dùng để xếp hạng từng người. Muốn biết tính năng có giúp ích hay không, vẫn phải xem phản hồi và kết quả công việc của người dùng.
+
+Có thể dùng những gợi ý này để tập cách làm việc, nhưng không nên coi chúng là bộ tiêu chí chung để chấm tư duy Product. Bài viết rút ra rằng kỹ sư cần cả sự chủ động, quyền tham gia quyết định và cơ hội thực hành. Đây là nhận định tổng hợp từ các nguồn, chưa được một nghiên cứu trực tiếp kiểm chứng đầy đủ.
+
+Với một tính năng sắp làm, kỹ sư có thể ghi rõ điều muốn kiểm tra và hẹn thời điểm xem lại kết quả sau khi đưa vào sử dụng. Nhóm thống nhất sẽ cung cấp thông tin gì, kỹ sư tham gia từ lúc nào, có bao nhiêu thời gian tìm hiểu và dựa vào đâu để đánh giá kết quả.
+
+**Kỹ sư có thể chủ động rèn luyện tư duy Product từ công việc hằng ngày. Để làm tốt hơn và được đánh giá công bằng, họ còn cần hiểu mục tiêu sản phẩm, có người phối hợp và biết rõ phạm vi được quyết định.**
+
+**Đọc tiếp:** [AI Product Handbook · Product Thinking & Lifecycle](https://koitran14.vercel.app/blog/ai-product-handbook/01)
+
+<details>
+<summary>Đọc thêm: kỳ vọng nghề nghiệp và các nghiên cứu về AI</summary>
+
+### Ngoài code, kỹ sư còn được kỳ vọng điều gì?
+
+Kỳ vọng kỹ sư hiểu sản phẩm đã có từ trước khi các công cụ AI viết code phổ biến. Từ năm 2019, [Gergely Orosz đã viết về product-minded engineer](https://blog.pragmaticengineer.com/the-product-minded-engineer/): những kỹ sư quan tâm đến sản phẩm, hỏi vì sao cần làm một tính năng, góp ý về yêu cầu và theo dõi tính năng sau khi ra mắt.
+
+Một số mô tả công việc cũng nêu yêu cầu này. Trong tin tuyển dụng được đối chiếu ngày 05/11/2026, [vị trí Product Engineer của Linear](https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b) yêu cầu kỹ sư cùng làm rõ vấn đề và theo sát tính năng từ ý tưởng đến phát hành. [Tài liệu nội bộ của PostHog](https://posthog.com/handbook/engineering/product-engineering) mô tả cách kỹ sư tìm hiểu nhu cầu, phát hành một phần tính năng rồi sửa tiếp dựa trên phản hồi.
+
+Hai ví dụ trên cho thấy yêu cầu này có trong thực tế, nhưng chưa nói được nó phổ biến đến đâu hay đang tăng lên. Các khảo sát dưới đây cung cấp thêm thông tin về kỹ năng và việc dùng AI. Chúng không đo nhu cầu tuyển kỹ sư có tư duy Product.
 
 | Số liệu | Ý nghĩa | Nguồn |
 |---|---|---|
@@ -43,155 +148,46 @@ Kỳ vọng ấy cũng có trong mô tả công việc. Khi đối chiếu ngày
 
 *Hình 1. Bối cảnh về kỹ năng và việc dùng AI. Mỗi khảo sát có nhóm người tham gia và cách hỏi riêng; các số liệu này không đo nhu cầu tuyển kỹ sư có tư duy Product.*
 
-Điều khiến mình quan tâm không phải một chức danh mới. Khi có thể làm ra nhiều phần mềm hơn, việc chọn làm gì vẫn đáng được cân nhắc. DORA 2025 cũng mô tả AI như thứ có thể khuếch đại cả điểm mạnh lẫn điểm yếu trong cách tổ chức làm việc. Mình đọc nhận định ấy như một lời nhắc về hướng đi, chứ chưa xem đó là bằng chứng AI làm tăng nhu cầu Product Engineer.
+Theo DORA 2025, AI có thể làm điểm mạnh lẫn điểm yếu sẵn có của tổ chức rõ hơn. Khi liên hệ với việc làm sản phẩm, có thể hiểu thế này: nếu nhóm chọn một tính năng ít người cần, viết code nhanh hơn cũng không khiến tính năng ấy hữu ích hơn. Đây là cách diễn giải nhận định của DORA, không phải kết quả nghiên cứu về nhu cầu tuyển Product Engineer.
 
-Hiểu người dùng là một hướng phát triển mình muốn theo đuổi. Nó không thay thế giá trị của những người đi sâu về hạ tầng, bảo mật, hiệu năng hay hệ thống, và cũng không có nghĩa mọi kỹ sư cần trở thành Product Manager.
+Với kỹ sư muốn tham gia sâu hơn vào việc làm sản phẩm, học cách tìm hiểu người dùng và chọn giải pháp là hướng đáng cân nhắc. Những người muốn chuyên sâu về hạ tầng, bảo mật, hiệu năng hay hệ thống vẫn có vai trò quan trọng. Có tư duy Product cũng không có nghĩa phải chuyển sang làm Product Manager.
 
 > **Video liên quan.** [DORA Community Discussion: State of AI-assisted Software Development](https://www.youtube.com/watch?v=Sz8NWaTiWfE) · DORA. Cách làm việc sẵn có ảnh hưởng đến việc sử dụng AI ra sao.
 
-<a id="s2"></a>
+### Code nhanh hơn, sản phẩm có tốt hơn?
 
-## 02 · Code nhanh hơn, sản phẩm có tốt hơn?
+AI giúp lập trình viên làm nhanh hơn đến đâu còn tùy công việc và cách sử dụng. Trong một [nghiên cứu về tác động của AI đến năng suất lập trình](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/), Zheyuan (Kevin) Cui cùng các tác giả khác tổng hợp kết quả từ ba thử nghiệm với 4.867 lập trình viên. Nhóm nghiên cứu ghi nhận những người dùng trợ lý viết code hoàn thành nhiều công việc hơn.
 
-Các nghiên cứu về AI chưa cho một câu trả lời duy nhất về năng suất. Trong ba thử nghiệm với tổng cộng 4.867 lập trình viên, Cui và cộng sự ghi nhận nhóm dùng trợ lý viết code hoàn thành nhiều công việc hơn. METR lại thấy 16 lập trình viên giàu kinh nghiệm mất nhiều thời gian hơn khi dùng công cụ đầu năm 2025 trên những kho mã nguồn họ đã quen.
+Trong một nghiên cứu khác, METR ghi nhận 16 lập trình viên giàu kinh nghiệm mất nhiều thời gian hơn khi dùng công cụ đầu năm 2025 trên những kho mã nguồn họ đã quen.
 
-Hai kết quả không thể đặt lên cùng một thước đo rồi chọn bên mình muốn tin: người tham gia, công cụ, công việc và cách đo đều khác nhau.
+Các nghiên cứu này không thử cùng một công cụ trên cùng một nhóm người và loại công việc. Cách đo cũng khác nhau. Vì vậy, kết quả trái chiều chưa đủ để kết luận nghiên cứu nào sai. Khi đọc bảng dưới đây, cũng cần tách ba chuyện: người dùng tin AI đến đâu, AI ảnh hưởng thế nào đến năng suất và những công việc nào có thể chịu tác động.
 
 | Số liệu | Ý nghĩa | Nguồn |
 |---|---|---|
 | **48%** | Chỉ tin kết quả AI tạo ra khi dễ kiểm chứng (n = 14.304). | [Stack Overflow · 2026](https://survey.stackoverflow.co/2026/ai/data) |
 | **6,6%** | Tin AI khi làm nhiều loại công việc, kể cả quyết định công việc quan trọng, trong cùng câu hỏi. | [Stack Overflow · 2026](https://survey.stackoverflow.co/2026/ai/data) |
-| **+26,08%** | Số công việc hoàn thành khi tổng hợp kết quả từ ba thử nghiệm, 4.867 lập trình viên; sai số chuẩn 10,3%. | [Cui và cộng sự · Microsoft Research](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/) |
+| **+26,08%** | Số công việc hoàn thành khi tổng hợp kết quả từ ba thử nghiệm, 4.867 lập trình viên; sai số chuẩn 10,3%. | [Zheyuan (Kevin) Cui và các tác giả · Microsoft Research](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/) |
 | **+19%** | Thời gian hoàn thành khi dùng AI trong thí nghiệm đầu năm 2025, 16 lập trình viên, 246 công việc. | [METR · 07/2025](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) |
 | **~25%** | Việc làm trên toàn cầu thuộc các nghề có phần việc có thể chịu tác động của AI tạo sinh (GenAI). Đây không phải tỷ lệ việc làm sẽ mất đi. | [ILO–NASK · 05/2025](https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure) |
 | **49%** | Nhóm nghề có ghi nhận Claude được dùng cho ít nhất 1/4 số loại công việc, tổng hợp qua các báo cáo. | [Anthropic · 01/2026](https://www.anthropic.com/research/anthropic-economic-index-january-2026-report) |
 
 *Hình 2. Niềm tin, năng suất và khả năng công việc chịu tác động của AI là những cách đo khác nhau. Chúng không thể cộng hay lấy trung bình với nhau.*
 
-Ngay cả con số của một nghiên cứu cũng cần được đọc đúng thời điểm. Trong [cập nhật tháng 2/2026](https://metr.org/blog/2026-02-24-uplift-update/), METR cho rằng công cụ mới có thể đã giúp nhanh hơn, nhưng dữ liệu mới bị ảnh hưởng bởi việc người tham gia chọn công việc đưa vào nghiên cứu và những khó khăn khi đo thời gian. Kết quả năm 2025 vì thế không nên trở thành kết luận cố định về mọi công cụ AI.
+Kết quả nghiên cứu còn phụ thuộc vào thời điểm công cụ được thử nghiệm. Trong [cập nhật tháng 2/2026](https://metr.org/blog/2026-02-24-uplift-update/), METR cho rằng công cụ mới có thể đã giúp lập trình viên làm nhanh hơn. Tuy nhiên, dữ liệu mới chưa đáng tin cậy: người tham gia tự chọn công việc đưa vào nghiên cứu, còn thời gian làm việc khó đo chính xác. Vì vậy, kết quả năm 2025 không thể dùng để kết luận về mọi công cụ AI hiện nay.
 
-Điểm kiểm thử cũng chỉ cho biết một phần. Các đợt rà soát [SWE-bench Verified](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/) và [SWE-bench Pro](https://openai.com/index/separating-signal-from-noise-coding-evaluations/) của OpenAI chỉ ra vấn đề về dữ liệu và bài kiểm thử. Điểm xử lý yêu cầu sửa lỗi chưa tự cho biết một công cụ có thể hiểu nhu cầu chưa rõ, xử lý ngoại lệ hay vận hành một sản phẩm lâu dài.
+Điểm benchmark, tức điểm trên các bộ bài kiểm tra năng lực AI, cũng có giới hạn. Khi rà soát [SWE-bench Verified](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/) và [SWE-bench Pro](https://openai.com/index/separating-signal-from-noise-coding-evaluations/), OpenAI chỉ ra các vấn đề về dữ liệu và bài kiểm thử. Làm tốt một bài sửa lỗi chưa cho biết công cụ sẽ xử lý ra sao khi yêu cầu còn mơ hồ, gặp tình huống ngoại lệ hoặc phải hỗ trợ vận hành sản phẩm lâu dài.
 
-Tương tự, một công việc có phần AI hỗ trợ được chưa có nghĩa cả vị trí đó sẽ biến mất. ILO đo khả năng công việc chịu tác động; Anthropic phân biệt số loại việc có dùng AI với phần việc AI thực sự làm xong và đạt yêu cầu. Tự động hóa một việc, tự động hóa cả quy trình và thay thế nhân sự có liên quan, nhưng còn cách nhau bởi chất lượng, chi phí và lựa chọn kinh doanh.
+AI làm được một phần công việc chưa có nghĩa sẽ thay được người đang làm công việc đó. Số liệu của ILO nói về những phần việc có thể chịu tác động của AI. Anthropic cũng phân biệt giữa có sử dụng AI và AI thực sự hoàn thành việc được giao với chất lượng đạt yêu cầu. Muốn tự động hóa cả quy trình hoặc thay đổi số nhân sự cần thiết, doanh nghiệp còn phải tính chất lượng, chi phí và phần việc vẫn cần con người.
 
-Với mình, điểm cần giữ lại khá cụ thể: **làm nhanh hơn chưa cho biết mình đã làm đúng thứ người dùng cần**. Khung [SPACE](https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/) cũng nhắc rằng không thể chỉ nhìn lượng công việc đã làm để đánh giá năng suất. Các nguồn trên chưa kiểm tra Product Thinking có giúp kỹ sư thích nghi tốt hơn các hướng khác; mình quan tâm đến nó như một cách tìm hiểu vấn đề và lựa chọn giải pháp.
+**Tốc độ hoàn thành công việc và ích lợi của sản phẩm là hai chuyện khác nhau.** Khung [SPACE](https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/) cũng lưu ý không thể chỉ nhìn lượng công việc hoàn thành để đánh giá năng suất. Các nghiên cứu này chưa cho biết học tư duy Product có tốt hơn những hướng phát triển nghề nghiệp khác hay không. Nhưng trong công việc làm sản phẩm, ngoài chuyện làm nhanh, nhóm vẫn phải quyết định tính năng nào đáng làm. Quyết định đó cần dựa vào nhu cầu thực tế của người dùng.
 
 > **Video liên quan.** [Build the Right Thing: Product Engineering (Part 1)](https://www.youtube.com/watch?v=_fHTqOs5wQA&t=943s) · Kent C. Dodds · AI Engineer · từ 15:43. Góc nhìn về việc chọn bài toán khi triển khai ngày càng nhanh.
 
-<a id="s3"></a>
-
-## 03 · Làm đúng yêu cầu đã là giải đúng vấn đề?
-
-Quay lại yêu cầu ở đầu bài. Giả sử nhóm được giao làm một trang tổng hợp số liệu — dashboard — để người dùng xuất báo cáo nhanh hơn. Phiếu công việc, hay ticket, ghi đủ bộ lọc, cột dữ liệu và thời hạn. Mình có thể dựa vào đó để ước lượng và bắt đầu viết code.
-
-Nhưng người dùng cần báo cáo để gửi quản lý, tìm dữ liệu sai hay chuyển sang hệ thống khác? Họ mất thời gian lúc tải tệp, đối chiếu số liệu hay chờ phê duyệt? Chưa hỏi những điều ấy, mình mới biết giải pháp được yêu cầu, chưa biết nguyên nhân gây chậm.
-
-Có thể họ mất nhiều thời gian để đối chiếu hai nguồn dữ liệu. Nếu tìm hiểu thực tế xác nhận điều đó, cảnh báo các dòng chênh lệch là một phương án đáng cân nhắc. Nếu nguyên nhân nằm ở truy vấn chậm hoặc bước phê duyệt, hướng xử lý sẽ khác. Ví dụ này chưa có dữ liệu để kết luận dashboard hay cảnh báo tốt hơn.
-
-Sự khác biệt nằm ở cách bắt đầu. Một bên làm rõ chức năng của giải pháp đã chọn; bên kia tìm hiểu vấn đề trước khi quyết định cách giải quyết. Cả hai vẫn có thể dẫn đến cùng một dashboard, nhưng lý do lựa chọn và cách kiểm tra sau đó sẽ rõ hơn.
-
-Trong [Product vs. Feature Teams](https://www.svpg.com/product-vs-feature-teams/), Marty Cagan phân biệt nhóm nhận danh sách tính năng với nhóm được giao vấn đề và kết quả cần đạt. Mình không hiểu điều đó là cứ dùng ticket thì thiếu tư duy Product. Ticket vẫn hữu ích để chia việc; điều cần biết là ai đã chọn giải pháp, dựa trên thông tin nào và nhóm còn có thể thay đổi những gì.
-
-> Product Thinking, theo cách mình dùng trong bài, là hiểu vấn đề của người dùng, dựa vào đó để chọn giải pháp và quay lại kiểm tra xem giải pháp có giúp được họ không.
-
-Dashboard được đưa vào sử dụng là phần đã bàn giao — output. Người dùng làm báo cáo nhanh hơn mà không tăng sai sót là kết quả mong muốn — outcome. Chỉ sau khi đo mình mới biết kết quả thực tế có giống mong muốn hay không. Hai điều đó cần được phân biệt ngay cả khi công việc đã hoàn thành đúng yêu cầu.
-
-<a id="s4"></a>
-
-## 04 · Tư duy Product bắt đầu từ một ticket
-
-Mình không nghĩ phải đợi có chức danh Product Engineer mới bắt đầu học những thói quen này. Một ticket đang làm đã có thể là chỗ để tập hỏi rõ hơn và theo dõi đến cùng hơn.
-
-[Drew Hoskins](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/) gợi ý tìm hiểu nhu cầu qua những nguồn có sẵn: cuộc gọi bán hàng, trao đổi hỗ trợ khách hàng, yêu cầu trên GitHub và dữ liệu sử dụng. [Teresa Torres](https://www.producttalk.org/glossary-discovery-continuous-discovery/) đề xuất nhóm phát triển sản phẩm duy trì việc trao đổi với khách hàng hằng tuần, qua những hoạt động nghiên cứu nhỏ. Đây là gợi ý thực hành, không phải số buổi bắt buộc để chứng minh một người có năng lực Product.
-
-Với ví dụ dashboard, mình sẽ bắt đầu bằng một đoạn ngắn trong ticket: “Người dùng muốn xuất báo cáo nhanh hơn; chưa rõ bước nào gây chậm.” Cách viết ấy có vẻ chưa đầy đủ, nhưng giúp mình nhận ra cần hỏi gì tiếp, thay vì đưa giả thuyết đối chiếu dữ liệu vào như một sự thật đã biết.
-
-Sau đó có thể đọc lại các yêu cầu hỗ trợ, cùng người phụ trách xem cách người dùng làm việc, hoặc xin tham gia một buổi trao đổi. Nếu đã xác nhận việc đối chiếu là khó khăn chính, mình mới đề xuất thử làm nổi bật những dòng chênh lệch. Trước khi làm, cần thống nhất sẽ ghi nhận số liệu gì và kết quả thế nào thì phải xem lại giả thuyết.
-
-Mình cũng muốn đặt cạnh nhau vài cách xử lý: sửa cách xuất tệp đang có, thêm cảnh báo hay làm dashboard. Mỗi phương án có chi phí và hạn chế riêng. Sau khi đưa vào sử dụng, một lần xem lại số liệu và phản hồi có thể giúp biết có nên tiếp tục sửa hay dừng ở đó. Đây là các bước mình đề xuất để tập, chưa phải một chương trình đào tạo đã được đánh giá kết quả.
-
-Công việc bảo trì cũng có chỗ để thực hành. Một lỗi xuất báo cáo lặp lại đặt ra câu hỏi ai bị ảnh hưởng, họ phải làm lại những gì và sửa thế nào để bớt tái diễn. Với công cụ nội bộ, người dùng có thể là lập trình viên khác; nhu cầu của họ vẫn đáng tìm hiểu.
-
-Mình có thể tự bắt đầu bằng việc hỏi, ghi rõ điều chưa biết và theo dõi phần đã làm. Gặp khách hàng, thu thập thêm dữ liệu hay thay đổi phạm vi thì thường cần người khác cùng tham gia. Sự chủ động của mình nằm ở việc làm tốt phần đang có và đề nghị bước tiếp theo đủ cụ thể.
-
-> **Video liên quan.** [How to become a product-minded engineer](https://www.youtube.com/watch?v=JtUfbaVdP_M) · Drew Hoskins · The Product Engineers Podcast. Học từ phản hồi và dữ liệu có sẵn trong công việc.
-
-<a id="s5"></a>
-
-## 05 · Trách nhiệm sản phẩm cần quyền quyết định nào?
-
-Một kỹ sư có thể hiểu rất rõ vì sao dashboard chưa giải quyết được khó khăn của người dùng, nhưng vẫn không có quyền thay đổi yêu cầu. Điều đó không làm câu hỏi của họ kém giá trị. Nó cho thấy năng lực nhìn ra vấn đề và phạm vi được quyết định là hai chuyện cần nói riêng.
-
-Trong bài, mình dùng **Product Ownership** để nói về việc chịu trách nhiệm cho kết quả sản phẩm cùng quyền tham gia những quyết định liên quan. Cách dùng này không đồng nhất với chức danh Product Owner trong Scrum. Product Thinking có thể thể hiện qua cách mình suy nghĩ và làm việc; còn khi nhận trách nhiệm về kết quả, cần biết mình thực sự được quyết những gì.
-
-[The Four Big Risks](https://www.svpg.com/four-big-risks/) của Cagan giúp nhìn rõ hơn những việc phải cân nhắc: người dùng có cần không, có biết cách dùng không, nhóm có xây được không và giải pháp có phù hợp với hoạt động kinh doanh không. Trong mô hình này, người phụ trách sản phẩm — Product Manager, hay PM — chịu trách nhiệm chính về nhu cầu và kinh doanh; người thiết kế phụ trách trải nghiệm; kỹ sư phụ trách khả năng xây dựng giải pháp. Các bên vẫn cần làm việc cùng nhau.
-
-Với dashboard, mình cần hỏi thêm có cam kết khách hàng, yêu cầu kiểm toán hay kế hoạch kinh doanh liên quan không. Đó là thông tin cần tìm, chưa phải ràng buộc đã có trong tình huống giả định. Biết thêm bối cảnh giúp mình đề xuất sát hơn, thay vì chỉ so hai phương án về độ gọn của code.
-
-Mình thấy một cuộc trao đổi sẽ dễ hơn nếu làm rõ ba phạm vi: việc được tự quyết, việc cần cùng quyết và việc phải đề nghị người có thẩm quyền quyết. Chẳng hạn, sửa cách triển khai trong giới hạn đã thống nhất có thể thuộc phần đầu; đổi phạm vi tính năng cần PM và người thiết kế; thay cam kết hợp đồng hay ngân sách cần người có thẩm quyền. Ranh giới cụ thể tùy nơi, không phải cứ là quyết định kỹ thuật thì một kỹ sư được tự quyết.
-
-Chịu trách nhiệm làm đúng phần việc đã nhận khác với chịu trách nhiệm cho toàn bộ kết quả kinh doanh. Giá bán, phân phối, vận hành và thời điểm thị trường đều có thể nằm ngoài quyền quyết định của mình. Khi được kỳ vọng đóng góp sâu hơn, mình muốn thống nhất rõ: cần đạt kết quả gì, được thay đổi phần nào, có ai và bao nhiêu thời gian để làm, ai cùng chịu trách nhiệm?
-
-> **Video liên quan.** [Product-minded engineers in an AI-native world](https://www.youtube.com/watch?v=0Cv5763UX70&t=1925s) · The Pragmatic Engineer · từ 32:05. Trao đổi về vai trò của kỹ sư và Product Manager.
-
-<a id="s6"></a>
-
-## 06 · Thiếu năng lực hay thiếu cơ hội thể hiện?
-
-Giả sử một nhóm dành phần lớn thời gian vận hành hệ thống cũ và làm các ticket đã chốt giải pháp. Việc tìm hiểu nhu cầu và thử ý tưởng cho sản phẩm mới được giao cho nhóm khác. Sau một thời gian, nhóm đầu tiên bị đánh giá là chưa thể hiện khả năng chịu trách nhiệm về sản phẩm.
-
-Mình sẽ chưa vội kết luận vì sao. Có thể năng lực chưa đủ, cơ hội thể hiện chưa có, hoặc cả hai. Cách phân công cũng có thể có lý do hợp lý: nhóm khác có chuyên môn phù hợp hơn, hợp đồng cần hoàn thành sớm, hoặc hệ thống hiện tại phải có người giữ ổn định. Tình huống giả định này không cho biết lý do nào đúng.
-
-Điều mình muốn hỏi là họ từng được giao bài toán nào, được tham gia quyết định gì và đã làm gì trong phạm vi ấy. Nếu muốn xem khả năng tìm hiểu người dùng và lựa chọn giải pháp, cần có công việc cho phép quan sát những điều đó. Kết quả bảo trì vẫn có giá trị, nhưng không trả lời hết câu hỏi một người sẽ làm ra sao khi chủ trì việc tìm hiểu một sản phẩm mới.
-
-Các tài liệu về cách tổ chức nhóm giúp đặt vấn đề này vào một phạm vi rộng hơn. [Product trio của Torres](https://www.producttalk.org/product-trio/) đề nghị PM, người thiết kế và kỹ sư cùng tìm hiểu nhu cầu. Nghiên cứu của [Verwijs và Russo](https://arxiv.org/abs/2105.12439), kiểm tra mô hình bằng khảo sát khoảng 5.000 lập trình viên trong 2.000 nhóm Scrum, xem xét cả quyền quyết định của nhóm và hỗ trợ từ người quản lý. [DORA](https://dora.dev/capabilities/user-centric-focus/) nhấn mạnh việc kỹ sư được tiếp cận phản hồi và dữ liệu người dùng.
-
-Các nguồn ấy chưa chứng minh nguyên nhân trong trường hợp của một cá nhân. Từ đó, mình đề xuất khi đánh giá nên xem cả việc người đó đã làm lẫn điều kiện họ có để làm: có biết mục tiêu không, có được tham gia trước khi chọn giải pháp không, có thời gian và người phối hợp không, có được thay đổi điều gì không?
-
-Nếu ít người hơn hoặc ít thời gian hơn mà trách nhiệm lại tăng, cần thống nhất việc nào làm gọn, thu hẹp hay để lại sau. Mình không muốn mặc định AI sẽ bù đủ phần thiếu khi chưa biết thời gian tiết kiệm được có lớn hơn công kiểm tra và sửa lỗi hay không.
-
-Tổ chức vẫn có thể chọn để một nhóm quyết định hướng sản phẩm, còn kỹ sư chủ yếu thực hiện yêu cầu. Khi đó, kỳ vọng phù hợp có thể là hiểu đủ vấn đề để làm tốt, báo rủi ro và góp ý cách triển khai. Nếu muốn đánh giá ở mức chịu trách nhiệm cao hơn, cũng cần trao đổi lại cách giao việc và quyền tham gia quyết định.
-
-> Ít cơ hội thể hiện chưa chứng minh một người thiếu năng lực. Nhưng thiếu cơ hội cũng chưa giải thích được mọi kết quả. Mình cần nhìn cả hai trước khi đánh giá.
-
-<a id="s7"></a>
-
-## 07 · 90 ngày để thử, đo và học
-
-Thay vì chỉ nói mình cần “có tư duy Product hơn”, mình muốn thử theo một vấn đề đủ nhỏ từ lúc tìm hiểu đến khi xem lại kết quả. Chẳng hạn, với báo cáo, trước hết cần xác nhận người dùng đang mất thời gian ở đâu. Chỉ khi việc đối chiếu thực sự là khó khăn chính, giảm thời gian đối chiếu mới trở thành mục tiêu phù hợp.
-
-Dưới đây là cách mình đề xuất sắp xếp một thử nghiệm 90 ngày. Nó chưa có dữ liệu thực hiện trong bài; thời lượng thật cần theo chu kỳ sử dụng và công việc đang có. Trước khi bắt đầu, cần thống nhất mục tiêu, số liệu ban đầu, phạm vi được thử, thời gian và người phối hợp.
-
-| Giai đoạn | Việc chính | Điều cần ghi lại |
-|---|---|---|
-| NGÀY 01–30 | Tìm hiểu | Cách người dùng làm việc, phản hồi, số liệu ban đầu và giả thuyết cần kiểm tra. |
-| NGÀY 31–60 | Làm và thử | Một thay đổi nhỏ, phản hồi khi dùng thử, lỗi và chi phí phát sinh. |
-| NGÀY 61–90 | Xem lại | So sánh kết quả, xem những vấn đề mới và quyết định sửa tiếp hay dừng. |
-
-*Hình 3. Mốc 90 ngày là ví dụ đề xuất, chưa phải phương pháp đã được kiểm chứng. Có thể sửa hướng đi hoặc dừng sớm khi có đủ thông tin.*
-
-Mình sẽ nhìn kết quả từ bốn mặt, thay vì dùng một con số để đánh giá cả thử nghiệm:
-
-1. **Người dùng có bớt khó khăn không?** Nếu đang giải quyết việc đối chiếu, cần xem thời gian làm, số lỗi bỏ sót và số lần phải làm lại.
-2. **Giải pháp có vận hành tốt không?** Xem chất lượng, chi phí, lỗi và công hỗ trợ. Các chỉ số DORA có thể giúp theo dõi việc triển khai của ứng dụng hoặc dịch vụ, không dùng để xếp hạng từng kỹ sư.
-3. **Mình hiểu thêm được gì?** Giả thuyết nào được ủng hộ, giả thuyết nào cần bỏ, thông tin nào khiến mình đổi cách làm? Số cuộc gặp người dùng tự nó chưa trả lời được những câu hỏi này.
-4. **Có đủ điều kiện để thực hiện không?** Ghi lại thông tin còn thiếu, thời gian thực tế, người phối hợp và những quyết định chưa được tham gia.
-
-Cách chia bốn mặt là đề xuất của mình. Nó tham khảo việc phân biệt tính năng với kết quả của Cagan, cách học từ người dùng của Torres và Hoskins, cùng hướng dẫn đo của [DORA](https://dora.dev/guides/dora-metrics/) và SPACE; các nguồn không kiểm chứng toàn bộ cách đánh giá này.
-
-Nếu sau này thời gian làm báo cáo giảm, vẫn cần xem số lỗi và công hỗ trợ có tăng không, hay báo cáo được thử vốn dễ hơn. Nếu không cải thiện, cần xem lại giả thuyết, cách đo và cách triển khai. Còn nếu chưa thể thử vì thiếu dữ liệu hoặc quyền quyết định, điều có thể ghi nhận là phần nào chưa làm được và vì sao — chưa thể kết luận giải pháp không hiệu quả hay kỹ sư thiếu năng lực.
-
-Mình vẫn cho rằng kỳ vọng kỹ sư hiểu vấn đề và theo dõi kết quả là hợp lý. Nhưng khi đánh giá khả năng chịu trách nhiệm cho sản phẩm, mình muốn nhìn cùng phạm vi được quyết định và cơ hội đã có. Đây là quan điểm mình rút ra từ tài liệu, cần tiếp tục kiểm tra qua thực tế, không phải kết quả của một nghiên cứu trực tiếp về toàn bộ lập luận này.
-
-Về phần mình, có thể bắt đầu bằng một câu hỏi rõ hơn trong ticket, một giả thuyết trước khi làm và một lần xem lại sau khi đưa tính năng vào sử dụng. Phần cần cùng tổ chức thống nhất là mình được biết gì, tham gia từ đâu, dành thời gian ở đâu và được đánh giá bằng những gì đã thực sự có cơ hội làm.
-
-**Product Thinking có thể bắt đầu từ sự chủ động của một kỹ sư. Để sự chủ động ấy trở thành năng lực có thể vận dụng và đánh giá công bằng, cần thêm bối cảnh, người cùng làm và phạm vi trách nhiệm rõ ràng.**
-
-**Đọc tiếp:** [AI Product Handbook · Product Thinking & Lifecycle](https://koitran14.vercel.app/blog/ai-product-handbook/01)
+</details>
 
 ---
 
-**Ghi chú.** Bài viết có công cụ AI hỗ trợ soạn và biên tập. Các tình huống dashboard và phân công công việc đều là giả định. Ba phạm vi quyết định, lịch 90 ngày và cách đánh giá bốn mặt là đề xuất của mình, chưa có dữ liệu kiểm chứng trong bài.
+**Ghi chú.** Bài viết có AI hỗ trợ soạn và biên tập, kèm nguồn để đối chiếu. Các tình huống minh họa là giả định; phần diễn giải là quan điểm của mình.
 
 ## Nguồn tham khảo
 
@@ -203,7 +199,7 @@ Về phần mình, có thể bắt đầu bằng một câu hỏi rõ hơn trong
 6. [Linear · Product Engineer — mô tả tuyển dụng](https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b), đối chiếu 05/11/2026; nội dung tuyển dụng có thể thay đổi.
 7. [Linear · Careers — nguyên tắc làm việc](https://linear.app/careers), đối chiếu 05/11/2026.
 8. [PostHog · How to do product, as an engineer](https://posthog.com/handbook/engineering/product-engineering), handbook thực hành.
-9. [Cui và cộng sự · The Effects of Generative AI on High-Skilled Work](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/) · [Bản Management Science, 2026](https://doi.org/10.1287/mnsc.2025.00535).
+9. [Zheyuan (Kevin) Cui và các tác giả · The Effects of Generative AI on High-Skilled Work](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/) · [Bản Management Science, 2026](https://doi.org/10.1287/mnsc.2025.00535).
 10. [METR · Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/).
 11. [METR · We are Changing our Developer Productivity Experiment Design, 02/2026](https://metr.org/blog/2026-02-24-uplift-update/).
 12. [OpenAI · Why SWE-bench Verified no longer measures frontier coding capabilities, 02/2026](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/).
