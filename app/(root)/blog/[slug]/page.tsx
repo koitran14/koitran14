@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Reveal } from "@/components/reveal";
 import { HandbookPage } from "@/components/handbook-page";
 import HandbookLayout from "../cube-handbook/layout";
-import { ESSAYS, formatDate, getPosts, isAdmin } from "@/lib/blog";
+import { ESSAY_CATALOG, formatDate, getPosts, isAdmin } from "@/lib/blog";
 import { loadPage } from "@/lib/handbook";
 import { getViews } from "@/lib/views";
 import { ViewCount } from "@/components/view-count";
@@ -12,7 +12,9 @@ export const dynamic = "force-dynamic";
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
   // HTML essays use the handbook typography and chapter engine (TOC, study card, keywords)
-  if (ESSAYS.some((e) => e.slug === params.slug)) {
+  const essay = ESSAY_CATALOG.find((e) => e.slug === params.slug);
+  if (essay) {
+    if (!essay.published) notFound();
     return (
       <HandbookLayout>
         <HandbookPage book="notes" page={await loadPage("notes", params.slug)} engine />

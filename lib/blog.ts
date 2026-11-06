@@ -111,9 +111,10 @@ export const SERIES = [
 
 // Long-form articles written as HTML (content/notes/<slug>.html) and rendered with the handbook engine at /blog/<slug>.
 // Listed in Notes as articles alongside the posts; not editable from admin.
-export const ESSAYS = [
+export const ESSAY_CATALOG = [
   {
     slug: "ai-co-thay-the-ky-su-phan-mem",
+    published: false,
     title: "AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu?",
     excerpt: "AI đang làm được nhiều việc hơn trong phát triển phần mềm. Điều đó sẽ làm giảm nhu cầu kỹ sư, mở rộng công việc của họ, hay xảy ra cả hai?",
     minutes: 18,
@@ -121,6 +122,7 @@ export const ESSAYS = [
   },
   {
     slug: "khi-ky-su-duoc-ky-vong-co-tu-duy-product",
+    published: false,
     title: "Tư duy Product ở kỹ sư: chủ động thôi đã đủ?",
     excerpt:
       "Kỳ vọng kỹ sư có tư duy Product có hợp lý không? Những gì mỗi người có thể tự học và những điều cần thống nhất với tổ chức.",
@@ -128,6 +130,9 @@ export const ESSAYS = [
     createdAt: "2026-11-05T00:00:00.000Z",
   },
 ];
+
+// Keep unpublished essays in the catalog so restoring them only changes their flag.
+export const ESSAYS = ESSAY_CATALOG.filter((essay) => essay.published);
 
 // shortcut: posts live in a local JSON file, which does not persist on Vercel; move to a DB before deploying the blog.
 const FILE = path.join(process.cwd(), "data", "posts.json");
