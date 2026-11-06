@@ -114,7 +114,7 @@ export const SERIES = [
 export const ESSAY_CATALOG = [
   {
     slug: "ai-co-thay-the-ky-su-phan-mem",
-    published: false,
+    published: true,
     title: "AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu?",
     excerpt: "AI đang làm được nhiều việc hơn trong phát triển phần mềm. Điều đó sẽ làm giảm nhu cầu kỹ sư, mở rộng công việc của họ, hay xảy ra cả hai?",
     minutes: 18,
@@ -122,7 +122,7 @@ export const ESSAY_CATALOG = [
   },
   {
     slug: "khi-ky-su-duoc-ky-vong-co-tu-duy-product",
-    published: false,
+    published: true,
     title: "Tư duy Product ở kỹ sư: chủ động thôi đã đủ?",
     excerpt:
       "Kỳ vọng kỹ sư có tư duy Product có hợp lý không? Những gì mỗi người có thể tự học và những điều cần thống nhất với tổ chức.",
