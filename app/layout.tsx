@@ -12,7 +12,6 @@ import { Analytics } from '@vercel/analytics/next';
 import ModalProvider from "@/components/modalProvider";
 import { Toolbar } from "@/components/toolbar";
 import { Toaster } from "@/components/ui/toaster";
-import { toast } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ChatToggler } from "@/components/ui/chat-toggler";
 import { FEATURES } from "@/lib/features";
@@ -31,19 +30,6 @@ export default function RootLayout({
     || pathname === "/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product";
   // the floating contact toolbar would sit over the article and the audio player while reading
   const reading = pathname.startsWith("/blog");
-
-  React.useEffect(() => {
-    const isFirstVisit = localStorage.getItem("isFirstVisit");
-
-    if (!isFirstVisit) {
-      toast({
-        title: "Welcome 😊",
-        description: "Welcome to the app! Enjoy your stay.",
-      });
-
-      localStorage.setItem("isFirstVisit", "true");
-    }
-  }, []);
 
   return (
     // the intro's inline script tags <html> before hydration
