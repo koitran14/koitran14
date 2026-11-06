@@ -21,20 +21,20 @@ export const SERIES = [
   {
     slug: "cube-handbook",
     title: "Cube.dev Engineering Handbook",
-    summary: "Từ Semantic Layer đến production, cùng khám phá cách Cube.dev hoạt động qua từng phần, kèm câu hỏi ôn tập cuối mỗi chương để hệ thống lại kiến thức.",
+    summary: "Tìm hiểu Cube qua một câu hỏi về doanh thu, rồi từng bước học cách định nghĩa chỉ số, truy vấn dữ liệu, phân quyền và vận hành hệ thống. Gồm 9 chương, sơ đồ tương tác và câu hỏi ôn tập.",
     href: "/blog/cube-handbook",
     createdAt: "2026-10-24T00:00:00.000Z",
     // `key` is the localStorage suffix the handbook stores quiz answers under (ans:<key>); answered = read.
     chapters: [
-      "How Cube Works",
-      "Fundamentals",
-      "Architecture & Internals",
-      "Hands-on Implementation",
-      "Engineering Deep Dives",
-      "Production Engineering",
-      "Reference & Engineering Notes",
-      "Applied Case Studies",
-      "Access Control",
+      "Cube hoạt động như thế nào?",
+      "Khái niệm nền tảng",
+      "Kiến trúc và xử lý truy vấn",
+      "Thực hành dựng ứng dụng",
+      "Mô hình dữ liệu và tối ưu truy vấn",
+      "Triển khai và vận hành",
+      "Tra cứu cấu hình và xử lý lỗi",
+      "Bài toán minh họa từ đầu đến cuối",
+      "Xác thực và phân quyền dữ liệu",
     ].map((title, i) => {
       const n = String(i).padStart(2, "0");
       return { n, title, key: `ch${n}`, href: `/blog/cube-handbook/${n}` };

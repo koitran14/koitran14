@@ -1,4 +1,4 @@
-// Sources behind the handbook, verified 2026-10-24 (docs moved from cube.dev/docs to docs.cube.dev).
+// Handbook references. Technical cross-check: 2026-11-06/07; see content/drafts/cube-handbook-technical-audit.md for scope and unresolved items.
 window.NOTICE = 'Tài liệu này tổng hợp cách sử dụng Cube từ tài liệu chính thức, blog của Cube và một số bài viết khác; bản nháp được soạn với sự hỗ trợ của công cụ AI. Đây không phải tài liệu chính thức của Cube. Do Cube được cập nhật thường xuyên, cần đối chiếu với <a href="https://docs.cube.dev" target="_blank" rel="noopener">tài liệu chính thức</a> của phiên bản đang sử dụng trước khi áp dụng.';
 window.SOURCES = [
  {id: 'd-intro', g: 'Tài liệu chính thức của Cube', title: 'Introduction', by: 'Cube Documentation', url: 'https://docs.cube.dev/docs/introduction'},
@@ -39,15 +39,38 @@ window.SOURCES = [
  {id: 'c-medium', g: 'Bài viết cộng đồng', title: 'Cube: The Semantic Layer', by: 'ajithshetty28, Medium', url: 'https://ajithshetty28.medium.com/cube-the-semantic-layer-cce6c13c11f6'},
  {id: 'c-eval', g: 'Bài viết cộng đồng', title: 'Cube.dev Semantic Layer: Architecture, Features, and Evaluation', by: 'không tìm được bản gốc để dẫn link'},
  {id: 'ai-dr', g: 'Nội dung do AI tạo', title: 'Báo cáo Deep Research: Kiến trúc vận hành và hướng dẫn nghiên cứu chuyên sâu về Cube.dev', by: 'Gemini Deep Research, dùng làm khung tham khảo'},
- {id: 'ai-nb', g: 'Nội dung do AI tạo', title: 'Audio tổng quan, video “Sổ tay kỹ thuật Cube” và bộ trắc nghiệm', by: 'Gemini Notebook, tạo từ các nguồn trên'}];
+ {id: 'ai-nb', g: 'Nội dung do AI tạo', title: 'Audio tổng quan, video “Sổ tay kỹ thuật Cube” và bộ trắc nghiệm', by: 'Gemini Notebook, tạo từ các nguồn trên'},
+ {"id": "d-cache", "g": "Tài liệu chính thức của Cube", "title": "Caching overview", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/docs/pre-aggregations"},
+ {"id": "d-match", "g": "Tài liệu chính thức của Cube", "title": "Matching queries with pre-aggregations", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/docs/pre-aggregations/matching-pre-aggregations"},
+ {"id": "d-refresh", "g": "Tài liệu chính thức của Cube", "title": "Refreshing pre-aggregations", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/docs/pre-aggregations/refreshing-pre-aggregations"},
+ {"id": "d-preagg-ref", "g": "Tài liệu chính thức của Cube", "title": "Pre-aggregation configuration reference", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/reference/data-modeling/pre-aggregations"},
+ {"id": "d-cube-ref", "g": "Tài liệu chính thức của Cube", "title": "Cube configuration and refresh_key", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/reference/data-modeling/cube"},
+ {"id": "d-store", "g": "Tài liệu chính thức của Cube", "title": "Cube Store architecture", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/docs/pre-aggregations/cube-store-architecture"},
+ {"id": "d-joins", "g": "Tài liệu chính thức của Cube", "title": "Joins and primary keys", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/reference/data-modeling/joins"},
+ {"id": "d-dimensions", "g": "Tài liệu chính thức của Cube", "title": "Dimensions", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/reference/data-modeling/dimensions"},
+ {"id": "d-env", "g": "Tài liệu chính thức của Cube", "title": "Environment variables", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/reference/configuration/environment-variables"},
+ {"id": "d-arch", "g": "Tài liệu chính thức của Cube", "title": "Cube Core deployment architecture", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/cube-core/architecture"},
+ {"id": "d-production", "g": "Tài liệu chính thức của Cube", "title": "Running Cube Core in production", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/cube-core/running-in-production"},
+ {"id": "d-mcp", "g": "Tài liệu chính thức của Cube", "title": "Hosted MCP server: discovery, queries and authentication", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/docs/integrations/mcp-server"},
+ {"id": "d-numerics", "g": "Tài liệu chính thức của Cube", "title": "Retrieving numeric values on the front-end", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/recipes/core-data-api/cast-numerics"},
+ {"id": "d-rest-lifecycle", "g": "Tài liệu chính thức của Cube", "title": "REST authentication and Continue wait", "by": "Tài liệu chính thức của Cube", "url": "https://docs.cube.dev/reference/core-data-apis/rest-api"},
+ {"id": "gh-graphql", "g": "Mã nguồn chính thức của Cube", "title": "GraphQL schema implementation", "by": "Mã nguồn chính thức của Cube", "url": "https://github.com/cube-js/cube/blob/master/packages/cubejs-api-gateway/src/graphql.ts"},
+ {"id": "gh-cli", "g": "Mã nguồn chính thức của Cube", "title": "Legacy CLI project templates", "by": "Mã nguồn chính thức của Cube", "url": "https://github.com/cube-js/cube/blob/master/packages/cubejs-cli/src/templates.ts"},
+ {"id": "gh-pg", "g": "Mã nguồn chính thức của Cube", "title": "Postgres driver: readOnly and query execution", "by": "Mã nguồn chính thức của Cube", "url": "https://github.com/cube-js/cube/blob/master/packages/cubejs-postgres-driver/src/PostgresDriver.ts"},
+ {"id": "gh-planner", "g": "Mã nguồn chính thức của Cube", "title": "Pre-aggregation matching in schema compiler", "by": "Mã nguồn chính thức của Cube", "url": "https://github.com/cube-js/cube/blob/master/packages/cubejs-schema-compiler/src/adapter/PreAggregations.ts"},
+ {"id": "b-v18", "g": "Blog của Cube", "title": "Cube Core v1.8: CLI deprecation, Angular and refresh keys", "by": "Blog của Cube", "url": "https://cube.dev/blog/cube-core-v1-8-mistake-proof-defaults-performance"},
+ {"id": "dbt-api", "g": "Tài liệu chính thức của sản phẩm khác", "title": "dbt Semantic Layer APIs", "by": "Tài liệu chính thức của sản phẩm khác", "url": "https://docs.getdbt.com/docs/dbt-apis/sl-api-overview"},
+ {"id": "looker-api", "g": "Tài liệu chính thức của sản phẩm khác", "title": "Looker embedding and API", "by": "Tài liệu chính thức của sản phẩm khác", "url": "https://docs.cloud.google.com/looker/docs/use-embedding-and-api"},
+ {"id": "cube-price", "g": "Website của Cube", "title": "Cube pricing", "by": "Website của Cube", "url": "https://cube.dev/pricing"},
+ {"id": "looker-price", "g": "Tài liệu chính thức của sản phẩm khác", "title": "Looker platform and user pricing", "by": "Tài liệu chính thức của sản phẩm khác", "url": "https://cloud.google.com/looker/pricing"}];
 // which sources each chapter leans on (keys are chapter numbers)
 window.CH_SOURCES = {
- '00': ['d-intro', 'd-model', 'd-queries', 'd-rest', 'd-sec', 'd-client'],
- '01': ['w-home', 'w-sl', 'd-intro', 'd-model', 'c-pipe', 'gh', 'v-ws'],
- '02': ['d-intro', 'd-queries', 'd-preagg', 'b-v28', 'b-ext', 'v-ws'],
- '03': ['d-syntax', 'd-model', 'd-rest', 'd-client', 'b-v33', 'b-angular', 'b-vue', 'b-bubble', 'v-ws'],
- '04': ['d-model', 'd-measures', 'd-ctx', 'd-preagg', 'd-sec', 'b-ext', 'b-pyjinja', 'b-v33', 'b-v28', 'v-ws'],
- '05': ['b-v28', 'd-sec', 'd-preagg', 'b-pycfg'],
- '06': ['d-rest', 'd-queries', 'd-syntax', 'd-ctx', 'd-client', 'b-pycfg', 'gh'],
- '07': ['w-sl', 'd-sec', 'd-preagg', 'v-ws', 'ai-dr'],
- '08': ['d-ac', 'd-jwt', 'd-sec', 'd-mls', 'd-rls', 'd-ap', 'd-cfg', 'd-mt', 'd-sqlsec', 'd-cloudgrp', 'v-ap', 'v-apv', 'v-ws']};
+ '00': ["d-intro", "d-model", "d-queries", "d-rest", "d-sec", "d-client", "d-cfg", "d-rest-lifecycle", "d-cache", "d-cube-ref", "d-production"],
+ '01': ["w-home", "w-sl", "d-intro", "d-model", "c-pipe", "gh", "v-ws", "d-dimensions", "d-joins", "d-store", "dbt-api", "looker-api", "cube-price", "looker-price"],
+ '02': ["d-intro", "d-queries", "d-preagg", "b-v28", "b-ext", "v-ws", "gh-pg", "gh-planner", "d-cube-ref", "d-cache", "d-match", "d-sqlsec", "d-store"],
+ '03': ["d-syntax", "d-model", "d-rest", "d-client", "b-v33", "b-angular", "b-vue", "b-bubble", "v-ws", "gh-cli", "b-v18", "d-numerics", "d-rest-lifecycle", "d-production"],
+ '04': ["d-model", "d-measures", "d-ctx", "d-preagg", "d-sec", "b-ext", "b-pyjinja", "b-v33", "b-v28", "v-ws", "d-joins", "d-cache", "d-refresh", "d-match", "d-preagg-ref"],
+ '05': ["b-v28", "d-sec", "d-preagg", "b-pycfg", "d-env", "d-arch", "d-production", "d-preagg-ref", "d-match", "d-cache"],
+ '06': ["d-rest", "d-queries", "d-syntax", "d-ctx", "d-client", "b-pycfg", "gh", "d-cfg", "gh-graphql", "d-cache", "d-rest-lifecycle"],
+ '07': ["w-sl", "d-sec", "d-preagg", "v-ws", "ai-dr", "d-mcp", "d-match", "d-measures", "d-mls", "d-refresh"],
+ '08': ["d-ac", "d-jwt", "d-sec", "d-mls", "d-rls", "d-ap", "d-cfg", "d-mt", "d-sqlsec", "d-cloudgrp", "v-ap", "v-apv", "v-ws", "d-ctx"]};

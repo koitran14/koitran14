@@ -74,7 +74,7 @@
 <article>
   <div class="crumb"><b>Learning</b> / Data / Semantic layer</div>
   <h1>Cube.dev <i>Engineering Handbook</i></h1>
-  <p class="dek">Tài liệu gồm tám chương, trình bày từ câu hỏi “Cube là gì” đến triển khai trên production. Mỗi chương có thể đọc trọn trong một buổi, kèm audio, video và câu hỏi tự kiểm tra.</p>
+  <p class="dek">Bắt đầu bằng một câu hỏi về doanh thu để hiểu Cube làm gì, rồi học cách định nghĩa chỉ số, truy vấn dữ liệu, phân quyền và vận hành hệ thống. Tài liệu gồm 9 chương, đánh số từ 00 đến 08, kèm sơ đồ tương tác, âm thanh, video và câu hỏi ôn tập.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>9 chương · 68 mục</span><span>hơn 2 giờ đọc · 117 câu tự kiểm tra</span></div>
     </div>
 
@@ -111,12 +111,12 @@
     <h2 style="font-size:28px">Nguồn và lưu ý khi đọc</h2>
     <dl class="notes">
       <dt>Tính chất tài liệu</dt><dd>Đây là handbook cá nhân về Cube.dev, tổng hợp từ các nguồn tham khảo liệt kê bên dưới. Tài liệu viết ra để học tập và chia sẻ kiến thức, không phải tài liệu chính thức của Cube Dev, Inc. Cube Dev, Inc. không liên kết, tài trợ hoặc xác nhận nội dung này. Cube và các tên sản phẩm được đề cập là thương hiệu của chủ sở hữu tương ứng.</dd>
-      <dt>Cách biên soạn</dt><dd>Các nguồn tham khảo được gom và sắp xếp trong Gemini Notebook. Bản draft viết với sự hỗ trợ của các công cụ AI như Gemini và Claude, sau đó được biên tập và rà soát lại. Những điểm chưa chính xác hoặc cần đối chiếu với nguồn gốc được ghi chú ở chương tương ứng.</dd>
-      <dt>Version và tính cập nhật</dt><dd>Một số nội dung gắn với các version cụ thể như v0.28, v0.33 và v0.34. Cube.dev thay đổi liên tục nên một số API, configuration hoặc hướng dẫn có thể không còn phù hợp với version hiện tại. Hãy đối chiếu với <a href="https://docs.cube.dev/" target="_blank" rel="noopener">official documentation</a> trước khi áp dụng vào dự án thực tế.</dd>
-      <dt>Số liệu và case study</dt><dd>Các số liệu về AI accuracy, cost và latency ở chương 04 và 07 lấy từ tài liệu tham khảo và case study, chủ yếu để minh họa khái niệm. Các số liệu này chưa được kiểm chứng hay đo lại độc lập nên không nên xem là benchmark chính thức.</dd>
-      <dt>Code mẫu</dt><dd>Token, password và secret trong các đoạn code mẫu đã được thay bằng placeholder. Hãy kiểm tra và chạy thử code trong môi trường development trước khi đưa lên production, đồng thời rà soát configuration, security và compatibility với version đang dùng.</dd>
+      <dt>Cách biên soạn</dt><dd>Các nguồn tham khảo được gom và sắp xếp trong Gemini Notebook. Bản nháp được viết với sự hỗ trợ của các công cụ AI như Gemini và Claude, sau đó được biên tập và rà soát lại. Những điểm chưa chính xác hoặc cần đối chiếu với nguồn gốc được ghi chú ở chương tương ứng.</dd>
+      <dt>Phiên bản và tính cập nhật</dt><dd>Một số nội dung gắn với các phiên bản cụ thể như v0.28, v0.33 và v0.34. Cube.dev thay đổi liên tục nên một số API, cấu hình hoặc hướng dẫn có thể không còn phù hợp với phiên bản hiện tại. Hãy đối chiếu với <a href="https://docs.cube.dev/" target="_blank" rel="noopener">tài liệu chính thức</a> trước khi áp dụng vào dự án thực tế.</dd>
+      <dt>Số liệu và tình huống minh họa</dt><dd>Các số liệu về độ chính xác của AI, chi phí và thời gian phản hồi ở chương 04 và 07 lấy từ tài liệu tham khảo và tình huống minh họa, chủ yếu để minh họa khái niệm. Các số liệu này chưa được kiểm chứng hay đo lại độc lập nên không nên xem là kết quả đo chuẩn chính thức.</dd>
+      <dt>Code mẫu</dt><dd>Token, password và secret trong các đoạn code mẫu đã được thay bằng placeholder. Hãy kiểm tra và chạy thử code trong môi trường phát triển trước khi đưa vào vận hành thực tế, đồng thời rà soát cấu hình, bảo mật và khả năng tương thích với phiên bản đang dùng.</dd>
       <dt>Audio, video và câu hỏi ôn tập</dt><dd><p>Audio tổng quan, video <i>Sổ tay kỹ thuật Cube</i> và một phần câu hỏi ôn tập do AI tạo qua Gemini Notebook, nên có thể còn lỗi phát âm, lỗi diễn đạt hoặc sai sót kỹ thuật.</p><p>Video workshop thuộc Cube Dev, Inc. được nhúng từ YouTube để học tập và tham khảo; handbook không tải xuống hay đăng lại video này.</p></dd>
-      <dt>Góp ý và phản hồi</dt><dd>Nếu phát hiện nội dung chưa chính xác, thiếu nguồn tham khảo hoặc cần bổ sung, bạn có thể gửi feedback qua email <a href="mailto:tndkhoi.work@gmail.com"><b>tndkhoi.work@gmail.com</b></a>. Mình sẽ xem xét và cập nhật handbook khi cần.</dd>
+      <dt>Góp ý và phản hồi</dt><dd>Nếu phát hiện nội dung chưa chính xác, thiếu nguồn tham khảo hoặc cần bổ sung, bạn có thể gửi góp ý qua email <a href="mailto:tndkhoi.work@gmail.com"><b>tndkhoi.work@gmail.com</b></a>. Mình sẽ xem xét và cập nhật handbook khi cần.</dd>
     </dl>
     <div id="srcList"></div>
   </section>
@@ -135,27 +135,27 @@ srcList.innerHTML = [...new Set(SOURCES.map(x => x.g))].map(g => `<h3>${g}</h3><
 </script>
 <script>
 const CHS = [
- {n: '00', t: 'How Cube Works', vi: 'Đi theo một câu hỏi của người dùng qua LLM, qua Cube, xuống database rồi quay lại, để thấy mỗi thành phần làm gì.', lvl: 'Bắt đầu ở đây', min: 15, href: '/blog/cube-handbook/00', key: 'ch00', q: 8,
-  s: ['LLM tham gia ở bước nào', 'Một câu hỏi qua bảy bước', 'File YAML là từ điển', 'Thực hành: Cube xử lý một query JSON']},
- {n: '01', t: 'Fundamentals', vi: 'Cube.dev là gì, giải quyết vấn đề gì và nên dùng trong trường hợp nào.', lvl: 'Nền tảng', min: 14, href: '/blog/cube-handbook/01', key: 'ch01', q: 12,
-  s: ['What Is Cube.dev?', 'The Semantic Layer Concept', 'Problems Cube.dev Solves', 'Core Concepts and Terminology', 'Cube.dev Use Cases', 'Benefits, Limitations & Alternatives']},
- {n: '02', href: '/blog/cube-handbook/02', key: 'ch02', t: 'Architecture & Internals', vi: 'Cube gồm những thành phần nào và xử lý một query ra sao.', lvl: 'Nền tảng', min: 12, q: 13,
-  s: ['High-Level Architecture', 'Core Components and Responsibilities', 'Query Lifecycle', 'Request-to-Response Flow', 'Data Sources and Query Execution', 'Architecture Diagrams']},
- {n: '03', href: '/blog/cube-handbook/03', key: 'ch03', t: 'Hands-on Implementation', vi: 'Dựng một ứng dụng Cube chạy được, từ cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
-  s: ['Environment Setup', 'Connect a Data Source', 'Create Your First Data Model', 'Query Data Through Cube.dev', 'Integrate with a Frontend App', 'Build a Basic Analytics Dashboard', 'Validate Query Results', 'Implementation Labs']},
- {n: '04', href: '/blog/cube-handbook/04', key: 'ch04', t: 'Engineering Deep Dives', vi: 'Bên trong Cube chạy thế nào, kèm thực nghiệm để kiểm chứng.', lvl: 'Nâng cao', min: 24, q: 17,
-  s: ['Data Modeling', 'Measures, Dimensions & Granularity', 'Joins, Fanout & Double Counting', 'SQL Generation and Inspection', 'Query Execution and Optimization', 'Caching Mechanisms', 'Pre-aggregations', 'Authentication, Authorization & Multi-tenancy', 'Source Code Investigation', 'Experiments & Performance Analysis']},
- {n: '05', href: '/blog/cube-handbook/05', key: 'ch05', t: 'Production Engineering', vi: 'Deploy Cube lên production, vận hành và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
-  s: ['Deployment Architecture', 'Environment Configuration & Secrets', 'Authentication and Security Configuration', 'Observability, Logs & Monitoring', 'Performance Troubleshooting', 'Common Production Issues', 'CI/CD and Release Management', 'Production Readiness Checklist']},
- {n: '06', href: '/blog/cube-handbook/06', key: 'ch06', t: 'Reference & Engineering Notes', vi: 'Tra nhanh khi viết code, cấu hình, debug hoặc review.', lvl: 'Tra cứu', min: 10, q: 8,
-  s: ['Configuration Reference', 'API & Query Examples', 'Common Patterns and Code Snippets', 'Error Messages & Solutions', 'Troubleshooting Checklist', 'Glossary', 'Useful Commands & Tools', 'External References']},
- {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Applied Case Studies', vi: 'Dùng Cube cho một bài toán cụ thể và ghi lại kết quả kỹ thuật.', lvl: 'Ứng dụng', min: 16, q: 17,
-  s: ['Case Study Overview', 'Business Problem & Requirements', 'Dataset and Data Model', 'Proposed Architecture', 'Implementation', 'Experiments and Evaluation', 'Results, Trade-offs & Lessons Learned', 'Reproducibility Guide']},
- {n: '08', href: '/blog/cube-handbook/08', key: 'ch08', new: '2026-10-28', t: 'Access Control', vi: 'Ai được gọi Cube và thấy được dữ liệu nào: JWT, security context, access policy, masking, multitenancy.', lvl: 'Nâng cao', min: 22, q: 13,
-  s: ['Big Picture', 'Authentication', 'Security Context', 'Member-Level Security', 'Row-Level Security', 'Combining Policies', 'Data Masking', 'queryRewrite', 'Multitenancy', 'Case Study: Retail SaaS']}];
+ {n: '00', t: 'Cube hoạt động như thế nào?', vi: 'Đi theo một câu hỏi của người dùng qua LLM, qua Cube, xuống database rồi quay lại, để thấy mỗi thành phần làm gì.', lvl: 'Bắt đầu ở đây', min: 15, href: '/blog/cube-handbook/00', key: 'ch00', q: 8,
+  s: ["LLM tham gia ở bước nào?", "Một câu hỏi qua bảy bước", "File YAML là từ điển", "Thực hành: Cube xử lý một query JSON"]},
+ {n: '01', t: 'Khái niệm nền tảng', vi: 'Cube.dev là gì, giải quyết vấn đề gì và nên dùng trong trường hợp nào.', lvl: 'Nền tảng', min: 14, href: '/blog/cube-handbook/01', key: 'ch01', q: 12,
+  s: ["Cube.dev là gì?", "Semantic layer giải quyết vấn đề gì?", "Bốn dấu hiệu khi thiếu semantic layer", "Sáu khái niệm cốt lõi", "Ba kịch bản dùng Cube", "Cube, dbt Semantic Layer hay LookML?"]},
+ {n: '02', href: '/blog/cube-handbook/02', key: 'ch02', t: 'Kiến trúc và xử lý truy vấn', vi: 'Cube gồm những thành phần nào và xử lý một truy vấn ra sao.', lvl: 'Nền tảng', min: 12, q: 13,
+  s: ["Kiến trúc tổng thể", "Bốn thành phần lõi", "Vòng đời một truy vấn", "Từ yêu cầu đến kết quả", "Nguồn dữ liệu và thực thi truy vấn", "Sơ đồ kiến trúc khi chạy local"]},
+ {n: '03', href: '/blog/cube-handbook/03', key: 'ch03', t: 'Thực hành dựng ứng dụng', vi: 'Dựng một ứng dụng Cube chạy được, từ cài đặt đến dashboard.', lvl: 'Thực hành', min: 20, q: 16,
+  s: ["Chuẩn bị môi trường", "Kết nối nguồn dữ liệu", "Data model đầu tiên", "Truy vấn qua Cube", "Tích hợp vào ứng dụng frontend", "Dashboard phân tích cơ bản", "Kiểm tra kết quả truy vấn", "Bài lab: Bubble.io gọi Cube REST API"]},
+ {n: '04', href: '/blog/cube-handbook/04', key: 'ch04', t: 'Mô hình dữ liệu và tối ưu truy vấn', vi: 'Hiểu cách nối dữ liệu, tính chỉ số, dùng bộ nhớ đệm và tránh những lỗi thường gặp.', lvl: 'Nâng cao', min: 24, q: 17,
+  s: ["Khai báo mô hình dữ liệu", "Chỉ số, thuộc tính và mức chia thời gian", "Nối bảng và tránh tính trùng", "Sinh và kiểm tra SQL", "Biến ngữ cảnh trong mô hình", "Hai cơ chế lưu kết quả và dữ liệu tính sẵn", "Bảng tổng hợp tính sẵn: pre-aggregation", "Xác thực và tách dữ liệu giữa các khách hàng", "Kiểm tra mô hình và cấu hình đang chạy", "Đọc và đánh giá số liệu về AI"]},
+ {n: '05', href: '/blog/cube-handbook/05', key: 'ch05', t: 'Triển khai và vận hành', vi: 'Triển khai Cube cho người dùng thực tế, theo dõi hoạt động và xử lý sự cố.', lvl: 'Vận hành', min: 12, q: 13,
+  s: ["Kiến trúc triển khai", "Biến môi trường và khóa bí mật", "Xác thực và bảo mật", "Nhật ký, chỉ số và giám sát", "Xử lý sự cố hiệu năng", "Lỗi thường gặp trên production", "CI/CD và phát hành", "Danh sách kiểm tra trước khi vận hành"]},
+ {n: '06', href: '/blog/cube-handbook/06', key: 'ch06', t: 'Tra cứu cấu hình và xử lý lỗi', vi: 'Tra cú pháp, cấu hình và cách xử lý lỗi trong lúc thực hành.', lvl: 'Tra cứu', min: 10, q: 8,
+  s: ["Cấu hình hệ thống", "Ví dụ API và truy vấn", "Mẫu mã nguồn thường dùng", "Thông báo lỗi và cách sửa", "Kiểm tra khi kết quả sai hoặc chậm", "Thuật ngữ", "Lệnh và công cụ", "Tài liệu tham khảo"]},
+ {n: '07', href: '/blog/cube-handbook/07', key: 'ch07', t: 'Bài toán minh họa từ đầu đến cuối', vi: 'Ghép các phần đã học vào một tình huống giả định; phân biệt thiết kế, mục tiêu và số liệu minh họa.', lvl: 'Ứng dụng', min: 16, q: 17,
+  s: ["Bối cảnh bài toán", "Bài toán và yêu cầu", "Dữ liệu và data model", "Kiến trúc đề xuất", "Triển khai", "Cách đọc số liệu minh họa", "Kết quả, đánh đổi và bài học", "Thử các thành phần trên máy cá nhân"]},
+ {n: '08', href: '/blog/cube-handbook/08', key: 'ch08', new: '2026-10-28', t: 'Xác thực và phân quyền dữ liệu', vi: 'Xác minh người gọi, giới hạn dữ liệu được xem và tách dữ liệu giữa các khách hàng.', lvl: 'Nâng cao', min: 22, q: 13,
+  s: ["Bức tranh tổng thể", "Xác thực người gọi", "Thông tin người gọi: securityContext", "Giới hạn trường được truy vấn", "Giới hạn dòng dữ liệu được xem", "Kết hợp nhiều chính sách phân quyền", "Che giá trị dữ liệu", "Viết lại hoặc chặn truy vấn: queryRewrite", "Tách dữ liệu và tài nguyên giữa các khách hàng", "Ví dụ: ứng dụng bán lẻ phục vụ nhiều khách hàng"]}];
 const ROUTES = [['Người mới tìm hiểu', ['00', '01', '02', '03'], 'Đọc chương 00 trước để thấy Cube xử lý một câu hỏi cụ thể ra sao; sau đó đọc 01 → 02 → 03 để nắm khái niệm, kiến trúc và dựng một bản chạy được.'],
  ['Bắt đầu thực hành', ['03', '06'], 'Vào thẳng chương 03 để cài đặt và viết model đầu tiên; mở chương 06 bên cạnh để tra cú pháp.'],
- ['Chuẩn bị production', ['04', '08', '05', '07'], 'Chương 04 nói về cache và join; chương 08 về xác thực và phân quyền; chương 05 về vận hành; chương 07 là một ví dụ đầy đủ.'],
+ ['Chuẩn bị vận hành thực tế', ['04', '08', '05', '07'], 'Chương 04 nói về cache và join; chương 08 về xác thực và phân quyền; chương 05 về vận hành; chương 07 ghép các phần này vào một tình huống giả định.'],
  ['Tra cứu', ['06'], 'Chương 06 gom cấu hình, ví dụ API, thông báo lỗi và các lệnh hay dùng.']];
 const store = {get(k, d) {try {return JSON.parse(localStorage.getItem(k)) ?? d} catch {return d}}, set(k, v) {try {localStorage.setItem(k, JSON.stringify(v))} catch {}}};
 function renderPath(hot) {
