@@ -126,13 +126,15 @@ export const ESSAY_CATALOG = [
     title: "Tư duy Product ở kỹ sư: chủ động thôi đã đủ?",
     excerpt:
       "Kỳ vọng kỹ sư có tư duy Product có hợp lý không? Những gì mỗi người có thể tự học và những điều cần thống nhất với tổ chức.",
-    minutes: 20,
+    minutes: 14,
     createdAt: "2026-11-05T00:00:00.000Z",
   },
 ];
 
 // Keep unpublished essays in the catalog so restoring them only changes their flag.
-export const ESSAYS = ESSAY_CATALOG.filter((essay) => essay.published);
+export const ESSAYS = ESSAY_CATALOG.filter(
+  (essay) => essay.published || process.env.NODE_ENV === "development",
+);
 
 // shortcut: posts live in a local JSON file, which does not persist on Vercel; move to a DB before deploying the blog.
 const FILE = path.join(process.cwd(), "data", "posts.json");

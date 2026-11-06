@@ -112,3 +112,6 @@ window.CH_SOURCES["02"].push("eai-9","eai-10","eai-11");
 
 window.SOURCES.push({id:"eai-12", title:'<a href="https://github.com/hiring-lab/job_postings_tracker">Indeed Hiring Lab · Daily Job Postings Index · dữ liệu gốc và phương pháp</a>'});
 window.CH_SOURCES["02"].push("eai-12");
+
+// The Product essay now links to the preceding AI discussion instead of repeating its sources.
+window.CH_SOURCES["01"] = ["ept-17", "ept-18", "ept-20", "ept-21", "ept-22", "ept-23", "ept-24", "ept-25"];

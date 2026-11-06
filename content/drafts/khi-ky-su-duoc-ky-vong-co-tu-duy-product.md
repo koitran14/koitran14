@@ -2,7 +2,7 @@
 
 *Kỹ sư có thể tự rèn luyện tư duy Product từ công việc hằng ngày. Nhưng để chịu trách nhiệm cho kết quả sản phẩm, họ còn cần bối cảnh, cơ hội thực hành và quyền quyết định rõ ràng.*
 
-Trần Ngọc Đăng Khôi · Ghi chép & suy ngẫm · 20 phút đọc · 05.11.2026
+Trần Ngọc Đăng Khôi · Ghi chép & suy ngẫm · 14 phút đọc · 05.11.2026
 
 URL: https://koitran14.vercel.app/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product
 
@@ -38,7 +38,7 @@ Nếu chỉ hỏi thêm về bộ lọc hay định dạng tệp, nhóm đang ho
 
 Trong [Product vs. Feature Teams](https://www.svpg.com/product-vs-feature-teams/), Marty Cagan phân biệt nhóm được giao danh sách tính năng cần làm với nhóm được giao một vấn đề và kết quả cần đạt.
 
-Cả hai nhóm đều có thể dùng ticket để chia việc. Điểm khác nằm ở chỗ nhóm chỉ thực hiện giải pháp đã chốt, hay được tìm hiểu và chọn giải pháp. Muốn lựa chọn, nhóm phải có thông tin về vấn đề và biết giới hạn của những gì được phép thay đổi. Đây là mô hình tổ chức Cagan bàn đến, không phải yêu cầu áp dụng cho mọi nhóm.
+Cả hai nhóm đều có thể dùng ticket để chia việc. Khác biệt Cagan nêu giúp nhận ra rằng hỏi kỹ yêu cầu chưa đồng nghĩa với được chọn giải pháp. Với dashboard, kỹ sư có thể hiểu nguyên nhân gây chậm nhưng vẫn chỉ được triển khai phương án đã chốt. Vì vậy, cần phân biệt năng lực tìm hiểu vấn đề với quyền quyết định dùng hiểu biết đó để thay đổi công việc. Đây là cách vận dụng mô hình Cagan vào ví dụ, không phải yêu cầu mọi nhóm phải tổ chức giống nhau.
 
 > Trong bài này, tư duy Product là cách làm việc bắt đầu từ vấn đề của người dùng: tìm hiểu họ đang vướng ở đâu, chọn cách giải quyết rồi kiểm tra xem cách đó có giúp được họ không.
 
@@ -50,11 +50,13 @@ Làm xong dashboard là bàn giao một tính năng (output). Người dùng là
 
 Không phải kỹ sư nào cũng được tự bỏ yêu cầu làm dashboard để chọn cách khác. Nhưng ngay trong ticket đang nhận, họ vẫn có thể hỏi vì sao cần tính năng này và ai sẽ dùng nó. Đó là một việc cụ thể để bắt đầu, không cần chờ đổi chức danh.
 
-[Drew Hoskins](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/) gợi ý tìm hiểu nhu cầu qua những nguồn có sẵn: cuộc gọi bán hàng, trao đổi hỗ trợ khách hàng, yêu cầu trên GitHub và dữ liệu sử dụng.
+[Drew Hoskins](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/) gợi ý tìm hiểu nhu cầu qua cuộc gọi bán hàng, trao đổi hỗ trợ, yêu cầu trên GitHub và dữ liệu sử dụng. Những nguồn này giúp kỹ sư tìm dấu hiệu để hỏi tiếp: ai gặp khó khăn, xảy ra lúc nào, đã thử xử lý ra sao. Một yêu cầu hỗ trợ đơn lẻ chưa đại diện cho toàn bộ người dùng; giá trị của nó là giúp bớt đoán khi làm rõ yêu cầu.
 
 Với ví dụ dashboard, ticket có thể ghi rõ: “Người dùng muốn xuất báo cáo nhanh hơn; chưa rõ bước nào gây chậm.” Ghi rõ điều chưa biết giúp xác định cần hỏi thêm điều gì, thay vì mặc định việc đối chiếu dữ liệu là nguyên nhân.
 
-Để biết bước nào gây chậm, kỹ sư có thể cùng người phụ trách quan sát người dùng làm báo cáo hoặc xin tham gia một buổi trao đổi. Nếu vướng mắc chính là đối chiếu số liệu, nhóm mới có cơ sở thử làm nổi bật các dòng chênh lệch. Trước khi thử, cần thống nhất sẽ đo gì và kết quả nào cho thấy nhận định ban đầu không đúng.
+Để biết bước nào gây chậm, kỹ sư có thể cùng người phụ trách quan sát người dùng làm báo cáo hoặc tham gia một buổi trao đổi. Nếu vướng mắc chính là đối chiếu số liệu, nhóm mới có cơ sở thử làm nổi bật các dòng chênh lệch.
+
+Trước khi thử, cần ghi nhận cách người dùng đang làm, thời gian cho bước đối chiếu và số sai sót. Sau khi thay đổi, xem lại chính các kết quả ấy trong điều kiện có thể đối chiếu. Cảnh báo được bấm nhiều chưa đủ để nói báo cáo nhanh hơn; còn phải biết người dùng có bớt công đối chiếu mà không bỏ sót lỗi không. Đây là cách kiểm tra giả thuyết trong ví dụ, chưa phải kết quả đo thực tế.
 
 Nhóm có thể đặt vài phương án cạnh nhau: sửa chức năng xuất tệp hiện tại, thêm cảnh báo hoặc làm dashboard. Mỗi phương án tốn bao nhiêu công sức và giải quyết được phần nào của vấn đề? Sau khi đưa vào sử dụng, số liệu và phản hồi sẽ giúp quyết định sửa tiếp hay dừng. Đây là ví dụ minh họa cách áp dụng các gợi ý, chưa phải kết quả thử nghiệm hay một chương trình đào tạo.
 
@@ -76,9 +78,11 @@ Trong [The Four Big Risks](https://www.svpg.com/four-big-risks/), Cagan nêu b�
 
 Theo cách phân chia của Cagan, người phụ trách sản phẩm (Product Manager, hay PM) chịu trách nhiệm chính về nhu cầu người dùng và sự phù hợp với hoạt động kinh doanh; người thiết kế phụ trách trải nghiệm sử dụng; kỹ sư xem xét khả năng xây dựng giải pháp về mặt kỹ thuật. Các bên vẫn cần phối hợp với nhau.
 
-Chẳng hạn, muốn thay dashboard bằng cách khác, nhóm còn phải biết đã hứa gì với khách hàng, có yêu cầu kiểm toán nào và việc này liên quan đến kế hoạch kinh doanh ra sao. Ví dụ đang xét chưa có các thông tin đó. Phương án ít code hơn chưa chắc đáp ứng được những yêu cầu này.
+Chẳng hạn, sửa chức năng xuất tệp có thể giảm công sức đối chiếu nhưng chưa đáp ứng cam kết hiển thị dữ liệu cho quản lý hoặc yêu cầu kiểm toán. Ví dụ này chưa cho biết có những ràng buộc ấy không, nên phải hỏi trước khi đổi giải pháp. Ý nghĩa của việc hiểu thêm nghiệp vụ nằm ở chỗ đó: đánh giá được phương án tiết kiệm code có thực sự thay được phương án đã giao hay không.
 
-Nhóm nên thống nhất việc nào kỹ sư được tự quyết, việc nào phải bàn chung và việc nào cần người có thẩm quyền duyệt. Chẳng hạn, kỹ sư có thể tự chọn cách triển khai trong giới hạn đã thỏa thuận. Đổi phạm vi tính năng thường cần bàn với PM và người thiết kế; đổi cam kết hợp đồng hay ngân sách cần người có thẩm quyền quyết định. Mỗi nơi sẽ phân chia khác nhau, kể cả quyền quyết định về kỹ thuật.
+Nhóm nên thống nhất việc nào kỹ sư được tự quyết, việc nào phải bàn chung và việc nào cần người có thẩm quyền duyệt. Kỹ sư có thể tự chọn cách triển khai trong giới hạn đã thỏa thuận; đổi phạm vi tính năng thường cần PM và người thiết kế cùng bàn; đổi cam kết hợp đồng hay ngân sách cần người có thẩm quyền quyết định. Cách phân chia tùy nơi, kể cả quyết định kỹ thuật.
+
+Làm rõ quyền hạn không có nghĩa mọi góp ý đều phải được chấp nhận. Một đề xuất vẫn phải chứng minh nó giải quyết được vấn đề và đáp ứng ràng buộc. Nhưng nếu kỹ sư bị đánh giá qua kết quả mà mọi quyết định ảnh hưởng đến kết quả đều nằm ngoài phạm vi tham gia, nhóm cần xem lại sự tương xứng giữa trách nhiệm và quyền hạn.
 
 Kết quả kinh doanh còn phụ thuộc vào giá bán, cách phân phối, vận hành và thời điểm ra mắt. Những việc này có thể do người khác quyết định dù kỹ sư đã làm tốt phần được giao. Vì thế, khi giao thêm trách nhiệm về sản phẩm, cần nói rõ mục tiêu, những gì kỹ sư được phép thay đổi, ai cùng làm và thời gian dành cho công việc đó.
 
@@ -98,7 +102,9 @@ Cách chia việc ảnh hưởng đến cơ hội tham gia tìm hiểu người 
 
 Trong nghiên cứu về nhóm Scrum, [Verwijs và Russo](https://arxiv.org/abs/2105.12439) xem xét hiệu quả làm việc của nhóm, bao gồm quyền quyết định và sự hỗ trợ từ người quản lý. Hai tác giả dùng khảo sát để kiểm tra mô hình nghiên cứu, với khoảng 5.000 lập trình viên trong 2.000 nhóm. [DORA](https://dora.dev/capabilities/user-centric-focus/) nhấn mạnh việc kỹ sư được đọc phản hồi và xem dữ liệu người dùng.
 
-Các tài liệu này nói về cách làm việc của nhóm, không đủ để giải thích kết quả của từng người. Khi đánh giá một kỹ sư, vẫn cần xem họ có biết mục tiêu, được góp ý trước khi chốt giải pháp và được phép thay đổi những gì. Thời gian dành cho công việc và sự phối hợp của người khác cũng phải được tính đến.
+Product trio gợi ý một cách tạo cơ hội thực hành: kỹ sư cùng PM và người thiết kế tham gia tìm hiểu nhu cầu, thay vì chỉ nhận kết quả sau khi đã chọn giải pháp. Nghiên cứu Scrum và tài liệu DORA bổ sung góc nhìn về điều kiện làm việc của nhóm. Chúng không chứng minh rằng cứ trao quyền là một cá nhân sẽ làm tốt.
+
+Khi đánh giá người kỹ sư trong ví dụ, cần tách hai điều: họ đã có cơ hội làm chưa, và khi có cơ hội thì đã làm ra sao. Cơ hội có thể được ghi nhận qua phần việc và quyết định được giao; năng lực phải nhìn qua cách đặt câu hỏi, cân nhắc phương án và xem lại kết quả. Cách tách này tránh cả hai kết luận vội: quy mọi hạn chế cho cá nhân hoặc quy mọi kết quả chưa tốt cho tổ chức.
 
 Nếu số người hoặc thời gian giảm mà trách nhiệm tăng, nhóm phải thống nhất việc nào làm gọn, việc nào bớt đi hoặc để sau. AI có bù được phần thiếu hụt hay không cần được đo trong công việc thực tế, tính cả thời gian kiểm tra và sửa những gì AI làm sai.
 
@@ -122,68 +128,13 @@ Về quá trình triển khai, [DORA](https://dora.dev/guides/dora-metrics/) hư
 
 Có thể dùng những gợi ý này để tập cách làm việc, nhưng không nên coi chúng là bộ tiêu chí chung để chấm tư duy Product. Bài viết rút ra rằng kỹ sư cần cả sự chủ động, quyền tham gia quyết định và cơ hội thực hành. Đây là nhận định tổng hợp từ các nguồn, chưa được một nghiên cứu trực tiếp kiểm chứng đầy đủ.
 
-Với một tính năng sắp làm, kỹ sư có thể ghi rõ điều muốn kiểm tra và hẹn thời điểm xem lại kết quả sau khi đưa vào sử dụng. Nhóm thống nhất sẽ cung cấp thông tin gì, kỹ sư tham gia từ lúc nào, có bao nhiêu thời gian tìm hiểu và dựa vào đâu để đánh giá kết quả.
+Lần nhận việc tiếp theo có thể dùng để làm rõ một thỏa thuận nhỏ: vấn đề nào cần tìm hiểu, kỹ sư được tham gia từ đâu, ai cung cấp thông tin và lúc nào cả nhóm xem lại kết quả. Từ lần thực hành đó, nhóm có thêm căn cứ để bàn kỹ sư cần học gì và cần được giao thêm phạm vi nào. Trách nhiệm lớn hơn nên đi cùng những cơ hội cụ thể để thể hiện và học, thay vì chỉ thêm một kỳ vọng vào nhận xét cuối kỳ.
 
 **Kỹ sư có thể chủ động rèn luyện tư duy Product từ công việc hằng ngày. Để làm tốt hơn và được đánh giá công bằng, họ còn cần hiểu mục tiêu sản phẩm, có người phối hợp và biết rõ phạm vi được quyết định.**
 
 **Đọc tiếp:** [AI Product Handbook · Product Thinking & Lifecycle](https://koitran14.vercel.app/blog/ai-product-handbook/01)
 
-<details>
-<summary>Đọc thêm: kỳ vọng nghề nghiệp và các nghiên cứu về AI</summary>
 
-### Ngoài code, kỹ sư còn được kỳ vọng điều gì?
-
-Kỳ vọng kỹ sư hiểu sản phẩm đã có từ trước khi các công cụ AI viết code phổ biến. Từ năm 2019, [Gergely Orosz đã viết về product-minded engineer](https://blog.pragmaticengineer.com/the-product-minded-engineer/): những kỹ sư quan tâm đến sản phẩm, hỏi vì sao cần làm một tính năng, góp ý về yêu cầu và theo dõi tính năng sau khi ra mắt.
-
-Một số mô tả công việc cũng nêu yêu cầu này. Trong tin tuyển dụng được đối chiếu ngày 05/11/2026, [vị trí Product Engineer của Linear](https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b) yêu cầu kỹ sư cùng làm rõ vấn đề và theo sát tính năng từ ý tưởng đến phát hành. [Tài liệu nội bộ của PostHog](https://posthog.com/handbook/engineering/product-engineering) mô tả cách kỹ sư tìm hiểu nhu cầu, phát hành một phần tính năng rồi sửa tiếp dựa trên phản hồi.
-
-Hai ví dụ trên cho thấy yêu cầu này có trong thực tế, nhưng chưa nói được nó phổ biến đến đâu hay đang tăng lên. Các khảo sát dưới đây cung cấp thêm thông tin về kỹ năng và việc dùng AI. Chúng không đo nhu cầu tuyển kỹ sư có tư duy Product.
-
-| Số liệu | Ý nghĩa | Nguồn |
-|---|---|---|
-| **39%** | Kỹ năng hiện có được nhà tuyển dụng dự báo thay đổi hoặc lỗi thời trong giai đoạn 2025–2030. | [WEF · Future of Jobs 2025](https://www.weforum.org/publications/the-future-of-jobs-report-2025/) |
-| **63%** | Nhà tuyển dụng được khảo sát xem việc người lao động chưa có đủ kỹ năng cần thiết là rào cản lớn với chuyển đổi kinh doanh. | [WEF · Thông cáo 01/2025](https://www.weforum.org/press/2025/01/future-of-jobs-report-2025-78-million-new-job-opportunities-by-2030-but-urgent-upskilling-needed-to-prepare-workforces/) |
-| **83%** | Người trả lời câu hỏi về việc dùng AI đã dùng ít nhất một công cụ AI trong công việc (n = 17.464). | [Stack Overflow · 2026](https://survey.stackoverflow.co/2026/ai/data) |
-| **90%** | Người trả lời khảo sát DORA 2025 dùng AI trong công việc. | [Google Cloud · DORA 2025](https://cloud.google.com/blog/products/ai-machine-learning/announcing-the-2025-dora-report) |
-
-*Hình 1. Bối cảnh về kỹ năng và việc dùng AI. Mỗi khảo sát có nhóm người tham gia và cách hỏi riêng; các số liệu này không đo nhu cầu tuyển kỹ sư có tư duy Product.*
-
-Theo DORA 2025, AI có thể làm điểm mạnh lẫn điểm yếu sẵn có của tổ chức rõ hơn. Khi liên hệ với việc làm sản phẩm, có thể hiểu thế này: nếu nhóm chọn một tính năng ít người cần, viết code nhanh hơn cũng không khiến tính năng ấy hữu ích hơn. Đây là cách diễn giải nhận định của DORA, không phải kết quả nghiên cứu về nhu cầu tuyển Product Engineer.
-
-Với kỹ sư muốn tham gia sâu hơn vào việc làm sản phẩm, học cách tìm hiểu người dùng và chọn giải pháp là hướng đáng cân nhắc. Những người muốn chuyên sâu về hạ tầng, bảo mật, hiệu năng hay hệ thống vẫn có vai trò quan trọng. Có tư duy Product cũng không có nghĩa phải chuyển sang làm Product Manager.
-
-> **Video liên quan.** [DORA Community Discussion: State of AI-assisted Software Development](https://www.youtube.com/watch?v=Sz8NWaTiWfE) · DORA. Cách làm việc sẵn có ảnh hưởng đến việc sử dụng AI ra sao.
-
-### Code nhanh hơn, sản phẩm có tốt hơn?
-
-AI giúp lập trình viên làm nhanh hơn đến đâu còn tùy công việc và cách sử dụng. Trong một [nghiên cứu về tác động của AI đến năng suất lập trình](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/), Zheyuan (Kevin) Cui cùng các tác giả khác tổng hợp kết quả từ ba thử nghiệm với 4.867 lập trình viên. Nhóm nghiên cứu ghi nhận những người dùng trợ lý viết code hoàn thành nhiều công việc hơn.
-
-Trong một nghiên cứu khác, METR ghi nhận 16 lập trình viên giàu kinh nghiệm mất nhiều thời gian hơn khi dùng công cụ đầu năm 2025 trên những kho mã nguồn họ đã quen.
-
-Các nghiên cứu này không thử cùng một công cụ trên cùng một nhóm người và loại công việc. Cách đo cũng khác nhau. Vì vậy, kết quả trái chiều chưa đủ để kết luận nghiên cứu nào sai. Khi đọc bảng dưới đây, cũng cần tách ba chuyện: người dùng tin AI đến đâu, AI ảnh hưởng thế nào đến năng suất và những công việc nào có thể chịu tác động.
-
-| Số liệu | Ý nghĩa | Nguồn |
-|---|---|---|
-| **48%** | Chỉ tin kết quả AI tạo ra khi dễ kiểm chứng (n = 14.304). | [Stack Overflow · 2026](https://survey.stackoverflow.co/2026/ai/data) |
-| **6,6%** | Tin AI khi làm nhiều loại công việc, kể cả quyết định công việc quan trọng, trong cùng câu hỏi. | [Stack Overflow · 2026](https://survey.stackoverflow.co/2026/ai/data) |
-| **+26,08%** | Số công việc hoàn thành khi tổng hợp kết quả từ ba thử nghiệm, 4.867 lập trình viên; sai số chuẩn 10,3%. | [Zheyuan (Kevin) Cui và các tác giả · Microsoft Research](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/) |
-| **+19%** | Thời gian hoàn thành khi dùng AI trong thí nghiệm đầu năm 2025, 16 lập trình viên, 246 công việc. | [METR · 07/2025](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/) |
-| **~25%** | Việc làm trên toàn cầu thuộc các nghề có phần việc có thể chịu tác động của AI tạo sinh (GenAI). Đây không phải tỷ lệ việc làm sẽ mất đi. | [ILO–NASK · 05/2025](https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure) |
-| **49%** | Nhóm nghề có ghi nhận Claude được dùng cho ít nhất 1/4 số loại công việc, tổng hợp qua các báo cáo. | [Anthropic · 01/2026](https://www.anthropic.com/research/anthropic-economic-index-january-2026-report) |
-
-*Hình 2. Niềm tin, năng suất và khả năng công việc chịu tác động của AI là những cách đo khác nhau. Chúng không thể cộng hay lấy trung bình với nhau.*
-
-Kết quả nghiên cứu còn phụ thuộc vào thời điểm công cụ được thử nghiệm. Trong [cập nhật tháng 2/2026](https://metr.org/blog/2026-02-24-uplift-update/), METR cho rằng công cụ mới có thể đã giúp lập trình viên làm nhanh hơn. Tuy nhiên, dữ liệu mới chưa đáng tin cậy: người tham gia tự chọn công việc đưa vào nghiên cứu, còn thời gian làm việc khó đo chính xác. Vì vậy, kết quả năm 2025 không thể dùng để kết luận về mọi công cụ AI hiện nay.
-
-Điểm benchmark, tức điểm trên các bộ bài kiểm tra năng lực AI, cũng có giới hạn. Khi rà soát [SWE-bench Verified](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/) và [SWE-bench Pro](https://openai.com/index/separating-signal-from-noise-coding-evaluations/), OpenAI chỉ ra các vấn đề về dữ liệu và bài kiểm thử. Làm tốt một bài sửa lỗi chưa cho biết công cụ sẽ xử lý ra sao khi yêu cầu còn mơ hồ, gặp tình huống ngoại lệ hoặc phải hỗ trợ vận hành sản phẩm lâu dài.
-
-AI làm được một phần công việc chưa có nghĩa sẽ thay được người đang làm công việc đó. Số liệu của ILO nói về những phần việc có thể chịu tác động của AI. Anthropic cũng phân biệt giữa có sử dụng AI và AI thực sự hoàn thành việc được giao với chất lượng đạt yêu cầu. Muốn tự động hóa cả quy trình hoặc thay đổi số nhân sự cần thiết, doanh nghiệp còn phải tính chất lượng, chi phí và phần việc vẫn cần con người.
-
-**Tốc độ hoàn thành công việc và ích lợi của sản phẩm là hai chuyện khác nhau.** Khung [SPACE](https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/) cũng lưu ý không thể chỉ nhìn lượng công việc hoàn thành để đánh giá năng suất. Các nghiên cứu này chưa cho biết học tư duy Product có tốt hơn những hướng phát triển nghề nghiệp khác hay không. Nhưng trong công việc làm sản phẩm, ngoài chuyện làm nhanh, nhóm vẫn phải quyết định tính năng nào đáng làm. Quyết định đó cần dựa vào nhu cầu thực tế của người dùng.
-
-> **Video liên quan.** [Build the Right Thing: Product Engineering (Part 1)](https://www.youtube.com/watch?v=_fHTqOs5wQA&t=943s) · Kent C. Dodds · AI Engineer · từ 15:43. Góc nhìn về việc chọn bài toán khi triển khai ngày càng nhanh.
-
-</details>
 
 ---
 
@@ -191,28 +142,11 @@ AI làm được một phần công việc chưa có nghĩa sẽ thay được n
 
 ## Nguồn tham khảo
 
-1. [WEF · The Future of Jobs Report 2025](https://www.weforum.org/publications/the-future-of-jobs-report-2025/).
-2. [WEF · Thông cáo Future of Jobs 2025](https://www.weforum.org/press/2025/01/future-of-jobs-report-2025-78-million-new-job-opportunities-by-2030-but-urgent-upskilling-needed-to-prepare-workforces/).
-3. [Stack Overflow · Developer Survey 2026 — AI data](https://survey.stackoverflow.co/2026/ai/data).
-4. [DORA · State of AI-assisted Software Development 2025](https://dora.dev/research/2025/dora-report/).
-5. [Google Cloud · Announcing the 2025 DORA Report](https://cloud.google.com/blog/products/ai-machine-learning/announcing-the-2025-dora-report).
-6. [Linear · Product Engineer — mô tả tuyển dụng](https://linear.app/careers/0c7c2e26-0a98-42cf-a47c-9a3999fb513b), đối chiếu 05/11/2026; nội dung tuyển dụng có thể thay đổi.
-7. [Linear · Careers — nguyên tắc làm việc](https://linear.app/careers), đối chiếu 05/11/2026.
-8. [PostHog · How to do product, as an engineer](https://posthog.com/handbook/engineering/product-engineering), handbook thực hành.
-9. [Zheyuan (Kevin) Cui và các tác giả · The Effects of Generative AI on High-Skilled Work](https://www.microsoft.com/en-us/research/publication/the-effects-of-generative-ai-on-high-skilled-work-evidence-from-three-field-experiments-with-software-developers/) · [Bản Management Science, 2026](https://doi.org/10.1287/mnsc.2025.00535).
-10. [METR · Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity](https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/).
-11. [METR · We are Changing our Developer Productivity Experiment Design, 02/2026](https://metr.org/blog/2026-02-24-uplift-update/).
-12. [OpenAI · Why SWE-bench Verified no longer measures frontier coding capabilities, 02/2026](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/).
-13. [OpenAI · Separating signal from noise in coding evaluations, 07/2026](https://openai.com/index/separating-signal-from-noise-coding-evaluations/).
-14. [ILO–NASK · Generative AI and Jobs: A Refined Global Index of Occupational Exposure, 05/2025](https://www.ilo.org/publications/generative-ai-and-jobs-refined-global-index-occupational-exposure).
-15. [Anthropic · Economic Index: Economic primitives, 01/2026](https://www.anthropic.com/research/anthropic-economic-index-january-2026-report).
-16. [Forsgren và cộng sự · The SPACE of Developer Productivity, 2021](https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/) · [ACM Queue](https://queue.acm.org/detail.cfm?id=3454124).
-17. [Marty Cagan · Product vs. Feature Teams, 2019](https://www.svpg.com/product-vs-feature-teams/).
-18. [Marty Cagan · The Four Big Risks, 2017](https://www.svpg.com/four-big-risks/).
-19. [Gergely Orosz · The Product-Minded Software Engineer, 2019](https://blog.pragmaticengineer.com/the-product-minded-engineer/).
-20. [Teresa Torres · Continuous Discovery](https://www.producttalk.org/glossary-discovery-continuous-discovery/).
-21. [Teresa Torres · The Product Trio](https://www.producttalk.org/product-trio/).
-22. [Drew Hoskins · How to Become a Product-Minded Engineer in the AI Era, 09/2026](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/).
-23. [Verwijs và Russo · A Theory of Scrum Team Effectiveness](https://arxiv.org/abs/2105.12439), bản sửa 2022; nghiên cứu ở cấp team.
-24. [DORA · User-centric focus](https://dora.dev/capabilities/user-centric-focus/).
-25. [DORA · Software delivery performance metrics](https://dora.dev/guides/dora-metrics/).
+1. [Marty Cagan · Product vs. Feature Teams, 2019](https://www.svpg.com/product-vs-feature-teams/).
+2. [Marty Cagan · The Four Big Risks, 2017](https://www.svpg.com/four-big-risks/).
+3. [Teresa Torres · Continuous Discovery](https://www.producttalk.org/glossary-discovery-continuous-discovery/).
+4. [Teresa Torres · The Product Trio](https://www.producttalk.org/product-trio/).
+5. [Drew Hoskins · How to Become a Product-Minded Engineer in the AI Era, 09/2026](https://productengineers.com/episodes/season2/how-to-become-a-product-minded-engineer-in-the-ai-era/).
+6. [Verwijs và Russo · A Theory of Scrum Team Effectiveness](https://arxiv.org/abs/2105.12439), bản sửa 2022; nghiên cứu ở cấp team.
+7. [DORA · User-centric focus](https://dora.dev/capabilities/user-centric-focus/).
+8. [DORA · Software delivery performance metrics](https://dora.dev/guides/dora-metrics/).

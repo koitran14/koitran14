@@ -14,7 +14,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
   // HTML essays use the handbook typography and chapter engine (TOC, study card, keywords)
   const essay = ESSAY_CATALOG.find((e) => e.slug === params.slug);
   if (essay) {
-    if (!essay.published) notFound();
+    if (!essay.published && process.env.NODE_ENV !== "development") notFound();
     return (
       <HandbookLayout>
         <HandbookPage book="notes" page={await loadPage("notes", params.slug)} engine />
