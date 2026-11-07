@@ -1,49 +1,37 @@
 ---
 name: aiph-04-product-design
-description: Học và luyện tập Chương 04 của AI Product Handbook — Product Design và UX cho sản phẩm AI (UX khi đầu ra không cố định, user flow có nhánh fallback và ngưỡng confidence, prototype sớm, design thinking như bộ lọc, human-in-the-loop và trust calibration). Dùng khi người dùng muốn học, ôn, làm quiz hoặc luyện bài tập chương 04, hoặc gõ /aiph-04-product-design.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 04 của AI Product Handbook — Product Design và UX cho sản phẩm AI. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-04-product-design.
 ---
 
 # Chương 04 · Product Design và UX cho sản phẩm AI
 
-Nguồn gốc: `content/ai-product-handbook/04.html` (đọc phần văn bản; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, mảng `terms` là thuật ngữ; hằng `LANE` chứa ba ngưỡng confidence của Hình 1). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách".
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/04.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Thiết kế quyền kiểm soát, nguồn dễ kiểm tra và luồng phục hồi khi AI sai; dùng tín hiệu đã kiểm định để điều phối, giúp người dùng tin ở mức phù hợp.
 
-- Giải thích vì sao tính năng AI được đo bằng tỷ lệ câu trả lời chấp nhận được trên tập mẫu, không phải pass/fail.
-- Thiết kế màn hình cho người dùng đánh giá, sửa, duyệt hoặc từ chối đầu ra AI.
-- Vẽ user flow có điểm nhập, nhánh fallback theo ngưỡng confidence và điểm duyệt cho dữ liệu nhạy cảm.
-- Dùng design thinking để loại chỗ không cần AI và tìm tác vụ lặp lại từ dữ liệu thật.
-- Căn chỉnh niềm tin bằng human-in-the-loop, minh bạch và cảnh báo.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **04.1 · UX khi đầu ra có thể sai:** Đánh giá chất lượng trên tập mẫu cùng kiểm thử các ràng buộc phần mềm. Phân biệt câu trả lời, nguồn và phiên bản tài liệu. Cho phép sửa, từ chối và báo lỗi.
+- **04.2 · User flow, wireframe và prototype:** Vẽ đầu vào, nhánh lỗi và đường duyệt/chuyển ca. Điều phối theo kiểm tra hoặc điểm đã kiểm định, không dùng confidence tự khai. Prototype giúp học luồng, chưa chứng minh production readiness.
+- **04.3 · Design thinking như một bộ lọc:** Lọc 1: cần AI hay quy tắc là đủ. Lọc 2: dữ liệu thực tế từ ticket và phỏng vấn. Tác vụ lặp lại, rủi ro thấp là ứng viên tốt.
+- **04.4 · Human-in-the-loop và trust calibration:** Trust calibration là niềm tin phù hợp năng lực và giới hạn. Người có thẩm quyền duyệt hành động vượt phạm vi tự động. Cho kiểm tra nguồn; chỉ hiển thị xác suất khi có ý nghĩa đã kiểm định.
 
-1. **04.1** Mỗi đầu ra AI trên màn hình nên đi kèm một cách để người dùng sửa hoặc bỏ nó. Information architecture hiển thị kết quả theo lớp kèm tín hiệu độ tin cậy.
-2. **04.2** Vẽ nhánh lỗi trước nhánh thành công; nhánh lỗi quyết định người dùng có tin sản phẩm không. Ví dụ ngưỡng: ≥ 75% hiển thị kèm nguồn, 50–75% hỏi lại người dùng, < 50% chuyển cho người (chỉ là ví dụ). Dựng prototype sớm bằng no-code hoặc gọi thẳng API.
-3. **04.3** (mục không có Ghi nhớ, tóm từ nội dung) Hai bộ lọc: IF-THEN giải được với chi phí thấp và đúng 100% → AI là thừa; thấu cảm bằng dữ liệu thật (support ticket, phỏng vấn sâu) để tìm tác vụ lặp lại như đặt lại mật khẩu, tải hóa đơn.
-4. **04.4** AI đề xuất, người quyết định, ở mọi chỗ mà một lần sai là quá đắt. Trust calibration: không quá tin mà chủ quan, không quá nghi mà bỏ dùng.
+## Cách hướng dẫn
 
-## Cách chạy skill
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-### Học
-Đi lần lượt 04.1 → 04.4. Mỗi mục: giải thích ý chính trong 3–5 câu, cho một ví dụ đời thường, rồi hỏi **một** câu kiểm tra hiểu (dạng "vì sao", không phải "là gì"). Trả lời sai → gợi ý, không đưa đáp án ngay.
+## Bài luyện
 
-### Luyện
-Chọn bài theo mục người học yếu (hoặc lần lượt). Chấm theo rubric, chỉ ra một điểm làm tốt và một điểm cần sửa, cho viết lại một lần.
+Vẽ luồng có nguồn, sửa/báo lỗi và chuyển ca; giải thích có nên hiển thị confidence không.
 
-| # | Bài tập | Rubric đạt |
-|---|---|---|
-| L1 | Lấy một tính năng (ví dụ gợi ý trả lời email cho CSKH): viết lại 3 hàng của bảng 04.1 (cách chạy, hành vi, kiểm thử) cho bản truyền thống và bản AI, rồi đặt tiêu chí kiểm thử cho bản AI. | Tiêu chí là tỷ lệ chấp nhận được trên tập mẫu có số (ví dụ "≥ 90% trên 200 email mẫu"), không phải pass/fail. |
-| L2 | Mô tả wireframe một màn hình hiển thị đầu ra AI: người dùng sửa, duyệt, từ chối ở đâu; tín hiệu độ tin cậy hiển thị thế nào. | Có đủ hành động sửa/bỏ cho mỗi đầu ra; có tín hiệu tin cậy hoặc trích nguồn; có nhãn cho biết đang làm việc với AI. |
-| L3 | Vẽ user flow (dạng danh sách bước) cho trợ lý tra cứu chính sách nội bộ với 3 phần: điểm nhập, nhánh fallback theo 3 ngưỡng của Hình 1, điểm duyệt. Thử 3 giá trị confidence 82%, 60%, 35% và nói luồng đi đâu. | 82% → hiển thị kèm nguồn; 60% → hỏi lại; 35% → chuyển cho người kèm tóm tắt ngữ cảnh, không đoán; ngưỡng được ghi là có thể chỉnh. |
-| L4 | Cho danh sách 6 yêu cầu lấy từ support ticket (đặt lại mật khẩu, tải hóa đơn, tính phí trễ hạn theo bảng giá, tóm tắt khiếu nại dài, phân loại ý định email, đổi email đăng nhập): lọc cái nào dùng quy tắc, cái nào đáng dùng AI. | Mỗi mục có lý do theo bộ lọc 1 (IF-THEN đủ chưa) và bộ lọc 2 (tần suất, lặp lại); không gắn AI cho việc tính phí theo bảng. |
-| L5 | Thiết kế trust calibration cho luồng hoàn tiền hoặc phê duyệt truy cập dữ liệu cá nhân: AI làm gì, người làm gì, cảnh báo nào hiển thị. | AI chỉ phân tích, tổng hợp, đề xuất; người quyết định; nêu cả rủi ro quá tin lẫn quá nghi và cách thiết kế chống từng cái. |
-| L6 | **Sửa bài:** sửa thiết kế "Chatbot trả lời tự động mọi câu hỏi về hoàn tiền, luôn đưa ra câu trả lời, không hiện nguồn, không có nút chuyển nhân viên". | Thêm nhánh fallback theo confidence, review checkpoint trước khi hoàn tiền, trích nguồn, nút sửa/từ chối, nhãn AI. |
+**Tiêu chí đạt:** Phân biệt điểm tự khai với điểm hiệu chỉnh; quyền kiểm soát cụ thể và xử lý yêu cầu ngoài phạm vi.
 
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `04.html` (trường `q`, `o`, `a`, `ex`, `why`), hỏi từng câu, xáo thứ tự đáp án. Sau đó thêm 2 câu tình huống tự soạn (ví dụ: sau ra mắt người dùng chấp nhận mọi gợi ý AI mà không đọc, đó là lỗi calibration nào và sửa ra sao; model cập nhật làm câu trả lời cho cùng câu hỏi thay đổi, test pass/fail cũ còn dùng được không). Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục; mục 04.3 có thể không có câu trong quiz, khi đó dùng câu tình huống để phủ).
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-## Kết thúc buổi
+## Kết thúc
 
-Tóm tắt 3 điều người học đã nắm, 1 điều cần ôn, và gợi ý chương tiếp theo: `/aiph-05-vision-strategy` (Product Vision, Strategy & Positioning).
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 05 · Product Vision, Strategy & Positioning.

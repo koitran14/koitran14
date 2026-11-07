@@ -1,50 +1,38 @@
 ---
 name: aiph-02-problem-discovery
-description: Học và luyện tập Chương 02 của AI Product Handbook — Problem Discovery và nghiên cứu người dùng (bẫy công nghệ đi tìm bài toán, launch readiness, Jobs to Be Done, persona cho sản phẩm AI, problem statement). Dùng khi người dùng muốn học, ôn, làm quiz hoặc luyện bài tập chương 02, hoặc gõ /aiph-02-problem-discovery.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 02 của AI Product Handbook — Problem Discovery và nghiên cứu người dùng. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-02-problem-discovery.
 ---
 
 # Chương 02 · Problem Discovery và nghiên cứu người dùng
 
-Nguồn gốc: `content/ai-product-handbook/02.html` (đọc phần văn bản; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, mảng `terms` là thuật ngữ). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách".
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/02.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Tránh bẫy “có AI rồi mới đi tìm bài toán”: đóng khung vấn đề, dùng Jobs to Be Done, persona, customer journey, và viết problem statement trước khi nghĩ tới giải pháp.
 
-- Quyết định được khi nào **không** nên dùng AI (quy tắc IF-THEN là đủ).
-- Đặt ngưỡng launch readiness trên eval set ngay từ lúc discovery.
-- Phân tích một việc theo JTBD: chức năng, cảm xúc, xã hội.
-- Viết persona có thêm tech literacy và trust in AI; đánh dấu pain point trên journey.
-- Viết problem statement không chứa tên giải pháp, rồi xếp cơ hội vào Efficiency / Personalization / Innovation.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **02.1 · Chọn công nghệ trước khi hiểu vấn đề:** Đừng chọn công nghệ trước rồi mới tìm vấn đề. Ba câu hỏi: dữ liệu, loại bài toán, ngưỡng lỗi. Quy tắc cố định đủ dùng thì không cần AI.
+- **02.2 · Chuẩn bị điều kiện ra mắt ngay từ giai đoạn khám phá vấn đề:** Eval là một điều kiện phát hành, không thay kiểm tra quyền truy cập và vận hành. Bộ mẫu có ca thông thường, ca khó và tiêu chí chấm rõ. Soạn eval sớm giúp kiểm tra lại giả định về vấn đề.
+- **02.3 · Jobs to Be Done:** JTBD: khách hàng thuê sản phẩm để làm một việc. Ba mặt: chức năng, cảm xúc, xã hội. AI giải lại các việc cũ theo cách mới: hội thoại, IDP, RAG.
+- **02.4 · Persona, customer journey và pain point:** Persona dựa trên bằng chứng; kiểm tra mức độ quen thuộc với công nghệ và niềm tin vào AI. Phỏng vấn về lần làm việc gần nhất, tránh gợi ý giải pháp. Quan sát quy trình và ghi giả thuyết cần kiểm chứng tiếp.
+- **02.5 · Problem statement và cơ hội tạo giá trị:** Công thức: ai, gặp khó gì, hậu quả, nguyên nhân. Không nhắc giải pháp trong problem statement. Ba nhóm cơ hội: Efficiency, Personalization, Innovation.
 
-1. **02.1** Ba câu hỏi đóng khung: dữ liệu có sẵn và đủ tốt? cần dự đoán/sinh nội dung? người dùng chịu sai tới đâu? IF-THEN giải được với chi phí thấp, đúng 100% → dùng AI là lãng phí.
-2. **02.2** Ngưỡng ra mắt đặt **trước** khi build, đo trên eval set có edge case, kèm cơ chế xử lý ngoại lệ.
-3. **02.3** Hỏi "người dùng đang cố làm xong việc gì", không hỏi "muốn tính năng gì".
-4. **02.4** Hai người cùng chức danh có thể cần hai thiết kế khác nhau nếu mức tin vào AI khác nhau.
-5. **02.5** Công thức: *[Người dùng] gặp khó khăn khi [tác vụ, điểm đau], dẫn tới [hậu quả, chi phí], vì [nguyên nhân gốc].* Thấy chữ "chatbot" trong problem statement → viết lại.
+## Cách hướng dẫn
 
-## Cách chạy skill
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-### Học
-Đi lần lượt 02.1 → 02.5. Mỗi mục: giải thích ý chính trong 3–5 câu, cho một ví dụ đời thường, rồi hỏi **một** câu kiểm tra hiểu (dạng "vì sao", không phải "là gì"). Trả lời sai → gợi ý, không đưa đáp án ngay.
+## Bài luyện
 
-### Luyện
-Chọn bài theo mục người học yếu (hoặc lần lượt). Chấm theo rubric, chỉ ra một điểm làm tốt và một điểm cần sửa, cho viết lại một lần.
+Viết năm câu hỏi phỏng vấn về lần gần nhất nhân viên tra quy trình, rồi soạn problem statement.
 
-| # | Bài tập | Rubric đạt |
-|---|---|---|
-| L1 | Phân loại 6 tình huống: cần AI hay quy tắc là đủ (tự nghĩ tình huống theo ngành của người học, ví dụ: khóa tài khoản sau 5 lần sai, phân loại email theo ý định, tính VAT, tóm tắt biên bản họp…). | Mỗi câu nêu đúng loại **và** lý do dựa trên 3 câu hỏi đóng khung. |
-| L2 | Cho một tính năng AI người học đang nghĩ tới: viết tiêu chí launch readiness (ngưỡng %, 3 edge case, cơ chế xử lý ngoại lệ). | Ngưỡng là con số đặt trước; edge case cụ thể; có đường thoát khi AI sai. |
-| L3 | Phân tích JTBD một việc (ví dụ: kế toán đối soát hóa đơn cuối tháng) thành 3 mặt + so cách truyền thống với cách có AI. | Đủ 3 mặt, mặt cảm xúc/xã hội không bị bỏ trống hoặc gượng ép. |
-| L4 | Viết 2 persona cùng chức danh nhưng khác trust in AI; nêu thiết kế khác nhau ở đâu. | Có tech literacy, trust in AI, độ khắt khe khi AI sai; khác biệt thiết kế cụ thể (ví dụ: duyệt trước khi gửi vs tự gửi). |
-| L5 | Viết problem statement theo công thức cho một vấn đề thật; sau đó xếp cơ hội vào 1 trong 3 nhóm. | Không có tên giải pháp/công nghệ; có hậu quả đo được; nguyên nhân gốc rõ. |
-| L6 | **Sửa bài:** viết lại "Chúng ta cần một chatbot RAG cho nhân viên" thành problem statement đúng. | Bỏ giải pháp, thêm ai/khó gì/hậu quả/nguyên nhân. |
+**Tiêu chí đạt:** Không dẫn dắt bằng tên giải pháp; hỏi hành vi thật, nguồn và hậu quả, nêu giả thuyết cần kiểm chứng.
 
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `02.html` (trường `q`, `o`, `a`, `ex`, `why`), hỏi từng câu, xáo thứ tự đáp án. Sau đó thêm 2 câu tình huống tự soạn. Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục).
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-## Kết thúc buổi
+## Kết thúc
 
-Tóm tắt 3 điều người học đã nắm, 1 điều cần ôn, và gợi ý chương tiếp theo: `/aiph-03-market` (Market Research & Opportunity Assessment).
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 03 · Market Research & Opportunity Assessment.

@@ -28,21 +28,21 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 15</div>
   <h1>Chiến lược nâng cao: <i>nền tảng và danh mục</i></h1>
-  <p class="dek">Khi có nhiều sản phẩm AI: platform strategy với năng lực dùng chung, bản đồ dịch vụ AI trên AWS, và công thức điểm ưu tiên cân giá trị với chi phí, latency, độ phức tạp.</p>
+  <p class="dek">Khi nào đầu tư các thành phần và dịch vụ dùng chung, đo giá trị cho đội ứng dụng và kiểm tra chi phí vận hành; dùng điểm ưu tiên như công cụ thảo luận có giới hạn.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 15 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Ở quy mô danh mục, lợi thế đến từ năng lực dùng chung: mỗi đội không tự dựng RAG, guardrails, gateway riêng.</div>
+  <div class="idea"><small>Ý chính của chương</small>Khi có nhiều sản phẩm AI, doanh nghiệp có thể tái sử dụng các năng lực như RAG, guardrails và gateway để giảm phần việc trùng lặp giữa các đội.</div>
   <section id="s1">
     <span class="num">15.1</span>
     <h2>Platform strategy</h2>
     <p class="gist">Chuẩn hóa các lớp RAG, cache, guardrails, gateway một lần để nhiều sản phẩm dùng chung.</p>
-<p>Khi doanh nghiệp có nhiều dòng sản phẩm dùng AI, xây giải pháp riêng lẻ cho từng đội gây lãng phí. Platform strategy là dựng các shared AI capabilities: lớp xử lý RAG, prompt cache, hệ thống guardrails, gateway kết nối model. Báo cáo nguồn nêu ba lợi ích: tận dụng chiết khấu theo khối lượng từ nhà cung cấp cloud, tránh vendor lock-in vì gateway cho phép đổi nhà cung cấp, và rút ngắn thời gian ra mắt các sản phẩm sau (báo cáo ước tới 70%, con số chưa kiểm chứng).</p>
-    <p>Rủi ro ngược lại là làm platform quá sớm, khi chưa có sản phẩm nào chứng minh được giá trị. Platform tốt thường rút ra từ hai, ba sản phẩm đã chạy, chứ không vẽ trên giấy trước.</p>
-    <div class="take"><small>Ghi nhớ</small>Rút platform từ sản phẩm đã chạy, đừng xây platform rồi mới đi tìm sản phẩm.</div>
+<p>Khi doanh nghiệp có nhiều dòng sản phẩm dùng AI, xây giải pháp riêng lẻ cho từng đội gây lãng phí. Platform strategy là dựng các shared AI capabilities: lớp xử lý RAG, prompt cache, hệ thống guardrails, gateway kết nối model. Báo cáo nguồn nêu ba lợi ích: tận dụng chiết khấu theo khối lượng từ nhà cung cấp cloud, giảm một phần phụ thuộc tích hợp nhờ gateway và tái sử dụng các năng lực đã kiểm chứng. Vẫn có chi phí đổi schema, công cụ, dữ liệu và kết quả đánh giá; không có tỷ lệ tiết kiệm chung cho mọi tổ chức.</p>
+    <p>Rủi ro ngược lại là làm platform quá sớm, khi chưa có sản phẩm nào chứng minh được giá trị. Một nền tảng dùng chung thường có cơ sở rõ hơn khi được phát triển từ nhu cầu đã quan sát ở hai hoặc ba sản phẩm đang vận hành.</p>
+    <div class="take"><small>Ghi nhớ</small>Nên phát triển nền tảng dùng chung từ những nhu cầu đã được kiểm chứng ở sản phẩm thực tế, thay vì đầu tư trước khi xác định rõ nhu cầu.</div>
+  <p>Các đội phát triển ứng dụng là người sử dụng trực tiếp của nền tảng dùng chung. Chọn hai nhu cầu lặp lại đã được quan sát, ví dụ quản lý quyền và trace, rồi đo thời gian tích hợp, adoption nội bộ, lỗi vận hành và chi phí hỗ trợ. Cần chủ sở hữu, tài liệu, version, SLA phù hợp và khả năng để đội ứng dụng lựa chọn giải pháp khác khi platform chưa đáp ứng. Nếu chi phí vận hành chung vượt phần tiết kiệm, giảm phạm vi hoặc dừng.</p>
   </section>
-
   <section id="s2">
     <span class="num">15.2</span>
     <h2>Bản đồ dịch vụ AI trên AWS</h2>
@@ -58,8 +58,8 @@
   <section id="s3">
     <span class="num">15.3</span>
     <h2>Ưu tiên danh mục</h2>
-    <p class="gist">Một tính năng AI chỉ lên production khi giá trị tạo ra vượt xa TCO và rủi ro chấp nhận được.</p>
-<p>Báo cáo nguồn đưa ra một công thức điểm ưu tiên cho danh mục:</p>
+    <p class="gist">Trước khi triển khai một tính năng AI, cần đánh giá giá trị kỳ vọng so với tổng chi phí sở hữu (TCO) và xác định liệu mức rủi ro có chấp nhận được hay không.</p>
+<p>Công thức dưới đây là heuristic minh họa để thảo luận, không phải chuẩn ngành hay phép tính lợi nhuận:</p>
     <div class="formula">Điểm ưu tiên = (Business Value × Adoption) / (Inference Cost × Latency × Technical Complexity)</div>
     <figure>
       <div class="fig">
@@ -68,14 +68,14 @@
       </div>
       <figcaption><b>Hình 1</b>Công thức chỉ để so sánh tương đối giữa các ứng viên, không có ý nghĩa tuyệt đối.</figcaption>
     </figure>
-    <p>Công thức nhân chia như vậy rất nhạy: một yếu tố chấm 1 ở mẫu số có thể đẩy điểm lên gấp nhiều lần. Hãy dùng công thức để mở thảo luận, đừng để nó quyết định thay người.</p>
-    <div class="take"><small>Ghi nhớ</small>Điểm số giúp đặt câu hỏi đúng; quyết định vẫn cần người chịu trách nhiệm.</div>
+    <p>Công thức nhân chia như vậy rất nhạy: một yếu tố chấm 1 ở mẫu số có thể đẩy điểm lên gấp nhiều lần. Hãy dùng kết quả tính điểm để thảo luận về các giả định, thay vì coi đó là căn cứ duy nhất để quyết định.</p>
+    <div class="take"><small>Ghi nhớ</small>Điểm số hỗ trợ thảo luận; người quyết định vẫn cần xem xét giả định, dữ liệu và những rủi ro chưa thể hiện trong phép tính.</div>
   </section>
 
   <div class="vids" data-videos="15"></div>
   <a class="next-ch" href="/blog/ai-product-handbook/16"><span><small>Chương tiếp theo</small><b>16 · Product Management Glossary</b></span><span>→</span></a>
 
-  <div class="end"><p>Mức rút ngắn 70% thời gian ra mắt ở mục 15.1 và công thức điểm ưu tiên ở mục 15.3 lấy từ báo cáo nguồn, chưa được kiểm chứng.</p></div>
+  <div class="end"><p>Không dùng tỷ lệ tiết kiệm chung để dự báo lợi ích platform. Công thức điểm là minh họa; kiểm tra giả định, độ nhạy và TCO trước khi quyết định.</p></div>
 </article>
 
 <script src="figs.js"></script>
@@ -102,9 +102,9 @@ window.CH = {
    "n": "15.1",
    "t": "Platform strategy",
    "sum": [
-    "Shared capabilities: RAG, cache, guardrails, gateway.",
-    "Lợi ích: chiết khấu, tránh lock-in, ra mắt nhanh hơn.",
-    "Đừng làm platform trước khi có sản phẩm chứng minh giá trị."
+    "Rút các thành phần và dịch vụ dùng chung từ nhu cầu lặp lại đã có bằng chứng.",
+    "Đo thời gian tích hợp, adoption nội bộ và chi phí vận hành platform.",
+    "Gateway giảm một phần phụ thuộc, không loại bỏ lock-in."
    ],
    "terms": [
     "platform",
@@ -132,9 +132,9 @@ window.CH = {
    "n": "15.3",
    "t": "Ưu tiên danh mục",
    "sum": [
-    "Tử số: business value × adoption.",
-    "Mẫu số: inference cost × latency × complexity.",
-    "Dùng để so sánh tương đối, mở thảo luận."
+    "Công thức điểm chỉ là heuristic minh họa.",
+    "Điểm nhạy với thang và phép nhân; không tự đo lợi nhuận.",
+    "Thử thay giả định và đối chiếu TCO, rủi ro trước quyết định."
    ],
    "terms": [
     "tco",
@@ -147,53 +147,53 @@ window.CH = {
  "terms": {
   "platform": [
    "platform strategy",
-   "Xây năng lực dùng chung (RAG, guardrails, gateway, cache) để nhiều sản phẩm dùng lại thay vì mỗi đội tự làm.",
-   "Làm chung một bếp trung tâm cho cả chuỗi nhà hàng."
+   "Xây các thành phần và dịch vụ dùng chung (RAG, guardrails, gateway, cache) để nhiều sản phẩm dùng lại thay vì mỗi đội tự làm.",
+   "Ví dụ: nhiều đội ứng dụng dùng chung hệ thống quản lý quyền, gateway và trace đã được kiểm chứng."
   ],
   "lockin": [
    "vendor lock-in",
    "Phụ thuộc vào một nhà cung cấp tới mức đổi sang bên khác rất tốn kém.",
-   "Mua máy in chỉ nhận mực chính hãng."
+   "Ví dụ: đổi nhà cung cấp đòi hỏi chuyển dữ liệu, chỉnh tích hợp công cụ và đánh giá lại chất lượng."
   ],
   "gateway": [
    "model gateway",
-   "Lớp trung gian quản lý mọi lời gọi model: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.",
-   "Tổng đài: mọi cuộc gọi đi qua đây, đường này bận thì nối đường khác."
+   "Lớp trung gian quản lý các lời gọi mô hình, bao gồm khóa API, giới hạn tần suất, cân bằng tải và chính sách thử lại hoặc chuyển sang nhà cung cấp dự phòng.",
+   "Ví dụ: tập trung các lời gọi mô hình để áp dụng giới hạn tần suất và chính sách thử lại hoặc chuyển sang phương án dự phòng."
   ],
   "cache": [
    "prompt caching",
-   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
-   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+   "Tái sử dụng phần tính toán cho tiền tố prompt trùng nhau, theo điều kiện của dịch vụ. Vẫn gọi mô hình sinh đầu ra; khác response caching và embedding caching.",
+   "Ví dụ: tái sử dụng phần xử lý system prompt cố định, rồi sinh câu trả lời mới."
   ],
   "fm": [
    "foundation model",
-   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
-   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+   "Mô hình được huấn luyện trên phạm vi dữ liệu rộng và có thể được điều chỉnh hoặc dùng lại cho nhiều tác vụ. Các foundation model hiện đại chủ yếu dựa trên deep learning.",
+   "Ví dụ: dùng một mô hình nền cho nhiều tính năng thay vì huấn luyện từng model từ đầu."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "tco": [
    "TCO",
    "Total Cost of Ownership: tổng chi phí sở hữu gồm hạ tầng, dữ liệu, gán nhãn, nhân sự, kiểm định, tuân thủ.",
-   "Giá xe cộng xăng, bảo hiểm, bảo dưỡng và chỗ đậu."
+   "Ví dụ: cộng các khoản hạ tầng, dữ liệu, nhân sự và vận hành trong cùng kỳ, tránh tính trùng chi phí."
   ],
   "adoption": [
    "adoption",
    "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
-   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+   "Ví dụ: đo tỷ lệ nhân viên thuộc nhóm mục tiêu thực sự dùng trợ lý trong công việc."
   ],
   "inference": [
    "inference cost",
-   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
-   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+   "Chi phí mỗi lần gọi mô hình để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Ví dụ: mỗi lần trợ lý xử lý câu hỏi và sinh câu trả lời có thể phát sinh phí token hoặc chi phí tính toán."
   ],
   "latency": [
    "latency",
    "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
-   "Thời gian chờ món sau khi gọi."
+   "Ví dụ: đo thời gian từ khi nhân viên gửi câu hỏi đến khi nhận phản hồi; cần nói rõ đang đo token đầu tiên hay toàn bộ câu trả lời."
   ]
  },
  "alias": {
@@ -245,64 +245,64 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "multi",
-   "q": "Năng lực nào thường được dùng chung trong platform strategy?",
+   "q": "Dấu hiệu nào ủng hộ đầu tư platform dùng chung?",
    "o": [
-    "Lớp xử lý RAG",
-    "Prompt cache",
-    "Guardrails",
-    "Logo từng sản phẩm"
+    "Chỉ cần dự báo sẽ có nhiều sản phẩm sau này",
+    "Có cách đo thời gian tích hợp và chi phí hỗ trợ",
+    "Có người chịu trách nhiệm tài liệu, version và vận hành",
+    "Nhiều đội có nhu cầu lặp lại đã được quan sát"
    ],
    "a": [
-    0,
     1,
-    2
+    2,
+    3
    ],
-   "ex": "Gateway cũng là một năng lực dùng chung."
+   "ex": "Platform cần nhu cầu và mô hình vận hành thực tế. Dự báo đơn thuần dễ dẫn tới xây quá sớm."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 0,
    "type": "one",
-   "q": "Gateway dùng chung giúp tránh rủi ro nào?",
+   "q": "Gateway dùng chung giảm được gì và không tự giải quyết gì?",
    "o": [
-    "Hallucination",
-    "Vendor lock-in",
-    "Bias",
-    "Drift"
+    "Loại bỏ mọi vendor lock-in",
+    "Giảm một phần công tích hợp; vẫn cần đổi schema, công cụ, dữ liệu và kết quả đánh giá khi thay đổi nhà cung cấp",
+    "Bảo đảm mô hình dự phòng có chất lượng bằng mô hình chính",
+    "Thay toàn bộ quy trình bảo mật"
    ],
    "a": 1,
-   "ex": "Đổi nhà cung cấp chỉ cần đổi ở gateway."
+   "ex": "Gateway là lớp trừu tượng có ích nhưng không xóa phụ thuộc về tính năng, dữ liệu, giá và chất lượng."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Dịch vụ AWS nào chuyên trích xuất dữ liệu từ tài liệu scan?",
+   "q": "Tài liệu scan cần trích văn bản trước khi index. Dịch vụ nào trong ví dụ phù hợp bước OCR?",
    "o": [
-    "Amazon Polly",
     "Amazon Textract",
-    "Amazon Lex",
-    "Amazon Macie"
+    "Amazon Macie",
+    "Amazon Polly",
+    "Amazon Lex"
    ],
-   "a": 1,
-   "ex": "Textract là dịch vụ IDP."
+   "a": 0,
+   "ex": "Textract hỗ trợ trích văn bản/cấu trúc tài liệu. Polly là text-to-speech; Lex là hội thoại; Macie phát hiện dữ liệu nhạy cảm trong S3."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 2,
    "type": "one",
-   "q": "Trong công thức điểm ưu tiên, yếu tố nào nằm ở tử số?",
+   "q": "Công thức điểm danh mục cho tính năng A cao hơn B. Kết luận nào có cơ sở?",
    "o": [
-    "Inference cost và latency",
-    "Business value và adoption",
-    "Technical complexity",
-    "Tất cả"
+    "Kiểm giả định, thang điểm, độ nhạy và TCO trước quyết định",
+    "A chắc chắn có ROI cao hơn",
+    "A phải triển khai trước bất kể rủi ro",
+    "B không cần nghiên cứu tiếp"
    ],
-   "a": 1,
-   "ex": "Chi phí, latency và độ phức tạp nằm ở mẫu số."
+   "a": 0,
+   "ex": "Đây là heuristic minh họa, không đo lợi nhuận và rất nhạy với thang chấm. Dùng nó để mở thảo luận, không tự chốt thứ tự."
   }
  ]
 };

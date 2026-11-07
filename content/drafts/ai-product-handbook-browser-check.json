@@ -1,0 +1,139 @@
+{
+  "chapters": [
+    {
+      "chapter": "00",
+      "sections": 4,
+      "quiz": 4,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "01",
+      "sections": 4,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "02",
+      "sections": 5,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "03",
+      "sections": 4,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "04",
+      "sections": 4,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "05",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "06",
+      "sections": 4,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "07",
+      "sections": 4,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "08",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "09",
+      "sections": 4,
+      "quiz": 6,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "10",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "11",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "12",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "13",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "14",
+      "sections": 4,
+      "quiz": 5,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "15",
+      "sections": 3,
+      "quiz": 4,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "16",
+      "sections": 3,
+      "quiz": 3,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "17",
+      "sections": 3,
+      "quiz": 3,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "18",
+      "sections": 2,
+      "quiz": 3,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "19",
+      "sections": 3,
+      "quiz": 4,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "20",
+      "sections": 3,
+      "quiz": 3,
+      "answerFeedback": "OK"
+    },
+    {
+      "chapter": "21",
+      "sections": 4,
+      "quiz": 4,
+      "answerFeedback": "OK"
+    }
+  ],
+  "widgetChecks": 4,
+  "mobileOverflow": false,
+  "pageErrors": []
+}

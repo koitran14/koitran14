@@ -1,50 +1,37 @@
 ---
 name: aiph-12-product-economics
-description: Học và luyện tập Chương 12 của AI Product Handbook — Kinh tế học của sản phẩm AI (chi phí biên không về 0, cost per successful task, TCO, ba cách tối ưu token, build vs. buy vs. partner, thu nhập AI PM). Dùng khi người dùng muốn học, ôn, làm quiz, tính unit economics hoặc luyện bài tập chương 12, hoặc gõ /aiph-12-product-economics.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 12 của AI Product Handbook — Kinh tế học của sản phẩm AI. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-12-product-economics.
 ---
 
 # Chương 12 · Kinh tế học của sản phẩm AI
 
-Nguồn gốc: `content/ai-product-handbook/12.html` (đọc phần văn bản; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, mảng `terms` là thuật ngữ, hàm `kpu()` là mô hình chi phí của Hình 1 với giá trị mặc định 0,01 USD/lần gọi, 70% dùng được, 1,5 lần gọi/tác vụ). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách".
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/12.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Tách chi phí thành phần khỏi chỉ số tổng hợp; tính chi phí mỗi tác vụ thành công, phân biệt các loại cache, cân nhắc giữa tự xây dựng, mua dịch vụ và hợp tác và thiết kế giá bán.
 
-- Giải thích vì sao chi phí biên của AI không về 0 như SaaS thường.
-- Tính cost per successful task và phân biệt nó với giá mỗi lần gọi API.
-- Liệt kê bốn thành phần chi phí: inference, cost per successful task, chi phí ngữ cảnh, TCO.
-- Chọn cách tối ưu token phù hợp (compression, caching, routing) và biết rủi ro chất lượng của routing.
-- Ra quyết định build / buy / partner theo giai đoạn sản phẩm.
-- Đọc bảng lương AI PM như tín hiệu thị trường, không phải số chính xác.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **12.1 · Chi phí thành phần và chi phí mỗi tác vụ:** Tách chi phí sử dụng mô hình, dữ liệu/ứng dụng và con người/vận hành. TCO là tổng; cost/task là tỷ số, không cộng như các khoản riêng. Tính cả chi phí ca lỗi và thử lại, chỉ chia cho số tác vụ đạt chuẩn.
+- **12.2 · Giảm chi phí mà vẫn đạt chất lượng:** Prompt cache khác response cache và embedding cache. Response cache cần phân quyền, version và hạn dùng. Compression và routing đều cần eval và đo tổng chi phí.
+- **12.3 · Build, buy và partner:** Build có nhiều mức: ứng dụng, self-host, huấn luyện. Managed API phù hợp khi yêu cầu dữ liệu và tính năng cho phép. Partner cần thỏa thuận trách nhiệm, quyền và phương án chuyển đổi hoặc chấm dứt hợp tác.
+- **12.4 · Giá bán và biên đóng góp:** Giá theo seat, tác vụ hoặc gói cần rõ hạn mức và trường hợp lỗi. Biên đóng góp = doanh thu trừ biến phí phục vụ đã định. LTV và CAC cần cùng giả định, phạm vi và thời gian.
 
-1. **12.1** Mỗi truy vấn là một hóa đơn nhỏ; sản phẩm được yêu thích vẫn có thể lỗ. Công thức Hình 1: **chi phí mỗi tác vụ thành công = giá mỗi lần gọi × số lần gọi mỗi tác vụ ÷ tỷ lệ dùng được** (mặc định: 0,01 × 1,5 ÷ 0,7 ≈ 0,0214 USD, gấp 2,1× giá một lần gọi). Đo chi phí trên mỗi tác vụ thành công, không phải trên mỗi lần gọi API.
-2. **12.2** Ba cách cộng dồn được: prompt compression, embedding/prompt caching, model routing. CSKH nhiều câu lặp lại → cache thường hiệu quả nhất với ít công sức nhất. Routing cần eval để model nhỏ không làm tụt chất lượng ở câu khó bị phân loại nhầm là dễ.
-3. **12.3** Buy/partner (ví dụ Amazon Bedrock) cho validation, POC, tính năng không phải lợi thế cốt lõi. Build (ví dụ model mã nguồn mở trên SageMaker AI) khi cần kiểm soát dữ liệu, tùy biến trọng số, lưu lượng rất lớn; tốn CapEx và cần đội MLOps. Bắt đầu bằng buy, đo lưu lượng và chi phí thật, rồi mới cân nhắc build phần ổn định và tốn tiền nhất.
-4. **12.4** Số lương (Mỹ: ZipRecruiter TB 159.405 USD, Glassdoor trung vị 200.000 USD; Bluecoders Pháp trung vị 60.000 EUR trên mẫu chỉ 5 hợp đồng) chưa kiểm chứng. Thông điệp: thị trường trả cao cho người nối được sản phẩm và kỹ thuật.
+## Cách hướng dẫn
 
-## Cách chạy skill
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-### Học
-Đi lần lượt 12.1 → 12.4. Mỗi mục: giải thích ý chính trong 3–5 câu, cho một ví dụ đời thường, rồi hỏi **một** câu kiểm tra hiểu (dạng "vì sao", không phải "là gì"). Ở 12.1, cho người học tự tính số mặc định của Hình 1 trước khi đưa công thức. Trả lời sai → gợi ý, không đưa đáp án ngay.
+## Bài luyện
 
-### Luyện
-Chọn bài theo mục người học yếu (hoặc lần lượt). Chấm theo rubric, chỉ ra một điểm làm tốt và một điểm cần sửa, cho viết lại một lần. Số trong bài là giả định, nói rõ với người học.
+Tính cost/success, biên đóng góp và độ nhạy khi lượng dùng tăng; chọn build/buy/partner theo ràng buộc.
 
-| # | Bài tập | Rubric đạt |
-|---|---|---|
-| L1 | **Unit economics.** Trợ lý AI bán gói 10 USD/người/tháng, mỗi người làm 300 tác vụ/tháng, dùng tham số mặc định Hình 1 (0,01 USD; 70%; 1,5 lần gọi). (a) Tính chi phí mỗi tác vụ thành công và chi phí model mỗi người/tháng. (b) Biên lợi nhuận gộp trên chi phí model là bao nhiêu? (c) Thêm cache: 40% lần gọi trúng cache, coi như 0 đồng → giá gọi hiệu dụng 0,006 USD; tính lại. (d) Thêm routing nhưng tỷ lệ dùng được tụt còn 60%; tính lại và kết luận. | (a) ≈ 0,0214 USD; ≈ 6,43 USD/người. (b) ≈ 36%. (c) ≈ 3,86 USD, biên ≈ 61%. (d) 0,006 × 1,5 ÷ 0,6 = 0,015 → 4,50 USD, biên 55%: routing làm *xấu* đi nếu không eval. Trình bày công thức từng bước. |
-| L2 | So hai model: A 0,004 USD/lần gọi, dùng được 50%, 2 lần gọi/tác vụ; B 0,01 USD/lần gọi, 90%, 1,1 lần gọi. Model nào rẻ hơn tính trên tác vụ thành công? | A = 0,016; B ≈ 0,0122 → B rẻ hơn dù giá gọi gấp 2,5×. Nêu đúng bài học "giá mỗi lần gọi rẻ chưa chắc tác vụ rẻ". |
-| L3 | Liệt kê TCO cho một trợ lý tra quy trình nội bộ, xếp vào bốn thành phần chi phí của 12.1. | Có ít nhất một mục cho mỗi thành phần; TCO có cả gán nhãn, nhân sự, kiểm định an toàn, rủi ro pháp lý, không chỉ hạ tầng. |
-| L4 | Cho hệ thống CSKH phần mềm kế toán: chọn thứ tự áp dụng compression / caching / routing, kèm chỉ số cần theo dõi để biết có làm tụt chất lượng. | Cache đi trước (nhiều câu lặp lại); routing có eval trên câu khó; nêu chỉ số chất lượng song song với chi phí. |
-| L5 | Ba tình huống: (a) startup đang POC, (b) ngân hàng cần dữ liệu không rời hạ tầng, lưu lượng hàng triệu lượt/ngày đã ổn định, (c) tính năng tóm tắt email không phải lợi thế cốt lõi. Build, buy hay partner? | (a) buy, (b) cân nhắc build cho phần ổn định, (c) buy/partner; lý do theo giai đoạn, kiểm soát dữ liệu, quy mô, năng lực MLOps. |
-| L6 | **Sửa bài:** "Chi phí API chỉ 0,002 USD/lần gọi nên sản phẩm gần như miễn phí khi scale; ta sẽ tự host model ngay từ POC để tiết kiệm; lương AI PM ở Pháp chắc chắn là 60.000 EUR." Viết lại. | Đổi sang cost per successful task + TCO; POC thì buy trước; số lương là tín hiệu, mẫu 5 hợp đồng. |
+**Tiêu chí đạt:** Tính cả ca lỗi; không cộng TCO với thành phần; cùng kỳ và phạm vi; phân biệt prompt/response/embedding cache và OpEx/CapEx.
 
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `12.html` (trường `q`, `o`, `a`, `ex`), hỏi từng câu, xáo thứ tự đáp án. Sau đó thêm 2 câu tình huống tự soạn (ví dụ: lưu lượng tăng gấp 3 thì chi phí biên của SaaS và của AI khác nhau thế nào; đội đề xuất routing toàn bộ sang model nhỏ để giảm 70% chi phí thì PM hỏi lại gì). Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục, 0 = 12.1).
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-## Kết thúc buổi
+## Kết thúc
 
-Tóm tắt 3 điều người học đã nắm, 1 điều cần ôn, và gợi ý chương tiếp theo: `/aiph-13-risk-governance` (AI Product Risk & Governance).
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 13 · AI Product Risk & Governance.

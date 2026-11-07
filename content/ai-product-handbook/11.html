@@ -17,46 +17,41 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần IV / 11</div>
   <h1>Ra mắt, adoption <i>và tăng trưởng</i></h1>
-  <p class="dek">Đưa AI từ POC ra thật: khoanh phạm vi tự động hóa, guardrails cho handoff, chọn RAG hay fine-tuning khi ra mắt, ba cơ chế UX giúp người dùng chấp nhận, và đo tăng trưởng bằng A/B test, AARRR.</p>
+  <p class="dek">Khoanh phạm vi và quyền hành động, xử lý handoff, chọn cách sửa theo nguyên nhân và thiết kế A/B test với chỉ số chính cùng điều kiện dừng.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 11 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Khi ra mắt AI, hạ tầng chưa phải phần khó nhất. Khó nhất là giữ người dùng tiếp tục dùng một hệ thống đôi khi trả lời không nhất quán.</div>
+  <div class="idea"><small>Ý chính của chương</small>Khi ra mắt sản phẩm AI, cần chuẩn bị cả hạ tầng lẫn trải nghiệm sử dụng. Người dùng cần hiểu giới hạn của hệ thống và được hỗ trợ khi câu trả lời không nhất quán.</div>
   <section id="s1">
     <span class="num">11.1</span>
     <h2>Khoanh phạm vi và handoff</h2>
-    <p class="gist">AI xử lý trọn những việc lặp lại, rủi ro thấp; việc nhạy cảm thì thu ngữ cảnh rồi chuyển cho người.</p>
-<p>Báo cáo nguồn lấy ví dụ trợ lý AI chăm sóc khách hàng cho một phần mềm kế toán doanh nghiệp. Bước đầu là phân tích lịch sử ticket để tìm việc lặp lại, rủi ro thấp, như hướng dẫn đặt lại mật khẩu hay tra và tải hóa đơn GTGT. Những việc này giao cho AI xử lý trọn vẹn.</p>
-    <p>Với yêu cầu nhạy cảm như khiếu nại sai lệch số liệu tài chính hay yêu cầu hoàn tiền, guardrails chặn AI xử lý trực tiếp. AI thu ngữ cảnh, tóm tắt sự cố, rồi handoff cho nhân viên mà người dùng không phải nhập lại thông tin.</p>
+    <p class="gist">Xác định rõ những tác vụ lặp lại, ít rủi ro mà hệ thống được phép xử lý; với yêu cầu nhạy cảm, thu thập thông tin cần thiết rồi chuyển cho người có thẩm quyền.</p>
+<p>Báo cáo nguồn lấy ví dụ trợ lý AI chăm sóc khách hàng cho một phần mềm kế toán doanh nghiệp. Bước đầu là phân tích lịch sử ticket để tìm việc lặp lại, rủi ro thấp, như hướng dẫn đặt lại mật khẩu hay tra và tải hóa đơn GTGT. AI có thể hỗ trợ hiểu yêu cầu và gọi quy trình sau khi ứng dụng đã xác thực, kiểm tra quyền truy cập và validate tham số; các thao tác rõ quy tắc không cần model quyết định.</p>
+    <p>Với yêu cầu nhạy cảm như khiếu nại sai lệch số liệu tài chính hay yêu cầu hoàn tiền vượt hạn mức hoặc ngoài chính sách, hệ thống chặn hành động tự động. AI thu ngữ cảnh, tóm tắt sự cố, rồi handoff cho nhân viên mà người dùng không phải nhập lại thông tin.</p>
     <figure>
       <div class="fig"><div id="scope"></div></div>
       <figcaption><b>Hình 1</b>Yêu cầu nào AI nên tự xử lý, yêu cầu nào nên chuyển cho người?</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Handoff tốt là khi nhân viên nhận ca đã biết khách cần gì, không phải hỏi lại từ đầu.</div>
+    <div class="take"><small>Ghi nhớ</small>Khi chuyển yêu cầu cho nhân viên, hệ thống cần cung cấp đủ ngữ cảnh để khách hàng không phải trình bày lại từ đầu.</div>
   </section>
 
   <section id="s2">
     <span class="num">11.2</span>
-    <h2>RAG hay fine-tuning khi ra mắt</h2>
-    <p class="gist">So theo chi phí, latency, độ chính xác và ngữ cảnh dùng.</p>
-<table class="tbl">
-      <tr><th></th><th>RAG</th><th>Fine-tuning</th></tr>
-      <tr><td>Chi phí</td><td>Đầu tư ban đầu thấp hơn nhiều; chi phí vận hành theo vector DB, tìm ngữ cảnh và token</td><td>Chi phí ban đầu cao: GPU để huấn luyện lại, dữ liệu gán nhãn chuẩn, nhân sự data science</td></tr>
-      <tr><td>Latency</td><td>Cao hơn vì chuỗi nối tiếp: mã hóa truy vấn → tìm vector → nạp ngữ cảnh → gọi model</td><td>Thấp và ổn định hơn vì tri thức đã nằm trong trọng số</td></tr>
-      <tr><td>Độ chính xác</td><td>Tốt cho tri thức thực tế thay đổi; sửa thông tin sai bằng cách cập nhật dữ liệu, không cần huấn luyện lại</td><td>Tốt cho văn phong, định dạng phức tạp (JSON schema), ngôn ngữ chuyên ngành hẹp; dễ lạc hậu tri thức</td></tr>
-      <tr><td>Hợp với</td><td>Tri thức nội bộ, CSKH tra chính sách thường đổi, ứng dụng cần trích nguồn</td><td>Phân loại chuyên sâu, chuyển định dạng đặc thù, văn phong thương hiệu, cắt token trong prompt</td></tr>
-    </table>
+    <h2>Sửa lỗi trước khi mở rộng</h2>
+    <p class="gist">Cần chọn cách xử lý theo nguyên nhân: thiếu thông tin, sai định dạng hoặc hành vi chưa đáp ứng yêu cầu.</p>
+<table class="tbl"><tr><th>Lỗi quan sát</th><th>Điều tra và thử trước</th><th>Khi nào cân nhắc thêm</th></tr><tr><td>Nguồn chính sách đã lỗi thời</td><td>Cập nhật nguồn, phiên bản index và kiểm tra retrieval</td><td>RAG cho dữ liệu thay đổi; vẫn cần kiểm generation và trích nguồn</td></tr><tr><td>JSON thiếu trường bắt buộc</td><td>Structured outputs nếu có, schema validation và xử lý lỗi</td><td>Fine-tuning khi dữ liệu/eval cho thấy cần cải thiện thêm hành vi</td></tr><tr><td>Giọng văn hoặc phân loại không ổn định</td><td>Rubric, prompt, few-shot, đo theo nhóm tác vụ</td><td>Fine-tuning nếu lợi ích đo được vượt chi phí duy trì</td></tr></table>
+    <p>RAG và fine-tuning có thể kết hợp. RAG thêm bước retrieval nhưng độ trễ toàn luồng còn phụ thuộc model, số token, cache và hạ tầng. Không suy ra một phương án luôn nhanh hoặc rẻ hơn. Đo cùng tác vụ và mức chất lượng trước khi mở rộng.</p>
   </section>
 
   <section id="s3">
     <span class="num">11.3</span>
     <h2>Ba cơ chế giúp người dùng chấp nhận</h2>
-    <p class="gist">Người duyệt cho hành động lớn, minh bạch về độ tin cậy, và fallback khi AI không chắc.</p>
+    <p class="gist">Xác định hành động cần người phê duyệt, giúp người dùng kiểm tra độ tin cậy và chuẩn bị phương án dự phòng khi hệ thống chưa đủ căn cứ để tiếp tục.</p>
 <ul>
       <li><b>Human-in-the-loop validation.</b> Giao diện yêu cầu người duyệt các hành động có tác động lớn (gửi email hàng loạt cho khách, thực hiện chuyển tiền) trước khi chạy.</li>
-      <li><b>Cảnh báo và độ tin cậy.</b> Nói rõ đây là AI, hiển thị confidence level hoặc trích nguồn để người dùng tự kiểm chứng.</li>
-      <li><b>Fallback linh hoạt.</b> Khi confidence xuống dưới ngưỡng (ví dụ dưới 75%), chuyển về kịch bản tra cứu theo quy tắc, gợi ý danh sách câu hỏi, hoặc nối ngay với tư vấn viên.</li>
+      <li><b>Cảnh báo và độ tin cậy.</b> Nói rõ đây là AI, hiển thị nguồn để người dùng kiểm; chỉ trình bày confidence như xác suất khi đã hiệu chỉnh và chứng minh ý nghĩa của điểm.</li>
+      <li><b>Fallback linh hoạt.</b> Khi các kiểm tra chất lượng hoặc điểm đã hiệu chỉnh không đạt điều kiện, chuyển về kịch bản tra cứu theo quy tắc, gợi ý danh sách câu hỏi, hoặc chuyển yêu cầu đến tư vấn viên.</li>
     </ul>
     <p>Đây là phần change management: người dùng đang quen một cách làm cũ, và họ chỉ đổi khi thấy cái mới đáng tin trong những lần đầu tiên.</p>
   </section>
@@ -64,10 +59,10 @@
   <section id="s4">
     <span class="num">11.4</span>
     <h2>Thử nghiệm và đo tăng trưởng</h2>
-    <p class="gist">A/B test để kiểm giả thuyết; AARRR để biết người dùng rơi ở chặng nào.</p>
-<p>A/B test chia người dùng ngẫu nhiên thành nhóm, mỗi nhóm thấy một phiên bản, rồi so chỉ số. Với AI, phiên bản có thể khác nhau ở prompt, model hay cách hiển thị confidence. Online evaluation ở chương 9 chính là dạng A/B test này.</p>
-    <p>Pirate metrics AARRR của Dave McClure chia quá trình của người dùng thành năm chặng: Acquisition (biết tới), Activation (dùng thử và thấy giá trị lần đầu), Retention (quay lại), Referral (giới thiệu), Revenue (trả tiền). Với tính năng AI, Activation thường quyết định nhiều nhất: nếu vài câu trả lời đầu tiên sai, người dùng hiếm khi cho cơ hội thứ hai.</p>
-    <div class="take"><small>Ghi nhớ</small>Với tính năng AI, những câu trả lời đầu tiên quyết định retention. Đầu tư vào trải nghiệm lần đầu.</div>
+    <p class="gist">Đặt giả thuyết, cách phân nhóm và điều kiện dừng trước khi xem kết quả.</p>
+<p><b>A/B test</b> là một thiết kế thí nghiệm trong online evaluation, không phải toàn bộ đánh giá online. Ví dụ giả thuyết: “Hiển thị phiên bản và trích đoạn nguồn giúp nhân viên chọn đúng quy trình nhanh hơn”. Chọn đơn vị randomization là nhân viên, giữ mỗi người ở một nhóm để giảm lẫn trải nghiệm; nếu nhân viên chia sẻ công việc nhiều, cần xem xét phân nhóm theo đội và ảnh hưởng lên cỡ mẫu.</p>
+    <ul><li><b>Chỉ số chính:</b> thời gian hoàn thành một tác vụ được xác nhận đúng, tính cả thời gian kiểm lại.</li><li><b>Guardrail metrics:</b> tỷ lệ chọn sai quy trình, tỷ lệ handoff, p95 latency và chi phí mỗi tác vụ thành công.</li><li><b>Kế hoạch:</b> ước lượng cỡ mẫu từ baseline và mức cải thiện nhỏ nhất đáng quan tâm; bao phủ chu kỳ làm việc. Không nên kết luận từ kết quả thuận lợi của một ngày khi chưa đủ dữ liệu theo kế hoạch.</li><li><b>Dừng:</b> chặn ngay khi có vi phạm quyền truy cập; với số liệu thông thường dùng quy tắc dừng và phương pháp phân tích đã chọn trước. Báo cáo độ bất định và cơ cấu tác vụ hai nhóm.</li></ul>
+    <p><b>AARRR</b>: Acquisition (tiếp cận), Activation (nhận giá trị lần đầu), Retention (quay lại), Referral (giới thiệu), Revenue (doanh thu). Chọn chặng theo vấn đề thực tế: trợ lý nội bộ có thể cần activation và sử dụng lại, còn công cụ thương mại phải đo cả chuyển đổi trả tiền. Nhiều lượt dùng không đủ nếu câu trả lời sai hoặc công sức kiểm tra tăng.</p><div class="take"><small>Ghi nhớ</small>Thử nghiệm cần một quyết định rõ: mở rộng, điều chỉnh hay dừng, dựa trên cả lợi ích và rủi ro.</div>
   </section>
 
   <div class="vids" data-videos="11"></div>
@@ -95,8 +90,8 @@ function sorter(box, data, labels) {
 sorter(document.getElementById('scope'), [
  ['Làm sao để đặt lại mật khẩu?', 0, 'Lặp lại nhiều, rủi ro thấp, câu trả lời có trong tài liệu. AI xử lý trọn.'],
  ['Số dư trên báo cáo quý sai lệch 120 triệu so với sổ cái, tôi muốn khiếu nại.', 1, 'Khiếu nại số liệu tài chính là nhạy cảm. AI tóm tắt sự cố rồi chuyển cho nhân viên.'],
- ['Cho tôi tải hóa đơn GTGT tháng 9.', 0, 'Tra và tải hóa đơn là việc lặp lại, rủi ro thấp.'],
- ['Tôi muốn hoàn tiền gói năm vừa gia hạn.', 1, 'Hoàn tiền là quyết định tài chính, cần người duyệt.'],
+ ['Cho tôi tải hóa đơn GTGT tháng 9.', 0, 'Có thể tự phục vụ sau xác thực và kiểm tra quyền sở hữu hóa đơn; không mặc định rủi ro thấp chỉ vì lặp lại.'],
+ ['Tôi muốn hoàn tiền ngoài thời hạn chính sách.', 1, 'Ngoài chính sách cần người có thẩm quyền duyệt; khoản đủ điều kiện có thể xử lý theo quy tắc.'],
  ['Phím tắt để tạo phiếu chi mới là gì?', 0, 'Hướng dẫn thao tác, AI trả lời được và không gây hại nếu sai nhẹ.']], ['AI tự xử lý', 'Chuyển cho người']);
 
 // ---- chapter data for kit.js ----
@@ -127,16 +122,17 @@ window.CH = {
   {
    "id": "s2",
    "n": "11.2",
-   "t": "RAG hay fine-tuning khi ra mắt",
+   "t": "Sửa lỗi trước khi mở rộng",
    "sum": [
-    "RAG: rẻ lúc đầu, latency cao hơn, dễ cập nhật.",
-    "Fine-tuning: đắt lúc đầu, nhanh và ổn định, dễ lạc hậu.",
-    "Chọn theo tri thức có thay đổi và có cần trích nguồn không."
+    "Chẩn đoán nguyên nhân trước khi chọn RAG hay fine-tuning.",
+    "Schema cần structured outputs/validation, không chỉ fine-tuning.",
+    "So chi phí và độ trễ trong cùng điều kiện."
    ],
    "terms": [
     "rag",
     "finetune",
-    "latency"
+    "latency",
+    "structured"
    ]
   },
   {
@@ -144,9 +140,9 @@ window.CH = {
    "n": "11.3",
    "t": "Ba cơ chế giúp người dùng chấp nhận",
    "sum": [
-    "Người duyệt hành động lớn.",
-    "Hiển thị confidence, trích nguồn.",
-    "Fallback khi dưới ngưỡng, ví dụ 75%."
+    "Duyệt hành động lớn theo quyền và chính sách.",
+    "Hiển thị nguồn; confidence chỉ khi được kiểm định.",
+    "Fallback có ngữ cảnh, không bắt người dùng kể lại."
    ],
    "terms": [
     "hitl",
@@ -160,9 +156,9 @@ window.CH = {
    "n": "11.4",
    "t": "Thử nghiệm và đo tăng trưởng",
    "sum": [
-    "A/B test so phiên bản prompt, model, giao diện.",
-    "AARRR: Acquisition, Activation, Retention, Referral, Revenue.",
-    "Với AI, Activation quyết định nhiều nhất."
+    "A/B là một thiết kế thí nghiệm, không đồng nghĩa online evaluation.",
+    "Chốt giả thuyết, đơn vị phân nhóm, cỡ mẫu và quy tắc dừng.",
+    "AARRR giúp chọn chặng cần cải thiện; không có chặng luôn quan trọng nhất."
    ],
    "terms": [
     "ab",
@@ -175,73 +171,78 @@ window.CH = {
  "terms": {
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "handoff": [
    "handoff",
    "Chuyển cuộc hội thoại hoặc tác vụ từ AI sang người, kèm ngữ cảnh để người dùng không phải kể lại.",
-   "Bàn giao ca trực kèm sổ ghi chép."
+   "Ví dụ: chuyển yêu cầu ngoài chính sách cho nhân viên, kèm lịch sử trao đổi và thông tin cần thiết."
   ],
   "poc": [
    "POC",
    "Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.",
-   "Thử xem đất có đóng cọc được không."
+   "Ví dụ: thử trên một bộ tài liệu nhỏ để kiểm tra khả năng truy xuất và trả lời đúng trước khi xây dựng đầy đủ."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "finetune": [
    "fine-tuning",
-   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
-   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+   "Huấn luyện thêm mô hình có sẵn để thay đổi trọng số, cải thiện hành vi hoặc tác vụ chuyên biệt. Không tự bảo đảm kiến thức mới, đúng schema hay trích nguồn.",
+   "Ví dụ: cải thiện giọng văn sau khi đã đo hạn chế của prompt và có dữ liệu phù hợp."
   ],
   "latency": [
    "latency",
    "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
-   "Thời gian chờ món sau khi gọi."
+   "Ví dụ: đo thời gian từ khi nhân viên gửi câu hỏi đến khi nhận phản hồi; cần nói rõ đang đo token đầu tiên hay toàn bộ câu trả lời."
   ],
   "hitl": [
    "human-in-the-loop",
    "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
-   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+   "Ví dụ: hệ thống soạn đề xuất, người có thẩm quyền xem và duyệt trước khi thực thi."
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
-   "Câu “chắc 90%” của một người bạn."
+   "Điểm thể hiện mức chắc chắn theo một phương pháp cụ thể; chỉ hiểu như xác suất đúng khi đã được hiệu chỉnh và kiểm tra. Điểm LLM tự khai không đủ làm căn cứ.",
+   "Ví dụ: kiểm trên dữ liệu có nhãn xem nhóm điểm 0,8 có đúng khoảng 80% hay không."
   ],
   "fallback": [
    "fallback",
    "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
-   "Kế hoạch B khi kế hoạch A trục trặc."
+   "Ví dụ: khi không tìm được nguồn phù hợp, trợ lý hỏi thêm thông tin hoặc chuyển yêu cầu cho nhân viên."
   ],
   "adoption": [
    "adoption",
    "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
-   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+   "Ví dụ: đo tỷ lệ nhân viên thuộc nhóm mục tiêu thực sự dùng trợ lý trong công việc."
   ],
   "ab": [
    "A/B test",
    "Thí nghiệm chia người dùng ngẫu nhiên thành nhóm, mỗi nhóm thấy một phiên bản, rồi so chỉ số.",
-   "Hai nồi canh, mời khách nếm mù rồi đếm phiếu."
+   "Ví dụ: phân ngẫu nhiên nhân viên thành hai nhóm dùng hai cách hiển thị nguồn, rồi so sánh kết quả theo kế hoạch thử nghiệm."
   ],
   "aarrr": [
    "AARRR",
    "Pirate metrics của Dave McClure: Acquisition, Activation, Retention, Referral, Revenue.",
-   "Năm chặng của một vị khách: biết quán, ăn thử, quay lại, rủ bạn, trả tiền."
+   "Ví dụ: theo dõi người dùng từ lúc biết đến trợ lý, thử dùng, quay lại, giới thiệu cho đồng nghiệp đến khi trả phí."
   ],
   "retention": [
    "retention",
    "Tỷ lệ người dùng còn quay lại sau một khoảng thời gian.",
-   "Bao nhiêu khách quay lại quán tuần sau."
+   "Ví dụ: đo tỷ lệ nhân viên tiếp tục sử dụng trợ lý sau một khoảng thời gian đã xác định."
   ],
   "online": [
    "online evaluation",
-   "Đo chất lượng trên người dùng thật sau khi phát hành, ví dụ qua A/B test.",
-   "Thi thật trong phòng thi."
+   "Đánh giá trên tương tác thực tế qua giám sát, lấy mẫu, phản hồi hoặc thí nghiệm. A/B test là một hình thức, không phải toàn bộ online evaluation.",
+   "Ví dụ: chuyên gia rà một mẫu phản hồi đang phục vụ người dùng."
+  ],
+  "structured": [
+   "structured outputs",
+   "Cơ chế ràng buộc đầu ra theo schema mà mô hình hoặc API hỗ trợ. Ứng dụng vẫn cần kiểm tra tính đúng đắn về nghiệp vụ và xử lý các trường hợp từ chối trả lời, đầu ra bị cắt hoặc schema vượt giới hạn hỗ trợ.",
+   "Ví dụ: buộc đủ trường JSON rồi kiểm số tiền với dữ liệu nguồn."
   ]
  },
  "alias": {
@@ -297,6 +298,11 @@ window.CH = {
   "online": [
    "online evaluation",
    "Online evaluation"
+  ],
+  "structured": [
+   "structured outputs",
+   "schema-constrained output",
+   "constrained output"
   ]
  },
  "rel": {
@@ -319,78 +325,78 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Với yêu cầu hoàn tiền, trợ lý AI nên làm gì?",
+   "q": "Khách yêu cầu hoàn tiền ngoài chính sách. Trợ lý nên làm gì trong pilot tra cứu?",
    "o": [
-    "Tự hoàn tiền",
-    "Thu ngữ cảnh, tóm tắt, handoff cho nhân viên",
-    "Từ chối và kết thúc",
-    "Hỏi người dùng nhập lại toàn bộ thông tin"
+    "Trả lời đã hoàn tiền rồi chờ xác nhận sau",
+    "Chỉ gửi link chính sách và kết thúc dù khách cần hỗ trợ",
+    "Tổng hợp dữ kiện cần thiết và chuyển người có thẩm quyền",
+    "Để mô hình lớn quyết định"
    ],
-   "a": 1,
-   "ex": "Việc nhạy cảm cần người, và handoff phải mang theo ngữ cảnh."
+   "a": 2,
+   "ex": "Pilot không có quyền tự hoàn tiền; chuyển ca phải giữ ngữ cảnh cần thiết. Không giả vờ đã thực hiện hành động."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Vì sao RAG thường có latency cao hơn fine-tuning?",
+   "q": "Có thể kết luận RAG luôn chậm hơn fine-tuning không?",
    "o": [
-    "Vì model lớn hơn",
-    "Vì phải đi qua chuỗi mã hóa truy vấn, tìm vector, nạp ngữ cảnh rồi mới gọi model",
-    "Vì RAG chạy trên CPU",
-    "Vì RAG không dùng cache"
+    "Không; RAG luôn nhanh hơn vì không huấn luyện",
+    "Có vì có retrieval",
+    "Không; đo toàn luồng cùng tác vụ, model, token và điều kiện cache/tải",
+    "Có nếu có trích nguồn"
    ],
-   "a": 1,
-   "ex": "Các bước nối tiếp cộng dồn thời gian."
+   "a": 2,
+   "ex": "Retrieval thêm bước nhưng latency còn nhiều yếu tố. Huấn luyện là chi phí trước inference, không chứng minh tốc độ mỗi request."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Cách sửa một thông tin sai trong hệ thống RAG là gì?",
+   "q": "Đã xác nhận tài liệu chính sách trong index lỗi thời, còn mô hình trả đúng theo bản đó. Cần thử sửa gì trước?",
    "o": [
-    "Huấn luyện lại model",
-    "Cập nhật dữ liệu trong kho tri thức",
-    "Đổi nhà cung cấp",
-    "Tăng context window"
+    "Fine-tune cùng dữ liệu cũ",
+    "Cập nhật nguồn/index và kiểm retrieval, quyền, version rồi eval lại",
+    "Chỉ thay giao diện trích nguồn",
+    "Tăng temperature"
    ],
    "a": 1,
-   "ex": "Đây là lợi thế lớn của RAG."
+   "ex": "Nguyên nhân đã xác định là nguồn cũ. Nếu lỗi ở retrieval hoặc generation thì chỉ sửa tài liệu chưa đủ; điều kiện đề bài quan trọng."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 2,
    "type": "multi",
-   "q": "Ba cơ chế UX giúp người dùng chấp nhận đầu ra xác suất là gì?",
+   "q": "Những cơ chế nào hỗ trợ niềm tin phù hợp với năng lực thực tế?",
    "o": [
-    "Human-in-the-loop cho hành động lớn",
-    "Hiển thị confidence hoặc trích nguồn",
-    "Fallback khi dưới ngưỡng",
-    "Ẩn mọi lỗi của AI"
+    "Nguồn và giới hạn dễ kiểm tra",
+    "Điểm confidence chỉ khi có ý nghĩa đã kiểm định",
+    "Đường sửa, từ chối và chuyển ca phù hợp",
+    "Ẩn các lỗi hiếm để không giảm adoption"
    ],
    "a": [
     0,
     1,
     2
    ],
-   "ex": "Ẩn lỗi làm mất niềm tin khi người dùng tự phát hiện."
+   "ex": "Minh bạch và quyền kiểm soát hỗ trợ trust calibration; giấu lỗi hoặc đưa số chưa kiểm định có thể gây tin quá mức."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
-   "q": "Chặng “người dùng dùng thử và thấy giá trị lần đầu” trong AARRR là gì?",
+   "q": "A/B test cho UI mới cần chốt gì trước khi xem kết quả?",
    "o": [
-    "Acquisition",
-    "Activation",
-    "Retention",
-    "Referral"
+    "Cỡ mẫu chỉ cần bằng bộ golden dataset",
+    "Giả thuyết, randomization, metric chính/guardrail và quy tắc dừng",
+    "Chọn metric tăng nhiều nhất sau một ngày",
+    "Đổi nhóm người dùng khi điểm xấu"
    ],
    "a": 1,
-   "ex": "Activation là khoảnh khắc người dùng thấy giá trị lần đầu."
+   "ex": "Thiết kế trước giúp diễn giải kết quả và kiểm soát rủi ro. Chọn metric hay dừng tùy kết quả dễ tạo kết luận lệch."
   }
  ]
 };

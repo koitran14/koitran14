@@ -17,58 +17,51 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 14</div>
   <h1>Stakeholder <i>và giao tiếp</i></h1>
-  <p class="dek">Dẫn dắt không cần quyền lực, chia vai AI PM và AI Engineer theo bài “The Rise of the AI Engineer”, cách làm việc với từng nhóm stakeholder, và decision log.</p>
+  <p class="dek">Phân công quyền quyết định, giải thích giới hạn bằng bằng chứng, xử lý bất đồng giữa kỹ thuật–kinh doanh–pháp lý và ghi lại quyết định.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 14 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>AI PM là người phiên dịch: nói với kỹ sư bằng tác động người dùng, nói với kinh doanh bằng giới hạn thật của AI, nói với pháp lý từ ngày đầu.</div>
+  <div class="idea"><small>Ý chính của chương</small>AI PM giúp các bên thống nhất cách hiểu về mục tiêu và giới hạn của sản phẩm: làm rõ tác động đến người dùng với kỹ sư, phạm vi cam kết với kinh doanh và yêu cầu tuân thủ với pháp lý ngay từ đầu.</div>
   <section id="s1">
     <span class="num">14.1</span>
     <h2>Ảnh hưởng không cần quyền lực</h2>
-    <p class="gist">AI PM hiếm khi là sếp của những người làm ra sản phẩm, nên phải dẫn dắt bằng lý lẽ và dữ liệu.</p>
+    <p class="gist">AI PM thường không trực tiếp quản lý tất cả những người tham gia phát triển sản phẩm, nên cần tạo sự đồng thuận bằng lập luận và dữ liệu.</p>
 <p>Quản lý sản phẩm AI đòi hỏi influencing without authority: dẫn dắt mà không dùng quyền lực chức vụ. AI PM đứng giữa đội kỹ thuật, mục tiêu kinh doanh và giới hạn pháp lý, làm người phiên dịch giữa các bên.</p>
     <p>Với người xuất thân kỹ sư, đây thường là chỗ khó nhất: lập luận kỹ thuật đúng chưa đủ để thuyết phục. Cần nói bằng ngôn ngữ của người nghe: chi phí, rủi ro, thời gian, tác động lên khách hàng.</p>
   </section>
 
   <section id="s2">
     <span class="num">14.2</span>
-    <h2>AI PM và AI Engineer theo swyx</h2>
-    <p class="gist">Bài luận “The Rise of the AI Engineer” của Shawn “swyx” Wang là mốc tham chiếu hay được dùng để chia hai vai trò.</p>
-<table class="tbl">
-      <tr><th></th><th>AI PM</th><th>AI Engineer</th></tr>
-      <tr><td>Mục tiêu</td><td>Xác định bài toán thật, giá trị thương mại, product-market fit</td><td>Xây, triển khai, tối ưu hệ thống AI tin cậy, an toàn, tiết kiệm tài nguyên</td></tr>
-      <tr><td>Việc hằng ngày</td><td>Discovery, định nghĩa bài toán, ưu tiên backlog, eval criteria, roadmap</td><td>Lập trình, nối API model, pipeline RAG, tối ưu prompt, test tự động, theo dõi log</td></tr>
-      <tr><td>Chiều sâu kỹ thuật</td><td>Hiểu năng lực, giới hạn, chi phí, phân phối xác suất của model; không bắt buộc viết code production</td><td>Kiến trúc phần mềm, vector DB, RAG, tích hợp API, cloud, tối ưu latency</td></tr>
-      <tr><td>Lập trình</td><td>Hiếm khi viết code production; có thể dùng Python hoặc no-code để làm prototype</td><td>Bắt buộc: Python, TypeScript, REST/gRPC, framework như LangChain, LlamaIndex</td></tr>
-      <tr><td>Đối tác chính</td><td>Lãnh đạo, kỹ sư AI, UX, kinh doanh/marketing, pháp lý</td><td>AI PM, data scientist, kỹ sư backend/frontend, cloud/DevOps</td></tr>
-      <tr><td>Đo thành công</td><td>Adoption, retention, CSAT, tỷ lệ tác vụ thành công, doanh thu</td><td>Accuracy/precision/recall, latency, uptime, inference cost</td></tr>
-    </table>
-    <p>Người làm AI Product Engineer đứng ở khoảng giữa hai cột: viết được code production như AI Engineer, nhưng chịu trách nhiệm cả những chỉ số ở cột AI PM.</p>
+    <h2>Phân công quyết định và trách nhiệm</h2>
+    <p class="gist">Bài của swyx là nguồn về AI Engineer; bảng trách nhiệm dưới đây là gợi ý biên tập, không phải chuẩn nghề nghiệp.</p>
+<p><a href="https://latent.space/p/ai-engineer/">The Rise of the AI Engineer</a> mô tả sự xuất hiện của kỹ sư xây sản phẩm quanh foundation model/API, cùng vai trò của dữ liệu và kết quả đánh giá theo sản phẩm. Không suy từ bài này ra một danh sách công nghệ bắt buộc hoặc ranh giới cứng với PM.</p>
+    <table class="tbl"><tr><th>Quyết định</th><th>Người dẫn dắt gợi ý</th><th>Bằng chứng cần cùng xem</th></tr><tr><td>Vấn đề và phạm vi thử nghiệm</td><td>PM, cùng người dùng và kỹ sư</td><td>Quan sát công việc, baseline và điều kiện thành công</td></tr><tr><td>Model, retrieval, độ trễ</td><td>Kỹ sư, cùng PM và nghiệp vụ</td><td>Eval theo tác vụ, chi phí, tải và lỗi rủi ro</td></tr><tr><td>Quyền dữ liệu và mở rộng phát hành</td><td>Người được giao thẩm quyền, cùng bảo mật/pháp lý</td><td>Quyền truy cập, intended use, kiểm tra và người vận hành</td></tr></table>
+    <p>Công nghệ tùy hệ thống: có thể dùng Python hoặc TypeScript, API hay công cụ khác; không bắt buộc dùng đồng thời REST/gRPC, LangChain và LlamaIndex. PM có thể viết code; kỹ sư có thể dẫn discovery. Điều cần rõ là ai quyết định và chịu trách nhiệm theo dõi sau quyết định.</p>
   </section>
 
   <section id="s3">
     <span class="num">14.3</span>
     <h2>Làm việc với từng nhóm</h2>
-    <p class="gist">Mỗi nhóm có một kiểu bẫy riêng cần tránh.</p>
+    <p class="gist">Mỗi nhóm có mối quan tâm riêng; cần làm rõ các khác biệt để tránh hiểu nhầm khi phối hợp.</p>
 <figure>
       <div class="fig"><div class="seg" id="sh"><button data-i="0" class="on">Kỹ sư AI, data scientist</button><button data-i="1">Kinh doanh, marketing</button><button data-i="2">Pháp lý, compliance</button></div><div class="rows" id="shR" style="margin-top:14px"></div></div>
-      <figcaption><b>Hình 1</b>Chọn một nhóm để xem cách làm việc và cái bẫy hay gặp.</figcaption>
+      <figcaption><b>Hình 1</b>Chọn một nhóm để xem cách phối hợp và những vấn đề thường gặp.</figcaption>
     </figure>
+  <p><b>Tình huống minh họa.</b> Kinh doanh muốn mở trợ lý CSKH cho toàn bộ khách hàng trong tháng; kỹ sư thấy nguồn còn mâu thuẫn; bảo mật chưa duyệt quyền tài liệu. PM đề xuất pilot nội bộ trên tài liệu đã duyệt, tắt công cụ có tác động tài chính và ghi tiêu chí mở rộng. Kinh doanh có bản demo đúng phạm vi để trao đổi; kỹ sư theo dõi lỗi theo nguồn; bảo mật kiểm tra quyền truy cập trước khi tăng người dùng. Nếu không đạt tiêu chí, giảm phạm vi hoặc lùi mốc thay vì đổi ngưỡng cho kịp ngày.</p>
   </section>
-
   <section id="s4">
     <span class="num">14.4</span>
     <h2>Decision log</h2>
-    <p class="gist">Với hệ thống xác suất, quyết định nào cũng là đánh cược có tính toán. Ghi lại để sau này hiểu vì sao.</p>
-<p>AI PM nên duy trì decision log. Mỗi quyết định đổi kiến trúc, chỉnh ngưỡng confidence hay chọn model đều ghi bốn ý: bối cảnh; giả định ban đầu; dữ liệu thực nghiệm lúc đó; lý do chấp nhận rủi ro. Decision log vừa là căn cứ khi audit, vừa giúp cả tổ chức học lại từ quyết định cũ thay vì tranh cãi lại từ đầu.</p>
+    <p class="gist">Các quyết định về hệ thống AI thường dựa trên những giả định còn chưa chắc chắn. Ghi lại căn cứ giúp đội ngũ đánh giá lại quyết định khi có dữ liệu mới.</p>
+<p>AI PM nên duy trì decision log. Mỗi quyết định đổi kiến trúc, chỉnh ngưỡng confidence hay lựa chọn mô hình đều ghi bốn ý: bối cảnh; giả định ban đầu; dữ liệu thực nghiệm lúc đó; lý do chấp nhận rủi ro. Decision log vừa là căn cứ khi audit, vừa giúp cả tổ chức học lại từ quyết định cũ thay vì tranh cãi lại từ đầu.</p>
     <div class="code"><pre>## 2026-10-12 · Đổi ngưỡng handoff từ 70% lên 75%
 Bối cảnh:   12 khiếu nại tuần qua về câu trả lời sai trong nhóm “hoàn tiền”.
-Giả định:  Câu sai tập trung ở confidence 70–75%.
-Dữ liệu:   Eval 300 câu: 9/11 câu sai có confidence 70–75%.
+Giả định: tăng ngưỡng điểm điều phối đã kiểm định có thể giảm lỗi; không dùng điểm LLM tự khai.
+Dữ liệu:   Eval 300 câu: 9/11 câu sai có điểm điều phối đã hiệu chỉnh trong khoảng 70–75%; rà thêm mẫu điểm cao và đo tỷ lệ lỗi từng nhóm.
 Rủi ro:    Tỷ lệ handoff dự kiến tăng 6%; chấp nhận vì chi phí khiếu nại cao hơn.</pre></div>
     <p>Mẫu trên chỉ minh họa định dạng; các con số là giả định.</p>
-    <div class="take"><small>Ghi nhớ</small>Nếu sáu tháng sau không ai nhớ vì sao chọn model này, nghĩa là đã thiếu decision log.</div>
+    <div class="take"><small>Ghi nhớ</small>Ghi lại lý do lựa chọn mô hình và các giả định liên quan để đội ngũ có thể xem lại khi nhu cầu hoặc điều kiện thay đổi.</div>
   </section>
 
   <div class="vids" data-videos="14"></div>
@@ -83,7 +76,7 @@ Rủi ro:    Tỷ lệ handoff dự kiến tăng 6%; chấp nhận vì chi phí 
 const SH = [['Gắn họ với tác động thật lên người dùng.', 'Tối ưu độ chính xác kỹ thuật vô hạn mà quên chi phí và latency.', 'Đặt ngưỡng “đủ tốt” bằng số từ đầu, kèm ngân sách latency và chi phí.'],
  ['Làm rõ tính chất xác suất của AI.', 'Hứa quá mức về năng lực AI, dẫn tới cam kết bán hàng sai thực tế.', 'Chia sẻ eval và giới hạn bằng ví dụ cụ thể trước khi họ hứa với khách.'],
  ['Đưa họ vào ngay từ bước scoping.', 'Gọi pháp lý vào sát ngày ra mắt, lúc đó sửa thì đắt.', 'Phân loại rủi ro EU AI Act và kế hoạch bảo vệ PII ngay khi đóng khung bài toán.']];
-function shu(i) {shR.innerHTML = `<div><b>Cách làm việc</b>${SH[i][0]}</div><div><b>Cái bẫy</b>${SH[i][1]}</div><div class="fix"><b>Gợi ý</b>${SH[i][2]}</div>`}
+function shu(i) {shR.innerHTML = `<div><b>Cách làm việc</b>${SH[i][0]}</div><div><b>Vấn đề thường gặp</b>${SH[i][1]}</div><div class="fix"><b>Gợi ý</b>${SH[i][2]}</div>`}
 document.getElementById('sh').onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; document.querySelectorAll('#sh button').forEach(x => x.classList.toggle('on', x === b)); shu(+b.dataset.i)};
 shu(0);
 
@@ -114,11 +107,11 @@ window.CH = {
   {
    "id": "s2",
    "n": "14.2",
-   "t": "AI PM và AI Engineer theo swyx",
+   "t": "Phân công quyết định và trách nhiệm",
    "sum": [
-    "PM: bài toán, giá trị, ưu tiên, eval criteria.",
-    "Engineer: code, RAG, prompt, test, log.",
-    "AI Product Engineer đứng giữa hai cột."
+    "Phân công quyền quyết định theo đội, không áp ranh giới nghề nghiệp cứng.",
+    "AI Engineer phối hợp product-specific data và eval.",
+    "Công nghệ là lựa chọn theo hệ thống, không phải danh sách bắt buộc."
    ],
    "terms": [
     "pm",
@@ -143,9 +136,9 @@ window.CH = {
    "n": "14.4",
    "t": "Decision log",
    "sum": [
-    "Ghi bối cảnh, giả định, dữ liệu, lý do chấp nhận rủi ro.",
-    "Căn cứ audit và học tập.",
-    "Tránh tranh cãi lại từ đầu."
+    "Ghi bối cảnh, giả định, dữ liệu, lựa chọn và rủi ro.",
+    "Điểm điều phối cần được kiểm định; lấy mẫu cả nhóm điểm cao.",
+    "Ghi người chịu trách nhiệm và thời điểm xem lại."
    ],
    "terms": [
     "decisionlog",
@@ -156,38 +149,38 @@ window.CH = {
  "terms": {
   "stakeholder": [
    "stakeholder",
-   "Bên có lợi ích hoặc ảnh hưởng tới sản phẩm: lãnh đạo, kỹ thuật, kinh doanh, pháp lý, người dùng.",
-   "Những người ngồi quanh bàn khi chia bánh."
+   "Cá nhân hoặc nhóm chịu tác động hoặc có khả năng ảnh hưởng đến quyết định và kết quả sản phẩm.",
+   "Ví dụ: nhân viên CSKH, trưởng nhóm, kỹ sư và bộ phận bảo mật."
   ],
   "pm": [
    "AI Product Manager",
-   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
-   "Người chọn đích đến và giải thích vì sao đi đường này."
+   "Vai trò thường dẫn dắt xác định vấn đề, giá trị, tiêu chí thành công và ưu tiên, phối hợp với kỹ thuật, thiết kế và các bên liên quan.",
+   "Ví dụ: cùng kỹ sư và CSKH quyết định điều kiện mở thử nghiệm."
   ],
   "aie": [
    "AI Engineer",
-   "Kỹ sư xây và vận hành hệ thống AI: tích hợp model, RAG, prompt, eval tự động, theo dõi latency và chi phí.",
-   "Người lái và bảo dưỡng chiếc xe."
+   "Kỹ sư xây và vận hành hệ thống AI, đồng thời phối hợp discovery, eval và đo tác động sản phẩm. Công nghệ cụ thể tùy hệ thống.",
+   "Ví dụ: cải thiện retrieval vì đo thấy nhân viên vẫn chọn nhầm quy trình."
   ],
   "pmf": [
    "product-market fit",
-   "Trạng thái sản phẩm đáp ứng nhu cầu đủ mạnh của một thị trường đủ lớn để người dùng tự quay lại và chịu trả tiền.",
-   "Quán ăn tới mức khách tự kéo bạn bè đến."
+   "Trạng thái sản phẩm đáp ứng một nhu cầu đủ mạnh trong thị trường mục tiêu, thể hiện qua việc người dùng tiếp tục sử dụng và sẵn sàng trả tiền.",
+   "Ví dụ: nhóm khách hàng mục tiêu nhận thấy giá trị đủ lớn để tiếp tục sử dụng và trả tiền cho sản phẩm."
   ],
   "adoption": [
    "adoption",
    "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
-   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+   "Ví dụ: đo tỷ lệ nhân viên thuộc nhóm mục tiêu thực sự dùng trợ lý trong công việc."
   ],
   "decisionlog": [
    "decision log",
    "Nhật ký ghi lại quyết định quan trọng: bối cảnh, giả định, dữ liệu lúc đó, lý do chấp nhận rủi ro.",
-   "Sổ tay thuyền trưởng."
+   "Ví dụ: ghi lý do thay đổi ngưỡng chuyển yêu cầu cho nhân viên, kèm dữ liệu đánh giá và ngày xem lại."
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
-   "Câu “chắc 90%” của một người bạn."
+   "Điểm thể hiện mức chắc chắn theo một phương pháp cụ thể; chỉ hiểu như xác suất đúng khi đã được hiệu chỉnh và kiểm tra. Điểm LLM tự khai không đủ làm căn cứ.",
+   "Ví dụ: kiểm trên dữ liệu có nhãn xem nhóm điểm 0,8 có đúng khoảng 80% hay không."
   ]
  },
  "alias": {
@@ -229,79 +222,78 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "“Influencing without authority” nghĩa là gì?",
+   "q": "Đội kinh doanh muốn mở rộng nhưng eval cho thấy một nhóm lỗi quan trọng. Cách gây ảnh hưởng phù hợp là gì?",
    "o": [
-    "Ra lệnh cho đội kỹ thuật",
-    "Dẫn dắt bằng lý lẽ và dữ liệu mà không dựa vào quyền chức vụ",
-    "Không cần giao tiếp",
-    "Để sếp quyết hết"
+    "Hứa mốc trước rồi hạ ngưỡng sau",
+    "Chỉ viện chức danh PM",
+    "Trình bày dữ kiện, tác động, phương án giảm phạm vi và tiêu chí mở rộng",
+    "Giữ kín lỗi để chờ sửa"
    ],
-   "a": 1,
-   "ex": "AI PM thường không quản lý trực tiếp những người làm ra sản phẩm."
+   "a": 2,
+   "ex": "Lý lẽ đi cùng tác động và lựa chọn giúp các bên quyết định. Giấu lỗi hoặc đổi ngưỡng theo lịch làm mất căn cứ đánh giá."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Theo bảng so sánh, AI PM có bắt buộc viết code production không?",
+   "q": "Cách phân công PM và AI Engineer nào phù hợp nhất?",
    "o": [
-    "Có, mỗi ngày",
-    "Không bắt buộc; có thể dùng Python hoặc no-code cho prototype",
-    "Không bao giờ được viết code",
-    "Chỉ viết SQL"
+    "Phân người dẫn dắt từng quyết định nhưng cùng quan tâm discovery, eval và outcome",
+    "PM không được viết code",
+    "Kỹ sư chỉ lo latency, không cần biết nhu cầu",
+    "Chỉ người dùng chịu trách nhiệm outcome"
    ],
-   "a": 1,
-   "ex": "Code production là việc của AI Engineer."
+   "a": 0,
+   "ex": "Trọng tâm khác nhau không tạo ranh giới cứng. Công nghệ và quyền quyết định tùy đội, cần làm rõ trách nhiệm phối hợp."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 2,
    "type": "one",
-   "q": "Cái bẫy hay gặp khi làm việc với đội kinh doanh là gì?",
+   "q": "Kinh doanh muốn hứa trợ lý xử lý mọi yêu cầu. Nên chuẩn bị thông tin nào?",
    "o": [
-    "Họ không quan tâm AI",
-    "Hứa quá mức về năng lực AI với khách hàng",
-    "Họ muốn đọc code",
-    "Họ chặn ra mắt"
+    "Số dòng code đã viết",
+    "Danh sách model nổi tiếng",
+    "Một demo chỉ có ca thành công",
+    "Phạm vi đã kiểm, lỗi còn lại, ngưỡng và đường chuyển ca"
    ],
-   "a": 1,
-   "ex": "Làm rõ tính xác suất của AI trước khi họ hứa với khách."
+   "a": 3,
+   "ex": "Cam kết phải bám bằng chứng và phạm vi. Demo đẹp hoặc tên model chưa chứng minh năng lực trên mọi yêu cầu."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 2,
    "type": "one",
-   "q": "Nên đưa đội pháp lý vào lúc nào?",
+   "q": "Khi nào nên mời bảo mật/pháp lý tham gia?",
    "o": [
-    "Sát ngày ra mắt",
-    "Từ bước scoping",
-    "Sau khi có sự cố",
-    "Không cần"
+    "Khi xác định dữ liệu, mục đích và phạm vi ban đầu, rồi theo các thay đổi quan trọng",
+    "Chỉ sau pilot vì lúc đó mới có người dùng",
+    "Chỉ khi khách yêu cầu hợp đồng",
+    "Chỉ sau khi đã chọn provider"
    ],
-   "a": 1,
-   "ex": "Sửa sớm rẻ hơn nhiều."
+   "a": 0,
+   "ex": "Tham gia sớm giúp phát hiện ràng buộc trước đầu tư lớn; tiếp tục xem lại khi intended use, dữ liệu hoặc thị trường thay đổi."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "multi",
-   "q": "Một mục decision log nên có gì?",
+   "q": "Decision log hữu ích cần lưu những gì?",
    "o": [
-    "Bối cảnh",
-    "Giả định ban đầu",
-    "Dữ liệu thực nghiệm lúc đó",
-    "Lý do chấp nhận rủi ro"
+    "Chỉ kết luận cuối để tránh tranh luận cũ",
+    "Bối cảnh và giả định",
+    "Rủi ro, người phụ trách và thời điểm xem lại",
+    "Dữ liệu, lựa chọn và lý do"
    ],
    "a": [
-    0,
     1,
     2,
     3
    ],
-   "ex": "Đủ bốn ý để người sau hiểu vì sao."
+   "ex": "Cần đủ căn cứ để hiểu và xem lại quyết định. Chỉ lưu kết luận khiến khó biết khi nào giả định đã thay đổi."
   }
  ]
 };

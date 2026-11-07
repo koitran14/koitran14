@@ -32,28 +32,28 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Token là đơn vị tiền tệ thật của AI. Hiểu thuật ngữ kỹ thuật là hiểu chi phí và rủi ro của sản phẩm.</div>
+  <div class="idea"><small>Ý chính của chương</small>Hiểu thuật ngữ giúp chọn kiến trúc, đo chất lượng và trao đổi rõ giới hạn của hệ thống. Các định nghĩa dưới đây nêu cả điều kiện áp dụng.</div>
   <section id="s1">
     <span class="num">17.1</span>
     <h2>Model và cách học</h2>
     <p class="gist">Các tầng của AI và các kiểu học.</p>
 <input class="glf" data-glf placeholder="Lọc thuật ngữ trong chương…" aria-label="Lọc thuật ngữ">
-    <dl class="gl"><dt>machine learning</dt><dd>Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.</dd><dt>deep learning</dt><dd>Nhánh của machine learning dùng mạng neural nhiều lớp, mạnh với ảnh, âm thanh, văn bản.</dd><dt>foundation model</dt><dd>Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.</dd><dt>LLM</dt><dd>Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.</dd><dt>deterministic</dt><dd>Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.</dd><dt>probabilistic</dt><dd>Hệ thống đưa ra dự đoán hoặc sinh nội dung theo xác suất; cùng một đầu vào có thể cho những đầu ra khác nhau.</dd></dl>
-    <p>Ba kiểu học của machine learning: supervised (học từ dữ liệu đã gán nhãn, X → Y), unsupervised (tự tìm cấu trúc ẩn trong dữ liệu chưa gán nhãn), reinforcement (tối ưu hành động bằng thưởng, phạt).</p>
+    <dl class="gl"><dt>machine learning</dt><dd>Phương pháp học các mẫu từ dữ liệu; gồm nhiều cách như supervised, unsupervised, self-supervised và reinforcement learning.</dd><dt>deep learning</dt><dd>Nhánh của machine learning dùng mạng neural nhiều lớp, mạnh với ảnh, âm thanh, văn bản.</dd><dt>foundation model</dt><dd>Mô hình được huấn luyện trên phạm vi dữ liệu rộng và có thể được điều chỉnh hoặc dùng lại cho nhiều tác vụ. Các foundation model hiện đại chủ yếu dựa trên deep learning.</dd><dt>LLM</dt><dd>Mô hình ngôn ngữ lớn, thường được huấn luyện trước bằng self-supervised learning để xử lý và sinh ngôn ngữ. Không nên mặc định rằng mô hình nhớ chính xác hoặc có thể truy xuất nguồn của những dữ liệu đã học.</dd><dt>deterministic</dt><dd>Với cùng đầu vào, trạng thái và cấu hình liên quan, một phép tính xác định cho cùng kết quả. Mô hình ML cũng có thể được chạy theo cách này.</dd><dt>probabilistic</dt><dd>Mô hình hóa bằng xác suất; ở tác vụ sinh nội dung có lấy mẫu, cùng prompt có thể cho câu trả lời khác nhau. Không có nghĩa mọi mô hình AI đều ngẫu nhiên khi chạy.</dd></dl>
+    <p>Các cách học có thể kết hợp: supervised dùng cặp đầu vào–nhãn; unsupervised tìm cấu trúc; self-supervised tạo tín hiệu từ chính dữ liệu như dự đoán token kế tiếp; reinforcement tối ưu hành động theo thưởng.</p>
   </section>
 
   <section id="s2">
     <span class="num">17.2</span>
     <h2>Dữ liệu, ngữ cảnh và kiến trúc</h2>
-    <p class="gist">Những gì đi vào model và cách hệ thống được ghép lại.</p>
-<dl class="gl"><dt>token</dt><dd>Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.<span class="ins"><b>Lưu ý</b>Token là đơn vị tiền tệ thật của AI. Quản lý token là quản lý chi phí sản phẩm.</span></dd><dt>embedding</dt><dd>Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.</dd><dt>vector database</dt><dd>Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).</dd><dt>context window</dt><dd>Số token tối đa model nhận và sinh trong một lần gọi, tính cả prompt lẫn câu trả lời.</dd><dt>prompt engineering</dt><dd>Thiết kế câu lệnh và ngữ cảnh đưa vào model (system prompt, few-shot, chèn dữ liệu) để điều khiển đầu ra mà không đổi trọng số.</dd><dt>few-shot prompting</dt><dd>Đưa vài ví dụ đầu vào – đầu ra mẫu ngay trong prompt để model bắt chước định dạng.</dd><dt>RAG</dt><dd>Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.</dd><dt>fine-tuning</dt><dd>Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.</dd><dt>tool calling</dt><dd>Khả năng model quyết định gọi hàm hoặc API bên ngoài (truy vấn SQL, gửi email…) thay vì chỉ trả văn bản.</dd><dt>AI agent</dt><dd>Ứng dụng dựa trên LLM tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.</dd><dt>model routing</dt><dd>Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.</dd><dt>model gateway</dt><dd>Lớp trung gian quản lý mọi lời gọi model: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.</dd><dt>orchestration</dt><dd>Lớp điều phối luồng: dựng prompt, gọi công cụ, quản lý state, nối các dịch vụ (LangChain, LlamaIndex, Step Functions…).</dd><dt>prompt caching</dt><dd>Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.</dd></dl>
+    <p class="gist">Các loại dữ liệu đầu vào, cách quản lý ngữ cảnh và vai trò của từng thành phần trong hệ thống.</p>
+<dl class="gl"><dt>token</dt><dd>Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.</dd><dt>embedding</dt><dd>Biểu diễn dữ liệu bằng vector; độ gần phản ánh sự liên quan theo cách mô hình được huấn luyện, không bảo đảm nội dung đúng hoặc đầy đủ.</dd><dt>vector database</dt><dd>Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).</dd><dt>context window</dt><dd>Giới hạn token ngữ cảnh của model cho một lần gọi, thường gồm đầu vào và đầu ra; còn có giới hạn output riêng, tùy model/API.</dd><dt>prompt engineering</dt><dd>Thiết kế câu lệnh và ngữ cảnh đưa vào model (system prompt, few-shot, chèn dữ liệu) để điều khiển đầu ra mà không đổi trọng số.</dd><dt>few-shot prompting</dt><dd>Đưa vài ví dụ đầu vào – đầu ra mẫu ngay trong prompt để model bắt chước định dạng.</dd><dt>RAG</dt><dd>Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.</dd><dt>fine-tuning</dt><dd>Huấn luyện thêm mô hình có sẵn để thay đổi trọng số, cải thiện hành vi hoặc tác vụ chuyên biệt. Không tự bảo đảm kiến thức mới, đúng schema hay trích nguồn.</dd><dt>structured outputs</dt><dd>Cơ chế ràng buộc đầu ra theo schema mà mô hình hoặc API hỗ trợ. Ứng dụng vẫn cần kiểm tra tính đúng đắn về nghiệp vụ và xử lý các trường hợp từ chối trả lời, đầu ra bị cắt hoặc schema vượt giới hạn hỗ trợ.</dd><dt>tool calling</dt><dd>Mô hình đề xuất gọi công cụ với tham số; ứng dụng kiểm tra quyền, validate và thực thi. Quyền hành động không đến từ lời đề xuất của model.</dd><dt>AI agent</dt><dd>Hệ thống dùng LLM chọn bước tiếp theo, gọi công cụ, đọc kết quả và lặp theo điều kiện dừng, trong giới hạn quyền và ngân sách.</dd><dt>model routing</dt><dd>Lựa chọn mô hình theo tiêu chí như loại tác vụ, chất lượng, độ trễ và chi phí. Có thể thực hiện bằng quy tắc cố định, không cần agent.</dd><dt>model gateway</dt><dd>Lớp trung gian quản lý mọi lời gọi mô hình: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.</dd><dt>orchestration</dt><dd>Lớp điều phối luồng: dựng prompt, gọi công cụ, quản lý trạng thái, nối các dịch vụ (LangChain, LlamaIndex, Step Functions…).</dd><dt>prompt caching</dt><dd>Tái sử dụng phần tính toán cho tiền tố prompt trùng nhau, theo điều kiện của dịch vụ. Vẫn gọi mô hình sinh đầu ra; khác response caching và embedding caching.</dd></dl>
   </section>
 
   <section id="s3">
     <span class="num">17.3</span>
     <h2>Chất lượng, vận hành và an toàn</h2>
-    <p class="gist">Cách đo, cách giữ hệ thống chạy, và các rủi ro cần chặn.</p>
-<dl class="gl"><dt>hallucination</dt><dd>Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.</dd><dt>groundedness</dt><dd>Mức độ câu trả lời dựa hoàn toàn vào ngữ cảnh được cung cấp (ví dụ tài liệu RAG), không lấy thông tin trôi nổi.</dd><dt>faithfulness</dt><dd>Mức độ câu trả lời giữ đúng ý của tài liệu gốc, không bóp méo.</dd><dt>eval set</dt><dd>Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.</dd><dt>golden dataset</dt><dd>Bộ dữ liệu đánh giá được chuyên gia gán đáp án chuẩn, dùng làm mốc so sánh cố định giữa các phiên bản.</dd><dt>LLM-as-a-judge</dt><dd>Dùng một LLM chấm điểm câu trả lời của model khác theo tiêu chí cho trước.</dd><dt>offline evaluation</dt><dd>Chấm model trên eval set trước khi phát hành.</dd><dt>online evaluation</dt><dd>Đo chất lượng trên người dùng thật sau khi phát hành, ví dụ qua A/B test.</dd><dt>precision</dt><dd>Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).</dd><dt>recall</dt><dd>Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).</dd><dt>drift</dt><dd>Chất lượng model giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).</dd><dt>latency</dt><dd>Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.</dd><dt>TTFT</dt><dd>Time to First Token: thời gian đến khi model trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.</dd><dt>throughput</dt><dd>Lượng yêu cầu hoặc token hệ thống xử lý được trong một đơn vị thời gian.</dd><dt>observability</dt><dd>Khả năng nhìn vào hệ thống đang chạy qua log, metric, trace để biết nó làm gì và hỏng ở đâu.</dd><dt>guardrails</dt><dd>Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.</dd><dt>prompt injection</dt><dd>Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.</dd><dt>PII</dt><dd>Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.</dd><dt>PII redaction</dt><dd>Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.</dd></dl>
+    <p class="gist">Các khái niệm dùng để đánh giá chất lượng, theo dõi vận hành và kiểm soát rủi ro.</p>
+<dl class="gl"><dt>hallucination</dt><dd>Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.</dd><dt>groundedness</dt><dd>Mức các khẳng định trong câu trả lời được ngữ cảnh cung cấp hỗ trợ; cần xác định cách chấm và mẫu số. Có thể chồng lấn với faithfulness.</dd><dt>faithfulness</dt><dd>Trong đánh giá RAG, thường là mức câu trả lời được ngữ cảnh hỗ trợ; định nghĩa tùy bộ đo, không phải nhóm loại trừ groundedness hay hallucination.</dd><dt>eval set</dt><dd>Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng mô hình và prompt.</dd><dt>golden dataset</dt><dd>Bộ tham chiếu có đáp án hoặc tiêu chí chấm được kiểm định, quản lý phiên bản để so sánh. Cần bổ sung mẫu mới và giữ riêng tập kiểm tra độc lập (holdout) tránh tối ưu quá mức trên bộ đề.</dd><dt>LLM-as-a-judge</dt><dd>Dùng LLM chấm theo tiêu chí chấm, có thể dùng offline hoặc online. Cần kiểm định độ đồng thuận với người chấm và theo dõi thiên lệch.</dd><dt>offline evaluation</dt><dd>Đánh giá trên dữ liệu đã chuẩn bị, có thể chạy trước hoặc sau phát hành. Có thể chấm bằng code, chuyên gia hoặc LLM.</dd><dt>online evaluation</dt><dd>Đánh giá trên tương tác thực tế qua giám sát, lấy mẫu, phản hồi hoặc thí nghiệm. A/B test là một hình thức, không phải toàn bộ online evaluation.</dd><dt>precision</dt><dd>Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).</dd><dt>recall</dt><dd>Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).</dd><dt>drift</dt><dd>Thay đổi phân phối đầu vào (data drift) hoặc quan hệ đầu vào–đầu ra mục tiêu (concept drift). Có thể làm giảm chất lượng, không đồng nghĩa luôn giảm hay giảm dần.</dd><dt>latency</dt><dd>Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.</dd><dt>TTFT</dt><dd>Time to First Token: thời gian đến khi mô hình trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.</dd><dt>throughput</dt><dd>Lượng yêu cầu hoặc token hệ thống xử lý được trong một đơn vị thời gian.</dd><dt>observability</dt><dd>Khả năng nhìn vào hệ thống đang chạy qua log, metric, trace để biết nó làm gì và hỏng ở đâu.</dd><dt>guardrails</dt><dd>Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.</dd><dt>prompt injection</dt><dd>Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.</dd><dt>PII</dt><dd>Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.</dd><dt>PII redaction</dt><dd>Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.</dd></dl>
   </section>
 
   <div class="vids" data-videos="17"></div>
@@ -83,14 +83,15 @@ window.CH = {
    "n": "17.1",
    "t": "Model và cách học",
    "sum": [
-    "Machine learning, deep learning, foundation model, LLM.",
-    "Deterministic và probabilistic.",
-    "Supervised, unsupervised, reinforcement."
+    "Phương pháp học các mẫu từ dữ liệu; gồm nhiều cách như supervised, unsupervised, self-supervised và reinforcement learning.",
+    "Mô hình ngôn ngữ lớn, thường được huấn luyện trước bằng self-supervised learning để xử lý và sinh ngôn ngữ. Không mặc định nhớ chính xác hay tra được nguồn dữ liệu đã học.",
+    "Model huấn luyện trên dữ liệu rộng, có thể được điều chỉnh hoặc dùng lại cho nhiều tác vụ; các foundation model hiện đại chủ yếu dựa trên deep learning."
    ],
    "terms": [
     "ml",
     "llm",
-    "fm"
+    "fm",
+    "selfsupervised"
    ]
   },
   {
@@ -98,14 +99,15 @@ window.CH = {
    "n": "17.2",
    "t": "Dữ liệu, ngữ cảnh và kiến trúc",
    "sum": [
-    "Token, embedding, vector DB, context window.",
-    "Prompt, few-shot, RAG, fine-tuning.",
-    "Tool calling, agent, routing, gateway, orchestration, caching."
+    "Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.",
+    "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+    "Biểu diễn dữ liệu bằng vector; độ gần phản ánh sự liên quan theo cách mô hình được huấn luyện, không bảo đảm nội dung đúng hoặc đầy đủ."
    ],
    "terms": [
     "token",
     "rag",
-    "embedding"
+    "embedding",
+    "structured"
    ]
   },
   {
@@ -113,9 +115,8 @@ window.CH = {
    "n": "17.3",
    "t": "Chất lượng, vận hành và an toàn",
    "sum": [
-    "Hallucination, groundedness, faithfulness.",
-    "Eval set, golden dataset, LLM-as-a-judge.",
-    "Latency, TTFT, guardrails, prompt injection, PII."
+    "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+    "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection."
    ],
    "terms": [
     "halluc",
@@ -127,48 +128,58 @@ window.CH = {
  "terms": {
   "ml": [
    "machine learning",
-   "Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.",
-   "Học nấu ăn bằng cách nếm nhiều món, không phải đọc từng công thức."
+   "Phương pháp học các mẫu từ dữ liệu; gồm nhiều cách như supervised, unsupervised, self-supervised và reinforcement learning.",
+   "Ví dụ: học phân loại ticket từ các ticket đã gán nhãn."
   ],
   "llm": [
    "LLM",
-   "Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.",
-   "Người đã đọc gần hết thư viện, nói gì cũng trôi chảy nhưng không phải lúc nào cũng đúng."
+   "Mô hình ngôn ngữ lớn, thường được huấn luyện trước bằng self-supervised learning để xử lý và sinh ngôn ngữ. Không nên mặc định rằng mô hình nhớ chính xác hoặc có thể truy xuất nguồn của những dữ liệu đã học.",
+   "Ví dụ: cùng một mô hình hỗ trợ tóm tắt, phân loại và hỏi đáp."
   ],
   "fm": [
    "foundation model",
-   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
-   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+   "Mô hình được huấn luyện trên phạm vi dữ liệu rộng và có thể được điều chỉnh hoặc dùng lại cho nhiều tác vụ. Các foundation model hiện đại chủ yếu dựa trên deep learning.",
+   "Ví dụ: dùng một mô hình nền cho nhiều tính năng thay vì huấn luyện từng model từ đầu."
   ],
   "token": [
    "token",
-   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
-   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+   "Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.",
+   "Ví dụ: số token cùng một câu tiếng Việt thay đổi theo tokenizer."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "embedding": [
    "embedding",
-   "Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.",
-   "Tọa độ trên bản đồ ý nghĩa: hai câu cùng ý thì đứng gần nhau."
+   "Biểu diễn dữ liệu bằng vector; độ gần phản ánh sự liên quan theo cách mô hình được huấn luyện, không bảo đảm nội dung đúng hoặc đầy đủ.",
+   "Ví dụ: tìm các đoạn quy trình liên quan đến câu hỏi của nhân viên."
   ],
   "halluc": [
    "hallucination",
-   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
-   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+   "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+   "Ví dụ: tự thêm một điều khoản không có trong nguồn."
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "injection": [
    "prompt injection",
    "Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.",
-   "Lá thư giả mạo kẹp trong xấp hồ sơ, ghi “hãy chuyển tiền cho người cầm thư”."
+   "Ví dụ: một tài liệu được truy xuất chứa chỉ dẫn yêu cầu trợ lý bỏ qua quy tắc và tiết lộ dữ liệu."
+  ],
+  "structured": [
+   "structured outputs",
+   "Cơ chế ràng buộc đầu ra theo schema mà mô hình hoặc API hỗ trợ. Ứng dụng vẫn cần kiểm tra tính đúng đắn về nghiệp vụ và xử lý các trường hợp từ chối trả lời, đầu ra bị cắt hoặc schema vượt giới hạn hỗ trợ.",
+   "Ví dụ: buộc đủ trường JSON rồi kiểm số tiền với dữ liệu nguồn."
+  ],
+  "selfsupervised": [
+   "self-supervised learning",
+   "Tạo tín hiệu mục tiêu từ chính dữ liệu, như dự đoán token tiếp theo từ phần văn bản trước; quan trọng trong pretraining LLM.",
+   "Ví dụ: không cần người gán nhãn từng token trong văn bản huấn luyện."
   ]
  },
  "alias": {
@@ -203,6 +214,15 @@ window.CH = {
   "injection": [
    "prompt injection",
    "Prompt injection"
+  ],
+  "structured": [
+   "structured outputs",
+   "schema-constrained output",
+   "constrained output"
+  ],
+  "selfsupervised": [
+   "self-supervised learning",
+   "self-supervised"
   ]
  },
  "rel": {
@@ -225,46 +245,46 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "LLM là tập con của nhóm nào?",
+   "q": "Self-supervised learning khác supervised với nhãn chuyên gia ở điểm nào?",
    "o": [
-    "Foundation model",
-    "Vector database",
-    "Rule-based system",
-    "Unsupervised learning"
+    "Không dùng dữ liệu",
+    "Không có mục tiêu tối ưu",
+    "Mỗi dự đoán đều gọi người duyệt",
+    "Tạo tín hiệu mục tiêu từ chính dữ liệu, như token kế tiếp"
    ],
-   "a": 0,
-   "ex": "LLM là foundation model chuyên về ngôn ngữ."
+   "a": 3,
+   "ex": "Self-supervised vẫn có mục tiêu tối ưu và dữ liệu. Nó có thể được kết hợp với nhãn hoặc reinforcement ở giai đoạn khác."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Với tiếng Anh, 1.000 token tương đương khoảng bao nhiêu từ?",
+   "q": "Để dự toán phí token tiếng Việt đáng tin hơn, nên làm gì?",
    "o": [
-    "100",
-    "750",
-    "2.000",
-    "10.000"
+    "Đếm số từ và bỏ qua output",
+    "Coi ký tự và token luôn bằng nhau",
+    "Lấy mẫu nội dung thật và dùng tokenizer/công cụ đếm của model",
+    "Áp dụng cố định 750 từ cho 1.000 token mọi mô hình"
    ],
-   "a": 1,
-   "ex": "Khoảng 750 từ tiếng Anh."
+   "a": 2,
+   "ex": "Tokenizer và nội dung quyết định số token; cần tách input/output và các phần context. Tỷ lệ tiếng Anh chỉ là ước lượng thô."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 2,
    "type": "one",
-   "q": "Kỹ thuật tấn công chèn chỉ dẫn độc hại để phá guardrails gọi là gì?",
+   "q": "Dữ liệu đầu vào thay đổi phân phối, nhưng chưa thấy chất lượng giảm. Có thể kết luận gì?",
    "o": [
-    "Hallucination",
-    "Prompt injection",
-    "Drift",
-    "Fine-tuning"
+    "Có thể có data drift; cần đo ảnh hưởng, không đồng nhất drift với suy giảm",
+    "Phải huấn luyện lại ngay",
+    "Mọi lỗi đều do prompt injection",
+    "Không có drift vì accuracy chưa giảm"
    ],
-   "a": 1,
-   "ex": "Prompt injection có thể trực tiếp hoặc gián tiếp qua tài liệu."
+   "a": 0,
+   "ex": "Drift là thay đổi dữ liệu/quan hệ mục tiêu, có thể hoặc không ảnh hưởng hiệu năng. Cần điều tra theo nhóm và tác động thực tế."
   }
  ]
 };

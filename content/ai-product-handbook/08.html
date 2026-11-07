@@ -31,28 +31,28 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần III / 08</div>
   <h1>Kiến trúc hệ thống AI <i>cho production</i></h1>
-  <p class="dek">Bốn lớp của một hệ thống AI production, model gateway với fallback khi nhà cung cấp lỗi, orchestration, hạ tầng cloud, và các chỉ số vận hành: TTFT, throughput, error rate, uptime.</p>
+  <p class="dek">Bốn lớp của một hệ thống AI production, model gateway với fallback khi nhà cung cấp lỗi, orchestration, hạ tầng đám mây, và các chỉ số vận hành: TTFT, throughput, error rate, uptime.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 08 / 21</span><span>8 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Đưa AI từ prototype lên production chủ yếu là bài toán độ ổn định, latency, khả năng mở rộng và chi phí; prompt chỉ là phần nhỏ.</div>
+  <div class="idea"><small>Ý chính của chương</small>Để đưa một bản thử nghiệm AI vào vận hành thực tế, cần giải quyết thêm các yêu cầu về độ ổn định, độ trễ, khả năng mở rộng và chi phí, bên cạnh việc thiết kế prompt.</div>
   <section id="s1">
     <span class="num">08.1</span>
     <h2>Bốn lớp kiến trúc</h2>
-    <p class="gist">Frontend, orchestration, model, data &amp; messaging: mỗi lớp lo một loại rủi ro.</p>
+    <p class="gist">Bốn lớp gồm giao diện, điều phối, mô hình và dữ liệu–truyền thông điệp; mỗi lớp đảm nhiệm một nhóm chức năng.</p>
 <figure>
       <div class="fig"><div class="stack" id="stack"></div><div class="panel" id="stackP"></div></div>
       <figcaption><b>Hình 1</b>Bốn lớp của hệ thống AI production theo báo cáo nguồn. Chọn một lớp để xem vai trò và công cụ ví dụ.</figcaption>
     </figure>
-    <p>Tách lớp rõ giúp thay thế từng phần mà không đụng phần còn lại: đổi nhà cung cấp model chỉ chạm lớp model, đổi vector DB chỉ chạm lớp dữ liệu. Ví dụ dùng dịch vụ AWS vì báo cáo nguồn viết theo AWS; các cloud khác có dịch vụ tương đương.</p>
+    <p>Phân tách trách nhiệm giữa các lớp giúp hạn chế ảnh hưởng khi thay đổi nhà cung cấp mô hình hoặc cơ sở dữ liệu vector. Tuy vậy, vẫn cần kiểm tra lại schema, cách gọi công cụ, quá trình truy xuất và chất lượng của toàn bộ luồng xử lý. Ví dụ dùng dịch vụ AWS vì báo cáo nguồn viết theo AWS; các nền tảng đám mây khác có dịch vụ tương đương.</p>
   </section>
 
   <section id="s2">
     <span class="num">08.2</span>
     <h2>Model gateway và orchestration</h2>
-    <p class="gist">Mọi lời gọi model đi qua một cổng chung, nơi quản lý key, rate limit và chuyển nhà cung cấp khi lỗi.</p>
-<p>Model gateway là lớp đệm quản lý mọi kết nối API tới model: giữ API key tập trung, load balancing, rate limiting. Khi gặp lỗi giới hạn tần suất (<code>HTTP 429 Too Many Requests</code>), hoặc nhà cung cấp chính chậm bất thường hay gián đoạn, gateway kích hoạt fallback: tự chuyển truy vấn từ nhà cung cấp chính sang nhà cung cấp phụ mà người dùng không bị gián đoạn.</p>
+    <p class="gist">Mọi lời gọi mô hình đi qua một cổng chung, nơi quản lý key, rate limit và chuyển nhà cung cấp khi lỗi.</p>
+<p>Model gateway là lớp đệm quản lý mọi kết nối API tới model: giữ API key tập trung, load balancing, rate limiting. Khi gặp lỗi giới hạn tần suất (<code>HTTP 429 Too Many Requests</code>), hoặc nhà cung cấp chính chậm bất thường hay gián đoạn, gateway áp dụng chính sách đã cấu hình: backoff/retry có giới hạn, đưa vào queue hoặc fallback sang mô hình dự phòng đã được đánh giá. Chuyển provider còn phụ thuộc quyền sử dụng dữ liệu, quota, ngân sách và tính tương thích; không bảo đảm mọi request đều thành công.</p>
     <figure>
       <div class="fig">
         <div class="figbar"><span>Mô phỏng: trạng thái nhà cung cấp chính</span><div class="seg" id="gw"><button data-s="ok" class="on">Bình thường</button><button data-s="429">429 rate limit</button><button data-s="slow">Chậm bất thường</button><button data-s="down">Gián đoạn</button></div></div>
@@ -60,37 +60,37 @@
       </div>
       <figcaption><b>Hình 2</b>Gateway quyết định gửi request tới đâu.</figcaption>
     </figure>
-    <p>Orchestration dùng framework như LangChain, LlamaIndex, LangGraph hoặc dịch vụ như AWS Lambda, Step Functions để điều phối chuỗi tác vụ phức tạp, quản lý state và khôi phục khi có sự cố. Với agent nhiều bước, phần quản lý state và khả năng chạy lại từ bước lỗi quan trọng hơn chọn framework nào.</p>
-    <div class="take"><small>Ghi nhớ</small>Fallback giữa các nhà cung cấp chỉ an toàn khi bạn đã chấm model phụ trên cùng eval set với model chính.</div>
+    <p>Orchestration dùng framework như LangChain, LlamaIndex, LangGraph hoặc dịch vụ như AWS Lambda, Step Functions để điều phối chuỗi tác vụ phức tạp, quản lý trạng thái và khôi phục khi có sự cố. Với agent nhiều bước, phần quản lý trạng thái và khả năng chạy lại từ bước lỗi quan trọng hơn chọn framework nào.</p>
+    <div class="take"><small>Ghi nhớ</small>Fallback giữa các nhà cung cấp chỉ an toàn khi bạn đã đánh giá mô hình phụ trên cùng eval set với mô hình chính.</div>
   </section>
 
   <section id="s3">
     <span class="num">08.3</span>
     <h2>API, database, queue và tích hợp</h2>
-    <p class="gist">Một sản phẩm AI trên cloud ghép nhiều dịch vụ: lưu trữ, suy luận, hàng chờ, phân quyền, kết nối riêng.</p>
+    <p class="gist">Một sản phẩm AI trên nền tảng đám mây ghép nhiều dịch vụ: lưu trữ, suy luận, hàng chờ, phân quyền, kết nối riêng.</p>
 <table class="tbl">
       <tr><th>Thành phần</th><th>Ví dụ trên AWS</th><th>Vai trò</th></tr>
       <tr><td>Lưu trữ dữ liệu</td><td>Amazon S3</td><td>Tài liệu thô, dữ liệu huấn luyện, dữ liệu kiểm thử, log</td></tr>
-      <tr><td>Suy luận</td><td>Amazon Bedrock / SageMaker AI</td><td>Gọi foundation model qua API (Bedrock) hoặc huấn luyện, fine-tune, triển khai model riêng (SageMaker AI)</td></tr>
+      <tr><td>Suy luận</td><td>Amazon Bedrock / SageMaker AI</td><td>Gọi foundation model qua API (Bedrock) hoặc huấn luyện, fine-tune, triển khai mô hình riêng (SageMaker AI)</td></tr>
       <tr><td>Hàng chờ, bất đồng bộ</td><td>Amazon SQS / EventBridge</td><td>Đệm request để kiểm soát rate limit khi gọi LLM, giảm tải backend</td></tr>
       <tr><td>Danh tính, phân quyền</td><td>AWS IAM</td><td>Phân quyền giữa các dịch vụ, bảo vệ API key và tài nguyên</td></tr>
       <tr><td>Kết nối riêng</td><td>AWS PrivateLink</td><td>Dữ liệu giữa các dịch vụ AI không đi qua internet công cộng</td></tr>
     </table>
-    <p>Queue là phần hay bị quên ở prototype. Khi lưu lượng tăng, gọi LLM đồng bộ trực tiếp từ request của người dùng dễ đụng rate limit; đẩy qua queue giúp hệ thống chịu tải đều hơn với các tác vụ không cần trả lời tức thì.</p>
+    <p>Queue là phần hay bị quên ở prototype. Khi lưu lượng tăng, gọi LLM đồng bộ trực tiếp từ request của người dùng có thể vượt giới hạn tần suất gọi; đẩy qua queue giúp hệ thống chịu tải đều hơn với các tác vụ không cần trả lời tức thì.</p>
   </section>
 
   <section id="s4">
     <span class="num">08.4</span>
     <h2>Observability, latency và mở rộng</h2>
-    <p class="gist">Bốn chỉ số vận hành cốt lõi, cộng với theo dõi token theo thời gian thực để không vỡ ngân sách.</p>
+    <p class="gist">Theo dõi bốn chỉ số vận hành chính và lượng token sử dụng theo thời gian thực để kiểm soát chất lượng dịch vụ và ngân sách.</p>
 <ul>
-      <li><b>Latency (TTFT)</b>: thời gian tới token đầu tiên.</li>
+      <li><b>Latency</b>: phân biệt thời gian tới token đầu tiên (TTFT) với thời gian hoàn thành toàn bộ phản hồi. Theo dõi p50/p95 trong điều kiện tải đã nêu.</li>
       <li><b>Throughput</b>: số token hoặc request xử lý được mỗi đơn vị thời gian (TPS, RPS).</li>
       <li><b>Error rate</b>: tỷ lệ lời gọi API thất bại hoặc bị ngắt.</li>
       <li><b>Uptime</b>: tỷ lệ thời gian hệ thống chạy không sự cố.</li>
     </ul>
-    <p>Về chi phí, theo dõi lượng token tiêu thụ theo thời gian thực để không vượt ngân sách. Prompt caching cho các câu hỏi hoặc phần prompt lặp lại giúp trả kết quả nhanh mà không phải gọi lại model, vừa giảm chi phí vừa giảm latency. Observability tốt cho hệ thống AI còn gồm trace từng bước của agent: prompt nào đã gửi, công cụ nào đã gọi, kết quả nào quay về, để khi trả lời sai có thể lần ra bước hỏng.</p>
-    <div class="take"><small>Ghi nhớ</small>Không có trace thì không debug được agent. Ghi lại prompt, tool call và kết quả của từng bước.</div>
+    <p>Về chi phí, theo dõi lượng token tiêu thụ theo thời gian thực để không vượt ngân sách. Prompt caching tái sử dụng phần tính toán của tiền tố prompt trùng nhau, giảm chi phí và thời gian xử lý đầu vào; model vẫn được gọi để sinh câu trả lời mới. Response caching mới trả lại câu trả lời đã lưu. Cả hai cần kiểm tra điều kiện cache của dịch vụ; response cache còn phải giữ đúng quyền truy cập và độ mới của dữ liệu. Observability tốt cho hệ thống AI còn gồm trace từng bước của agent: prompt nào đã gửi, công cụ nào đã gọi, kết quả nào quay về, để khi trả lời sai có thể xác định bước gây ra lỗi.</p>
+    <div class="take"><small>Ghi nhớ</small>Trace giúp xác định bước gây ra lỗi trong một tác vụ nhiều bước. Ghi trace từng bước với mã yêu cầu, độ trễ và kết quả cần thiết; che dữ liệu nhạy cảm, giới hạn quyền đọc và thời gian lưu nhật ký.</div>
   </section>
 
   <div class="vids" data-videos="08"></div>
@@ -109,7 +109,7 @@ const STACK = [['Frontend / UI', 'Người dùng gửi tương tác và nhận k
 stack.innerHTML = STACK.map((s, i) => `<button data-i="${i}"><b>${i + 1}</b><span>${s[0]}<small>${s[2]}</small></span></button>`).join('');
 stack.onclick = e => {const b = e.target.closest('[data-i]'); if (!b) return; stack.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); stackP.innerHTML = `<h5>${STACK[+b.dataset.i][0]}</h5>${STACK[+b.dataset.i][1]}`};
 stack.querySelector('button').click();
-const GW = {ok: [0, 'Gateway gửi tới nhà cung cấp chính như thường.'], '429': [1, 'Nhà cung cấp chính trả 429. Gateway chuyển request sang nhà cung cấp phụ, người dùng không thấy lỗi.'],
+const GW = {ok: [0, 'Gateway gửi tới nhà cung cấp chính như thường.'], '429': [1, 'Nhà cung cấp chính trả 429. Trong chính sách minh họa này, gateway thử model phụ đã được duyệt; thực tế cũng có thể backoff hoặc queue.'],
  slow: [1, 'Latency nhà cung cấp chính vượt ngưỡng. Gateway chuyển sang nhà cung cấp phụ để giữ trải nghiệm.'], down: [1, 'Nhà cung cấp chính gián đoạn. Mọi request đi sang nhà cung cấp phụ cho tới khi bên chính hồi phục.']};
 function gwu(s) {const [k, t] = GW[s];
  gwF.innerHTML = `<div class="on">Ứng dụng</div><i>→</i><div class="on">Model gateway</div><i>→</i><div style="display:grid;gap:6px;padding:0;border:0;background:none"><div class="${k ? 'bad' : 'on'}">Nhà cung cấp chính</div><div class="${k ? 'on' : ''}">Nhà cung cấp phụ</div></div><p>${t}</p>`}
@@ -145,9 +145,9 @@ window.CH = {
    "n": "08.2",
    "t": "Model gateway và orchestration",
    "sum": [
-    "Gateway: API key, load balancing, rate limiting.",
-    "Lỗi 429 hoặc gián đoạn thì chuyển nhà cung cấp phụ.",
-    "Orchestration quản lý chuỗi tác vụ và state."
+    "Gateway quản lý key, quota và chính sách retry/fallback.",
+    "429 có thể backoff, queue hoặc fallback tùy điều kiện.",
+    "Model phụ cần eval, quyền dữ liệu và ngân sách phù hợp."
    ],
    "terms": [
     "gateway",
@@ -172,9 +172,9 @@ window.CH = {
    "n": "08.4",
    "t": "Observability, latency và mở rộng",
    "sum": [
-    "TTFT, throughput, error rate, uptime.",
-    "Theo dõi token theo thời gian thực.",
-    "Prompt caching giảm chi phí và latency; trace để debug."
+    "Tách TTFT và độ trễ hoàn thành; đo phân vị theo tải.",
+    "Prompt cache tái sử dụng đầu vào; response cache tái sử dụng câu trả lời.",
+    "Trace có che dữ liệu nhạy cảm và chính sách lưu giữ."
    ],
    "terms": [
     "ttft",
@@ -188,53 +188,53 @@ window.CH = {
  "terms": {
   "orchestration": [
    "orchestration",
-   "Lớp điều phối luồng: dựng prompt, gọi công cụ, quản lý state, nối các dịch vụ (LangChain, LlamaIndex, Step Functions…).",
-   "Nhạc trưởng: không chơi đàn nhưng giữ nhịp cho cả dàn nhạc."
+   "Việc điều phối các bước của hệ thống như chuẩn bị prompt, gọi công cụ, quản lý trạng thái và kết nối dịch vụ; có thể dùng mã ứng dụng, framework hoặc dịch vụ điều phối.",
+   "Ví dụ: xác thực yêu cầu, truy xuất tài liệu, gọi mô hình, kiểm tra kết quả và chuyển yêu cầu khi cần."
   ],
   "vectordb": [
    "vector database",
    "Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).",
-   "Thủ thư xếp sách theo nội dung, không theo tên."
+   "Ví dụ: lưu vector của các đoạn tài liệu để truy xuất những đoạn liên quan đến câu hỏi."
   ],
   "gateway": [
    "model gateway",
-   "Lớp trung gian quản lý mọi lời gọi model: API key, rate limit, load balancing, chuyển nhà cung cấp khi lỗi.",
-   "Tổng đài: mọi cuộc gọi đi qua đây, đường này bận thì nối đường khác."
+   "Lớp trung gian quản lý các lời gọi mô hình, bao gồm khóa API, giới hạn tần suất, cân bằng tải và chính sách thử lại hoặc chuyển sang nhà cung cấp dự phòng.",
+   "Ví dụ: tập trung các lời gọi mô hình để áp dụng giới hạn tần suất và chính sách thử lại hoặc chuyển sang phương án dự phòng."
   ],
   "fallback": [
    "fallback",
    "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
-   "Kế hoạch B khi kế hoạch A trục trặc."
+   "Ví dụ: khi không tìm được nguồn phù hợp, trợ lý hỏi thêm thông tin hoặc chuyển yêu cầu cho nhân viên."
   ],
   "agent": [
    "AI agent",
-   "Ứng dụng dựa trên LLM tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.",
-   "Trợ lý được giao cả việc, tự chia bước và tự cầm dụng cụ."
+   "Hệ thống dùng LLM chọn bước tiếp theo, gọi công cụ, đọc kết quả và lặp theo điều kiện dừng, trong giới hạn quyền và ngân sách.",
+   "Ví dụ: tra hồ sơ, kiểm dữ kiện rồi đề xuất bước xử lý tiếp."
   ],
   "ttft": [
    "TTFT",
-   "Time to First Token: thời gian đến khi model trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.",
-   "Lúc người phục vụ mang ly nước ra, trước khi món chính tới."
+   "Time to First Token: thời gian từ lúc gửi yêu cầu đến khi nhận token đầu tiên. Chỉ số này ảnh hưởng đến cảm nhận phản hồi ban đầu, nhưng không thể hiện thời gian hoàn tất toàn bộ câu trả lời.",
+   "Ví dụ: đo khoảng chờ đến token đầu tiên; chỉ số này không cho biết khi nào toàn bộ câu trả lời hoàn tất."
   ],
   "throughput": [
    "throughput",
    "Lượng yêu cầu hoặc token hệ thống xử lý được trong một đơn vị thời gian.",
-   "Số xe qua trạm thu phí mỗi phút."
+   "Ví dụ: đo số yêu cầu hoặc số token hệ thống xử lý mỗi giây dưới một mức tải xác định."
   ],
   "cache": [
    "prompt caching",
-   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
-   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+   "Tái sử dụng phần tính toán cho tiền tố prompt trùng nhau, theo điều kiện của dịch vụ. Vẫn gọi mô hình sinh đầu ra; khác response caching và embedding caching.",
+   "Ví dụ: tái sử dụng phần xử lý system prompt cố định, rồi sinh câu trả lời mới."
   ],
   "observability": [
    "observability",
    "Khả năng nhìn vào hệ thống đang chạy qua log, metric, trace để biết nó làm gì và hỏng ở đâu.",
-   "Bảng đồng hồ trên xe."
+   "Ví dụ: theo dõi độ trễ từng bước để xác định lỗi nằm ở retrieval, mô hình hay công cụ."
   ],
   "token": [
    "token",
-   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
-   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+   "Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.",
+   "Ví dụ: số token cùng một câu tiếng Việt thay đổi theo tokenizer."
   ]
  },
  "alias": {
@@ -279,78 +279,78 @@ window.CH = {
  "rel": {},
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Lớp nào quản lý luồng, xử lý prompt và gọi công cụ?",
+   "q": "Thành phần nào điều phối việc dựng prompt, gọi công cụ và quản lý trạng thái?",
    "o": [
-    "Frontend",
+    "Lớp lưu trữ tài liệu",
     "Orchestration",
-    "Model",
-    "Data & messaging"
+    "Giao diện hiển thị",
+    "Bộ tokenizer"
    ],
    "a": 1,
-   "ex": "Orchestration là lớp điều phối."
+   "ex": "Orchestration quản lý luồng; giao diện, lưu trữ và tokenizer có nhiệm vụ khác. Có thể viết trực tiếp hoặc dùng framework/dịch vụ."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Khi nhà cung cấp chính trả HTTP 429, model gateway nên làm gì?",
+   "q": "Provider trả 429. Trước khi fallback sang provider khác, cần kiểm gì?",
    "o": [
-    "Trả lỗi cho người dùng",
-    "Kích hoạt fallback sang nhà cung cấp phụ",
-    "Tăng max token",
-    "Xóa cache"
+    "Chính sách retry/backoff, quota, quyền dữ liệu và mô hình dự phòng đã đáp ứng tiêu chí đánh giá",
+    "Chỉ cần tăng max output token",
+    "Chỉ cần mô hình dự phòng rẻ hơn",
+    "Chỉ cần provider khác chưa trả lỗi"
    ],
-   "a": 1,
-   "ex": "429 là rate limit; gateway chuyển sang nhà cung cấp phụ."
+   "a": 0,
+   "ex": "429 có thể xử lý bằng backoff, queue hoặc fallback theo chính sách. Chuyển provider phải hợp quyền, chất lượng, quota và ngân sách."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "multi",
-   "q": "Model gateway chịu trách nhiệm những gì?",
+   "q": "Gateway có thể tập trung những việc gì?",
    "o": [
-    "Quản lý API key tập trung",
-    "Load balancing",
-    "Rate limiting",
-    "Thiết kế giao diện"
+    "Rate limit và chính sách retry/fallback",
+    "Quản lý credential",
+    "Tự bảo đảm mọi câu trả lời đúng nghiệp vụ",
+    "Theo dõi chi phí và chọn endpoint"
    ],
    "a": [
     0,
     1,
-    2
+    3
    ],
-   "ex": "Giao diện thuộc lớp frontend."
+   "ex": "Gateway quản lý kết nối và chính sách; không tự thay eval, kiểm tra nguồn và xử lý nghiệp vụ."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 2,
    "type": "one",
-   "q": "Dịch vụ nào trong ví dụ dùng để đệm request, kiểm soát rate limit?",
+   "q": "Tác vụ không cần trả lời tức thì thường xuyên vượt hạn mức gọi LLM. Thành phần nào giúp điều tiết tải?",
    "o": [
-    "Amazon S3",
-    "AWS IAM",
-    "Amazon SQS / EventBridge",
-    "AWS PrivateLink"
+    "Queue có giới hạn, worker và retry policy",
+    "Chỉ tăng context window",
+    "Chỉ thêm prompt ví dụ",
+    "Chỉ đổi CSS giao diện"
    ],
-   "a": 2,
-   "ex": "Hàng chờ giúp hệ thống chịu tải đều hơn."
+   "a": 0,
+   "ex": "Queue điều tiết tốc độ xử lý; vẫn cần giới hạn backlog, timeout và xử lý retry. Context và prompt không giải quyết quota."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
-   "q": "Prompt caching giúp gì?",
+   "q": "Prompt caching khác response caching ở điểm nào?",
    "o": [
-    "Tăng độ sáng tạo",
-    "Giảm chi phí và latency cho phần lặp lại",
-    "Tăng context window",
-    "Chống prompt injection"
+    "Prompt cache tái sử dụng xử lý đầu vào, vẫn sinh câu trả lời mới",
+    "Prompt cache luôn miễn phí",
+    "Prompt cache trả nguyên câu trả lời cũ",
+    "Response cache chỉ lưu token input"
    ],
-   "a": 1,
-   "ex": "Không phải xử lý hay trả tiền lại cho phần đã có."
+   "a": 0,
+   "ex": "Response cache có thể trả kết quả đã lưu; prompt cache tái sử dụng tiền tố theo điều kiện dịch vụ và vẫn có phí/giới hạn riêng."
   }
  ]
 };

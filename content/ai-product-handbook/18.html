@@ -37,29 +37,29 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Builder và FDE gần với người đã quen viết phần mềm nhất: họ code, nhưng thước đo của họ là vấn đề của khách hàng có được giải không.</div>
+  <div class="idea"><small>Ý chính của chương</small>Builder và FDE đều cần kỹ năng phát triển phần mềm và khả năng tìm hiểu vấn đề của khách hàng. Kết quả công việc được đánh giá qua hiệu quả của giải pháp trong thực tế.</div>
   <section id="s1">
     <span class="num">18.1</span>
     <h2>Hai vai trò</h2>
-    <p class="gist">Một người đi từ vấn đề tới sản phẩm chạy được; một người đưa sản phẩm vào hệ thống thật của khách hàng.</p>
-<dl class="gl"><dt>AI Product Builder</dt><dd>Người tự đi từ vấn đề đến sản phẩm AI chạy được: discovery, prototype, tích hợp, đo kết quả.</dd><dt>Forward Deployed Engineer</dt><dd>Kỹ sư làm việc sát khách hàng, tích hợp và tùy biến sản phẩm vào hệ thống thật của họ, rồi mang bài học về cho đội sản phẩm.</dd></dl>
+    <p class="gist">AI Product Builder phát triển sản phẩm từ vấn đề ban đầu; Forward Deployed Engineer tập trung đưa sản phẩm vào môi trường thực tế của khách hàng.</p>
+<dl class="gl"><dt>AI Product Builder</dt><dd>Người tham gia từ khâu tìm hiểu vấn đề đến phát triển sản phẩm AI có thể sử dụng được, bao gồm thử nghiệm, tích hợp và đo lường kết quả.</dd><dt>Forward Deployed Engineer</dt><dd>Kỹ sư làm sát khách hàng để hiểu quy trình, tích hợp và tùy biến sản phẩm trong môi trường thực tế, đồng thời đưa bài học về đội sản phẩm.</dd></dl>
     <p>Cả hai vai trò đều cần nền tảng kỹ sư và tư duy sản phẩm. AI Product Builder thường làm từ con số 0: tự tìm vấn đề, dựng prototype, đưa cho người dùng thử, đo kết quả. Forward Deployed Engineer làm ở phía khách hàng: hiểu quy trình và dữ liệu của họ, tích hợp và tùy biến sản phẩm, rồi mang những gì học được về cho đội sản phẩm. Video trong chương giúp hình dung công việc hằng ngày của hai vai trò này.</p>
   </section>
 
   <section id="s2">
     <span class="num">18.2</span>
     <h2>Sáu thuật ngữ trong vòng làm việc</h2>
-    <p class="gist">Một vòng đi từ hiểu khách hàng tới đo tác động.</p>
+    <p class="gist">Quy trình bắt đầu từ tìm hiểu khách hàng, phát triển giải pháp và đánh giá kết quả, sau đó tiếp tục cải tiến.</p>
 <ol class="loop">
       <li><b>Customer discovery</b>Phỏng vấn và quan sát để tìm vấn đề thật của khách hàng.</li>
       <li><b>Solution validation</b>Thử nhanh để xác nhận giải pháp AI có giải được bài toán không.</li>
-      <li><b>Prototyping</b>Dựng bản chạy thử nhanh bằng API hoặc no-code để kiểm tính khả thi.</li>
-      <li><b>Production readiness</b>Mức sẵn sàng về an toàn, latency, chịu tải và bảo mật để đưa ra thật.</li>
-      <li><b>System integration</b>Đưa model AI vào kiến trúc phần mềm đang có.</li>
-      <li><b>Outcome measurement</b>Đo tác động kinh doanh thật sau khi triển khai.</li>
+      <li><b>Prototyping</b>Dựng bản chạy thử nhanh bằng API hoặc no-code để kiểm tra tính khả thi.</li>
+      <li><b>Production readiness</b>Mức độ đáp ứng các yêu cầu về an toàn, độ trễ, khả năng chịu tải và bảo mật trước khi vận hành thực tế.</li>
+      <li><b>System integration</b>Đưa mô hình AI vào kiến trúc phần mềm đang có.</li>
+      <li><b>Outcome measurement</b>Đo thay đổi trong công việc người dùng và kết quả sản phẩm sau triển khai, rồi liên hệ với tác động kinh doanh.</li>
     </ol>
-    <p>Vòng này lặp lại: outcome measurement chỉ ra chỗ cần discovery tiếp. Với người xuất thân Software Engineer, bước 4 và 5 là thế mạnh sẵn có; bước 1, 2 và 6 cần tập thêm. Phần I và Phần IV của handbook nói về các bước này.</p>
-    <div class="take"><small>Ghi nhớ</small>Bạn đã giỏi bước 4 và 5. Đầu tư vào bước 1, 2 và 6.</div>
+    <p>Vòng này lặp lại: outcome measurement chỉ ra chỗ cần discovery tiếp. Người có kinh nghiệm phần mềm có thể quen bước 4 và 5, nhưng mức sẵn sàng còn tùy hệ thống. Dùng một dự án nhỏ để kiểm tra cả sáu năng lực; không mặc định một người đã thành thạo những kỹ năng này chỉ vì chức danh của họ. Phần I và Phần IV của handbook nói về các bước này.</p>
+    <div class="take"><small>Ghi nhớ</small>Nền tảng kỹ sư có thể hỗ trợ bước 4 và 5. Tự đánh giá từng năng lực trước khi chọn phần cần luyện.</div>
   </section>
 
   <div class="vids" data-videos="18"></div>
@@ -99,9 +99,9 @@ window.CH = {
    "n": "18.2",
    "t": "Sáu thuật ngữ trong vòng làm việc",
    "sum": [
-    "Discovery → validation → prototyping.",
-    "Production readiness → integration → outcome measurement.",
-    "Kỹ sư mạnh bước 4–5, cần tập bước 1, 2, 6."
+    "Discovery, validation và prototyping kiểm các giả định.",
+    "Readiness, integration và outcome measurement cần bằng chứng thực tế.",
+    "Tự đánh giá kỹ năng, không suy năng lực chỉ từ chức danh."
    ],
    "terms": [
     "prototype",
@@ -112,23 +112,23 @@ window.CH = {
  "terms": {
   "builder": [
    "AI Product Builder",
-   "Người tự đi từ vấn đề đến sản phẩm AI chạy được: discovery, prototype, tích hợp, đo kết quả.",
-   "Thợ cả vừa vẽ được bản vẽ vừa tự dựng được nhà mẫu."
+   "Người tham gia từ khâu tìm hiểu vấn đề đến phát triển sản phẩm AI có thể sử dụng được, bao gồm thử nghiệm, tích hợp và đo lường kết quả.",
+   "Ví dụ: tìm hiểu khó khăn khi tra quy trình, xây dựng bản thử nghiệm và đo hiệu quả sử dụng."
   ],
   "fde": [
    "Forward Deployed Engineer",
-   "Kỹ sư làm việc sát khách hàng, tích hợp và tùy biến sản phẩm vào hệ thống thật của họ, rồi mang bài học về cho đội sản phẩm.",
-   "Kỹ sư công trường, không phải kỹ sư ngồi văn phòng thiết kế."
+   "Kỹ sư làm sát khách hàng để hiểu quy trình, tích hợp và tùy biến sản phẩm trong môi trường thực tế, đồng thời đưa bài học về đội sản phẩm.",
+   "Ví dụ: cùng khách hàng xử lý quyền truy cập trước khi triển khai trợ lý."
   ],
   "prototype": [
    "prototype",
    "Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.",
-   "Mô hình giấy của căn nhà."
+   "Ví dụ: dựng giao diện tra cứu để kiểm tra người dùng có hiểu câu trả lời, nguồn và cách báo lỗi hay không."
   ],
   "latency": [
    "latency",
    "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
-   "Thời gian chờ món sau khi gọi."
+   "Ví dụ: đo thời gian từ khi nhân viên gửi câu hỏi đến khi nhận phản hồi; cần nói rõ đang đo token đầu tiên hay toàn bộ câu trả lời."
   ]
  },
  "alias": {
@@ -158,46 +158,46 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Forward Deployed Engineer làm việc chủ yếu ở đâu?",
+   "q": "FDE làm gì trong bối cảnh handbook?",
    "o": [
-    "Chỉ trong phòng lab nghiên cứu model",
-    "Sát khách hàng, tích hợp sản phẩm vào hệ thống thật của họ",
-    "Ở bộ phận marketing",
-    "Ở bộ phận pháp lý"
+    "Làm sát khách hàng, tích hợp theo quy trình thực tế và phản hồi về đội sản phẩm",
+    "Chỉ bán hợp đồng và không tham gia kỹ thuật",
+    "Chỉ nghiên cứu pretraining",
+    "Chỉ nhận ticket không tiếp xúc người dùng"
+   ],
+   "a": 0,
+   "ex": "FDE kết nối kỹ thuật với bối cảnh khách hàng. Phạm vi cụ thể tùy tổ chức, không chỉ giới hạn ở khâu triển khai hoặc ở một địa điểm làm việc cụ thể."
+  },
+  {
+   "id": "my2-v2",
+   "s": 1,
+   "type": "one",
+   "q": "Prototype dùng tốt nhưng chưa kiểm tra quyền truy cập và chịu tải. Đánh giá nào hợp lý?",
+   "o": [
+    "Không cần pilot nữa",
+    "Còn thiếu bằng chứng production readiness và kế hoạch vận hành",
+    "Đã production ready vì UX tốt",
+    "Đã đủ nếu mô hình lớn"
    ],
    "a": 1,
-   "ex": "FDE đưa sản phẩm vào môi trường thật và mang bài học về."
+   "ex": "Prototype kiểm một số giả định; readiness còn có quyền, bảo mật, tải, giám sát và xử lý lỗi theo rủi ro."
   },
   {
-   "id": "my2",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Bước nào kiểm mức sẵn sàng về an toàn, latency, chịu tải, bảo mật?",
+   "q": "Outcome measurement nên đo gì?",
    "o": [
-    "Customer discovery",
-    "Prototyping",
-    "Production readiness",
-    "Outcome measurement"
+    "Thay đổi trong công việc và kết quả sản phẩm so với giả định/baseline",
+    "Chỉ số commit",
+    "Chỉ điểm model trên benchmark công khai",
+    "Chỉ số lượng tính năng đã bàn giao"
    ],
-   "a": 2,
-   "ex": "Production readiness là cổng trước khi ra thật."
-  },
-  {
-   "id": "my3",
-   "s": 1,
-   "type": "one",
-   "q": "Bước nào đo tác động kinh doanh sau triển khai?",
-   "o": [
-    "Solution validation",
-    "System integration",
-    "Outcome measurement",
-    "Prototyping"
-   ],
-   "a": 2,
-   "ex": "Outcome measurement khép vòng và mở vòng discovery tiếp theo."
+   "a": 0,
+   "ex": "Outcome đo thay đổi có ý nghĩa, rồi liên hệ impact. Output hay benchmark có ích nhưng chưa chứng minh giá trị trong quy trình."
   }
  ]
 };

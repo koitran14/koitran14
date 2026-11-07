@@ -17,61 +17,61 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần I / 01</div>
   <h1>Product Thinking <i>và vòng đời sản phẩm AI</i></h1>
-  <p class="dek">Sản phẩm, dự án, tính năng và dịch vụ AI khác nhau ở đâu; vì sao phải đo outcome thay vì output; và vòng đời năm giai đoạn của một sản phẩm AI.</p>
+  <p class="dek">Phân biệt sản phẩm, dự án, tính năng và dịch vụ AI; đánh giá sản phẩm bàn giao, kết quả sử dụng và tác động kinh doanh; quản lý sự không chắc chắn trong suốt vòng đời sản phẩm.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 01 / 21</span><span>9 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Phần mềm truyền thống chạy theo quy tắc cố định. Sản phẩm AI chạy theo xác suất, nên người làm sản phẩm phải quản lý sự không chắc chắn và đo kết quả, không chỉ đếm thứ đã bàn giao.</div>
+  <div class="idea"><small>Ý chính của chương</small>Sản phẩm dùng AI cần được đánh giá trên các tình huống đại diện, đồng thời kiểm thử các ràng buộc phần mềm. Thành công là người dùng làm việc tốt hơn với chi phí và mức rủi ro chấp nhận được.</div>
   <section id="s1">
     <span class="num">01.1</span>
     <h2>Product, project, feature và service</h2>
-    <p class="gist">Coi AI là một dự án ngắn hạn hay một tính năng phụ thường dẫn tới thất bại, vì chi phí và chất lượng của AI thay đổi liên tục sau khi ra mắt.</p>
-<p>Phần mềm truyền thống là deterministic (chạy theo quy tắc cố định): cùng đầu vào, luôn cùng đầu ra. Sản phẩm AI là probabilistic (đưa ra dự đoán theo xác suất): đầu ra thay đổi theo ngữ cảnh và dữ liệu, độ chính xác cũng vậy. Khác biệt này làm bốn khái niệm quen thuộc mang nghĩa mới.</p>
+    <p class="gist">Dự án có thời hạn bàn giao, còn sản phẩm và tính năng cần được phân công vận hành, bố trí ngân sách và đánh giá sau khi ra mắt.</p>
+<p>Ở ứng dụng LLM sinh nội dung, câu trả lời có thể thay đổi giữa các lần gọi và chất lượng phụ thuộc dữ liệu, prompt, model. Tuy vậy, không phải mọi AI đều sinh đầu ra ngẫu nhiên: một mô hình phân loại có thể cho kết quả cố định với cùng đầu vào và cấu hình. Phần mềm không AI cũng có trạng thái và phụ thuộc bên ngoài. Người xây dựng sản phẩm cần hiểu hành vi mà mô hình học được từ dữ liệu, những giới hạn của hành vi đó và ảnh hưởng khi đưa vào quy trình thực tế. Bốn khái niệm dưới đây giúp xác định phạm vi công việc; chúng có thể cùng xuất hiện trong một hệ thống.</p>
     <table class="tbl">
       <tr><th>Khái niệm</th><th>Mục tiêu</th><th>Chi phí, rủi ro</th><th>Đo thành công bằng</th></tr>
       <tr><td>AI product</td><td>Giải quyết liên tục một vấn đề thật bằng năng lực AI</td><td>Inference cost và latency phát sinh liên tục theo lưu lượng; rủi ro hallucination, drift</td><td>Adoption, mức hài lòng, retention, tác động kinh doanh (ROI, LTV, doanh thu)</td></tr>
-      <tr><td>AI project</td><td>Triển khai, tích hợp AI trong thời gian, ngân sách, phạm vi xác định</td><td>Chi phí cố định cho huấn luyện, gán nhãn, hạ tầng ban đầu; rủi ro trễ hạn</td><td>Bàn giao đúng hạn, đúng ngân sách, đạt KPI đã cam kết</td></tr>
+      <tr><td>AI project</td><td>Triển khai, tích hợp AI trong thời gian, ngân sách, phạm vi xác định</td><td>Ngân sách triển khai, dữ liệu, tích hợp và nghiệm thu; cần bàn giao cả kế hoạch vận hành</td><td>Bàn giao đúng hạn, đúng ngân sách, đạt KPI đã cam kết</td></tr>
       <tr><td>AI feature</td><td>Một thành phần nhỏ trong sản phẩm (tìm kiếm RAG, trích xuất văn bản)</td><td>Chi phí theo từng lượt gọi API; phải giữ latency để không làm chậm cả luồng</td><td>Độ chính xác tác vụ, tần suất dùng, số thao tác thủ công giảm được</td></tr>
       <tr><td>AI service</td><td>Cung cấp hạ tầng hoặc model dạng API (Amazon Bedrock, SageMaker, Textract)</td><td>Tính tiền theo mức dùng; cần cam kết SLA</td><td>Uptime, latency thấp, API ổn định, giá mỗi lượt suy luận</td></tr>
     </table>
-    <p>Điểm cần để ý là cột chi phí. Một dự án kết thúc khi bàn giao; một sản phẩm AI tiếp tục tốn tiền mỗi lần có người dùng, và chất lượng có thể trôi đi theo thời gian.</p>
-    <div class="take"><small>Ghi nhớ</small>Nếu chỉ coi AI là một dự án cần bàn giao, bạn sẽ bỏ qua chi phí vận hành, latency và việc chất lượng giảm dần sau ra mắt.</div>
+    <p>Điểm cần để ý là cột chi phí. Dự án có thể kết thúc khi nghiệm thu, nhưng hệ thống được bàn giao vẫn cần chi phí vận hành và đánh giá lại. Ngay cả một tính năng AI nhỏ cũng cần có người chịu trách nhiệm vận hành, với mức kiểm soát phù hợp với rủi ro.</p>
+    <div class="take"><small>Ghi nhớ</small>Kế hoạch triển khai AI cần tính cả chi phí vận hành, độ trễ và nguy cơ suy giảm chất lượng sau khi bàn giao.</div>
   </section>
 
   <section id="s2">
     <span class="num">01.2</span>
     <h2>Từ output đến outcome và impact</h2>
-    <p class="gist">Bàn giao xong một model chưa phải là thành công. Thành công là người dùng làm việc tốt hơn và doanh nghiệp thu về giá trị.</p>
-<p>Có ba tầng để đánh giá một việc đã làm. Output là thứ bàn giao: một LLM được tích hợp, một luồng API, một eval set, một PRD. Outcome là thay đổi ở hệ thống và người dùng: độ chính xác, latency, tỷ lệ tác vụ được tự động hoàn thành, mức hài lòng. Impact là giá trị dài hạn: retention, doanh thu định kỳ (ARR), chi phí hỗ trợ thủ công giảm, ROI.</p>
+    <p class="gist">Việc bàn giao mô hình chưa đủ để đánh giá thành công. Cần xem người dùng có làm việc hiệu quả hơn và doanh nghiệp có nhận được lợi ích hay không.</p>
+<p>Có thể đánh giá công việc qua ba mức: sản phẩm bàn giao, kết quả sử dụng và tác động dài hạn. Output là thứ bàn giao: một LLM được tích hợp, một luồng API, một eval set, một PRD. Outcome là thay đổi ở hệ thống và người dùng: độ chính xác, latency, tỷ lệ tác vụ được tự động hoàn thành, mức hài lòng. Impact là giá trị dài hạn: retention, doanh thu định kỳ (ARR), chi phí hỗ trợ thủ công giảm, ROI.</p>
     <figure>
       <div class="fig"><div id="ooi"></div></div>
       <figcaption><b>Hình 1</b>Mỗi câu là output, outcome hay impact?</figcaption>
     </figure>
-    <p>Với bài toán phân loại hay phát hiện, outcome thường phải đào sâu tới chuyện đánh đổi giữa precision và recall. Precision là tỷ lệ dự đoán dương tính mà đúng thật (giảm false positive). Recall là tỷ lệ trường hợp dương tính thật mà model bắt được (giảm false negative). Chọn ưu tiên cái nào là quyết định kinh doanh. Hệ thống phát hiện gian lận hay chẩn đoán y tế không được bỏ sót, nên ưu tiên recall; hệ thống tự duyệt tiền thưởng hay gắn nhãn spam không được khóa nhầm người tốt, nên ưu tiên precision. Chương 10 quay lại chủ đề này kỹ hơn.</p>
+    <p>Với bài toán phân loại hay phát hiện, việc đánh giá kết quả thường cần xét đến sự đánh đổi giữa precision và recall. Precision là tỷ lệ dự đoán dương tính mà đúng thật (giảm false positive). Recall là tỷ lệ trường hợp dương tính thật mà model bắt được (giảm false negative). Việc ưu tiên chỉ số nào phụ thuộc vào mục tiêu và chi phí của từng loại lỗi. Trước hết phải định nghĩa lớp dương tính và hành động sau dự đoán. Ví dụ, nếu “dương tính” là giao dịch gian lận và hệ thống chỉ gắn cờ cho chuyên viên rà, nếu thiệt hại do bỏ sót lớn hơn chi phí xử lý cảnh báo nhầm, đội ngũ có thể ưu tiên recall. Nếu cờ đó tự khóa tài khoản, thiệt hại do khóa nhầm lại đặt ra yêu cầu precision cao. Không chọn chỉ số chỉ từ tên ngành; phải cân chi phí hai loại lỗi và khả năng rà soát. Chương 10 quay lại chủ đề này kỹ hơn.</p>
     <div class="take"><small>Ghi nhớ</small>Hỏi “người dùng làm được gì tốt hơn” trước khi hỏi “mình đã làm xong cái gì”.</div>
   </section>
 
   <section id="s3">
     <span class="num">01.3</span>
-    <h2>Sống chung với sự không chắc chắn</h2>
-    <p class="gist">AI không bao giờ đúng 100%. Việc của người làm sản phẩm là quyết định sai đến mức nào thì chấp nhận được.</p>
-<p>Vì đầu ra của model không bao giờ đúng tuyệt đối, AI Product Manager phải viết ra hướng dẫn đánh giá: lỗi nào chấp nhận được với tác vụ thông thường, lỗi nào không chấp nhận được với tác vụ nhạy cảm. Song song đó là quản lý kỳ vọng của các bên: nói rõ giới hạn của công nghệ, thiết kế guardrails, và có quy trình fallback hoặc chuyển cho người (human-in-the-loop) khi AI không chắc.</p>
-    <p>Ví dụ, một trợ lý tra cứu hướng dẫn nội bộ trả lời sai một lần trong năm mươi câu có thể vẫn hữu ích, miễn là có trích nguồn để người dùng tự kiểm. Một hệ thống tự quyết định hoàn tiền thì một lỗi đã là quá nhiều; ở đó AI chỉ nên đề xuất, người duyệt.</p>
-    <div class="take"><small>Ghi nhớ</small>Ngưỡng lỗi chấp nhận được là một quyết định sản phẩm, phải viết ra trước khi build, không phải phát hiện sau khi ra mắt.</div>
+    <h2>Quản lý sự không chắc chắn của AI</h2>
+    <p class="gist">Không thể dùng vài lần trả lời đúng để kết luận hệ thống hoạt động tốt trong mọi tình huống. Cần xác định lỗi nào, trong tác vụ nào, có thể chấp nhận được.</p>
+<p>Vì mô hình có thể sai trên những tình huống chưa được kiểm tra, AI Product Manager phải viết ra hướng dẫn đánh giá: lỗi nào chấp nhận được với tác vụ thông thường, lỗi nào không chấp nhận được với tác vụ nhạy cảm. Song song đó là quản lý kỳ vọng của các bên: nói rõ giới hạn của công nghệ, thiết kế guardrails, và có quy trình fallback hoặc chuyển cho người (human-in-the-loop) khi AI không chắc.</p>
+    <p>Ví dụ, một trợ lý tra cứu hướng dẫn nội bộ trả lời sai một lần trong năm mươi câu có thể vẫn hữu ích, miễn là có trích nguồn để người dùng tự kiểm. Với khoản hoàn tiền vượt hạn mức hoặc ngoài chính sách, AI nên tổng hợp và đề xuất để người có thẩm quyền duyệt. Khoản nhỏ, đủ điều kiện rõ ràng có thể tự động hóa bằng quy tắc kiểm soát được.</p>
+    <div class="take"><small>Ghi nhớ</small>Cần thống nhất mức lỗi có thể chấp nhận và cách đo trước khi xây dựng, thay vì chờ đến sau khi sản phẩm ra mắt mới xác định.</div>
   </section>
 
   <section id="s4">
     <span class="num">01.4</span>
     <h2>Vòng đời sản phẩm AI và đội ngũ</h2>
-    <p class="gist">Năm giai đoạn lặp lại, và một đội nhiều vai trò, với AI PM đứng giữa nối kỹ thuật với mục tiêu kinh doanh.</p>
-<p>Vòng đời sản phẩm AI có năm giai đoạn lặp lại: Ideation (tìm điểm đau và cơ hội dùng AI), Discovery (khảo sát dữ liệu, đánh giá tính khả thi, đóng khung bài toán), Evaluation (tinh chỉnh prompt, chấm model trên eval set, cân đối chi phí, latency và độ chính xác), Deployment (tích hợp vào quy trình thật, làm giao diện phù hợp) và Monitoring (theo dõi hiệu năng, phát hiện drift, thu phản hồi để cải tiến). Monitoring đưa dữ liệu ngược về Ideation, nên vòng này không có điểm kết thúc.</p>
+    <p class="gist">Vòng đời sản phẩm gồm năm giai đoạn lặp lại, với sự phối hợp của nhiều vai trò để gắn các quyết định kỹ thuật với mục tiêu kinh doanh.</p>
+<p>Vòng đời sản phẩm AI có năm giai đoạn lặp lại: Ideation (tìm điểm đau và cơ hội dùng AI), Discovery (khảo sát dữ liệu, đánh giá tính khả thi, đóng khung bài toán), Evaluation (tinh chỉnh prompt, đánh giá mô hình trên eval set, cân đối chi phí, latency và độ chính xác), Deployment (tích hợp vào quy trình thực tế, làm giao diện phù hợp) và Monitoring (theo dõi hiệu năng, phát hiện drift, thu phản hồi để cải tiến). Monitoring đưa dữ liệu ngược về Ideation, nên vòng này không có điểm kết thúc.</p>
     <figure>
       <div class="fig"><div id="lc"></div></div>
       <figcaption><b>Hình 2</b>Năm giai đoạn của vòng đời sản phẩm AI. Sau Monitoring, vòng lặp quay lại Ideation.</figcaption>
     </figure>
-    <p>Đội làm sản phẩm AI thường gồm: AI PM (định hướng, đóng khung vấn đề, đặt tiêu chuẩn thành công); AI/ML Engineer và Data Scientist (xây, tinh chỉnh, tích hợp model); Data Engineer (thu thập, làm sạch, gán nhãn dữ liệu); UX Designer (thiết kế giao diện cho đầu ra không chắc chắn); và nhóm pháp lý, bảo mật (PII, tuân thủ). AI PM là người dịch kỳ vọng kinh doanh thành tiêu chí đánh giá đo được, và giữ cho cả đội hướng về một sản phẩm an toàn, hữu ích.</p>
-    <div class="take"><small>Ghi nhớ</small>Vòng đời AI là vòng tròn: Monitoring cấp dữ liệu cho lần Ideation tiếp theo.</div>
+    <p>Đội làm sản phẩm AI thường gồm: AI PM (định hướng, đóng khung vấn đề, đặt tiêu chuẩn thành công); AI/ML Engineer và Data Scientist (xây, tinh chỉnh, tích hợp model); Data Engineer (thu thập, làm sạch, gán nhãn dữ liệu); UX Designer (thiết kế giao diện cho đầu ra không chắc chắn); và nhóm pháp lý, bảo mật (PII, tuân thủ). AI PM giúp cụ thể hóa kỳ vọng kinh doanh thành các tiêu chí đánh giá có thể đo lường, và giữ cho cả đội hướng về một sản phẩm an toàn, hữu ích.</p>
+    <div class="take"><small>Ghi nhớ</small>Dữ liệu giám sát và phản hồi sau triển khai là cơ sở để xác định những vấn đề cần cải tiến trong vòng tiếp theo.</div>
   </section>
 
   <div class="vids" data-videos="01"></div>
@@ -123,9 +123,9 @@ window.CH = {
    "n": "01.1",
    "t": "Product, project, feature và service",
    "sum": [
-    "Phần mềm truyền thống deterministic, AI probabilistic.",
-    "Product, project, feature, service khác nhau ở mục tiêu, chi phí và cách đo.",
-    "Sản phẩm AI tốn chi phí suy luận liên tục và có thể drift."
+    "LLM sinh nội dung có thể biến thiên; không phải mọi AI đều ngẫu nhiên.",
+    "Phân biệt phạm vi product, project, feature và service.",
+    "Bàn giao cần kèm trách nhiệm vận hành và ngân sách."
    ],
    "terms": [
     "deterministic",
@@ -143,7 +143,7 @@ window.CH = {
    "sum": [
     "Output là thứ bàn giao; outcome là thay đổi; impact là giá trị dài hạn.",
     "Precision giảm báo nhầm, recall giảm bỏ sót.",
-    "Chọn ưu tiên precision hay recall dựa trên cái giá của mỗi loại sai."
+    "Chọn ưu tiên precision hay recall dựa trên chi phí và hậu quả của từng loại lỗi."
    ],
    "terms": [
     "output",
@@ -158,11 +158,11 @@ window.CH = {
   {
    "id": "s3",
    "n": "01.3",
-   "t": "Sống chung với sự không chắc chắn",
+   "t": "Quản lý sự không chắc chắn của AI",
    "sum": [
-    "Không có model đúng 100%.",
+    "Kết quả trên mẫu không bảo đảm mọi tình huống; xác định mức lỗi theo tác vụ.",
     "Viết rõ ngưỡng lỗi chấp nhận được cho từng loại tác vụ.",
-    "Guardrails, fallback và human-in-the-loop là cách sống chung với lỗi."
+    "Guardrails, phương án dự phòng và sự tham gia của con người giúp kiểm soát hậu quả khi AI mắc lỗi."
    ],
    "terms": [
     "guardrails",
@@ -176,7 +176,7 @@ window.CH = {
    "n": "01.4",
    "t": "Vòng đời sản phẩm AI và đội ngũ",
    "sum": [
-    "Ideation → Discovery → Evaluation → Deployment → Monitoring, rồi lặp.",
+    "Vòng đời sản phẩm gồm hình thành ý tưởng, khám phá vấn đề, đánh giá, triển khai và giám sát. Kết quả giám sát là cơ sở cho vòng cải tiến tiếp theo.",
     "Đội gồm PM, ML Engineer, Data Engineer, UX, pháp lý và bảo mật.",
     "AI PM dịch kỳ vọng kinh doanh thành tiêu chí đo được."
    ],
@@ -190,98 +190,98 @@ window.CH = {
  "terms": {
   "deterministic": [
    "deterministic",
-   "Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.",
-   "Máy bán nước: bấm nút số 3 lần nào cũng ra đúng lon số 3."
+   "Với cùng đầu vào, trạng thái và cấu hình liên quan, một phép tính xác định cho cùng kết quả. Mô hình ML cũng có thể được chạy theo cách này.",
+   "Ví dụ: tính số tiền theo công thức đã kiểm thử."
   ],
   "probabilistic": [
    "probabilistic",
-   "Hệ thống đưa ra dự đoán hoặc sinh nội dung theo xác suất; cùng một đầu vào có thể cho những đầu ra khác nhau.",
-   "Hỏi một người bạn cùng một câu hai lần, ý giống nhau nhưng câu chữ mỗi lần một khác."
+   "Mô hình hóa bằng xác suất; ở tác vụ sinh nội dung có lấy mẫu, cùng prompt có thể cho câu trả lời khác nhau. Không có nghĩa mọi mô hình AI đều ngẫu nhiên khi chạy.",
+   "Ví dụ: lấy mẫu token có thể tạo hai cách diễn đạt khác nhau."
   ],
   "inference": [
    "inference cost",
-   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
-   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+   "Chi phí mỗi lần gọi mô hình để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Ví dụ: mỗi lần trợ lý xử lý câu hỏi và sinh câu trả lời có thể phát sinh phí token hoặc chi phí tính toán."
   ],
   "latency": [
    "latency",
    "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
-   "Thời gian chờ món sau khi gọi."
+   "Ví dụ: đo thời gian từ khi nhân viên gửi câu hỏi đến khi nhận phản hồi; cần nói rõ đang đo token đầu tiên hay toàn bộ câu trả lời."
   ],
   "drift": [
    "drift",
-   "Chất lượng model giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
-   "Bản đồ in năm ngoái, đường đã mở thêm vài lối mới."
+   "Thay đổi phân phối đầu vào (data drift) hoặc quan hệ đầu vào–đầu ra mục tiêu (concept drift). Có thể làm giảm chất lượng, không đồng nghĩa luôn giảm hay giảm dần.",
+   "Ví dụ: loại ticket mới tăng lên, khiến bộ đánh giá cũ không còn đại diện."
   ],
   "halluc": [
    "hallucination",
-   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
-   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+   "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+   "Ví dụ: tự thêm một điều khoản không có trong nguồn."
   ],
   "output": [
    "output",
    "Thứ đội làm ra và bàn giao: model, API, eval set, PRD, tính năng.",
-   "Số viên gạch đã xây."
+   "Ví dụ: đội ngũ đã bàn giao API tra cứu, giao diện và bộ đánh giá."
   ],
   "outcome": [
    "outcome",
    "Thay đổi trong hành vi người dùng hoặc hiệu năng hệ thống mà output tạo ra: độ chính xác, latency, tỷ lệ hoàn thành tác vụ, mức hài lòng.",
-   "Ngôi nhà có ở được không."
+   "Ví dụ: nhân viên tìm đúng quy trình nhanh hơn và ít phải hỏi đồng nghiệp hơn."
   ],
   "impact": [
    "impact",
    "Giá trị kinh doanh dài hạn: retention, doanh thu, chi phí vận hành giảm, ROI.",
-   "Gia đình sống trong nhà có khá lên không."
+   "Ví dụ: chi phí vận hành bộ phận hỗ trợ giảm sau khi quy trình tra cứu được cải thiện."
   ],
   "precision": [
    "precision",
    "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
-   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+   "Ví dụ: trong những giao dịch bị gắn cờ gian lận, xác định tỷ lệ thực sự là gian lận."
   ],
   "recall": [
    "recall",
    "Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
-   "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
+   "Ví dụ: trong toàn bộ giao dịch gian lận thực tế, xác định tỷ lệ hệ thống phát hiện được."
   ],
   "fp": [
    "false positive",
    "Mô hình báo dương tính nhưng thực tế âm tính (cảnh báo giả).",
-   "Chuông báo cháy kêu khi chỉ có người nướng bánh."
+   "Ví dụ: một giao dịch hợp lệ nhưng hệ thống gắn cờ là gian lận."
   ],
   "fn": [
    "false negative",
    "Mô hình báo âm tính nhưng thực tế dương tính (bỏ sót).",
-   "Nhà cháy mà chuông không kêu."
+   "Ví dụ: một giao dịch gian lận nhưng hệ thống không gắn cờ cảnh báo."
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "fallback": [
    "fallback",
    "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
-   "Kế hoạch B khi kế hoạch A trục trặc."
+   "Ví dụ: khi không tìm được nguồn phù hợp, trợ lý hỏi thêm thông tin hoặc chuyển yêu cầu cho nhân viên."
   ],
   "hitl": [
    "human-in-the-loop",
    "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
-   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+   "Ví dụ: hệ thống soạn đề xuất, người có thẩm quyền xem và duyệt trước khi thực thi."
   ],
   "pm": [
    "AI Product Manager",
-   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
-   "Người chọn đích đến và giải thích vì sao đi đường này."
+   "Vai trò thường dẫn dắt xác định vấn đề, giá trị, tiêu chí thành công và ưu tiên, phối hợp với kỹ thuật, thiết kế và các bên liên quan.",
+   "Ví dụ: cùng kỹ sư và CSKH quyết định điều kiện mở thử nghiệm."
   ],
   "evalset": [
    "eval set",
-   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
-   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+   "Tập câu hỏi hoặc tình huống dùng để đánh giá chất lượng mô hình và prompt, có các mẫu đại diện cùng những tình huống ngoại lệ cần kiểm tra.",
+   "Ví dụ: tập câu hỏi tra quy trình với đáp án hoặc tiêu chí chấm được chuyên gia xác nhận."
   ],
   "pii": [
    "PII",
    "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
-   "Những thứ đủ để người lạ biết đó là bạn."
+   "Ví dụ: thông tin trong ticket có thể giúp nhận diện một cá nhân, riêng lẻ hoặc khi kết hợp với dữ liệu khác."
   ]
  },
  "alias": {
@@ -399,97 +399,92 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Điểm khác cốt lõi giữa phần mềm truyền thống và sản phẩm AI là gì?",
+   "q": "Nhận định nào chính xác hơn về tính xác định của AI?",
    "o": [
-    "AI luôn nhanh hơn",
-    "Phần mềm truyền thống deterministic, AI probabilistic",
-    "AI không cần kiểm thử",
-    "Phần mềm truyền thống không tốn chi phí vận hành"
-   ],
-   "a": 1,
-   "ex": "Cùng đầu vào, phần mềm quy tắc cho cùng đầu ra; AI đưa ra dự đoán có độ chính xác biến thiên."
-  },
-  {
-   "id": "my2",
-   "s": 0,
-   "type": "one",
-   "q": "Vì sao coi AI như một “dự án” ngắn hạn dễ dẫn tới thất bại?",
-   "o": [
-    "Vì dự án luôn trễ hạn",
-    "Vì bỏ qua chi phí suy luận liên tục, latency và việc chất lượng thay đổi theo thời gian",
-    "Vì dự án không có ngân sách",
-    "Vì AI không thể tích hợp"
-   ],
-   "a": 1,
-   "ex": "Sản phẩm AI tiếp tục tốn tiền mỗi lượt dùng và có thể drift; dự án chỉ đo việc bàn giao."
-  },
-  {
-   "id": "my3",
-   "s": 1,
-   "type": "one",
-   "q": "“Retention tăng 10% sau hai quý nhờ tính năng AI” thuộc tầng nào?",
-   "o": [
-    "Output",
-    "Outcome",
-    "Impact"
+    "Cùng prompt thì model phải trả cùng kết quả ở mọi phiên bản",
+    "Mọi mô hình AI đều ngẫu nhiên ở mỗi lần gọi",
+    "Mô hình ML có thể chạy xác định; LLM có lấy mẫu có thể sinh câu khác nhau",
+    "Chỉ phần mềm không AI mới cần kiểm thử pass/fail"
    ],
    "a": 2,
-   "ex": "Retention, doanh thu, ROI là giá trị kinh doanh dài hạn, tức impact."
+   "ex": "Cần xét cấu hình và trạng thái. Cả hệ thống AI và không AI đều cần kiểm thử các ràng buộc; chất lượng học từ dữ liệu còn cần eval."
   },
   {
-   "id": "my4",
+   "id": "my2-v2",
+   "s": 0,
+   "type": "one",
+   "q": "Một dự án chatbot sắp nghiệm thu. Điều gì nên được bàn giao thêm để tiếp tục vận hành?",
+   "o": [
+    "Ngân sách, chủ sở hữu vận hành, giám sát và quy trình xử lý lỗi",
+    "Cam kết giữ nguyên model để khỏi phải đánh giá lại",
+    "Danh sách prompt tốt nhất của đội demo",
+    "Quyền quyết định model cho từng người dùng"
+   ],
+   "a": 0,
+   "ex": "Nghiệm thu không kết thúc trách nhiệm vận hành. Prompt demo hoặc giữ nguyên model không thay kế hoạch theo dõi chi phí và chất lượng."
+  },
+  {
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Hệ thống phát hiện gian lận tài chính nên ưu tiên chỉ số nào?",
+   "q": "Theo khung output–outcome–impact trong chương, đâu là output?",
    "o": [
-    "Precision, vì báo nhầm gây phiền",
-    "Recall, vì bỏ sót gian lận gây thiệt hại nghiêm trọng",
-    "Không cần chọn",
-    "Latency"
+    "Đã bàn giao API tra quy trình",
+    "Thời gian tìm được đúng quy trình giảm",
+    "Nhân viên cần hỏi đồng nghiệp ít hơn",
+    "Chi phí hỗ trợ giảm sau hai quý"
    ],
-   "a": 1,
-   "ex": "Khi false negative (bỏ sót) đắt, ưu tiên recall.",
-   "why": {
-    "0": "Precision quan trọng khi báo nhầm đắt hơn bỏ sót, ví dụ khóa nhầm tài khoản."
-   }
+   "a": 0,
+   "ex": "API được bàn giao là output. Các lựa chọn khác là thay đổi trong công việc hoặc kết quả kinh doanh; ranh giới outcome/impact cần thống nhất trong đội."
   },
   {
-   "id": "my5",
+   "id": "my4-v2",
+   "s": 1,
+   "type": "one",
+   "q": "Dương tính là giao dịch gian lận; hệ thống chỉ gắn cờ để người rà soát. FN tốn 10 triệu, FP tốn 20 nghìn; còn khả năng xử lý của người rà soát. Nên thử gì trước?",
+   "o": [
+    "Giữ ngưỡng vì chi phí không liên quan metric",
+    "Tăng precision bằng mọi giá",
+    "Tối ưu accuracy tổng thể",
+    "Tăng recall trong giới hạn khả năng xử lý của người rà soát rồi tính tổng tổn thất"
+   ],
+   "a": 3,
+   "ex": "Với dữ kiện này, bỏ sót đắt hơn nhiều. Tăng recall đáng thử nhưng vẫn cần kiểm soát cảnh báo và đo tổn thất; không suy quy tắc cho mọi hệ thống gian lận."
+  },
+  {
+   "id": "my5-v2",
    "s": 2,
    "type": "multi",
-   "q": "Cách nào giúp sản phẩm sống chung với lỗi của AI?",
+   "q": "Những biện pháp nào cùng giúp quản lý lỗi của trợ lý?",
    "o": [
-    "Viết rõ ngưỡng lỗi chấp nhận được",
-    "Thiết kế guardrails và fallback",
-    "Hứa với khách hàng AI luôn đúng",
-    "Chuyển cho người khi AI không chắc"
+    "Có fallback và đường chuyển cho người",
+    "Đo lại sau thay đổi prompt hoặc dữ liệu",
+    "Dùng điểm tự tin LLM tự khai như xác suất đã kiểm chứng",
+    "Đặt tiêu chí chấm và mức lỗi chấp nhận theo tác vụ"
    ],
    "a": [
     0,
     1,
     3
    ],
-   "ex": "Ngưỡng lỗi, guardrails, fallback và human-in-the-loop là các công cụ chính.",
-   "why": {
-    "2": "Hứa quá mức làm vỡ kỳ vọng và mất niềm tin."
-   }
+   "ex": "Rubric, chuyển ca và đánh giá lại tạo cơ chế kiểm soát. Điểm tự khai không tự là xác suất đúng đã hiệu chỉnh."
   },
   {
-   "id": "my6",
+   "id": "my6-v2",
    "s": 3,
    "type": "one",
-   "q": "Giai đoạn nào đưa dữ liệu ngược về đầu vòng đời?",
+   "q": "Monitoring phát hiện một loại ticket mới tăng nhanh. Bước tiếp theo hợp lý nhất là gì?",
    "o": [
-    "Ideation",
-    "Discovery",
-    "Deployment",
-    "Monitoring"
+    "Giữ bộ đánh giá cũ để bảo đảm khả năng so sánh",
+    "Tìm hiểu nhu cầu mới, bổ sung eval có quản lý phiên bản và xác định cần sửa gì",
+    "Huấn luyện lại ngay mọi mô hình",
+    "Bỏ loại ticket đó khỏi dashboard"
    ],
-   "a": 3,
-   "ex": "Monitoring phát hiện drift và thu phản hồi, làm đầu vào cho vòng Ideation tiếp theo."
+   "a": 1,
+   "ex": "Monitoring cấp bằng chứng cho vòng khám phá/cải tiến. Có thể cần sửa nguồn, prompt, quy trình hoặc model sau khi tìm nguyên nhân."
   }
  ]
 };

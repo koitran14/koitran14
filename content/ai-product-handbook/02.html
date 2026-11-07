@@ -25,31 +25,31 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>AI chỉ có giá trị khi đặt đúng vào một vấn đề thật và đủ lớn. Nếu một quy tắc IF-THEN giải được, đừng dùng AI.</div>
+  <div class="idea"><small>Ý chính của chương</small>AI nên được dùng để giải quyết một vấn đề cụ thể có giá trị đối với người dùng. Nếu quy tắc IF-THEN đã đáp ứng yêu cầu với chi phí và rủi ro thấp hơn, hãy ưu tiên cách đó.</div>
   <section id="s1">
     <span class="num">02.1</span>
-    <h2>Bẫy công nghệ đi tìm bài toán</h2>
-    <p class="gist">Nhiều đội chọn LLM vì đang là xu hướng, rồi mới tìm chỗ để gắn nó vào.</p>
-<p>Một sai lầm phổ biến là triển khai model ngôn ngữ hay tự động hóa phức tạp chỉ vì nó đang “hot”, trong khi vấn đề của người dùng có thể giải rẻ hơn, chắc hơn bằng phần mềm thường hoặc quy tắc nghiệp vụ cố định. Khi đóng khung vấn đề, hãy trả lời ba câu hỏi:</p>
+    <h2>Chọn công nghệ trước khi hiểu vấn đề</h2>
+    <p class="gist">Nhiều đội chọn LLM vì đang là xu hướng, rồi mới tìm công việc để ứng dụng.</p>
+<p>Một sai lầm phổ biến là triển khai model ngôn ngữ hay tự động hóa phức tạp chỉ vì công nghệ đó đang được quan tâm, trong khi vấn đề của người dùng có thể được giải quyết với chi phí thấp hơn và kết quả ổn định hơn bằng phần mềm thường hoặc quy tắc nghiệp vụ cố định. Khi đóng khung vấn đề, hãy trả lời ba câu hỏi:</p>
     <ol>
       <li><b>Dữ liệu có sẵn và đủ tốt không?</b> Có quyền truy cập dữ liệu đại diện, sạch, được bảo mật và tuân thủ quy định về PII để huấn luyện hoặc làm nguồn tri thức không?</li>
       <li><b>Bài toán cần dự đoán hay sinh nội dung?</b> Dự báo, phân loại, trích xuất, sinh văn bản tự nhiên là những việc logic cố định khó làm. Nếu không phải loại này, có thể không cần AI.</li>
-      <li><b>Người dùng chịu được sai tới đâu?</b> Tìm hướng dẫn hay tóm tắt tài liệu khác hẳn quyết định hoàn tiền, đánh giá nhân sự, y tế, tài chính. Ngưỡng lỗi chấp nhận được của mỗi loại là bao nhiêu?</li>
+      <li><b>Mức sai sót nào có thể chấp nhận được?</b> Tìm hướng dẫn hay tóm tắt tài liệu khác hẳn quyết định hoàn tiền, đánh giá nhân sự, y tế, tài chính. Ngưỡng lỗi chấp nhận được của mỗi loại là bao nhiêu?</li>
     </ol>
     <figure>
       <div class="fig"><div id="air"></div></div>
       <figcaption><b>Hình 1</b>Tình huống nào cần AI, tình huống nào quy tắc cố định là đủ?</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Nếu một thuật toán IF-THEN giải được vấn đề với chi phí thấp và đúng 100%, dùng AI là lãng phí.</div>
+    <div class="take"><small>Ghi nhớ</small>Nếu quy tắc rõ ràng đã đạt yêu cầu với chi phí và rủi ro thấp hơn, ưu tiên quy tắc. Vẫn phải kiểm thử dữ liệu đầu vào và các ngoại lệ.</div>
   </section>
 
   <section id="s2">
     <span class="num">02.2</span>
-    <h2>Launch readiness bắt đầu từ discovery</h2>
-    <p class="gist">Ngay từ lúc khám phá vấn đề, đã nên nghĩ tới bộ đề để kiểm tra AI trước khi ra mắt.</p>
-<p>Báo cáo nguồn gắn câu hỏi về ngưỡng lỗi với “launch readiness”: để biết khi nào đủ an toàn đưa lên production, AI PM và đội kỹ thuật dựng eval set chạy tự động, bao cả những edge case cực đoan. Sản phẩm chỉ được ra mắt khi tỷ lệ trả lời đúng trên eval set vượt ngưỡng đã định từ trước, và đã có cơ chế xử lý ngoại lệ tự động.</p>
-    <p>Làm việc này sớm có một lợi ích phụ: khi phải viết ra “thế nào là trả lời đúng”, đội buộc phải hiểu vấn đề sâu hơn. Nhiều khi chính lúc soạn eval set, đội mới phát hiện người dùng thật ra hỏi một kiểu câu hoàn toàn khác với giả định ban đầu.</p>
-    <div class="take"><small>Ghi nhớ</small>Ngưỡng ra mắt đặt trước khi build, đo trên eval set có edge case, kèm cơ chế xử lý ngoại lệ.</div>
+    <h2>Chuẩn bị điều kiện ra mắt ngay từ giai đoạn khám phá vấn đề</h2>
+    <p class="gist">Ngay từ giai đoạn khám phá vấn đề, đội ngũ nên xác định cách đánh giá chất lượng AI trước khi ra mắt.</p>
+<p>Để đánh giá mức sẵn sàng ra mắt (launch readiness), AI PM và đội kỹ thuật cần xây dựng bộ dữ liệu đánh giá (eval set), có thể chạy tự động và bao gồm những tình huống ngoại lệ có rủi ro cao. Ngưỡng chất lượng trên eval set là một điều kiện ra mắt, cùng với bảo mật, quyền truy cập, chi phí, chịu tải, người trực vận hành và quy trình xử lý ngoại lệ. Độ chính xác cao trên bộ đánh giá không thay thế được các điều kiện vận hành và bảo mật còn lại.</p>
+    <p>Chuẩn bị cách đánh giá từ sớm còn giúp đội ngũ hiểu rõ hơn về vấn đề: khi phải viết ra “thế nào là trả lời đúng”, đội ngũ phải làm rõ những yêu cầu còn mơ hồ. Nhiều khi chính lúc soạn eval set, đội mới phát hiện người dùng thực tế ra hỏi một kiểu câu hoàn toàn khác với giả định ban đầu.</p>
+    <div class="take"><small>Ghi nhớ</small>Thống nhất điều kiện ra mắt trước khi xây dựng hệ thống; đánh giá trên bộ mẫu có tình huống ngoại lệ và chuẩn bị cách xử lý khi kết quả không đạt yêu cầu.</div>
   </section>
 
   <section id="s3">
@@ -69,10 +69,12 @@
   <section id="s4">
     <span class="num">02.4</span>
     <h2>Persona, customer journey và pain point</h2>
-    <p class="gist">Persona cho sản phẩm AI cần thêm hai trường: mức hiểu công nghệ và mức tin vào AI.</p>
-<p>Ngoài nhân khẩu học và thói quen, persona cho sản phẩm AI nên ghi thêm hai điều. Một là tech literacy: người này quen với công cụ số và viết prompt tới đâu. Hai là trust in AI: họ sẵn lòng nhận đề xuất tự động tới mức nào, và khắt khe ra sao khi AI trả lời sai. Hai người cùng chức danh có thể cần hai thiết kế rất khác nhau chỉ vì hai trường này.</p>
-    <p>Khi vẽ customer journey, đánh dấu các pain point: chờ lâu, thao tác thủ công lặp lại, quá tải thông tin. Đó là chỗ AI thường giúp được: tự động hóa quy trình bỏ bớt bước tay; tìm kiếm ngữ nghĩa với RAG gom nhanh câu trả lời từ kho tri thức đã duyệt; IDP tự trích dữ liệu từ biểu mẫu, hợp đồng, hóa đơn.</p>
-    <div class="take"><small>Ghi nhớ</small>Hai người dùng cùng chức danh có thể cần hai thiết kế khác nhau nếu mức tin vào AI của họ khác nhau.</div>
+    <p class="gist">Persona cần dựa trên nghiên cứu; với AI, mức độ quen thuộc với công nghệ và niềm tin vào tự động hóa là hai giả định đáng kiểm tra.</p>
+<p>Ngoài nhân khẩu học và thói quen, persona cho sản phẩm AI nên ghi thêm hai điều. Một là tech literacy: người này sử dụng công cụ số và viết prompt thành thạo đến mức nào. Hai là trust in AI: họ sẵn lòng nhận đề xuất tự động tới mức nào, và khắt khe ra sao khi AI trả lời sai. Hai người cùng chức danh có thể cần hai thiết kế rất khác nhau chỉ vì hai đặc điểm này.</p>
+    <p>Khi vẽ customer journey, đánh dấu các pain point: chờ lâu, thao tác thủ công lặp lại, quá tải thông tin. Đó là chỗ AI thường giúp được: tự động hóa để giảm thao tác thủ công; tìm kiếm ngữ nghĩa với RAG tổng hợp câu trả lời từ kho tri thức đã duyệt; IDP tự trích dữ liệu từ biểu mẫu, hợp đồng, hóa đơn.</p>
+    <div class="take"><small>Ghi nhớ</small>Cùng một chức danh chưa có nghĩa là người dùng có cùng nhu cầu; mức độ tin tưởng vào AI có thể làm thay đổi cách họ kiểm tra và sử dụng kết quả.</div>
+  <p><b>Cách thu bằng chứng.</b> Chọn người mới lẫn người có kinh nghiệm, ca thường lẫn ca khó. Hỏi “Lần gần nhất bạn tra quy trình là khi nào? Hãy cho xem bạn đã làm gì”, thay vì “Bạn có muốn chatbot không?”. Quan sát thời gian, tài liệu đã mở, chỗ phải hỏi đồng nghiệp và hậu quả khi tra sai. Xin phép trước khi ghi âm hoặc dùng ticket có dữ liệu cá nhân.</p>
+    <p><b>Ví dụ xuyên suốt — trợ lý tra quy trình CSKH.</b> Trong một nghiên cứu giả định với năm nhân viên, đội ghi nhận từng lần tra cứu rồi nhóm các khó khăn: tài liệu rải rác, phiên bản mâu thuẫn, thiếu quyền xem. Mẫu nghiên cứu nhỏ giúp hình thành giả thuyết, chưa đại diện cho toàn bộ nhân viên. Trước khi chọn RAG, đội kiểm tra liệu việc sắp xếp lại tài liệu, cải thiện tìm kiếm từ khóa hoặc bổ sung phân quyền đã giải được phần lớn vấn đề chưa.</p>
   </section>
 
   <section id="s5">
@@ -83,7 +85,7 @@
     <div class="formula">[Người dùng] gặp khó khăn khi [tác vụ, điểm đau], dẫn tới [hậu quả, chi phí], vì [nguyên nhân gốc].</div>
     <p>Ví dụ: “Nhân viên chăm sóc khách hàng mất trung bình 8 phút để tra quy trình xử lý một ticket, khiến khách phải chờ lâu, vì tài liệu nội bộ nằm rải rác ở nhiều nơi và khó tìm theo từ khóa.” Câu này chưa nói gì về RAG hay chatbot, nhưng đã đủ để cả đội hiểu nên đo cái gì.</p>
     <p>Từ đó, cơ hội tạo giá trị với AI thường rơi vào ba nhóm: <b>Efficiency</b> (giảm thời gian, tự động bước lặp lại, như tóm tắt văn bản, phân loại thư hỗ trợ), <b>Personalization</b> (nội dung, gợi ý theo ngữ cảnh từng người), và <b>Innovation</b> (năng lực mà phần mềm thường không làm được: hội thoại tự nhiên, sinh nội dung đa phương tiện, phân tích ngữ nghĩa sâu).</p>
-    <div class="take"><small>Ghi nhớ</small>Problem statement không chứa tên giải pháp. Nếu đọc lên đã thấy chữ “chatbot”, hãy viết lại.</div>
+    <div class="take"><small>Ghi nhớ</small>Problem statement nên mô tả khó khăn của người dùng trước khi đề xuất giải pháp như chatbot hay RAG.</div>
   </section>
 
   <div class="vids" data-videos="02"></div>
@@ -109,12 +111,12 @@ function sorter(box, data, labels) {
  show()}
 
 sorter(document.getElementById('air'), [
- ['Tự động khóa tài khoản sau 5 lần nhập sai mật khẩu.', 1, 'Quy tắc rõ ràng, đúng 100%, không cần dự đoán. Dùng AI ở đây là lãng phí.'],
+ ['Tự động khóa tài khoản sau 5 lần nhập sai mật khẩu.', 1, 'Điều kiện rõ ràng, không cần model dự đoán; vẫn phải kiểm thử bộ đếm và ngoại lệ. Dùng AI ở đây là lãng phí.'],
  ['Phân loại 2.000 email hỗ trợ mỗi ngày theo ý định của khách.', 0, 'Ngôn ngữ tự nhiên, cách viết đa dạng; quy tắc từ khóa sẽ sót nhiều. Đây là bài toán phân loại hợp với AI.'],
  ['Tính thuế VAT cho mỗi hóa đơn.', 1, 'Công thức cố định theo luật; cần đúng tuyệt đối. Quy tắc là đủ và an toàn hơn.'],
- ['Tóm tắt biên bản cuộc họp dài 90 phút.', 0, 'Sinh nội dung từ văn bản tự do là việc logic cố định không làm được.'],
+ ['Tóm tắt biên bản cuộc họp dài 90 phút.', 0, 'Văn bản dài và đa dạng là tình huống đáng thử LLM, rồi đo độ đúng và đủ trên mẫu thực tế.'],
  ['Gửi email nhắc khi hóa đơn quá hạn 7 ngày.', 1, 'Điều kiện ngày tháng đơn giản; một job theo lịch là đủ.'],
- ['Trích số hợp đồng, ngày ký, giá trị từ hợp đồng scan nhiều mẫu khác nhau.', 0, 'Bố cục và chất lượng scan thay đổi; IDP dùng AI xử lý tốt hơn template cứng.']], ['Cần AI', 'Quy tắc là đủ']);
+ ['Trích số hợp đồng, ngày ký, giá trị từ hợp đồng scan nhiều mẫu khác nhau.', 0, 'Bố cục và chất lượng scan thay đổi; IDP dùng AI xử lý tốt hơn template cứng.']], ['Đáng thử AI', 'Ưu tiên quy tắc']);
 
 // ---- chapter data for kit.js ----
 window.CH = {
@@ -129,7 +131,7 @@ window.CH = {
   {
    "id": "s1",
    "n": "02.1",
-   "t": "Bẫy công nghệ đi tìm bài toán",
+   "t": "Chọn công nghệ trước khi hiểu vấn đề",
    "sum": [
     "Đừng chọn công nghệ trước rồi mới tìm vấn đề.",
     "Ba câu hỏi: dữ liệu, loại bài toán, ngưỡng lỗi.",
@@ -143,11 +145,11 @@ window.CH = {
   {
    "id": "s2",
    "n": "02.2",
-   "t": "Launch readiness bắt đầu từ discovery",
+   "t": "Chuẩn bị điều kiện ra mắt ngay từ giai đoạn khám phá vấn đề",
    "sum": [
-    "Eval set đại diện, có edge case.",
-    "Chỉ ra mắt khi vượt ngưỡng đặt trước.",
-    "Soạn eval set giúp hiểu vấn đề rõ hơn."
+    "Eval là một điều kiện phát hành, không thay kiểm tra quyền truy cập và vận hành.",
+    "Bộ mẫu có ca thông thường, ca khó và tiêu chí chấm rõ.",
+    "Soạn eval sớm giúp kiểm tra lại giả định về vấn đề."
    ],
    "terms": [
     "evalset",
@@ -173,9 +175,9 @@ window.CH = {
    "n": "02.4",
    "t": "Persona, customer journey và pain point",
    "sum": [
-    "Persona AI thêm tech literacy và trust in AI.",
-    "Customer journey đánh dấu pain point.",
-    "AI giúp ở chỗ chờ lâu, việc tay lặp lại, quá tải thông tin."
+    "Persona dựa trên bằng chứng; kiểm tra mức độ quen thuộc với công nghệ và niềm tin vào AI.",
+    "Phỏng vấn về lần làm việc gần nhất, tránh gợi ý giải pháp.",
+    "Quan sát quy trình và ghi giả thuyết cần kiểm chứng tiếp."
    ],
    "terms": [
     "persona",
@@ -201,52 +203,52 @@ window.CH = {
   "pii": [
    "PII",
    "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
-   "Những thứ đủ để người lạ biết đó là bạn."
+   "Ví dụ: thông tin trong ticket có thể giúp nhận diện một cá nhân, riêng lẻ hoặc khi kết hợp với dữ liệu khác."
   ],
   "deterministic": [
    "deterministic",
-   "Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.",
-   "Máy bán nước: bấm nút số 3 lần nào cũng ra đúng lon số 3."
+   "Với cùng đầu vào, trạng thái và cấu hình liên quan, một phép tính xác định cho cùng kết quả. Mô hình ML cũng có thể được chạy theo cách này.",
+   "Ví dụ: tính số tiền theo công thức đã kiểm thử."
   ],
   "evalset": [
    "eval set",
-   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
-   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+   "Tập câu hỏi hoặc tình huống dùng để đánh giá chất lượng mô hình và prompt, có các mẫu đại diện cùng những tình huống ngoại lệ cần kiểm tra.",
+   "Ví dụ: tập câu hỏi tra quy trình với đáp án hoặc tiêu chí chấm được chuyên gia xác nhận."
   ],
   "edge": [
    "edge case",
-   "Tình huống hiếm, nằm ở rìa của đầu vào, dễ làm hệ thống hỏng.",
-   "Khách gọi món không có trong thực đơn."
+   "Tình huống khác với các trường hợp thông thường, có thể làm lộ hạn chế hoặc gây lỗi cho hệ thống; thường cần được kiểm tra riêng.",
+   "Ví dụ: câu hỏi không đủ thông tin hoặc tài liệu chứa hai phiên bản quy trình mâu thuẫn."
   ],
   "jtbd": [
    "Jobs to Be Done",
    "Khung nhìn coi khách hàng “thuê” sản phẩm để hoàn thành một việc; việc đó có mặt chức năng, cảm xúc và xã hội.",
-   "Người ta không cần mũi khoan, người ta cần cái lỗ trên tường."
+   "Ví dụ: nhân viên cần giải quyết yêu cầu của khách đúng quy trình; chatbot chỉ là một cách hỗ trợ công việc đó."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "persona": [
    "persona",
    "Chân dung đại diện một nhóm người dùng: mục tiêu, thói quen, khó khăn, mức hiểu công nghệ.",
-   "Một nhân vật hư cấu nhưng đủ thật để cả đội cùng hình dung."
+   "Ví dụ: tổng hợp mục tiêu, cách làm việc và khó khăn của một nhóm nhân viên từ nghiên cứu người dùng."
   ],
   "journey": [
    "customer journey",
    "Chuỗi bước người dùng đi qua khi tương tác với sản phẩm, kèm cảm xúc và điểm đau ở mỗi bước.",
-   "Lộ trình của khách từ lúc biết đến quán tới lúc thanh toán."
+   "Ví dụ: mô tả quá trình nhân viên nhận ticket, tìm quy trình, kiểm tra và trả lời khách hàng."
   ],
   "painpoint": [
    "pain point",
    "Điểm khó chịu, tốn thời gian hoặc tốn tiền mà người dùng gặp trong công việc.",
-   "Hòn sỏi trong giày."
+   "Ví dụ: phải mở nhiều tài liệu mới tìm được phiên bản quy trình hiện hành."
   ],
   "problemstmt": [
    "problem statement",
    "Câu mô tả vấn đề: ai gặp khó khăn gì, hậu quả ra sao, vì nguyên nhân gì; chưa nói tới giải pháp.",
-   "Khám bệnh trước khi kê thuốc."
+   "Ví dụ: mô tả vì sao nhân viên mất nhiều thời gian tra quy trình, trước khi đề xuất chatbot hay công nghệ khác."
   ]
  },
  "alias": {
@@ -297,103 +299,96 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "“Technology looking for a problem” nghĩa là gì?",
+   "q": "Đội đề xuất chatbot trước khi quan sát công việc. Câu hỏi nào giúp quay về discovery?",
    "o": [
-    "Dùng công nghệ mới cho vấn đề mới",
-    "Chọn AI vì xu hướng rồi mới tìm chỗ gắn vào",
-    "Tìm vấn đề bằng công nghệ phân tích dữ liệu",
-    "Dùng phần mềm cũ cho vấn đề mới"
+    "Model nào có context dài nhất?",
+    "Lần gần nhất nhân viên gặp khó là lúc nào và họ đã xử lý ra sao?",
+    "Framework nào hỗ trợ agent nhanh nhất?",
+    "Mất bao lâu để dựng demo?"
    ],
    "a": 1,
-   "ex": "Đây là bẫy chọn công nghệ trước, trong khi vấn đề có thể giải rẻ hơn bằng phần mềm thường."
+   "ex": "Hỏi về hành vi đã xảy ra giúp tìm vấn đề và cách hiện tại; câu hỏi công nghệ hoặc demo quá sớm dễ dẫn dắt giải pháp."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 0,
    "type": "multi",
-   "q": "Ba câu hỏi khi đóng khung vấn đề AI là gì?",
+   "q": "Trước khi chọn AI, đội cần kiểm tra điều gì?",
    "o": [
-    "Dữ liệu có sẵn và đủ tốt không",
-    "Bài toán cần dự đoán hay sinh nội dung không",
-    "Người dùng chịu được sai tới đâu",
-    "Model nào đang đứng đầu bảng xếp hạng"
-   ],
-   "a": [
-    0,
-    1,
-    2
-   ],
-   "ex": "Dữ liệu, loại bài toán và ngưỡng lỗi quyết định có nên dùng AI.",
-   "why": {
-    "3": "Chọn model là bước sau, không phải câu hỏi đóng khung vấn đề."
-   }
-  },
-  {
-   "id": "my3",
-   "s": 1,
-   "type": "one",
-   "q": "Khi nào sản phẩm AI được coi là sẵn sàng ra mắt theo chương này?",
-   "o": [
-    "Khi demo chạy tốt vài lần",
-    "Khi vượt ngưỡng đặt trước trên eval set có edge case, và đã có cơ chế xử lý ngoại lệ",
-    "Khi sếp đồng ý",
-    "Khi model mới nhất ra mắt"
-   ],
-   "a": 1,
-   "ex": "Ngưỡng đặt trước, đo trên eval set đại diện, kèm xử lý ngoại lệ."
-  },
-  {
-   "id": "my4",
-   "s": 2,
-   "type": "one",
-   "q": "Trong JTBD, “muốn trông chuyên nghiệp trước sếp” là mặt nào của việc?",
-   "o": [
-    "Chức năng",
-    "Cảm xúc",
-    "Xã hội"
-   ],
-   "a": 2,
-   "ex": "Cách người khác nhìn mình là mặt xã hội của việc."
-  },
-  {
-   "id": "my5",
-   "s": 3,
-   "type": "multi",
-   "q": "Persona cho sản phẩm AI nên ghi thêm những trường nào?",
-   "o": [
-    "Tech literacy",
-    "Trust in AI",
-    "Màu yêu thích",
-    "Mức khắt khe khi AI trả lời sai"
+    "Dữ liệu có sẵn, đủ chất lượng và được phép dùng",
+    "Bài toán và phương án quy tắc hiện tại",
+    "Chọn xong một nhà cung cấp mới được phỏng vấn",
+    "Chi phí và hậu quả các loại lỗi"
    ],
    "a": [
     0,
     1,
     3
    ],
-   "ex": "Mức hiểu công nghệ và mức tin vào AI (gồm cả độ khắt khe khi AI sai) ảnh hưởng trực tiếp tới thiết kế."
+   "ex": "Dữ liệu, phương án thay thế và rủi ro giúp quyết định có nên dùng AI. Chọn provider không phải điều kiện để bắt đầu nghiên cứu."
   },
   {
-   "id": "my6",
-   "s": 4,
+   "id": "my3-v2",
+   "s": 1,
    "type": "one",
-   "q": "Problem statement nào viết đúng tinh thần chương?",
+   "q": "Eval đạt ngưỡng nhưng quyền truy cập tài liệu chưa được kiểm tra. Có đủ điều kiện mở pilot không?",
    "o": [
-    "Chúng ta cần một chatbot RAG cho nhân viên",
-    "Nhân viên CSKH mất 8 phút tra quy trình mỗi ticket, khách chờ lâu, vì tài liệu rải rác",
-    "Hãy dùng GPT để tăng năng suất",
-    "AI sẽ thay đổi bộ phận CSKH"
+    "Đủ nếu có cảnh báo AI có thể sai",
+    "Chưa; phải kiểm tra quyền và các điều kiện vận hành liên quan",
+    "Đủ nếu model có guardrails",
+    "Đủ nếu pilot ít người"
    ],
    "a": 1,
-   "ex": "Câu tốt nêu ai, khó gì, hậu quả và nguyên nhân, chưa nói giải pháp.",
-   "why": {
-    "0": "Câu này đã chứa giải pháp.",
-    "2": "Không nói ai gặp khó khăn gì.",
-    "3": "Là khẩu hiệu, không đo được."
-   }
+   "ex": "Eval là một điều kiện, không thay kiểm tra quyền truy cập, chi phí, chịu tải và cơ chế xử lý sự cố. Cảnh báo hoặc guardrails không cấp quyền dữ liệu."
+  },
+  {
+   "id": "my4-v2",
+   "s": 2,
+   "type": "one",
+   "q": "Người dùng muốn bản báo cáo giúp họ được nhìn nhận là chuẩn bị kỹ trước đồng nghiệp. Đây là mặt nào của JTBD?",
+   "o": [
+    "Xã hội",
+    "Khả thi kỹ thuật",
+    "Chức năng",
+    "Cảm xúc"
+   ],
+   "a": 0,
+   "ex": "Mong muốn người khác nhìn nhận mình là khía cạnh xã hội; hoàn thành báo cáo là chức năng, cảm giác bớt lo là cảm xúc."
+  },
+  {
+   "id": "my5-v2",
+   "s": 3,
+   "type": "multi",
+   "q": "Trong nghiên cứu cho trợ lý CSKH, thông tin nào hữu ích để thiết kế trải nghiệm?",
+   "o": [
+    "Mức tin vào tự động hóa và cách kiểm lại",
+    "Mức quen công cụ số",
+    "Chỉ chức danh, vì người cùng chức danh có cùng nhu cầu",
+    "Khác biệt giữa ca thường và ca khó"
+   ],
+   "a": [
+    0,
+    1,
+    3
+   ],
+   "ex": "Cần bằng chứng về kỹ năng, niềm tin và bối cảnh công việc. Chức danh có ích để tuyển mẫu nhưng không đủ mô tả nhu cầu."
+  },
+  {
+   "id": "my6-v2",
+   "s": 4,
+   "type": "one",
+   "q": "Problem statement nào giữ vấn đề tách khỏi giải pháp?",
+   "o": [
+    "Cần sử dụng mô hình đa phương thức để tăng adoption",
+    "Nhân viên cần RAG để tra quy trình nhanh",
+    "Nên thay wiki bằng chatbot nội bộ",
+    "Nhân viên mất khoảng tám phút tra quy trình vì nguồn rải rác; cần kiểm baseline trên mẫu đại diện"
+   ],
+   "a": 3,
+   "ex": "Câu này nêu người dùng, khó khăn, hệ quả và giả thuyết nguyên nhân. Các lựa chọn còn lại chốt công nghệ trước khi kiểm chứng vấn đề."
   }
  ]
 };

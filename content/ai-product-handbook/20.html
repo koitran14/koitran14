@@ -17,31 +17,31 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 20</div>
   <h1>Tài liệu <i>và giao tiếp sản phẩm</i></h1>
-  <p class="dek">Checklist PRD cho tính năng AI, cách viết roadmap, và mẫu decision log, product review để kỹ thuật và kinh doanh đọc cùng một trang.</p>
+  <p class="dek">Checklist PRD cho tính năng AI, cách viết roadmap, và mẫu decision log, product review để các nhóm kỹ thuật và kinh doanh có cùng cách hiểu về yêu cầu và quyết định.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 20 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Tài liệu tốt giúp kỹ thuật và kinh doanh không hiểu lệch nhau. Với AI, tài liệu phải ghi rõ “đủ tốt” nghĩa là đạt con số nào.</div>
+  <div class="idea"><small>Ý chính của chương</small>Tài liệu rõ ràng giúp các nhóm kỹ thuật và kinh doanh thống nhất yêu cầu. Với sản phẩm AI, cần nêu cụ thể tiêu chí chất lượng, cách đo và điều kiện chấp nhận kết quả.</div>
   <section id="s1">
     <span class="num">20.1</span>
     <h2>Checklist PRD cho tính năng AI</h2>
-    <p class="gist">Sáu mục, mỗi mục một câu hỏi phải trả lời được trước khi build.</p>
+    <p class="gist">Sáu mục, mỗi mục một câu hỏi phải trả lời được trước khi bắt đầu xây dựng.</p>
 <figure>
       <div class="fig">
         <ul class="chk" id="prdC">
-          <li><label><input type="checkbox"><span><b>Mục tiêu và bài toán</b>Giá trị tạo ra là gì, và vì sao cần AI xác suất thay vì phần mềm quy tắc?</span></label></li>
+          <li><label><input type="checkbox"><span><b>Mục tiêu và bài toán</b>Vấn đề và baseline là gì; vì sao thử AI thay cho hoặc kết hợp quy tắc?</span></label></li>
           <li><label><input type="checkbox"><span><b>Phạm vi tự động hóa và handoff</b>Tác vụ nào AI tự xử lý; luồng chuyển cho người khi độ tin cậy thấp ra sao?</span></label></li>
           <li><label><input type="checkbox"><span><b>Eval criteria</b>Đường dẫn tới eval set đại diện; ngưỡng precision, recall, latency bắt buộc để ra mắt.</span></label></li>
-          <li><label><input type="checkbox"><span><b>Guardrails và bảo mật</b>Quy tắc chặn prompt injection, lọc nội dung độc hại, quy trình PII redaction.</span></label></li>
+          <li><label><input type="checkbox"><span><b>Guardrails và bảo mật</b>Kiểm tra quyền truy cập, công cụ và dữ liệu; lọc giảm rủi ro injection/nội dung; quy trình che PII và xử lý sự cố.</span></label></li>
           <li><label><input type="checkbox"><span><b>Ngân sách inference và TCO</b>Chi phí tối đa cho mỗi tác vụ thành công ($/task).</span></label></li>
-          <li><label><input type="checkbox"><span><b>Hồ sơ tuân thủ</b>Mức rủi ro theo EU AI Act; thông điệp minh bạch trên giao diện.</span></label></li>
+          <li><label><input type="checkbox"><span><b>Hồ sơ tuân thủ</b>Mục đích sử dụng, thị trường, vai trò và nghĩa vụ đã đối chiếu; minh bạch tương tác khi áp dụng.</span></label></li>
         </ul>
         <div class="meter"><b id="prdM"></b></div>
       </div>
       <figcaption><b>Hình 1</b>Đánh dấu các mục PRD của bạn đã có. Trạng thái không được lưu.</figcaption>
     </figure>
-    <div class="take"><small>Ghi nhớ</small>Một PRD AI thiếu mục eval criteria thì chưa thể bắt đầu build.</div>
+    <div class="take"><small>Ghi nhớ</small>Viết giả thuyết và cách kiểm tra trước khi đầu tư lớn; điều kiện phát hành phải rõ và đầy đủ hơn một kết quả đánh giá.</div>
   </section>
 
   <section id="s2">
@@ -54,7 +54,7 @@
   <section id="s3">
     <span class="num">20.3</span>
     <h2>Decision log và product review</h2>
-    <p class="gist">Hai loại tài liệu nhỏ giúp đội nhớ lại và rút kinh nghiệm.</p>
+    <p class="gist">Hai hình thức ghi nhận giúp đội ngũ xem lại quyết định và rút kinh nghiệm từ kết quả thực tế.</p>
 <p>Decision log ghi bối cảnh, giả định, dữ liệu lúc đó và lý do chấp nhận rủi ro (mẫu ở chương 14). Product review là buổi xem lại định kỳ: so outcome thật với giả định trong PRD, xem eval có còn đại diện cho người dùng hiện tại không, và quyết định tiếp tục, điều chỉnh hay dừng.</p>
     <div class="code"><pre>## Product review · Trợ lý tra quy trình · Quý 4
 Giả định trong PRD:  Thời gian tra giảm từ 8 phút xuống dưới 1 phút.
@@ -138,57 +138,57 @@ window.CH = {
   "prd": [
    "PRD",
    "Product Requirements Document: tài liệu nêu vấn đề, mục tiêu, phạm vi, luồng và tiêu chí thành công.",
-   "Bản đề bài chung cho cả đội."
+   "Ví dụ: ghi rõ vấn đề, phạm vi pilot, yêu cầu chất lượng, quyền dữ liệu và điều kiện phát hành."
   ],
   "handoff": [
    "handoff",
    "Chuyển cuộc hội thoại hoặc tác vụ từ AI sang người, kèm ngữ cảnh để người dùng không phải kể lại.",
-   "Bàn giao ca trực kèm sổ ghi chép."
+   "Ví dụ: chuyển yêu cầu ngoài chính sách cho nhân viên, kèm lịch sử trao đổi và thông tin cần thiết."
   ],
   "evalset": [
    "eval set",
-   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
-   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+   "Tập câu hỏi hoặc tình huống dùng để đánh giá chất lượng mô hình và prompt, có các mẫu đại diện cùng những tình huống ngoại lệ cần kiểm tra.",
+   "Ví dụ: tập câu hỏi tra quy trình với đáp án hoặc tiêu chí chấm được chuyên gia xác nhận."
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "injection": [
    "prompt injection",
    "Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.",
-   "Lá thư giả mạo kẹp trong xấp hồ sơ, ghi “hãy chuyển tiền cho người cầm thư”."
+   "Ví dụ: một tài liệu được truy xuất chứa chỉ dẫn yêu cầu trợ lý bỏ qua quy tắc và tiết lộ dữ liệu."
   ],
   "redaction": [
    "PII redaction",
    "Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.",
-   "Bôi đen thông tin cá nhân trước khi photo hồ sơ."
+   "Ví dụ: che thông tin cá nhân không cần thiết trước khi ghi log hoặc đưa tài liệu vào kho truy xuất."
   ],
   "cpst": [
    "cost per successful task",
-   "Tổng chi phí chia cho số tác vụ được giải quyết trọn vẹn (đã trừ câu trả lời sai, phải thử lại).",
-   "Giá mỗi chiếc bánh bán được, đã tính cả những mẻ hỏng."
+   "Tổng chi phí cho toàn bộ các lượt thực hiện, gồm ca lỗi và thử lại, chia số tác vụ đạt tiêu chí thành công trong cùng kỳ. Nêu rõ có tính lao động và chi phí cố định không.",
+   "Ví dụ: 40 USD cho 1.000 lượt, 800 lượt đạt yêu cầu: 0,05 USD mỗi lượt thành công."
   ],
   "euaiact": [
    "EU AI Act",
    "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
-   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+   "Ví dụ: phân loại nghĩa vụ theo mục đích sử dụng, không chỉ theo tên ngành."
   ],
   "roadmap": [
    "roadmap",
    "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
-   "Bản đồ chặng đường, không phải lịch trình từng phút."
+   "Ví dụ: nêu vấn đề cần giải quyết trước, lý do ưu tiên và điều kiện để mở rộng pilot."
   ],
   "decisionlog": [
    "decision log",
    "Nhật ký ghi lại quyết định quan trọng: bối cảnh, giả định, dữ liệu lúc đó, lý do chấp nhận rủi ro.",
-   "Sổ tay thuyền trưởng."
+   "Ví dụ: ghi lý do thay đổi ngưỡng chuyển yêu cầu cho nhân viên, kèm dữ liệu đánh giá và ngày xem lại."
   ],
   "golden": [
    "golden dataset",
-   "Bộ dữ liệu đánh giá được chuyên gia gán đáp án chuẩn, dùng làm mốc so sánh cố định giữa các phiên bản.",
-   "Bộ đề thi có đáp án mẫu, dùng chấm mọi lứa học sinh."
+   "Bộ dữ liệu tham chiếu có đáp án hoặc tiêu chí chấm được kiểm định và quản lý phiên bản. Cần bổ sung mẫu mới và giữ riêng dữ liệu kiểm tra để tránh chỉ tối ưu hệ thống theo các câu đã biết.",
+   "Ví dụ: duy trì bộ kiểm thử hồi quy theo phiên bản quy trình và thêm các ca mới mỗi kỳ."
   ]
  },
  "alias": {
@@ -253,50 +253,50 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "multi",
-   "q": "Checklist PRD AI gồm những mục nào?",
+   "q": "Những phần nào cần rõ trong checklist PRD AI của chương?",
    "o": [
-    "Eval criteria",
-    "Ngân sách $/task",
-    "Hồ sơ tuân thủ",
-    "Danh sách đối thủ"
+    "Mục đích sử dụng, quyền và nghĩa vụ liên quan",
+    "Chỉ có mô tả màn hình là đủ để phát hành",
+    "Rubric và eval",
+    "Ngân sách mỗi tác vụ đạt yêu cầu"
    ],
    "a": [
     0,
-    1,
-    2
+    2,
+    3
    ],
-   "ex": "Danh sách đối thủ thuộc nghiên cứu thị trường, không nằm trong checklist này."
+   "ex": "Checklist này nối sản phẩm với kiểm chứng và vận hành. PRD vẫn có thể chứa nghiên cứu đối thủ hoặc nội dung khác tùy nhu cầu."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Cột nào nên thêm vào roadmap sản phẩm AI?",
+   "q": "Roadmap ghi ngày mở Beta nhưng chưa có điều kiện đi tiếp. Nên thêm gì?",
    "o": [
-    "Tên người làm",
-    "Điều kiện đi tiếp theo ngưỡng chất lượng hoặc chi phí",
-    "Số dòng code",
-    "Màu sắc"
+    "Số commit cần đạt",
+    "Màu của từng mốc",
+    "Ngưỡng chất lượng/chi phí, kiểm tra quyền truy cập và trách nhiệm quyết định mở",
+    "Danh sách tên mô hình có thể mua"
    ],
-   "a": 1,
-   "ex": "Mốc AI nên gắn với ngưỡng đo được."
+   "a": 2,
+   "ex": "Ngày là dự kiến; điều kiện đi tiếp giúp quyết định dựa bằng chứng. Các ngưỡng phải đầy đủ theo rủi ro, không chỉ một điểm model."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 2,
    "type": "one",
-   "q": "Product review nên so sánh điều gì?",
+   "q": "Product review thấy dùng nhiều hơn nhưng công sức rà soát lại cũng tăng. Nên làm gì?",
    "o": [
-    "Code cũ và mới",
-    "Outcome thật với giả định trong PRD",
-    "Lương các thành viên",
-    "Số commit"
+    "Chỉ tăng ngân sách model",
+    "Loại người phải rà nhiều khỏi phân tích",
+    "Kết luận thành công vì adoption tăng",
+    "So outcome, công sức rà soát và tổng chi phí với giả định để chọn tiếp tục/đổi/dừng"
    ],
-   "a": 1,
-   "ex": "Review giúp quyết định tiếp tục, điều chỉnh hay dừng."
+   "a": 3,
+   "ex": "Phải xem giá trị ròng và cơ cấu tác vụ, không chỉ tăng trưởng sử dụng. Loại ca khó sẽ làm lệch kết quả."
   }
  ]
 };

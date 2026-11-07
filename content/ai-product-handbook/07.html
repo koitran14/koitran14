@@ -23,39 +23,39 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần III / 07</div>
   <h1>AI và LLM <i>từ nền tảng</i></h1>
-  <p class="dek">Các tầng AI, machine learning, deep learning và foundation model; token, embedding, context window; prompt engineering; RAG, fine-tuning, tool calling, agent và model routing.</p>
+  <p class="dek">Nền tảng AI và các cách học; token, embedding và context; RAG, fine-tuning, structured outputs, tool calling, agent và model routing.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 07 / 21</span><span>8 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Hiểu cơ chế bên dưới giúp đặt kỳ vọng đúng: biết LLM làm được gì, tốn bao nhiêu, và khi nào nên dùng RAG thay vì fine-tuning.</div>
+  <div class="idea"><small>Ý chính của chương</small>Hiểu cách mô hình hoạt động giúp đánh giá đúng khả năng, chi phí và giới hạn của LLM, từ đó lựa chọn giải pháp phù hợp như RAG hoặc fine-tuning.</div>
   <section id="s1">
     <span class="num">07.1</span>
     <h2>AI, machine learning, deep learning, foundation model</h2>
-    <p class="gist">Bốn tầng lồng nhau, từ khái niệm rộng nhất tới loại model các sản phẩm hiện nay hay dùng.</p>
+    <p class="gist">Sơ đồ minh họa mối quan hệ từ AI đến machine learning, deep learning và foundation model, là nhóm mô hình được sử dụng trong nhiều ứng dụng hiện nay.</p>
 <figure>
       <div class="fig"><div class="nest" id="nest"></div><div class="panel" id="nestP"></div></div>
       <figcaption><b>Hình 1</b>Chọn một tầng để xem định nghĩa.</figcaption>
     </figure>
-    <p>Machine learning có ba kiểu học chính. Supervised learning học từ dữ liệu đã gán nhãn (biết trước đáp án). Unsupervised learning tự tìm cấu trúc ẩn trong dữ liệu chưa gán nhãn. Reinforcement learning tối ưu hành vi bằng thưởng, phạt khi tương tác với môi trường. LLM thuộc nhóm foundation model: được huấn luyện trước trên dữ liệu khổng lồ, rồi dùng lại cho nhiều tác vụ.</p>
+    <p>Một số cách học thường gặp: supervised learning học từ cặp đầu vào–nhãn; unsupervised learning tìm cấu trúc khi không có nhãn mục tiêu; reinforcement learning tối ưu hành động theo tín hiệu thưởng. Self-supervised learning tạo tín hiệu học từ chính dữ liệu, ví dụ dự đoán token kế tiếp từ các token trước; đây là cách quan trọng trong huấn luyện trước LLM. Các cách học có thể được kết hợp ở các giai đoạn khác nhau. LLM thuộc nhóm foundation model: được huấn luyện trước trên dữ liệu khổng lồ, rồi dùng lại cho nhiều tác vụ.</p>
   </section>
 
   <section id="s2">
     <span class="num">07.2</span>
     <h2>Token, embedding và context window</h2>
-    <p class="gist">Token là đơn vị tính tiền và giới hạn; embedding là cách máy “hiểu” nghĩa; context window là mặt bàn làm việc.</p>
-<p><b>Tokenization</b> chia văn bản thành token: một từ, một phần của từ hoặc một ký tự. LLM tính chi phí và giới hạn đầu vào, đầu ra theo số token, nên số token ảnh hưởng trực tiếp tới tiền API và latency. Với tiếng Anh, khoảng 1.000 token tương đương 750 từ; tiếng Việt thường tốn nhiều token hơn cho cùng lượng chữ.</p>
-    <p><b>Embedding</b> chuyển văn bản thành vector số nhiều chiều; các đoạn gần nghĩa nằm gần nhau. Vector database lưu các vector này để tìm kiếm theo nghĩa (semantic search) thay vì khớp từ khóa.</p>
-    <p><b>Context window</b> là số token tối đa model nhận và xử lý trong một lần gọi, tính cả prompt và câu trả lời. Trong hội thoại dài, phải quản lý bộ nhớ hội thoại và sắp xếp nội dung trong context window để model không “quên” ngữ cảnh.</p>
-    <div class="take"><small>Ghi nhớ</small>Token là đơn vị tiền tệ của LLM. Quản lý token là quản lý chi phí sản phẩm.</div>
+    <p class="gist">Token là đơn vị biểu diễn đầu vào/đầu ra; embedding hỗ trợ so sánh nội dung; context window giới hạn lượng ngữ cảnh mỗi lần gọi.</p>
+<p><b>Tokenization</b> chia văn bản thành token: một từ, một phần của từ hoặc một ký tự. LLM tính chi phí và giới hạn đầu vào, đầu ra theo số token, nên số token ảnh hưởng trực tiếp tới tiền API và latency. Với tiếng Anh, 1.000 token xấp xỉ 750 từ là quy đổi thô. Số token tiếng Việt phụ thuộc tokenizer và nội dung; hãy đo bằng công cụ của model thay vì áp dụng cứng tỷ lệ này.</p>
+    <p><b>Embedding</b> chuyển văn bản thành vector số nhiều chiều; các đoạn liên quan theo mục tiêu huấn luyện thường có vector gần nhau; độ gần không bảo đảm thông tin đúng hoặc đủ. Vector database lưu các vector này để tìm kiếm theo nghĩa (semantic search) thay vì khớp từ khóa.</p>
+    <p><b>Context window</b> là số token tối đa model nhận và xử lý trong một lần gọi, tính cả prompt và câu trả lời. Còn có giới hạn output riêng tùy model/API. Trong hội thoại dài, cần chọn, tóm tắt hoặc truy xuất lại thông tin; context dài không bảo đảm model dùng đúng mọi chi tiết.</p>
+    <div class="take"><small>Ghi nhớ</small>Theo dõi token để ước tính chi phí sử dụng mô hình; tổng chi phí còn có tìm kiếm, lưu trữ, công cụ và người rà soát.</div>
   </section>
 
   <section id="s3">
     <span class="num">07.3</span>
     <h2>Prompt engineering và context engineering</h2>
-    <p class="gist">Điều khiển đầu ra của model bằng lời dặn và dữ liệu đưa vào, không đụng tới trọng số.</p>
+    <p class="gist">Định hướng câu trả lời của mô hình bằng chỉ dẫn và dữ liệu đầu vào, thay vì thay đổi trọng số của mô hình.</p>
 <ul>
-      <li><b>System prompt và vai trò.</b> Chỉ thị nền: vai trò, văn phong, và các quy tắc cấm model làm những điều không mong muốn.</li>
+      <li><b>System prompt và vai trò.</b> Chỉ thị nền: vai trò, văn phong, và quy tắc hướng dẫn hành vi. System prompt không thay được cơ chế phân quyền và kiểm tra công cụ trong ứng dụng.</li>
       <li><b>Few-shot prompting.</b> Đưa một vài ví dụ đầu vào – đầu ra ngay trong prompt để định hình cấu trúc và định dạng.</li>
       <li><b>Context injection.</b> Chèn thêm thông tin động (dữ liệu người dùng, tài liệu tra cứu) vào prompt trước khi gửi, giúp giảm hallucination.</li>
     </ul>
@@ -64,21 +64,17 @@
 
   <section id="s4">
     <span class="num">07.4</span>
-    <h2>RAG, fine-tuning, tool calling, agent</h2>
-    <p class="gist">RAG khi tri thức thay đổi và cần trích nguồn; fine-tuning khi cần cố định định dạng hoặc văn phong.</p>
-<table class="tbl" id="rft">
-      <tr><th>Tiêu chí</th><th>RAG</th><th>Fine-tuning</th></tr>
-      <tr><td>Dữ liệu thay đổi</td><td>Rất thường xuyên (tin tức, tài liệu nội bộ cập nhật hằng ngày)</td><td>Ít thay đổi (văn phong công ty, thuật ngữ y khoa, pháp lý cố định)</td></tr>
-      <tr><td>Truy nguồn</td><td>Trích được nguồn, trang, đoạn làm căn cứ</td><td>Kiến thức nằm trong trọng số, không trích nguồn cụ thể được</td></tr>
-      <tr><td>Định dạng, văn phong</td><td>Trung bình, dựa vào prompt và few-shot</td><td>Rất tốt cho cấu trúc đầu ra phức tạp (JSON đặc thù, giọng thương hiệu)</td></tr>
-      <tr><td>Chi phí, độ phức tạp</td><td>Thấp – trung bình: lưu vector DB và token</td><td>Cao: GPU để huấn luyện lại và bảo trì phiên bản model</td></tr>
-    </table>
-    <figure>
+    <h2>RAG, fine-tuning, công cụ và agent</h2>
+    <p class="gist">Chọn theo lỗi cần sửa; RAG và fine-tuning có thể cùng dùng trong một hệ thống.</p>
+<table class="tbl" id="rft"><tr><th>Cách</th><th>Giải quyết việc gì</th><th>Giới hạn</th></tr>
+    <tr><td>RAG</td><td>Truy xuất dữ liệu liên quan rồi đưa vào ngữ cảnh; hợp khi tài liệu cập nhật và cần dẫn nguồn</td><td>Cần quyền truy cập, dữ liệu tốt và retrikết quả đánh giá tốt; vẫn có thể trả lời sai hoặc dẫn nguồn không hỗ trợ kết luận</td></tr>
+    <tr><td>Fine-tuning</td><td>Huấn luyện thêm để cải thiện hành vi, văn phong hoặc tác vụ chuyên biệt khi đã có dữ liệu và bằng chứng cần thiết</td><td>Cần dữ liệu, đánh giá và bảo trì phiên bản; không tự bảo đảm kiến thức mới hay trích nguồn chính xác</td></tr>
+    <tr><td>Structured outputs</td><td>Ràng buộc đầu ra theo schema được model/API hỗ trợ</td><td>Vẫn cần kiểm tra quy tắc nghiệp vụ và xử lý từ chối/đầu ra bị cắt; đúng schema chưa chắc đúng nội dung</td></tr></table>
+    <p>Nếu JSON thiếu trường bắt buộc, hãy thử cơ chế ràng buộc đầu ra theo schema và kiểm tra kết quả trước khi quyết định fine-tuning. Nếu thiếu thông tin mới, hãy xem lại nguồn dữ liệu và quá trình truy xuất. Khi so sánh các phương án, cần đo chi phí và độ trễ trên cùng tác vụ, ở mức chất lượng tương đương. Với dịch vụ fine-tuning được nhà cung cấp quản lý, đội phát triển không nhất thiết phải tự vận hành GPU.</p><figure>
       <div class="fig"><div id="rftQ"></div></div>
-      <figcaption><b>Hình 2</b>Tình huống nào hợp RAG, tình huống nào hợp fine-tuning?</figcaption>
+      <figcaption><b>Hình 2</b>Chọn hướng xử lý phù hợp nhất với dữ kiện: RAG, fine-tuning hoặc structured outputs.</figcaption>
     </figure>
-    <p>Ngoài hai hướng trên còn hai mẫu kiến trúc. <b>Tool calling</b> (function calling) cho model quyết định gọi API bên ngoài để làm việc thật: truy vấn SQL, gửi email, tạo hóa đơn. <b>AI agent và model routing</b>: hệ thống tự điều hướng từng tác vụ tới model phù hợp, dùng model nhỏ, rẻ cho việc đơn giản và chỉ chuyển sang model lớn khi cần suy luận phức tạp.</p>
-    <div class="take"><small>Ghi nhớ</small>Câu hỏi đầu tiên khi chọn RAG hay fine-tuning: tri thức có thay đổi hằng tuần không, và người dùng có cần thấy nguồn không?</div>
+    <p><b>Tool calling</b>: mô hình đề xuất gọi hàm với tham số; ứng dụng kiểm tra quyền, validate và thực thi. Mô hình đề xuất “tạo hóa đơn” không có nghĩa nó tự được quyền tạo. <b>Agent</b>: hệ thống dùng LLM để chọn bước tiếp theo, gọi công cụ, quan sát kết quả rồi lặp trong giới hạn lượt, thời gian và quyền. <b>Model routing</b>: lựa chọn mô hình cho từng yêu cầu theo chất lượng, chi phí hoặc độ trễ; routing có thể là quy tắc cố định, không cần agent.</p><div class="take"><small>Ghi nhớ</small>Xác định lỗi là thiếu dữ liệu, sai hành vi hay sai định dạng trước khi chọn giải pháp.</div>
   </section>
 
   <div class="vids" data-videos="07"></div>
@@ -114,10 +110,10 @@ nest.onclick = e => {const r = e.target.closest('.ring'); if (!r) return; nest.q
 nest.querySelector('[data-i="3"]').click();
 sorter(document.getElementById('rftQ'), [
  ['Trợ lý trả lời theo chính sách bảo hiểm, chính sách đổi mỗi quý và cần trích điều khoản.', 0, 'Tri thức thay đổi và cần truy nguồn: RAG.'],
- ['Model luôn phải trả về JSON theo một schema nội bộ phức tạp.', 1, 'Cố định định dạng đầu ra là điểm mạnh của fine-tuning.'],
- ['Chatbot tra tin tức nội bộ cập nhật hằng ngày.', 0, 'Dữ liệu đổi liên tục; fine-tuning sẽ lạc hậu ngay.'],
- ['Viết mô tả sản phẩm đúng giọng thương hiệu, giảm token trong prompt để nhanh hơn.', 1, 'Văn phong cố định và cắt bớt prompt dài là lý do hợp lý để fine-tune.'],
- ['Tra cứu tài liệu kỹ thuật, người dùng muốn bấm vào nguồn để kiểm.', 0, 'Trích nguồn là thế mạnh của RAG.']], ['RAG', 'Fine-tuning']);
+ ['Model thường bỏ trường JSON bắt buộc; API có hỗ trợ schema-constrained output.', 2, 'Thử structured outputs và validation trước; fine-tuning không bảo đảm luôn đúng schema.'],
+ ['Chatbot tra tin tức nội bộ cập nhật hằng ngày.', 0, 'Dữ liệu cần cập nhật qua nguồn và retrieval; fine-tuning đơn lẻ không bảo đảm tri thức mới.'],
+ ['Prompt và few-shot chưa đạt giọng thương hiệu; đã có dữ liệu mẫu tốt và muốn thử giảm prompt dài.', 1, 'Văn phong cố định và cắt bớt prompt dài là lý do hợp lý để fine-tune.'],
+ ['Tra cứu tài liệu kỹ thuật, người dùng muốn bấm vào nguồn để kiểm.', 0, 'Trích nguồn là thế mạnh của RAG.']], ['RAG', 'Fine-tuning', 'Structured outputs']);
 
 // ---- chapter data for kit.js ----
 window.CH = {
@@ -134,15 +130,16 @@ window.CH = {
    "n": "07.1",
    "t": "AI, machine learning, deep learning, foundation model",
    "sum": [
-    "AI ⊃ ML ⊃ deep learning ⊃ foundation model.",
-    "ML: supervised, unsupervised, reinforcement.",
-    "LLM là foundation model chuyên về ngôn ngữ."
+    "AI, ML, deep learning và foundation model: sơ đồ nhập môn.",
+    "Có supervised, unsupervised, self-supervised và reinforcement learning.",
+    "LLM thường được huấn luyện trước bằng self-supervised learning."
    ],
    "terms": [
     "ml",
     "dl",
     "fm",
-    "llm"
+    "llm",
+    "selfsupervised"
    ]
   },
   {
@@ -150,9 +147,9 @@ window.CH = {
    "n": "07.2",
    "t": "Token, embedding và context window",
    "sum": [
-    "Token quyết định chi phí và latency.",
-    "Embedding và vector database cho semantic search.",
-    "Context window tính cả prompt và câu trả lời."
+    "Token hỗ trợ dự toán phí; đo theo tokenizer và tách input/output.",
+    "Vector gần nhau hỗ trợ retrieval, không bảo đảm tính đúng đắn và đầy đủ.",
+    "Context và output có giới hạn tùy model/API."
    ],
    "terms": [
     "token",
@@ -166,9 +163,9 @@ window.CH = {
    "n": "07.3",
    "t": "Prompt engineering và context engineering",
    "sum": [
-    "System prompt đặt vai trò và quy tắc.",
-    "Few-shot cho ví dụ mẫu.",
-    "Context injection đưa dữ liệu động, giảm hallucination."
+    "System prompt hướng dẫn hành vi, không thay kiểm tra quyền truy cập.",
+    "Few-shot cung cấp ví dụ; context engineering chọn và quản lý ngữ cảnh.",
+    "Nguồn bổ sung có thể sai hoặc chứa injection; vẫn cần kiểm tra."
    ],
    "terms": [
     "prompt",
@@ -179,101 +176,112 @@ window.CH = {
   {
    "id": "s4",
    "n": "07.4",
-   "t": "RAG, fine-tuning, tool calling, agent",
+   "t": "RAG, fine-tuning, công cụ và agent",
    "sum": [
-    "RAG: dữ liệu thay đổi, cần trích nguồn, chi phí thấp hơn.",
-    "Fine-tuning: cố định định dạng, văn phong, tốn GPU.",
-    "Tool calling và model routing mở rộng năng lực hệ thống."
+    "RAG bổ sung ngữ cảnh; fine-tuning thay đổi trọng số; có thể kết hợp.",
+    "Structured outputs cùng validation cho yêu cầu schema.",
+    "Tool calling cần ứng dụng thực thi; agent khác model routing."
    ],
    "terms": [
     "rag",
     "finetune",
     "toolcall",
     "agent",
-    "routing"
+    "routing",
+    "structured"
    ]
   }
  ],
  "terms": {
   "ml": [
    "machine learning",
-   "Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.",
-   "Học nấu ăn bằng cách nếm nhiều món, không phải đọc từng công thức."
+   "Phương pháp học các mẫu từ dữ liệu; gồm nhiều cách như supervised, unsupervised, self-supervised và reinforcement learning.",
+   "Ví dụ: học phân loại ticket từ các ticket đã gán nhãn."
   ],
   "dl": [
    "deep learning",
    "Nhánh của machine learning dùng mạng neural nhiều lớp, mạnh với ảnh, âm thanh, văn bản.",
-   "Nhiều tầng lọc chồng lên nhau, mỗi tầng nhận ra một chi tiết."
+   "Ví dụ: dùng mạng neural nhiều lớp để nhận diện văn bản trong tài liệu scan."
   ],
   "fm": [
    "foundation model",
-   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
-   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+   "Mô hình được huấn luyện trên phạm vi dữ liệu rộng và có thể được điều chỉnh hoặc dùng lại cho nhiều tác vụ. Các foundation model hiện đại chủ yếu dựa trên deep learning.",
+   "Ví dụ: dùng một mô hình nền cho nhiều tính năng thay vì huấn luyện từng model từ đầu."
   ],
   "llm": [
    "LLM",
-   "Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.",
-   "Người đã đọc gần hết thư viện, nói gì cũng trôi chảy nhưng không phải lúc nào cũng đúng."
+   "Mô hình ngôn ngữ lớn, thường được huấn luyện trước bằng self-supervised learning để xử lý và sinh ngôn ngữ. Không nên mặc định rằng mô hình nhớ chính xác hoặc có thể truy xuất nguồn của những dữ liệu đã học.",
+   "Ví dụ: cùng một mô hình hỗ trợ tóm tắt, phân loại và hỏi đáp."
   ],
   "token": [
    "token",
-   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
-   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+   "Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.",
+   "Ví dụ: số token cùng một câu tiếng Việt thay đổi theo tokenizer."
   ],
   "embedding": [
    "embedding",
-   "Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.",
-   "Tọa độ trên bản đồ ý nghĩa: hai câu cùng ý thì đứng gần nhau."
+   "Biểu diễn dữ liệu bằng vector; độ gần phản ánh sự liên quan theo cách mô hình được huấn luyện, không bảo đảm nội dung đúng hoặc đầy đủ.",
+   "Ví dụ: tìm các đoạn quy trình liên quan đến câu hỏi của nhân viên."
   ],
   "vectordb": [
    "vector database",
    "Cơ sở dữ liệu lưu embedding và tìm theo độ gần về nghĩa (semantic search).",
-   "Thủ thư xếp sách theo nội dung, không theo tên."
+   "Ví dụ: lưu vector của các đoạn tài liệu để truy xuất những đoạn liên quan đến câu hỏi."
   ],
   "context": [
    "context window",
-   "Số token tối đa model nhận và sinh trong một lần gọi, tính cả prompt lẫn câu trả lời.",
-   "Mặt bàn làm việc: rộng tới đâu thì bày được tới đó."
+   "Giới hạn số token trong ngữ cảnh của một lần gọi mô hình, thường tính cả đầu vào và đầu ra. Một số mô hình hoặc API còn có giới hạn riêng cho số token đầu ra.",
+   "Ví dụ: dành ngân sách cho system prompt, lịch sử, tài liệu và câu trả lời."
   ],
   "prompt": [
    "prompt engineering",
    "Thiết kế câu lệnh và ngữ cảnh đưa vào model (system prompt, few-shot, chèn dữ liệu) để điều khiển đầu ra mà không đổi trọng số.",
-   "Giao việc cho người mới: nói rõ vai trò, cho ví dụ, đưa tài liệu."
+   "Ví dụ: cung cấp mục tiêu, yêu cầu trả lời, ví dụ và tài liệu cần dùng để xử lý một câu hỏi."
   ],
   "fewshot": [
    "few-shot prompting",
    "Đưa vài ví dụ đầu vào – đầu ra mẫu ngay trong prompt để model bắt chước định dạng.",
-   "Cho xem hai bài giải mẫu trước khi làm bài thứ ba."
+   "Ví dụ: đưa vào prompt một số cặp câu hỏi và câu trả lời mẫu có định dạng mong muốn."
   ],
   "halluc": [
    "hallucination",
-   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
-   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+   "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+   "Ví dụ: tự thêm một điều khoản không có trong nguồn."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "finetune": [
    "fine-tuning",
-   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
-   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+   "Huấn luyện thêm mô hình có sẵn để thay đổi trọng số, cải thiện hành vi hoặc tác vụ chuyên biệt. Không tự bảo đảm kiến thức mới, đúng schema hay trích nguồn.",
+   "Ví dụ: cải thiện giọng văn sau khi đã đo hạn chế của prompt và có dữ liệu phù hợp."
   ],
   "toolcall": [
    "tool calling",
-   "Khả năng model quyết định gọi hàm hoặc API bên ngoài (truy vấn SQL, gửi email…) thay vì chỉ trả văn bản.",
-   "Trợ lý biết nhấc máy gọi phòng kế toán thay vì đoán số liệu."
+   "Mô hình đề xuất gọi công cụ với tham số; ứng dụng kiểm tra quyền, validate và thực thi. Quyền hành động không đến từ lời đề xuất của model.",
+   "Ví dụ: tra đơn hàng qua API chỉ sau khi xác thực người dùng."
   ],
   "agent": [
    "AI agent",
-   "Ứng dụng dựa trên LLM tự lập kế hoạch, gọi công cụ, đọc kết quả và lặp lại tới khi xong việc.",
-   "Trợ lý được giao cả việc, tự chia bước và tự cầm dụng cụ."
+   "Hệ thống dùng LLM chọn bước tiếp theo, gọi công cụ, đọc kết quả và lặp theo điều kiện dừng, trong giới hạn quyền và ngân sách.",
+   "Ví dụ: tra hồ sơ, kiểm dữ kiện rồi đề xuất bước xử lý tiếp."
   ],
   "routing": [
    "model routing",
-   "Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.",
-   "Phòng khám: cảm cúm gặp bác sĩ đa khoa, ca khó mới lên chuyên gia."
+   "Lựa chọn mô hình theo tiêu chí như loại tác vụ, chất lượng, độ trễ và chi phí. Có thể thực hiện bằng quy tắc cố định, không cần agent.",
+   "Ví dụ: phân loại ticket bằng mô hình nhỏ đã đáp ứng tiêu chí đánh giá, chuyển ca khó sang phương án khác."
+  ],
+  "structured": [
+   "structured outputs",
+   "Cơ chế ràng buộc đầu ra theo schema mà mô hình hoặc API hỗ trợ. Ứng dụng vẫn cần kiểm tra tính đúng đắn về nghiệp vụ và xử lý các trường hợp từ chối trả lời, đầu ra bị cắt hoặc schema vượt giới hạn hỗ trợ.",
+   "Ví dụ: buộc đủ trường JSON rồi kiểm số tiền với dữ liệu nguồn."
+  ],
+  "selfsupervised": [
+   "self-supervised learning",
+   "Tạo tín hiệu mục tiêu từ chính dữ liệu, như dự đoán token tiếp theo từ phần văn bản trước; quan trọng trong pretraining LLM.",
+   "Ví dụ: không cần người gán nhãn từng token trong văn bản huấn luyện."
   ]
  },
  "alias": {
@@ -333,6 +341,15 @@ window.CH = {
   "routing": [
    "model routing",
    "Model routing"
+  ],
+  "structured": [
+   "structured outputs",
+   "schema-constrained output",
+   "constrained output"
+  ],
+  "selfsupervised": [
+   "self-supervised learning",
+   "self-supervised"
   ]
  },
  "rel": {
@@ -360,87 +377,88 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Thứ tự lồng nhau đúng là gì?",
+   "q": "Mô tả nào phù hợp với foundation model?",
    "o": [
-    "ML ⊃ AI ⊃ deep learning",
-    "AI ⊃ ML ⊃ deep learning ⊃ foundation model",
-    "Deep learning ⊃ ML ⊃ AI",
-    "Foundation model ⊃ AI"
-   ],
-   "a": 1,
-   "ex": "AI rộng nhất, foundation model là tầng trong cùng."
-  },
-  {
-   "id": "my2",
-   "s": 0,
-   "type": "one",
-   "q": "Học từ dữ liệu đã gán nhãn là kiểu học nào?",
-   "o": [
-    "Supervised",
-    "Unsupervised",
-    "Reinforcement"
-   ],
-   "a": 0,
-   "ex": "Supervised learning biết trước đáp án trong dữ liệu huấn luyện."
-  },
-  {
-   "id": "my3",
-   "s": 1,
-   "type": "one",
-   "q": "Context window gồm những gì?",
-   "o": [
-    "Chỉ prompt đầu vào",
-    "Cả prompt đầu vào và câu trả lời đầu ra",
-    "Chỉ câu trả lời",
-    "Toàn bộ dữ liệu huấn luyện"
-   ],
-   "a": 1,
-   "ex": "Giới hạn tính cả hai chiều."
-  },
-  {
-   "id": "my4",
-   "s": 1,
-   "type": "one",
-   "q": "Vector database dùng để làm gì?",
-   "o": [
-    "Lưu ảnh",
-    "Lưu embedding và tìm theo nghĩa",
-    "Thay thế SQL",
-    "Huấn luyện model"
-   ],
-   "a": 1,
-   "ex": "Semantic search dựa trên độ gần giữa các vector."
-  },
-  {
-   "id": "my5",
-   "s": 2,
-   "type": "one",
-   "q": "Kỹ thuật nào giảm hallucination bằng cách đưa tài liệu tra cứu vào prompt?",
-   "o": [
-    "Few-shot",
-    "Context injection",
-    "Tăng temperature",
-    "Fine-tuning"
-   ],
-   "a": 1,
-   "ex": "Context injection cho model dữ liệu thật để dựa vào."
-  },
-  {
-   "id": "my6",
-   "s": 3,
-   "type": "one",
-   "q": "Khi nào nên chọn fine-tuning thay vì RAG?",
-   "o": [
-    "Khi dữ liệu thay đổi hằng ngày",
-    "Khi cần trích nguồn",
-    "Khi cần cố định định dạng đầu ra phức tạp hoặc văn phong",
-    "Khi muốn chi phí ban đầu thấp nhất"
+    "Một agent bắt buộc có nhiều công cụ",
+    "Mọi mạng neural dùng cho một nhãn duy nhất",
+    "Model huấn luyện trên dữ liệu rộng, có thể dùng hoặc điều chỉnh cho nhiều tác vụ",
+    "Một kho vector lưu tri thức cập nhật"
    ],
    "a": 2,
-   "ex": "Các trường hợp khác hợp RAG hơn."
+   "ex": "Foundation model nói về khả năng thích ứng từ nền huấn luyện rộng; không đồng nghĩa kho dữ liệu hay một cách điều phối agent."
+  },
+  {
+   "id": "my2-v2",
+   "s": 0,
+   "type": "one",
+   "q": "Dự đoán token tiếp theo từ văn bản, với mục tiêu được tạo từ chính văn bản, là ví dụ của gì?",
+   "o": [
+    "Self-supervised learning",
+    "Unsupervised chỉ phân cụm",
+    "Supervised với chuyên gia gán từng nhãn",
+    "Reinforcement theo thưởng từ môi trường"
+   ],
+   "a": 0,
+   "ex": "Nhãn mục tiêu được tạo từ dữ liệu, không cần chuyên gia gán từng token. LLM có thể kết hợp thêm cách học khác ở giai đoạn sau."
+  },
+  {
+   "id": "my3-v2",
+   "s": 1,
+   "type": "one",
+   "q": "Khi lập ngân sách context cho một lời gọi, cần xem gì?",
+   "o": [
+    "Chỉ độ dài câu hỏi người dùng",
+    "Chỉ độ dài tài liệu RAG",
+    "Toàn bộ dữ liệu huấn luyện của model",
+    "System prompt, lịch sử, tài liệu, đầu ra và các giới hạn riêng của API"
+   ],
+   "a": 3,
+   "ex": "Các thành phần đều chiếm ngân sách; giới hạn output và cách tính cụ thể tùy model/API. Dữ liệu huấn luyện không được gửi lại như context."
+  },
+  {
+   "id": "my4-v2",
+   "s": 1,
+   "type": "one",
+   "q": "Vector gần nhau trong embedding chứng minh điều gì?",
+   "o": [
+    "Câu trả lời chắc chắn đúng ngoài thực tế",
+    "Có thể bỏ tìm kiếm từ khóa trong mọi tác vụ",
+    "Nội dung có liên quan theo model embedding, vẫn cần kiểm tính đúng đắn và đầy đủ",
+    "Hai tài liệu có cùng quyền truy cập"
+   ],
+   "a": 2,
+   "ex": "Độ gần hỗ trợ retrieval nhưng không chứng minh tính đúng, quyền hay tính đầy đủ. Có thể cần hybrid search và kiểm tra nguồn."
+  },
+  {
+   "id": "my5-v2",
+   "s": 2,
+   "type": "one",
+   "q": "Thêm tài liệu tra cứu vào prompt giúp gì và còn rủi ro gì?",
+   "o": [
+    "Bảo đảm model không bịa",
+    "Cung cấp căn cứ, nhưng nguồn sai hoặc có injection vẫn gây lỗi",
+    "Thay thế việc kiểm tra quyền truy cập nguồn",
+    "Cập nhật trọng số model sau mỗi lượt"
+   ],
+   "a": 1,
+   "ex": "Context bổ sung căn cứ, không tự đảm bảo model dùng đúng hay nguồn an toàn. Không thay quyền truy cập và không fine-tune trọng số."
+  },
+  {
+   "id": "my6-v2",
+   "s": 3,
+   "type": "one",
+   "q": "Model thường bỏ trường JSON bắt buộc; API hỗ trợ constrained output. Nên thử bước nào trước?",
+   "o": [
+    "Fine-tune trên toàn bộ wiki",
+    "Thêm nhiều tài liệu RAG",
+    "Structured outputs cùng schema validation và xử lý ngoại lệ",
+    "Đổi mọi tác vụ sang agent nhiều bước"
+   ],
+   "a": 2,
+   "ex": "Ràng buộc schema đúng với lỗi định dạng. Vẫn phải kiểm nội dung nghiệp vụ và trường hợp từ chối/bị cắt; fine-tuning không tự bảo đảm schema."
   }
  ]
 };

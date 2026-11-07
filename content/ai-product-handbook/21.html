@@ -17,40 +17,40 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VII / 21</div>
   <h1>Capstone: <i>từ vấn đề đến launch</i></h1>
-  <p class="dek">Một dự án mẫu ghép mọi chương lại: hệ thống IDP và trợ lý CSKH cho một tập đoàn tài chính – bảo hiểm trên AWS, đi qua bốn giai đoạn. Cuối chương là checklist để bạn tự làm dự án của mình.</p>
+  <p class="dek">Một dự án minh họa về trợ lý tra quy trình CSKH: đi từ bằng chứng người dùng đến phạm vi, kiến trúc, eval và quyết định mở rộng. Các con số đều là giả định để luyện tập.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 21 / 21</span><span>7 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Đừng chỉ xem video rồi làm theo. Chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</div>
+  <div class="idea"><small>Ý chính của chương</small>Hãy vận dụng nội dung đã học vào một vấn đề thực tế: nghiên cứu người dùng, xây dựng giải pháp, xác định tiêu chí đánh giá AI và đo lường kết quả.</div>
   <section id="s1">
     <span class="num">21.1</span>
-    <h2>Giai đoạn 1: Discovery và định nghĩa sản phẩm</h2>
-    <p class="gist">Bối cảnh, giá trị mục tiêu, và ranh giới giữa việc AI làm với việc người làm.</p>
-<p><b>Bối cảnh.</b> Một tập đoàn tài chính – bảo hiểm bị quá tải vận hành: hàng triệu chứng từ, hóa đơn nhập tay gây chậm trễ, và trung tâm CSKH xử lý hàng nghìn yêu cầu tra cứu lặp lại.</p>
-    <p><b>Giá trị mục tiêu</b> (theo báo cáo nguồn): tự động hóa 85% quy trình nhập liệu tài liệu, giảm 60% thời gian phản hồi CSKH, giảm 40% chi phí vận hành.</p>
-    <p><b>Phạm vi.</b> AI tự xử lý: trích dữ liệu hóa đơn, hợp đồng chuẩn; trả lời câu hỏi tra cứu chính sách bảo hiểm, hướng dẫn thủ tục. Chuyển cho người: hồ sơ mờ, rách; khiếu nại bồi thường tài chính trực tiếp.</p>
+    <h2>Discovery và phạm vi</h2>
+    <p class="gist">Bắt đầu với một công việc có phạm vi đủ hẹp để đánh giá kết quả, trước khi mở rộng tự động hóa sang nhiều nghiệp vụ.</p>
+<p><b>Bối cảnh giả định:</b> năm nhân viên CSKH cho đội xem các lần tra cứu gần đây; một số ca mất khoảng tám phút vì tài liệu rải rác hoặc mâu thuẫn phiên bản. Những quan sát này giúp hình thành giả thuyết, chưa đủ để ước tính lợi ích toàn doanh nghiệp. Đo baseline trên tập tác vụ đại diện và thử cải thiện tìm kiếm/tổ chức tài liệu trước.</p>
+    <p><b>Giả thuyết:</b> câu trả lời kèm phiên bản nguồn đã duyệt giảm thời gian tìm được đúng quy trình mà không tăng tỷ lệ xử lý sai. Pilot chỉ phục vụ nhân viên nội bộ, với nguồn tài liệu nằm trong quyền truy cập của từng người. Trợ lý không tự hoàn tiền, sửa tài khoản hay quyết định bồi thường. Với yêu cầu ngoài phạm vi, hệ thống chuyển cho người xử lý và cung cấp ngữ cảnh cần thiết.</p>
   </section>
 
   <section id="s2">
     <span class="num">21.2</span>
-    <h2>Giai đoạn 2: Kiến trúc</h2>
-    <p class="gist">Luồng end-to-end từ tài liệu scan tới giao diện CSKH, có điểm chuyển cho người khi confidence thấp.</p>
+    <h2>Kiến trúc và quyền dữ liệu</h2>
+    <p class="gist">Kiểm tra quyền truy cập trước khi truy xuất và chỉ lập chỉ mục cho dữ liệu đã được phê duyệt.</p>
 <figure>
       <div class="fig"><div id="cap"></div></div>
       <figcaption><b>Hình 1</b>Luồng dữ liệu trong dự án mẫu, đi qua từng bước.</figcaption>
-    </figure>
-    <p>Báo cáo nguồn dùng Claude 3.5 Sonnet trên Amazon Bedrock làm model sinh câu trả lời. Khi bạn làm dự án của mình, chọn model theo eval set và ngân sách, không theo tên trong ví dụ.</p>
+    </figure><p>Tài liệu số có thể không cần OCR. Nếu có bản scan, Textract trích văn bản rồi cần kiểm tra chất lượng. Pipeline phát hiện PII và che dữ liệu là phần ứng dụng phải thiết kế, không tự hoàn tất chỉ bằng việc bật Macie; Macie hỗ trợ phát hiện trong S3, còn bước xử lý và tiêu chí kiểm duyệt phải rõ. Với CCCD Việt Nam, kiểm khả năng identifier tùy chỉnh và đo chất lượng nhận diện.</p>
+    <p>Chỉ đưa bản đã duyệt vào index; lọc theo quyền người dùng trước khi retrieval và kiểm lại quyền tài liệu được dẫn. Lựa chọn mô hình theo kết quả đánh giá và yêu cầu dữ liệu, không theo tên trong ví dụ. Log và cache cũng cần phân quyền, che dữ liệu và thời gian lưu giữ.</p>
   </section>
 
   <section id="s3">
     <span class="num">21.3</span>
-    <h2>Giai đoạn 3 và 4: Đánh giá, rủi ro, triển khai</h2>
-    <p class="gist">Eval set 800 mẫu, phân loại rủi ro, KPI giám sát và tối ưu chi phí.</p>
-<p><b>Eval set.</b> 500 mẫu chứng từ thật kèm 300 kịch bản câu hỏi khách hàng phức tạp; đo tự động qua CI/CD, kết hợp chuyên gia rà các phản hồi có confidence dưới 75%.</p>
-    <p><b>Tuân thủ.</b> Báo cáo nguồn xếp hệ thống vào nhóm rủi ro cao theo EU AI Act (mốc 02/12/2027), nên doanh nghiệp lập hồ sơ minh bạch thuật toán, lưu audit log truy vấn và hiển thị thông báo người dùng đang tương tác với AI. Một hệ thống cụ thể có thuộc nhóm rủi ro cao hay không thì phải đối chiếu văn bản luật, đừng mặc định.</p>
-    <p><b>KPI giám sát.</b> Precision trích xuất tài chính &gt; 98,5%; latency tổng thể &lt; 1,8 giây; CSAT &gt; 4,5/5. Ưu tiên precision vì trích sai số tiền đắt hơn bỏ sót một trường (người sẽ bổ sung trường bỏ sót).</p>
-    <p><b>Chi phí.</b> Prompt caching cho các điều khoản bảo hiểm cố định, báo cáo ước giảm 35% chi phí token đầu vào; model routing để giảm chi phí trên mỗi tác vụ thành công.</p>
+    <h2>Eval, rủi ro và quyết định mở rộng</h2>
+    <p class="gist">Đánh giá các phương án trên cùng nhóm tác vụ, đồng thời giữ riêng dữ liệu kiểm tra không được dùng để tối ưu hệ thống.</p>
+<p><b>Eval:</b> tạo bộ khởi đầu từ câu hỏi được phép sử dụng, có tiêu chí để xác định câu trả lời đúng quy trình, nêu đủ điều kiện và sử dụng đúng nguồn; tách ca thông thường, nguồn mâu thuẫn, không có đáp án và yêu cầu vượt quá quyền được cấp. Quy mô bộ đề dựa trên độ đa dạng/rủi ro và độ bất định cần chấp nhận, không coi 800 mẫu là chuẩn. Giữ riêng tập kiểm tra độc lập (holdout) và bổ sung ca mới có quản lý phiên bản.</p>
+    <p><b>Kiểm định:</b> mã kiểm tra xác nhận schema và quyền truy cập; chuyên gia kiểm tra nguồn/nghiệp vụ; LLM judge hỗ trợ sau khi đo độ đồng thuận. Nếu dùng điểm để chuyển ca, hiệu chỉnh trước và rà mẫu cả nhóm điểm cao. Không dùng confidence tự khai để bảo đảm an toàn.</p>
+    <p><b>Đo pilot:</b> thời gian hoàn thành tác vụ đúng, tỷ lệ chọn sai quy trình, công sức rà soát lại, p95 latency và chi phí mỗi tác vụ thành công. Viết ngưỡng, phương pháp lấy mẫu và điều kiện dừng trước khi chạy; so với baseline cùng cơ cấu tác vụ. Với dữ liệu ít, báo cáo độ bất định và chưa mở rộng nếu chưa đủ bằng chứng.</p>
+    <p><b>Tuân thủ:</b> không mặc định trợ lý tra cứu là high-risk chỉ vì khách hàng làm bảo hiểm. Đối chiếu intended use, vai trò và phạm vi pháp lý; tách nghĩa vụ minh bạch tương tác khỏi nghĩa vụ high-risk. Ghi người chịu trách nhiệm vận hành và xử lý sự cố trước khi mở rộng.</p>
+    <p><b>Chi phí:</b> đo cả model, retrieval, cache, công cụ và người rà soát. Prompt caching chỉ tiết kiệm phần input đủ điều kiện, không tự giảm một tỷ lệ cố định của toàn bộ chi phí. Giữ decision log cho lựa chọn mở rộng, điều chỉnh hoặc dừng.</p>
   </section>
 
   <section id="s4">
@@ -65,27 +65,29 @@
       </div>
       <figcaption><b>Hình 2</b>Checklist capstone. Tiến độ được lưu trong trình duyệt này.</figcaption>
     </figure>
-    <p>Chọn vấn đề đủ nhỏ để làm trong vài tuần và đủ thật để có người dùng thử. Một công cụ nội bộ cho đội của bạn thường là lựa chọn tốt: người dùng ở ngay bên cạnh, dữ liệu sẵn có, và bạn đo được outcome.</p>
-    <div class="take"><small>Ghi nhớ</small>Demo đẹp chưa đủ. Capstone thành công khi bạn đo được dự án giúp ai, bao nhiêu, với chi phí bao nhiêu.</div>
+    <p>Chọn một vấn đề có phạm vi vừa sức để thực hiện trong vài tuần và có người dùng sẵn sàng tham gia thử nghiệm. Một công cụ nội bộ cho đội của bạn thường là lựa chọn tốt: người dùng ở ngay bên cạnh, dữ liệu sẵn có, và bạn đo được kết quả sử dụng.</p>
+    <div class="take"><small>Ghi nhớ</small>Một bản trình diễn tốt chưa đủ để đánh giá dự án. Cần xác định ai được hưởng lợi, công việc được cải thiện đến mức nào và chi phí thực hiện là bao nhiêu.</div>
   </section>
 
   <div class="vids" data-videos="21"></div>
   <a class="next-ch" href="/blog/ai-product-handbook"><span><small>Hết handbook</small><b>Quay về trang mục lục</b></span><span>→</span></a>
 
-  <div class="end"><p>Các con số mục tiêu (85%, 60%, 40%), KPI và mức giảm 35% chi phí token trong dự án mẫu lấy từ báo cáo nguồn, là ví dụ minh họa chứ không phải kết quả đã kiểm chứng.</p></div>
+  <div class="end"><p>Đây là case giả định để học, không phải kết quả triển khai đã kiểm chứng. Chọn quy mô và mục tiêu theo dữ liệu thực tế; xem chương 13 và nguồn EU khi xác định nghĩa vụ pháp lý.</p></div>
 </article>
 
 <script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
-const CAP = [['Tài liệu scan', 'Hóa đơn, hợp đồng, chứng từ được tải lên.'], ['Amazon Textract', 'Trích văn bản và cấu trúc bảng (IDP); kết quả lưu vào S3 data lake.'],
- ['Macie + Lambda', 'Phát hiện và che PII (số thẻ, CCCD) trước khi lưu và index.'], ['Bedrock Knowledge Bases', 'Tạo embedding, lưu và tìm kiếm cho RAG.'],
- ['Model + Guardrails', 'Model trên Amazon Bedrock sinh câu trả lời kèm trích nguồn; Guardrails chặn câu ngoài phạm vi. Lưu lượng đi qua PrivateLink, phân quyền bằng IAM.'],
- ['Giao diện CSKH', 'Nhân viên và khách xem câu trả lời; nếu confidence < 75%, luồng tự đẩy sang chuyên gia rà soát (human-in-the-loop).']];
+const CAP = [['Nguồn và phiên bản', 'Tài liệu nghiệp vụ đã xác định chủ sở hữu, quyền và phiên bản.'],
+ ['Trích xuất nếu cần', 'OCR cho tài liệu scan; kiểm chất lượng trước khi dùng.'],
+ ['Kiểm tra và che PII', 'Quy trình ứng dụng phát hiện, che và phê duyệt dữ liệu; Macie hỗ trợ phát hiện trong S3, không tự che mọi dữ liệu.'],
+ ['Index và retrieval có quyền', 'Chỉ index bản đã duyệt; lọc tài liệu theo quyền người dùng.'],
+ ['Model và kiểm tra', 'Sinh câu trả lời, kiểm nguồn, schema và chính sách; guardrails chỉ là một lớp giảm rủi ro.'],
+ ['Giao diện và chuyển ca', 'Cho xem nguồn, báo lỗi và chuyển cho người khi thiếu bằng chứng hoặc ngoài phạm vi; không dựa vào confidence LLM tự khai.']];
 stepper(document.getElementById('cap'), CAP.map(([t, d]) => [t, `<p>${d}</p>`]));
 const STEPS = [['02', 'Viết problem statement cho một vấn đề thật, chưa nhắc giải pháp'], ['02', 'Phỏng vấn ít nhất năm người dùng mục tiêu'], ['03', 'Trả lời desirability, feasibility, viability'],
  ['06', 'Viết PRD có acceptance criteria định lượng'], ['09', 'Dựng golden dataset, có edge case'], ['04', 'Prototype luồng có fallback và human-in-the-loop'],
- ['07', 'Chọn RAG hay fine-tuning, ghi lý do vào decision log'], ['08', 'Đưa lên production với gateway, log và trace'], ['10', 'Đo outcome và cost per successful task'], ['20', 'Tổ chức product review: tiếp tục, điều chỉnh hay dừng']];
+ ['07', 'Chọn giải pháp theo lỗi cần sửa; ghi dữ liệu, rubric và lý do vào decision log'], ['08', 'Đưa lên production với gateway, log và trace'], ['10', 'Đo outcome và cost per successful task'], ['20', 'Tổ chức product review: tiếp tục, điều chỉnh hay dừng']];
 const KEY = 'aip21:capstone', st = (() => {try {return JSON.parse(localStorage.getItem(KEY)) || []} catch {return []}})();
 mine.innerHTML = STEPS.map(([c, t], i) => `<li><label><input type="checkbox" data-i="${i}"${st[i] ? ' checked' : ''}><span><b>Bước ${i + 1} · chương ${c}</b>${t}</span></label></li>`).join('');
 function mu() {const v = [...mine.querySelectorAll('input')].map(x => x.checked); try {localStorage.setItem(KEY, JSON.stringify(v))} catch {}
@@ -101,11 +103,11 @@ window.CH = {
   {
    "id": "s1",
    "n": "21.1",
-   "t": "Giai đoạn 1: Discovery và định nghĩa sản phẩm",
+   "t": "Discovery và phạm vi",
    "sum": [
-    "Bối cảnh: chứng từ nhập tay, CSKH quá tải.",
-    "Mục tiêu: 85% tự động nhập liệu, −60% thời gian phản hồi, −40% chi phí.",
-    "Hồ sơ hỏng và khiếu nại bồi thường chuyển cho người."
+    "Case và số liệu là giả định để luyện tập.",
+    "Thu bằng chứng công việc và đo baseline đại diện.",
+    "Pilot nội bộ, chỉ tra cứu; không tự hành động tài chính."
    ],
    "terms": [
     "handoff"
@@ -114,11 +116,11 @@ window.CH = {
   {
    "id": "s2",
    "n": "21.2",
-   "t": "Giai đoạn 2: Kiến trúc",
+   "t": "Kiến trúc và quyền dữ liệu",
    "sum": [
-    "Textract → S3 → Macie/Lambda che PII.",
-    "Bedrock Knowledge Bases cho RAG, Guardrails lọc.",
-    "Confidence < 75% thì chuyển người duyệt."
+    "Nguồn được quản lý phiên bản và quyền truy cập.",
+    "OCR chỉ khi cần; phát hiện PII khác che dữ liệu và phê duyệt.",
+    "Chỉ index bản đã duyệt, retrieval và nguồn phải đúng quyền."
    ],
    "terms": [
     "rag",
@@ -131,11 +133,11 @@ window.CH = {
   {
    "id": "s3",
    "n": "21.3",
-   "t": "Giai đoạn 3 và 4: Đánh giá, rủi ro, triển khai",
+   "t": "Eval, rủi ro và quyết định mở rộng",
    "sum": [
-    "Eval 800 mẫu, CI/CD + chuyên gia.",
-    "KPI: precision > 98,5%, latency < 1,8 s, CSAT > 4,5.",
-    "Caching và routing để giảm $/task."
+    "Eval có tiêu chí chấm, holdout và bộ rủi ro riêng.",
+    "Đo tác vụ đúng, thời gian, công sức rà soát, độ trễ và chi phí.",
+    "Phân loại pháp lý theo intended use; mở rộng theo bằng chứng."
    ],
    "terms": [
     "evalset",
@@ -164,67 +166,67 @@ window.CH = {
   "handoff": [
    "handoff",
    "Chuyển cuộc hội thoại hoặc tác vụ từ AI sang người, kèm ngữ cảnh để người dùng không phải kể lại.",
-   "Bàn giao ca trực kèm sổ ghi chép."
+   "Ví dụ: chuyển yêu cầu ngoài chính sách cho nhân viên, kèm lịch sử trao đổi và thông tin cần thiết."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "redaction": [
    "PII redaction",
    "Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.",
-   "Bôi đen thông tin cá nhân trước khi photo hồ sơ."
+   "Ví dụ: che thông tin cá nhân không cần thiết trước khi ghi log hoặc đưa tài liệu vào kho truy xuất."
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
-   "Câu “chắc 90%” của một người bạn."
+   "Điểm thể hiện mức chắc chắn theo một phương pháp cụ thể; chỉ hiểu như xác suất đúng khi đã được hiệu chỉnh và kiểm tra. Điểm LLM tự khai không đủ làm căn cứ.",
+   "Ví dụ: kiểm trên dữ liệu có nhãn xem nhóm điểm 0,8 có đúng khoảng 80% hay không."
   ],
   "hitl": [
    "human-in-the-loop",
    "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
-   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+   "Ví dụ: hệ thống soạn đề xuất, người có thẩm quyền xem và duyệt trước khi thực thi."
   ],
   "evalset": [
    "eval set",
-   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
-   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+   "Tập câu hỏi hoặc tình huống dùng để đánh giá chất lượng mô hình và prompt, có các mẫu đại diện cùng những tình huống ngoại lệ cần kiểm tra.",
+   "Ví dụ: tập câu hỏi tra quy trình với đáp án hoặc tiêu chí chấm được chuyên gia xác nhận."
   ],
   "euaiact": [
    "EU AI Act",
    "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
-   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+   "Ví dụ: phân loại nghĩa vụ theo mục đích sử dụng, không chỉ theo tên ngành."
   ],
   "precision": [
    "precision",
    "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
-   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+   "Ví dụ: trong những giao dịch bị gắn cờ gian lận, xác định tỷ lệ thực sự là gian lận."
   ],
   "cache": [
    "prompt caching",
-   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
-   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+   "Tái sử dụng phần tính toán cho tiền tố prompt trùng nhau, theo điều kiện của dịch vụ. Vẫn gọi mô hình sinh đầu ra; khác response caching và embedding caching.",
+   "Ví dụ: tái sử dụng phần xử lý system prompt cố định, rồi sinh câu trả lời mới."
   ],
   "routing": [
    "model routing",
-   "Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.",
-   "Phòng khám: cảm cúm gặp bác sĩ đa khoa, ca khó mới lên chuyên gia."
+   "Lựa chọn mô hình theo tiêu chí như loại tác vụ, chất lượng, độ trễ và chi phí. Có thể thực hiện bằng quy tắc cố định, không cần agent.",
+   "Ví dụ: phân loại ticket bằng mô hình nhỏ đã đáp ứng tiêu chí đánh giá, chuyển ca khó sang phương án khác."
   ],
   "cpst": [
    "cost per successful task",
-   "Tổng chi phí chia cho số tác vụ được giải quyết trọn vẹn (đã trừ câu trả lời sai, phải thử lại).",
-   "Giá mỗi chiếc bánh bán được, đã tính cả những mẻ hỏng."
+   "Tổng chi phí cho toàn bộ các lượt thực hiện, gồm ca lỗi và thử lại, chia số tác vụ đạt tiêu chí thành công trong cùng kỳ. Nêu rõ có tính lao động và chi phí cố định không.",
+   "Ví dụ: 40 USD cho 1.000 lượt, 800 lượt đạt yêu cầu: 0,05 USD mỗi lượt thành công."
   ],
   "outcome": [
    "outcome",
    "Thay đổi trong hành vi người dùng hoặc hiệu năng hệ thống mà output tạo ra: độ chính xác, latency, tỷ lệ hoàn thành tác vụ, mức hài lòng.",
-   "Ngôi nhà có ở được không."
+   "Ví dụ: nhân viên tìm đúng quy trình nhanh hơn và ít phải hỏi đồng nghiệp hơn."
   ]
  },
  "alias": {
@@ -281,60 +283,60 @@ window.CH = {
  "rel": {},
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Trong dự án mẫu, loại yêu cầu nào được chuyển cho người?",
+   "q": "Trong capstone pilot tra quy trình, yêu cầu nào cần chuyển cho người?",
    "o": [
-    "Tra cứu chính sách bảo hiểm",
-    "Trích hóa đơn chuẩn",
-    "Khiếu nại bồi thường tài chính trực tiếp",
-    "Hướng dẫn thủ tục"
+    "Hoàn tiền ngoài phạm vi hoặc cần quyết định có thẩm quyền",
+    "Mở link nguồn được phép xem",
+    "Tra tài liệu đã duyệt và người dùng có quyền",
+    "Hỏi phiên bản quy trình hiện hành"
    ],
-   "a": 2,
-   "ex": "Hồ sơ hỏng và khiếu nại bồi thường cần người."
+   "a": 0,
+   "ex": "Pilot chỉ tra cứu; quyền hành động tài chính bị giới hạn rõ. Chuyển ca cần giữ ngữ cảnh cần thiết, không tự mở rộng phạm vi."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Bước nào che PII trước khi index?",
+   "q": "Macie phát hiện PII trong nguồn S3. Trước khi index, pipeline cần làm gì?",
    "o": [
-    "Textract",
-    "Macie + Lambda",
-    "Bedrock Knowledge Bases",
-    "Giao diện CSKH"
+    "Index rồi để model bỏ qua PII",
+    "Chỉ bật PrivateLink",
+    "Xử lý/che theo quy trình, kiểm tra chất lượng và chỉ index bản đã duyệt",
+    "Coi finding là bằng chứng đã che xong"
    ],
-   "a": 1,
-   "ex": "PII phải được che trước khi vào kho vector."
+   "a": 2,
+   "ex": "Phát hiện không tự là redaction. Cần thiết kế xử lý, kiểm loại identifier và kiểm tra quyền truy cập; mạng riêng không thay bước này."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 2,
    "type": "one",
-   "q": "Vì sao dự án ưu tiên precision cho trích xuất tài chính?",
+   "q": "Chỉ rà các câu confidence thấp có thể bỏ sót gì?",
    "o": [
-    "Vì recall không đo được",
-    "Vì trích sai số tiền đắt hơn bỏ sót một trường mà người sẽ bổ sung",
-    "Vì precision rẻ hơn",
-    "Vì luật yêu cầu"
+    "Câu sai nhưng được gán điểm cao; cần mẫu ngẫu nhiên và kiểm định điểm",
+    "Chỉ câu trả lời ngắn",
+    "Chỉ lỗi giao diện",
+    "Không bỏ sót nếu LLM tự nói trên 90%"
    ],
-   "a": 1,
-   "ex": "False positive (số sai) gây hậu quả tài chính trực tiếp."
+   "a": 0,
+   "ex": "Điểm chưa được hiệu chỉnh có thể sai, kể cả điểm cao. Mẫu kiểm tra không nên chỉ phụ thuộc một cơ chế chấm."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 3,
    "type": "one",
-   "q": "Theo chương này, thế nào là capstone thành công?",
+   "q": "Bằng chứng nào phù hợp để đánh giá capstone thành công?",
    "o": [
-    "Demo đẹp",
-    "Đo được giúp ai, bao nhiêu, với chi phí bao nhiêu",
-    "Dùng model lớn nhất",
-    "Có nhiều tính năng"
+    "Có đủ 800 mẫu bất kể độ đại diện",
+    "Dùng đủ các dịch vụ trong sơ đồ",
+    "Người dùng hoàn thành đúng tác vụ tốt hơn baseline, với chi phí và rủi ro đạt yêu cầu",
+    "Demo không gặp lỗi trong một buổi"
    ],
-   "a": 1,
-   "ex": "Outcome và chi phí là thước đo."
+   "a": 2,
+   "ex": "Cần outcome, chất lượng, chi phí và rủi ro cùng điều kiện đo. Số dịch vụ, demo và số mẫu riêng lẻ chưa chứng minh hiệu quả."
   }
  ]
 };

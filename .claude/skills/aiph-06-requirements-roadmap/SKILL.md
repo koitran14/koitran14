@@ -1,48 +1,37 @@
 ---
 name: aiph-06-requirements-roadmap
-description: Học và luyện tập Chương 06 của AI Product Handbook — Yêu cầu, ưu tiên và roadmap (PRD cho tính năng AI, acceptance criteria định lượng, POC/prototype/MVP/pilot, ưu tiên backlog với trục data/model risk và RICE, roadmap Alpha → Beta → GA gắn ngưỡng chất lượng). Dùng khi người dùng muốn học, ôn, làm quiz hoặc luyện bài tập chương 06, hoặc gõ /aiph-06-requirements-roadmap.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 06 của AI Product Handbook — Yêu cầu, ưu tiên và roadmap. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-06-requirements-roadmap.
 ---
 
 # Chương 06 · Yêu cầu, ưu tiên và roadmap
 
-Nguồn gốc: `content/ai-product-handbook/06.html` (đọc phần văn bản; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, mảng `terms` là thuật ngữ, mảng `STG` là dữ liệu bốn giai đoạn ở Hình 1). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách".
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/06.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Chương này trình bày cách viết PRD cho tính năng AI, phân biệt POC, prototype, MVP và pilot, cùng cách ưu tiên công việc có rủi ro về dữ liệu và mô hình. Phần cuối đề cập đến quá trình phát hành từ Alpha, qua Beta đến GA.
 
-- Viết PRD cho tính năng AI có đủ ba phần mới: guardrails và fallback, acceptance criteria định lượng, eval set kèm mức lỗi chấp nhận được.
-- Phân biệt POC, prototype, MVP, pilot theo mục tiêu, phạm vi kỹ thuật và cách đo.
-- Xếp ưu tiên backlog AI theo ba trục (business impact, technical complexity, data/model risk) và chấm RICE với Confidence phản ánh rủi ro model.
-- Lập roadmap Alpha → Beta → GA với mốc là ngưỡng chất lượng, không chỉ là ngày.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **06.1 · PRD cho tính năng AI:** PRD nối vấn đề và phạm vi với tiêu chí chấm, eval và điều kiện phát hành. Tách chất lượng, quyền truy cập, độ trễ và ngân sách. Ngưỡng cần mẫu số, điều kiện đo và mức rủi ro cụ thể.
+- **06.2 · POC, prototype, MVP và pilot:** POC: khả thi kỹ thuật. Prototype: luồng trải nghiệm. MVP: giá trị thị trường; Pilot: vận hành thật quy mô nhỏ.
+- **06.3 · Ưu tiên backlog:** Cân tác động, công sức và rủi ro dữ liệu/model. RICE Confidence phản ánh bằng chứng cho các ước tính ưu tiên. Eval không thay bằng chứng về reach và impact.
+- **06.4 · Roadmap và phạm vi phát hành:** Alpha thử nội bộ; Beta/Pilot thử giới hạn với mục tiêu rõ. Kiểm trải nghiệm, chất lượng và vận hành trước khi mở rộng. Roadmap có mốc dự kiến và điều kiện đi tiếp.
 
-1. **06.1** PRD AI thêm guardrails + fallback, acceptance criteria có số (ví dụ trợ lý CSKH: groundedness > 85%, TTFT < 2,0 giây, hallucination < 5%), và trỏ tới eval set. Acceptance criteria không có con số → đội cãi nhau về "đủ tốt chưa" tới tận ngày ra mắt.
-2. **06.2** POC trả lời "làm được không" (model giải được bài toán lõi trong điều kiện thí nghiệm); prototype trả lời "người dùng hiểu và thao tác được không"; MVP kiểm giá trị thị trường với chi phí tối thiểu; pilot vận hành thật ở quy mô giới hạn. POC thành công chưa cho biết người dùng có muốn sản phẩm. *(Mục này không có hộp Ghi nhớ; ý rút từ văn bản và Hình 1.)*
-3. **06.3** Backlog AI có thêm trục data/model risk (thiếu dữ liệu, PII, hallucination, bias). RICE = Reach × Impact × Confidence / Effort; Confidence của tính năng AI chỉ nên cao khi đã có số đo trên eval set.
-4. **06.4** Alpha nội bộ (chỉnh prompt, dựng guardrails) → Beta/Pilot (thu tương tác thật để xây golden dataset) → GA (giám sát latency, chi phí token, độ chính xác, tỷ lệ lỗi). Mốc roadmap là "đạt ngưỡng X", không chỉ "đến ngày Y".
+## Cách hướng dẫn
 
-## Cách chạy skill
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-### Học
-Đi lần lượt 06.1 → 06.4. Mỗi mục: giải thích ý chính trong 3–5 câu, cho một ví dụ đời thường, rồi hỏi **một** câu kiểm tra hiểu (dạng "vì sao", không phải "là gì"). Ở 06.2, đi qua bốn giai đoạn theo ba cột mục tiêu / phạm vi kỹ thuật / đo thành công như Hình 1. Trả lời sai → gợi ý, không đưa đáp án ngay.
+## Bài luyện
 
-### Luyện
-Chọn bài theo mục người học yếu (hoặc lần lượt). Chấm theo rubric, chỉ ra một điểm làm tốt và một điểm cần sửa, cho viết lại một lần.
+Viết PRD ngắn cho pilot: phạm vi, eval tiêu chí chấm, dữ liệu/quyền, độ trễ, chi phí và điều kiện đi tiếp.
 
-| # | Bài tập | Rubric đạt |
-|---|---|---|
-| L1 | Viết khung PRD 3 phần (vấn đề và mục tiêu / guardrails và fallback / acceptance criteria) cho một tính năng AI theo ngành của người học, theo mẫu trợ lý tra quy trình CSKH trong chương. | Điểm đau có số (như "8 phút"); guardrails nói rõ phạm vi dữ liệu và loại câu hỏi phải từ chối/chuyển người; ít nhất 3 tiêu chí có ngưỡng số; có nhắc eval set và acceptable error rate. |
-| L2 | Xếp 4 việc vào POC / prototype / MVP / pilot: (a) gọi API model trên 50 hợp đồng mẫu xem trích điều khoản được không; (b) dựng luồng no-code với dữ liệu giả cho 5 nhân viên bấm thử; (c) mở cho 1 chi nhánh dùng với RAG hoàn chỉnh, log đầy đủ, đo CSAT; (d) đưa bản nhỏ nhất cho khách thật, xem tỷ lệ quay lại. | Đúng cả 4 (a POC, b prototype, c pilot, d MVP) **và** mỗi câu nêu được câu hỏi mà giai đoạn đó trả lời. |
-| L3 | Chấm RICE cho 3 hạng mục backlog (tự nghĩ, hoặc dùng: tóm tắt ticket, tự gợi ý câu trả lời cho nhân viên, phân loại khiếu nại có chứa số CCCD), rồi nêu rủi ro data/model của từng cái. | Có đủ R, I, C, E và kết quả; Confidence thấp cho hạng mục chưa chạy eval; nêu đúng loại rủi ro (PII, thiếu dữ liệu, hallucination, bias). |
-| L4 | Lập roadmap 3 mốc Alpha / Beta / GA cho tính năng ở L1; mỗi mốc ghi việc chính và điều kiện để đi tiếp. | Mỗi điều kiện là một ngưỡng đo được (ví dụ "groundedness ≥ 85% trên eval set"); Beta có mục tiêu xây golden dataset; GA có danh sách chỉ số giám sát. |
-| L5 | Phân loại MoSCoW cho 6 yêu cầu của tính năng ở L1 (trong đó có ít nhất 1 guardrail và 1 fallback). | Guardrail chặn dữ liệu nhạy cảm nằm ở Must; có ít nhất một mục Won't kèm lý do. |
-| L6 | **Sửa bài:** viết lại acceptance criteria "Trợ lý trả lời chính xác, nhanh, ít sai" và mốc roadmap "Ra Beta ngày 15/3" thành bản đúng. | Mỗi tính từ đổi thành chỉ số + ngưỡng + nơi đo (golden dataset); mốc Beta gắn với ngưỡng, ngày chỉ là dự kiến. |
+**Tiêu chí đạt:** Không coi một kết quả đánh giá là đủ phát hành; phân biệt bằng chứng kỹ thuật với confidence trong RICE.
 
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `06.html` (trường `q`, `o`, `a`, `ex`, `why` nếu có), hỏi từng câu, xáo thứ tự đáp án. Câu `type: "multi"` có nhiều đáp án đúng, báo trước cho người học. Sau đó thêm 2 câu tình huống tự soạn (ví dụ: "POC đạt 92% trên 30 mẫu, sếp muốn GA tuần sau. Bạn trả lời gì?"; "Một hạng mục chưa chạy eval nhưng đội chấm Confidence 100% trong RICE. Sai ở đâu?"). Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục, 0 = 06.1).
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-## Kết thúc buổi
+## Kết thúc
 
-Tóm tắt 3 điều người học đã nắm, 1 điều cần ôn, và gợi ý chương tiếp theo: `/aiph-07-ai-llm-fundamentals` (AI & LLM Fundamentals).
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 07 · AI & LLM Fundamentals.

@@ -30,21 +30,21 @@
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Biết xây AI chưa đủ. Một AI Product Engineer phải tìm đúng vấn đề, chọn kiến trúc hợp lý, chứng minh AI chạy đủ tốt và đo được nó tạo ra giá trị gì.</div>
+  <div class="idea"><small>Ý chính của chương</small>Biết xây dựng AI là chưa đủ. Một AI Product Engineer còn cần xác định đúng vấn đề, lựa chọn kiến trúc phù hợp, kiểm chứng chất lượng của hệ thống và đo lường giá trị mà sản phẩm mang lại.</div>
   <section id="s1">
     <span class="num">00.1</span>
     <h2>Handbook này dành cho ai</h2>
-    <p class="gist">Cho người đã biết viết phần mềm và muốn chịu trách nhiệm cho cả kết quả, không chỉ cho phần code.</p>
-<p>Nếu bạn là Software Engineer và đã từng tham gia làm ứng dụng AI, có lẽ bạn quen với việc nhận task: có ticket, có mô tả, làm xong thì đóng. Làm sản phẩm AI đòi hỏi thêm một số việc nằm trước và sau đoạn code đó: hỏi xem vấn đề có đáng giải không, có cần tới AI không, làm sao biết AI trả lời “đủ tốt”, và sau khi ra mắt thì người dùng có thật sự dùng không.</p>
-    <p>Handbook gom các việc đó lại thành 21 chương, chia làm bảy phần. Nội dung dựa trên ba báo cáo tổng hợp về AI Product Engineering & Management (Phần I, II–III, IV–VII), được biên tập lại; mỗi chương kèm một đến hai video YouTube để học tiếp. Ba vai trò hay được nhắc tới trong sách là <b>AI Product Engineer</b>, <b>AI Product Builder</b> và <b>AI Product Manager</b>. Ranh giới giữa chúng không cứng, và chương 14, 18 sẽ nói kỹ hơn.</p>
-    <div class="take"><small>Ghi nhớ</small>Mục tiêu của handbook là giúp bạn chuyển từ “làm đúng task” sang “chọn đúng task và chứng minh nó có giá trị”.</div>
+    <p class="gist">Dành cho người đã có kinh nghiệm phát triển phần mềm và muốn tham gia sâu hơn vào việc xác định vấn đề, xây dựng giải pháp và đánh giá kết quả.</p>
+<p>Nếu bạn là Software Engineer và đã tham gia phát triển ứng dụng AI, bạn có thể đã quen làm việc theo yêu cầu hoặc ticket được giao. Khi tham gia xây dựng sản phẩm, bạn còn cần tìm hiểu vì sao yêu cầu đó đáng thực hiện, liệu có cần dùng AI hay không, chất lượng cần đạt đến mức nào và người dùng có thực sự sử dụng sản phẩm sau khi ra mắt hay không.</p>
+    <p>Handbook trình bày những công việc này trong 21 chương, chia thành bảy phần. Nội dung dựa trên ba báo cáo tổng hợp về AI Product Engineering & Management (Phần I, II–III, IV–VII), được biên tập lại; mỗi chương kèm một đến hai video YouTube để học tiếp. Ba vai trò hay được nhắc tới trong sách là <b>AI Product Engineer</b>, <b>AI Product Builder</b> và <b>AI Product Manager</b>. Phạm vi công việc của các vai trò có thể giao nhau; chương 14 và 18 sẽ giải thích cụ thể hơn.</p>
+    <div class="take"><small>Ghi nhớ</small>Handbook giúp bạn vừa thực hiện tốt công việc được giao, vừa biết cách lựa chọn vấn đề cần giải quyết và kiểm chứng giá trị của giải pháp.</div>
   </section>
 
   <section id="s2">
     <span class="num">00.2</span>
-    <h2>Bảy phần trong một trang</h2>
+    <h2>Tổng quan bảy phần của handbook</h2>
     <p class="gist">Đi từ tư duy sản phẩm, qua thiết kế và kỹ thuật, tới đo lường, quản trị và một dự án tổng hợp.</p>
-<p>Phần I và II là nền móng sản phẩm: tìm vấn đề, nghiên cứu người dùng và thị trường, rồi biến nó thành chiến lược, yêu cầu và roadmap. Phần III là chỗ bạn tận dụng được nhiều nhất nền tảng kỹ sư: LLM, kiến trúc hệ thống AI, và đánh giá chất lượng. Phần IV nói về đo lường và tăng trưởng sau khi ra mắt. Phần V là các vấn đề của người dẫn dắt sản phẩm: kinh tế, rủi ro, làm việc với các bên và chiến lược dài hạn. Phần VI là phần tra cứu, không cần đọc theo thứ tự. Phần VII ghép mọi thứ lại thành một dự án.</p>
+<p>Phần I và II trình bày kiến thức nền tảng về sản phẩm: tìm vấn đề, nghiên cứu người dùng và thị trường, rồi biến nó thành chiến lược, yêu cầu và roadmap. Phần III có nhiều nội dung gần với kinh nghiệm của kỹ sư phần mềm: LLM, kiến trúc hệ thống AI, và đánh giá chất lượng. Phần IV nói về đo lường và tăng trưởng sau khi ra mắt. Phần V đề cập đến trách nhiệm khi dẫn dắt sản phẩm: kinh tế, rủi ro, làm việc với các bên và chiến lược dài hạn. Phần VI là phần tra cứu, không cần đọc theo thứ tự. Phần VII hướng dẫn vận dụng các nội dung đã học vào một dự án tổng hợp.</p>
     <figure>
       <div class="fig"><div class="map" id="map"></div></div>
       <figcaption><b>Hình 1</b>Bản đồ 21 chương. Chọn một chương để mở.</figcaption>
@@ -54,11 +54,11 @@
   <section id="s3">
     <span class="num">00.3</span>
     <h2>Nên đọc theo thứ tự nào</h2>
-    <p class="gist">Với nền tảng kỹ sư, ưu tiên năm chương giúp bạn đổi cách nghĩ trước, rồi mới mở rộng.</p>
-<p>Không cần đọc tuần tự từ chương 1. Gợi ý dưới đây chia theo ba mức ưu tiên, dành cho người đã quen làm phần mềm và từng đụng tới ứng dụng AI.</p>
+    <p class="gist">Nếu đã có nền tảng kỹ thuật, bạn có thể bắt đầu bằng năm chương về xác định vấn đề, chiến lược, yêu cầu, đánh giá AI và phân tích sản phẩm.</p>
+<p>Không cần đọc tuần tự từ chương 1. Gợi ý dưới đây chia theo ba mức ưu tiên, dành cho người đã quen làm phần mềm và từng tham gia phát triển ứng dụng AI.</p>
     <table class="tbl">
       <tr><th>Mức</th><th>Chương</th><th>Lý do</th></tr>
-      <tr><td>P1</td><td>02 · Problem Discovery & User Research</td><td>Chuyển từ thói quen nhận task sang chủ động tìm đúng vấn đề.</td></tr>
+      <tr><td>P1</td><td>02 · Problem Discovery & User Research</td><td>Rèn luyện cách chủ động xác định vấn đề cần giải quyết.</td></tr>
       <tr><td>P1</td><td>05 · Vision, Strategy & Positioning</td><td>Hiểu vì sao nên xây sản phẩm và sản phẩm tạo ra giá trị gì.</td></tr>
       <tr><td>P1</td><td>06 · Requirements, Prioritization & Roadmapping</td><td>Nối tư duy kỹ thuật với quyết định về phạm vi và thứ tự làm.</td></tr>
       <tr><td>P1</td><td>09 · AI Evaluation & Reliability</td><td>Năng lực cần có để làm ra sản phẩm AI đáng tin.</td></tr>
@@ -67,7 +67,7 @@
       <tr><td>P3</td><td>13, 15–20</td><td>Tư duy chiến lược và bộ tài liệu tra cứu lâu dài.</td></tr>
     </table>
     <p>Trang mục lục có nút lọc theo ba mức này, để bạn thấy ngay chương nào nên mở trước.</p>
-    <div class="take"><small>Ghi nhớ</small>P1 trước: 02 → 05 → 06 → 09 → 10. Phần tra cứu (16–20) để dành lúc làm dự án.</div>
+    <div class="take"><small>Ghi nhớ</small>Bạn nên đọc trước các chương 02, 05, 06, 09 và 10. Các chương từ 16 đến 20 là tài liệu tra cứu, có thể đọc khi cần áp dụng vào dự án.</div>
   </section>
 
   <section id="s4">
@@ -75,9 +75,9 @@
     <h2>Cách dùng video và audio</h2>
     <p class="gist">Video và audio để học thêm sau khi đọc, không thay cho phần đọc.</p>
 <p>Chương 01 đến 21 đều có khối “Video liên quan” ở cuối chương, mỗi chương một đến hai video. Bấm vào thumbnail để phát ngay trong trang; tiêu đề hiển thị là tiêu đề thật của video trên YouTube. Video bằng tiếng Anh; bạn có thể bật phụ đề tự động và dịch sang tiếng Việt.</p>
-    <p>Trang mục lục có thêm tám audio tổng quan do AI tạo từ cùng chủ đề. Nghe khi đi đường thì tiện, nhưng đừng coi đó là nguồn chính xác tuyệt đối.</p>
-    <details class="deep"><summary><span><small>Đọc sâu</small>Với chương 21, đừng chỉ xem rồi làm theo</span></summary><div>
-      <p>Chương capstone có video về đánh giá và đưa AI agent lên production. Video hữu ích để thấy toàn cảnh, nhưng phải tự làm mới học được: chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</p>
+    <p>Trang mục lục có thêm tám audio tổng quan do AI tạo từ cùng chủ đề. Audio chưa được đồng bộ với lần biên tập 07/11/2026; khi có khác biệt, ưu tiên bài đọc và nguồn trực tiếp. Bạn có thể nghe để ôn lại nội dung, nhưng vẫn nên đối chiếu bài đọc và nguồn tham khảo trước khi sử dụng thông tin.</p>
+    <details class="deep"><summary><span><small>Đọc sâu</small>Vận dụng chương 21 vào một dự án của bạn</span></summary><div>
+      <p>Chương capstone có video về đánh giá và đưa AI agent vào môi trường vận hành thực tế. Video giúp hình dung tổng thể; để hiểu cách áp dụng, hãy tự thực hiện các bước: chọn một vấn đề thật, tự nghiên cứu người dùng, dựng giải pháp, đặt tiêu chí đánh giá AI và đo kết quả.</p>
     </div></details>
   </section>
 
@@ -125,7 +125,7 @@ window.CH = {
   {
    "id": "s2",
    "n": "00.2",
-   "t": "Bảy phần trong một trang",
+   "t": "Tổng quan bảy phần của handbook",
    "sum": [
     "I–II: vấn đề, người dùng, chiến lược, yêu cầu.",
     "III: LLM, kiến trúc, đánh giá.",
@@ -162,23 +162,23 @@ window.CH = {
  "terms": {
   "pm": [
    "AI Product Manager",
-   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
-   "Người chọn đích đến và giải thích vì sao đi đường này."
+   "Vai trò thường dẫn dắt xác định vấn đề, giá trị, tiêu chí thành công và ưu tiên, phối hợp với kỹ thuật, thiết kế và các bên liên quan.",
+   "Ví dụ: cùng kỹ sư và CSKH quyết định điều kiện mở thử nghiệm."
   ],
   "builder": [
    "AI Product Builder",
-   "Người tự đi từ vấn đề đến sản phẩm AI chạy được: discovery, prototype, tích hợp, đo kết quả.",
-   "Thợ cả vừa vẽ được bản vẽ vừa tự dựng được nhà mẫu."
+   "Người tham gia từ khâu tìm hiểu vấn đề đến phát triển sản phẩm AI có thể sử dụng được, bao gồm thử nghiệm, tích hợp và đo lường kết quả.",
+   "Ví dụ: tìm hiểu khó khăn khi tra quy trình, xây dựng bản thử nghiệm và đo hiệu quả sử dụng."
   ],
   "roadmap": [
    "roadmap",
    "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
-   "Bản đồ chặng đường, không phải lịch trình từng phút."
+   "Ví dụ: nêu vấn đề cần giải quyết trước, lý do ưu tiên và điều kiện để mở rộng pilot."
   ],
   "llm": [
    "LLM",
-   "Large Language Model: model ngôn ngữ lớn, được huấn luyện trên lượng văn bản rất lớn để hiểu và sinh ngôn ngữ.",
-   "Người đã đọc gần hết thư viện, nói gì cũng trôi chảy nhưng không phải lúc nào cũng đúng."
+   "Mô hình ngôn ngữ lớn, thường được huấn luyện trước bằng self-supervised learning để xử lý và sinh ngôn ngữ. Không nên mặc định rằng mô hình nhớ chính xác hoặc có thể truy xuất nguồn của những dữ liệu đã học.",
+   "Ví dụ: cùng một mô hình hỗ trợ tóm tắt, phân loại và hỏi đáp."
   ]
  },
  "alias": {
@@ -200,67 +200,64 @@ window.CH = {
  "rel": {},
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Theo chương này, điều gì phân biệt người làm sản phẩm AI với người chỉ nhận task?",
+   "q": "Đội đã tích hợp được LLM, nhưng chưa biết nhân viên có giải quyết ticket tốt hơn không. Việc cần bổ sung là gì?",
    "o": [
-    "Viết code nhanh hơn",
-    "Chịu trách nhiệm cả việc chọn đúng vấn đề và chứng minh giá trị",
-    "Biết nhiều framework hơn",
-    "Không cần đọc tài liệu kỹ thuật"
+    "Tăng số tác vụ model hỗ trợ",
+    "Chuẩn hóa code trước rồi mới hỏi người dùng",
+    "Lựa chọn mô hình đứng đầu benchmark",
+    "Đo kết quả công việc so với cách hiện tại"
    ],
-   "a": 1,
-   "ex": "Người làm sản phẩm AI hỏi vấn đề có đáng giải không, AI có cần không, làm sao biết đủ tốt và người dùng có dùng không."
+   "a": 3,
+   "ex": "Cần biết vấn đề và giá trị thực tế; tích hợp, độ sạch của code hoặc benchmark chưa chứng minh công việc được cải thiện."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "Phần nào tận dụng nhiều nhất nền tảng Software Engineer?",
+   "q": "Một kỹ sư cần kiểm tra chất lượng và độ ổn định của trợ lý trước pilot. Phần nào nên đọc sâu?",
    "o": [
-    "Phần I: Product Foundations",
-    "Phần III: AI Product Engineering",
-    "Phần VI: Glossary",
-    "Phần V: Leadership"
+    "Phần V về quản trị danh mục",
+    "Phần VI chỉ để học tên thuật ngữ",
+    "Phần I về tìm vấn đề",
+    "Phần III về nền tảng, kiến trúc và eval"
    ],
-   "a": 1,
-   "ex": "Phần III nói về LLM, kiến trúc hệ thống AI và đánh giá chất lượng, gần nhất với kinh nghiệm kỹ sư."
+   "a": 3,
+   "ex": "Phần III đi vào model, kiến trúc và đánh giá. Các phần khác bổ sung bối cảnh nhưng không thay kiểm chứng kỹ thuật."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 2,
    "type": "multi",
-   "q": "Những chương nào nằm trong nhóm ưu tiên P1?",
+   "q": "Theo lộ trình gợi ý cho kỹ sư trong chương, những chương nào thuộc P1?",
    "o": [
-    "02 · Problem Discovery",
+    "10 · Product Analytics",
     "09 · AI Evaluation",
-    "16 · PM Glossary",
-    "10 · Product Analytics"
+    "02 · Problem Discovery",
+    "16 · PM Glossary"
    ],
    "a": [
     0,
     1,
-    3
+    2
    ],
-   "ex": "P1 gồm 02, 05, 06, 09, 10. Chương 16 thuộc nhóm tra cứu P3.",
-   "why": {
-    "2": "Glossary dùng để tra cứu, xếp P3."
-   }
+   "ex": "P1 gồm 02, 05, 06, 09, 10; glossary 16 là tài liệu tra cứu P3. Đây là gợi ý theo đối tượng, không phải thứ tự bắt buộc."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 3,
    "type": "one",
-   "q": "Nên dùng tám audio tổng quan ở trang mục lục thế nào?",
+   "q": "Audio tổng quan đưa ra một con số khác bài đọc. Cách sử dụng hợp lý nhất là gì?",
    "o": [
-    "Thay hoàn toàn cho việc đọc chương",
-    "Nghe để nắm ý chung, nhưng không coi là nguồn chính xác tuyệt đối",
-    "Trích dẫn nguyên văn khi viết PRD",
-    "Bỏ qua vì do AI tạo"
+    "Ưu tiên audio vì cô đọng hơn",
+    "Lấy trung bình hai con số",
+    "Tra nguồn gốc và điều kiện đo trước khi dùng",
+    "Dùng số xuất hiện ở cả nhiều audio nhất"
    ],
-   "a": 1,
-   "ex": "Audio do AI tạo, tiện để nghe khi đi đường, nhưng có thể còn lỗi phát âm hoặc diễn đạt chưa chính xác."
+   "a": 2,
+   "ex": "Audio giúp nắm ý nhưng không thay nguồn. Số liệu phải có nguồn, thời điểm và cách đo; tần suất lặp lại không chứng minh đúng."
   }
  ]
 };

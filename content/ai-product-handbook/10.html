@@ -24,28 +24,29 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần IV / 10</div>
   <h1>Product analytics <i>và quyết định dựa trên dữ liệu</i></h1>
-  <p class="dek">Đo sản phẩm AI khác đo phần mềm thường ra sao, cân precision với recall, giữ chất lượng model qua vòng đời ML, và khung đánh giá bốn bước. Kèm North Star Metric, cohort và funnel.</p>
+  <p class="dek">Từ North Star, funnel và cohort đến quyết định sản phẩm; chọn precision/recall theo tổn thất và nối phản hồi người dùng với quá trình đánh giá có kiểm định.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 10 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Đo sản phẩm AI là đo liên tục: chất lượng có trôi không, latency và chi phí trên mỗi truy vấn ra sao, và người dùng có thật sự được lợi không.</div>
+  <div class="idea"><small>Ý chính của chương</small>Cần theo dõi liên tục chất lượng, độ trễ và chi phí xử lý của sản phẩm AI, đồng thời kiểm tra xem những kết quả đó có giúp người dùng làm việc hiệu quả hơn hay không.</div>
   <section id="s1">
     <span class="num">10.1</span>
-    <h2>Đo phần mềm thường và đo sản phẩm AI</h2>
-    <p class="gist">Phần mềm thường đo luồng đúng/sai. Sản phẩm AI đo tỷ lệ trả lời đúng khi đầu ra mở, và theo dõi tỷ lệ này theo thời gian.</p>
-<p>Với phần mềm truyền thống, sản phẩm chạy đúng thiết kế hoặc có bug; chỉ số chính là uptime, tỷ lệ lỗi HTTP, số bug, thời gian tải trang. Với sản phẩm AI, cần theo dõi thêm: tỷ lệ phản hồi chính xác khi đầu ra là văn bản mở; drift của model khi dữ liệu đầu vào hoặc ý nghĩa của dữ liệu thay đổi (data drift, concept drift); latency suy luận; và chi phí điện toán trên mỗi tác vụ thành công.</p>
-    <p>Ở tầng sản phẩm, các khái niệm analytics quen thuộc vẫn cần: <b>North Star Metric</b> là một chỉ số phản ánh giá trị người dùng nhận được (ví dụ số ticket được giải quyết đúng nhờ AI mỗi tuần); <b>funnel</b> cho thấy người dùng rơi ở bước nào; <b>cohort analysis</b> theo dõi từng nhóm người dùng bắt đầu cùng thời điểm, để biết retention của người mới tháng này có tốt hơn tháng trước không.</p>
-    <div class="take"><small>Ghi nhớ</small>Chỉ số kỹ thuật (độ chính xác, latency) và chỉ số sản phẩm (retention, North Star) phải đặt cạnh nhau trên cùng một dashboard.</div>
+    <h2>Từ sự kiện sử dụng đến quyết định sản phẩm</h2>
+    <p class="gist">Chỉ số kỹ thuật và hành vi người dùng cần được đặt cạnh nhau.</p>
+<p>Cả phần mềm có và không có AI đều cần đo giá trị người dùng. Với trợ lý sinh nội dung, bổ sung chất lượng câu trả lời, nguồn, chi phí và thay đổi phân phối đầu vào. Uptime tốt không chứng minh người dùng tìm đúng quy trình.</p>
+    <p><b>North Star Metric</b> giả định: số tác vụ tra cứu được xác nhận đúng quy trình mỗi tuần. Định nghĩa “đúng” bằng chuyên gia trên mẫu, tránh tự coi bấm sao chép là thành công. Theo dõi thêm thời gian, tỷ lệ phải hỏi người và chi phí để tránh tăng số lượng bằng cách giảm tiêu chuẩn.</p>
+    <table class="tbl"><tr><th>Funnel giả định / tuần</th><th>Số tác vụ</th><th>Câu hỏi cần kiểm tra</th></tr><tr><td>Mở trợ lý</td><td>1.000</td><td>Có đếm trùng tác vụ không?</td></tr><tr><td>Gửi câu hỏi</td><td>700</td><td>300 ca còn lại chưa hiểu công cụ hay không có nhu cầu?</td></tr><tr><td>Mở tài liệu nguồn</td><td>350</td><td>Không mở có thể vì đã đủ thông tin, không mặc định là thất bại</td></tr><tr><td>Xác nhận giải quyết đúng</td><td>280</td><td>Ai xác nhận và có kiểm tra độc lập không?</td></tr></table>
+    <p><b>Cohort</b>: so nhóm bắt đầu dùng từng tuần theo cùng khoảng thời gian kể từ lần đầu. Nếu tuần mới có adoption cao nhưng quay lại thấp, kiểm thay đổi cơ cấu người dùng và chất lượng trước khi kết luận giao diện tốt hơn. Số liệu bảng chỉ minh họa, không chứng minh quan hệ nhân quả.</p><div class="take"><small>Ghi nhớ</small>Từ mỗi chỉ số, viết ra một quyết định và dữ liệu bổ sung cần có.</div>
   </section>
 
   <section id="s2">
     <span class="num">10.2</span>
-    <h2>Precision hay recall</h2>
-    <p class="gist">Hai chỉ số kéo ngược nhau. Chọn ưu tiên bên nào là quyết định về chi phí của mỗi loại sai.</p>
-<p>Precision = TP / (TP + FP): trong những lần model báo “có”, bao nhiêu lần đúng. Ưu tiên precision khi false positive đắt: tự duyệt khoản vay, phát hiện gian lận giao dịch lớn, tự ký hợp đồng. Đổi lại, hệ thống bỏ sót nhiều hơn và cần quy trình thủ công dự phòng.</p>
-    <p>Recall = TP / (TP + FN): trong những trường hợp “có” thật, model bắt được bao nhiêu. Ưu tiên recall khi false negative nghiêm trọng: chẩn đoán tổn thương qua ảnh y khoa, quét mã độc, lọc nội dung vi phạm pháp luật. Đổi lại, cảnh báo giả tăng và cần thêm người rà soát.</p>
-    <figure>
+    <h2>Precision và recall theo quyết định thực tế</h2>
+    <p class="gist">Trước khi lựa chọn ngưỡng, cần định nghĩa lớp dương tính, hành động sau dự đoán và chi phí của hai loại lỗi.</p>
+<p><b>Precision = TP / (TP + FP)</b>: trong các dự đoán dương, tỷ lệ đúng. <b>Recall = TP / (TP + FN)</b>: trong các ca dương thật, tỷ lệ bắt được. TP/FP/FN chỉ có nghĩa khi đã định nghĩa “dương”. Không có dự đoán dương thì precision chưa xác định; biểu đồ dưới hiển thị 0 theo quy ước minh họa.</p>
+    <p>Ví dụ “dương” là giao dịch gian lận. Nếu hệ thống chỉ gắn cờ cho người rà soát, một ca bỏ sót tốn 10 triệu đồng và một cảnh báo nhầm tốn 20 nghìn đồng, đội có thể ưu tiên tăng recall trong giới hạn khả năng xử lý của người rà soát. Nếu cảnh báo tự khóa tài khoản, tổn thất FP khác hẳn; phải đánh giá lại ngưỡng và thêm quyền khiếu nại.</p>
+    <p>Cải thiện chất lượng mô hình có thể cải thiện cả hai chỉ số; còn thay ngưỡng trên một mô hình cố định thường tạo đánh đổi. Không coi “ngành y tế chọn recall” hay “tài chính chọn precision” là quy tắc. Với trích xuất số tiền, bổ sung exact match từng trường, sai số tiền và tỷ lệ hồ sơ cần người kiểm.</p><figure>
       <div class="fig">
         <div class="figbar"><span>Kéo ngưỡng quyết định của model</span><span id="thV"></span></div>
         <input type="range" id="th" min="5" max="95" value="50" aria-label="Ngưỡng">
@@ -53,16 +54,15 @@ input[type=range]{width:100%;accent-color:var(--acc)}
         <div class="out" id="pr"></div>
       </div>
       <figcaption><b>Hình 1</b>Bộ dữ liệu giả lập 200 mẫu, 40 mẫu dương tính thật. Ngưỡng cao: ít báo nhầm, sót nhiều. Ngưỡng thấp: bắt được nhiều, báo nhầm tăng.</figcaption>
-    </figure>
-    <div class="take"><small>Ghi nhớ</small>Trước khi chỉnh ngưỡng, hỏi: một false positive tốn bao nhiêu, một false negative tốn bao nhiêu?</div>
+    </figure><div class="take"><small>Ghi nhớ</small>Chọn ngưỡng theo tổng tổn thất và năng lực xử lý, rồi đo trên dữ liệu đại diện.</div>
   </section>
 
   <section id="s3">
     <span class="num">10.3</span>
     <h2>Giữ chất lượng qua vòng đời ML</h2>
-    <p class="gist">Model cần dữ liệu gán nhãn liên tục và vòng phản hồi để cập nhật khi thực tế thay đổi.</p>
-<p>Để giữ hiệu năng model qua thời gian, cần thu và gán nhãn dữ liệu ở quy mô lớn. Báo cáo nguồn lấy ví dụ AWS SageMaker Ground Truth: quy trình gán nhãn tự động kết hợp người (human-in-the-loop), giúp đội dựng dữ liệu huấn luyện và đánh giá chất lượng cao. Quy trình này cũng lập feedback loop để cập nhật model mỗi khi phát hiện lệch so với dữ liệu thực tế.</p>
-    <p>Ở phía sản phẩm, feedback loop có thể đơn giản như nút thích/không thích, hoặc cho người dùng sửa câu trả lời ngay trong giao diện. Mỗi lần sửa là một mẫu dữ liệu có nhãn.</p>
+    <p class="gist">Theo dõi nhu cầu và dữ liệu mới để quyết định cần sửa nguồn, prompt, quy trình hay model; không phải thay đổi nào cũng cần huấn luyện lại.</p>
+<p>Để giữ hiệu năng của mô hình qua thời gian, cần thu và gán nhãn dữ liệu ở quy mô lớn. Báo cáo nguồn lấy ví dụ AWS SageMaker Ground Truth: quy trình gán nhãn tự động kết hợp người (human-in-the-loop), giúp đội dựng dữ liệu huấn luyện và đánh giá chất lượng cao. Quy trình này cũng lập feedback loop để cập nhật model mỗi khi phát hiện lệch so với dữ liệu thực tế.</p>
+    <p>Ở phía sản phẩm, feedback loop có thể đơn giản như nút thích/không thích, hoặc cho người dùng sửa câu trả lời ngay trong giao diện. Mỗi lần sửa là tín hiệu phản hồi, chưa tự là nhãn chuẩn. Cần kiểm tra chất lượng, quyền sử dụng và thiên lệch chọn mẫu trước khi dùng cho huấn luyện hoặc eval.</p>
   </section>
 
   <section id="s4">
@@ -70,12 +70,12 @@ input[type=range]{width:100%;accent-color:var(--acc)}
     <h2>Khung đánh giá model bốn bước</h2>
     <p class="gist">Eval set đại diện, tiêu chí tường minh, đo tự động qua mỗi phiên bản, và chuyên gia chấm định kỳ.</p>
 <ol>
-      <li><b>Eval set đại diện.</b> Bộ benchmark phản ánh đúng phân phối dữ liệu người dùng thật, bắt buộc có edge case nguy hiểm và adversarial prompt.</li>
+      <li><b>Eval set đại diện.</b> Bộ benchmark phản ánh đúng phân phối dữ liệu người dùng thực tế, bắt buộc có edge case nguy hiểm và adversarial prompt.</li>
       <li><b>Tiêu chí tường minh.</b> Thay chỉ số chung chung bằng bộ tiêu chí nhiều chiều cho mỗi câu trả lời: factuality, completeness, latency, format compliance, tone & style, hallucination rate.</li>
-      <li><b>Đo tự động qua phiên bản.</b> Dựng pipeline CI/CD cho AI để tự chạy bộ eval (LLM-as-a-judge hoặc test tự động) mỗi khi đổi model nền, prompt, hoặc cấu hình kho tri thức RAG.</li>
-      <li><b>Chuyên gia chấm định kỳ.</b> Domain expert rà các câu trả lời có confidence thấp hoặc thuộc chủ đề nhạy cảm, làm căn cứ hiệu chỉnh lại bộ chấm tự động.</li>
+      <li><b>Đo tự động qua phiên bản.</b> Dựng pipeline CI/CD cho AI để tự chạy bộ đánh giá (LLM-as-a-judge hoặc test tự động) mỗi khi đổi mô hình nền, prompt, hoặc cấu hình kho tri thức RAG.</li>
+      <li><b>Chuyên gia chấm định kỳ.</b> Chuyên gia rà cả mẫu ngẫu nhiên, nhóm rủi ro cao và nhóm điểm thấp. Lấy mẫu cả các câu tự tin cao để tìm lỗi mà cơ chế confidence bỏ sót; dùng kết quả để kiểm định bộ chấm và điểm điều phối.</li>
     </ol>
-    <div class="take"><small>Ghi nhớ</small>Đổi prompt cũng là một lần release. Chạy eval trước khi merge, như chạy unit test.</div>
+    <div class="take"><small>Ghi nhớ</small>Thay đổi prompt có thể làm thay đổi hành vi của sản phẩm. Hãy chạy bộ đánh giá trước khi tích hợp thay đổi, tương tự như kiểm thử mã nguồn.</div>
   </section>
 
   <div class="vids" data-videos="10"></div>
@@ -111,11 +111,11 @@ window.CH = {
   {
    "id": "s1",
    "n": "10.1",
-   "t": "Đo phần mềm thường và đo sản phẩm AI",
+   "t": "Từ sự kiện sử dụng đến quyết định sản phẩm",
    "sum": [
-    "Phần mềm thường: uptime, lỗi, bug.",
-    "AI: độ chính xác đầu ra mở, drift, latency, chi phí mỗi tác vụ.",
-    "North Star, funnel, cohort vẫn cần."
+    "Funnel cho thấy bước cần tìm hiểu, không tự giải thích nguyên nhân.",
+    "Cohort so nhóm theo cùng tuổi sử dụng.",
+    "North Star đi cùng chỉ số chất lượng, thời gian và chi phí."
    ],
    "terms": [
     "drift",
@@ -128,11 +128,11 @@ window.CH = {
   {
    "id": "s2",
    "n": "10.2",
-   "t": "Precision hay recall",
+   "t": "Precision và recall theo quyết định thực tế",
    "sum": [
-    "Precision = TP / (TP + FP).",
-    "Recall = TP / (TP + FN).",
-    "Ngưỡng quyết định dịch chuyển cán cân giữa hai chỉ số."
+    "Định nghĩa lớp dương và hành động sau dự đoán.",
+    "Precision = TP/(TP+FP); recall = TP/(TP+FN).",
+    "Chọn ngưỡng theo chi phí lỗi và khả năng xử lý của người rà soát."
    ],
    "terms": [
     "precision",
@@ -146,9 +146,9 @@ window.CH = {
    "n": "10.3",
    "t": "Giữ chất lượng qua vòng đời ML",
    "sum": [
-    "Gán nhãn quy mô lớn, có người tham gia.",
-    "Feedback loop để cập nhật khi có drift.",
-    "Nút đánh giá, ô sửa câu trả lời là nguồn dữ liệu."
+    "Phản hồi người dùng là tín hiệu cần kiểm định trước khi thành nhãn.",
+    "Drift không tự đồng nghĩa chất lượng suy giảm.",
+    "Chọn sửa dữ liệu, nguồn, prompt hoặc model theo nguyên nhân."
    ],
    "terms": [
     "hitl",
@@ -160,9 +160,9 @@ window.CH = {
    "n": "10.4",
    "t": "Khung đánh giá model bốn bước",
    "sum": [
-    "Eval set đại diện, có edge case.",
-    "Tiêu chí: factuality, completeness, latency, format, tone, hallucination.",
-    "CI/CD chạy eval mỗi lần đổi; chuyên gia hiệu chỉnh định kỳ."
+    "Eval đại diện, tiêu chí chấm rõ và chạy theo phiên bản.",
+    "Kết hợp code, người và LLM judge đã kiểm định.",
+    "Rà mẫu ngẫu nhiên và cả nhóm điểm cao để tìm lỗi bỏ sót."
    ],
    "terms": [
     "evalset",
@@ -175,73 +175,73 @@ window.CH = {
  "terms": {
   "drift": [
    "drift",
-   "Chất lượng model giảm dần vì dữ liệu thực tế hoặc ý nghĩa của dữ liệu thay đổi so với lúc đánh giá (data drift, concept drift).",
-   "Bản đồ in năm ngoái, đường đã mở thêm vài lối mới."
+   "Thay đổi phân phối đầu vào (data drift) hoặc quan hệ đầu vào–đầu ra mục tiêu (concept drift). Có thể làm giảm chất lượng, không đồng nghĩa luôn giảm hay giảm dần.",
+   "Ví dụ: loại ticket mới tăng lên, khiến bộ đánh giá cũ không còn đại diện."
   ],
   "nsm": [
    "North Star Metric",
    "Một chỉ số cốt lõi phản ánh giá trị sản phẩm mang lại cho người dùng, dùng để định hướng cả đội.",
-   "Sao Bắc Đẩu: đi đâu cũng nhìn về nó để chỉnh hướng."
+   "Ví dụ: số tác vụ tra cứu được xác nhận giải quyết đúng mỗi tuần."
   ],
   "funnel": [
    "funnel",
    "Chuỗi bước người dùng cần đi qua để đạt một mục tiêu, kèm tỷ lệ rơi rớt ở mỗi bước.",
-   "Cái phễu: miệng rộng, đáy hẹp."
+   "Ví dụ: theo dõi số người mở trợ lý, gửi câu hỏi và hoàn thành tác vụ ở từng bước."
   ],
   "cohort": [
    "cohort analysis",
    "Phân tích theo nhóm người dùng bắt đầu cùng thời điểm để xem hành vi của họ thay đổi ra sao theo thời gian.",
-   "Theo dõi từng khóa học sinh thay vì cả trường."
+   "Ví dụ: so sánh tỷ lệ quay lại của các nhóm nhân viên bắt đầu dùng trợ lý ở những thời điểm khác nhau."
   ],
   "retention": [
    "retention",
    "Tỷ lệ người dùng còn quay lại sau một khoảng thời gian.",
-   "Bao nhiêu khách quay lại quán tuần sau."
+   "Ví dụ: đo tỷ lệ nhân viên tiếp tục sử dụng trợ lý sau một khoảng thời gian đã xác định."
   ],
   "precision": [
    "precision",
    "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
-   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+   "Ví dụ: trong những giao dịch bị gắn cờ gian lận, xác định tỷ lệ thực sự là gian lận."
   ],
   "recall": [
    "recall",
    "Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
-   "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
+   "Ví dụ: trong toàn bộ giao dịch gian lận thực tế, xác định tỷ lệ hệ thống phát hiện được."
   ],
   "fp": [
    "false positive",
    "Mô hình báo dương tính nhưng thực tế âm tính (cảnh báo giả).",
-   "Chuông báo cháy kêu khi chỉ có người nướng bánh."
+   "Ví dụ: một giao dịch hợp lệ nhưng hệ thống gắn cờ là gian lận."
   ],
   "fn": [
    "false negative",
    "Mô hình báo âm tính nhưng thực tế dương tính (bỏ sót).",
-   "Nhà cháy mà chuông không kêu."
+   "Ví dụ: một giao dịch gian lận nhưng hệ thống không gắn cờ cảnh báo."
   ],
   "hitl": [
    "human-in-the-loop",
    "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
-   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+   "Ví dụ: hệ thống soạn đề xuất, người có thẩm quyền xem và duyệt trước khi thực thi."
   ],
   "evalset": [
    "eval set",
-   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
-   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+   "Tập câu hỏi hoặc tình huống dùng để đánh giá chất lượng mô hình và prompt, có các mẫu đại diện cùng những tình huống ngoại lệ cần kiểm tra.",
+   "Ví dụ: tập câu hỏi tra quy trình với đáp án hoặc tiêu chí chấm được chuyên gia xác nhận."
   ],
   "edge": [
    "edge case",
-   "Tình huống hiếm, nằm ở rìa của đầu vào, dễ làm hệ thống hỏng.",
-   "Khách gọi món không có trong thực đơn."
+   "Tình huống khác với các trường hợp thông thường, có thể làm lộ hạn chế hoặc gây lỗi cho hệ thống; thường cần được kiểm tra riêng.",
+   "Ví dụ: câu hỏi không đủ thông tin hoặc tài liệu chứa hai phiên bản quy trình mâu thuẫn."
   ],
   "judge": [
    "LLM-as-a-judge",
-   "Dùng một LLM chấm điểm câu trả lời của model khác theo tiêu chí cho trước.",
-   "Nhờ một giám khảo chấm bài theo barem."
+   "Dùng LLM chấm theo tiêu chí chấm, có thể dùng offline hoặc online. Cần kiểm định độ đồng thuận với người chấm và theo dõi thiên lệch.",
+   "Ví dụ: chấm độ đầy đủ rồi đối chiếu với chuyên gia trên một mẫu có nhãn."
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
-   "Câu “chắc 90%” của một người bạn."
+   "Điểm thể hiện mức chắc chắn theo một phương pháp cụ thể; chỉ hiểu như xác suất đúng khi đã được hiệu chỉnh và kiểm tra. Điểm LLM tự khai không đủ làm căn cứ.",
+   "Ví dụ: kiểm trên dữ liệu có nhãn xem nhóm điểm 0,8 có đúng khoảng 80% hay không."
   ]
  },
  "alias": {
@@ -318,28 +318,28 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "multi",
-   "q": "Chỉ số nào đặc thù cho sản phẩm AI so với phần mềm thường?",
+   "q": "Khi đọc funnel của trợ lý CSKH, nên kiểm tra gì?",
    "o": [
-    "Drift của model",
-    "Chi phí điện toán trên mỗi tác vụ thành công",
-    "Tỷ lệ phản hồi đúng trong đầu ra mở",
-    "Thời gian tải trang"
+    "Coi mọi lần không mở nguồn là thất bại",
+    "Định nghĩa và khả năng đếm trùng tác vụ",
+    "Cơ cấu nhóm người dùng và loại câu hỏi",
+    "Chất lượng cùng thời gian/công sức kiểm tra lại"
    ],
    "a": [
-    0,
     1,
-    2
+    2,
+    3
    ],
-   "ex": "Thời gian tải trang là chỉ số phần mềm thường."
+   "ex": "Hành vi cần diễn giải trong bối cảnh; không mở nguồn có nhiều nguyên nhân. Metric cần định nghĩa và kiểm tra chất lượng."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
-   "q": "TP = 30, FP = 10, FN = 20. Precision là bao nhiêu?",
+   "q": "TP = 30, FP = 10, FN = 20. Precision bằng bao nhiêu?",
    "o": [
     "60%",
     "75%",
@@ -347,47 +347,49 @@ window.CH = {
     "40%"
    ],
    "a": 1,
-   "ex": "30 / (30 + 10) = 75%."
+   "ex": "30/(30+10)=75%. Precision xét các dự đoán dương, không dùng FN ở mẫu số."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Cùng số liệu TP = 30, FN = 20, recall là bao nhiêu?",
+   "q": "TP = 30, FN = 20. Recall bằng bao nhiêu?",
    "o": [
-    "60%",
     "75%",
     "50%",
-    "40%"
+    "40%",
+    "60%"
    ],
-   "a": 0,
-   "ex": "30 / (30 + 20) = 60%."
+   "a": 3,
+   "ex": "30/(30+20)=60%. Recall xét tất cả ca dương thật; 75% là precision khi FP=10."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 1,
    "type": "one",
-   "q": "Quét mã độc nên ưu tiên chỉ số nào?",
+   "q": "Một hệ thống quét mã độc tự cách ly file quan trọng. Có thể mặc định luôn ưu tiên recall không?",
    "o": [
-    "Precision",
-    "Recall"
+    "Không; luôn ưu tiên precision",
+    "Có vì tên bài toán là bảo mật",
+    "Có nếu mô hình lớn",
+    "Không; phải cân bỏ sót, cách ly nhầm và khả năng khôi phục/rà soát"
    ],
-   "a": 1,
-   "ex": "Bỏ sót mã độc nguy hiểm hơn báo nhầm."
+   "a": 3,
+   "ex": "Hành động và chi phí lỗi quyết định ngưỡng. Cả hai quy tắc “luôn” đều thiếu điều kiện."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
-   "q": "Khi nào pipeline CI/CD cho AI nên chạy lại eval?",
+   "q": "Đổi prompt hoặc cấu hình retrieval có cần eval lại không?",
    "o": [
-    "Chỉ khi đổi model nền",
-    "Khi đổi model nền, prompt, hoặc cấu hình RAG",
-    "Mỗi tháng một lần",
-    "Khi người dùng phàn nàn"
+    "Chỉ khi thay đổi mô hình",
+    "Chỉ khi người dùng phàn nàn",
+    "Không nếu số token ít hơn",
+    "Có, vì đều có thể thay đổi chất lượng; dùng bộ hồi quy và kiểm rủi ro liên quan"
    ],
-   "a": 1,
-   "ex": "Cả ba loại thay đổi đều có thể làm chất lượng đổi."
+   "a": 3,
+   "ex": "Cùng model nhưng đầu vào hoặc dữ liệu khác có thể đổi kết quả. Đo trước phát hành và tiếp tục giám sát theo phạm vi thay đổi."
   }
  ]
 };

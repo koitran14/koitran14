@@ -17,50 +17,43 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần II / 05</div>
   <h1>Vision, strategy <i>và định vị</i></h1>
-  <p class="dek">Ai trả lời “cái gì, tại sao”, ai trả lời “làm thế nào”; AI PM khác AI Engineer ra sao; value proposition; và tam giác đánh đổi chất lượng, chi phí, latency.</p>
+  <p class="dek">Phân biệt vision, mission, strategy và positioning; chọn khách hàng, phạm vi và lợi thế; phối hợp PM–kỹ sư và cân chất lượng với chi phí, độ trễ.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 05 / 21</span><span>7 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Chiến lược sản phẩm AI là biến năng lực kỹ thuật thành lời giải cho đúng bài toán thị trường, với mức chất lượng, chi phí và tốc độ mà mô hình kinh doanh gánh được.</div>
+  <div class="idea"><small>Ý chính của chương</small>Chiến lược sản phẩm AI là biến năng lực kỹ thuật thành lời giải cho đúng bài toán thị trường, với mức chất lượng, chi phí và tốc độ phù hợp với khả năng vận hành và mô hình kinh doanh.</div>
   <section id="s1">
     <span class="num">05.1</span>
-    <h2>Vision, mission và chia việc</h2>
-    <p class="gist">AI PM lo “cái gì” và “tại sao”; AI Engineer lo “làm thế nào”.</p>
-<p>Product vision và mission nói mục tiêu dài hạn và giá trị cốt lõi sản phẩm mang lại. Từ đó chia việc rõ ràng. AI Product Manager xác định cần xây gì dựa trên nhu cầu thị trường, và vì sao điều đó quan trọng với mục tiêu kinh doanh; AI PM cũng đặt tiêu chuẩn thành công, ngân sách và phạm vi. AI Engineer tìm cách làm: chọn kiến trúc model, xử lý dữ liệu, tối ưu hạ tầng và giữ hệ thống chạy ổn định.</p>
-    <p>Với người xuất thân Software Engineer, điểm cần tập là đứng ở cả hai phía: khi đề xuất một hướng kỹ thuật, nói được nó phục vụ mục tiêu nào và cái giá phải trả là gì. Video trong chương phân biệt rõ thêm vision, strategy và roadmap, ba khái niệm hay bị dùng lẫn.</p>
+    <h2>Vision, mission và strategy</h2>
+    <p class="gist">Vision nêu trạng thái muốn tạo ra; strategy là các lựa chọn để tiến tới đó.</p>
+<p><b>Vision</b> mô tả tương lai mong muốn; <b>mission</b> nói mục đích phục vụ hiện tại; <b>strategy</b> chọn khách hàng, vấn đề và cách tạo lợi thế cạnh tranh trong giới hạn nguồn lực. <b>Roadmap</b> diễn đạt thứ tự giải quyết các vấn đề và điều kiện đi tiếp. Một danh sách tính năng hoặc tên model chưa phải chiến lược.</p>
+    <p><b>Ví dụ xuyên suốt — trợ lý tra quy trình CSKH.</b> Vision: nhân viên tìm được quy trình hiện hành trong lúc phục vụ khách. Mission: giảm thời gian tra cứu và nguy cơ chọn nhầm phiên bản. Strategy giai đoạn đầu: chỉ phục vụ nhóm xử lý ticket phổ biến, lấy tài liệu đã duyệt làm nguồn và tích hợp vào màn hình ticket. Chưa tự quyết hoàn tiền, chưa mở cho khách hàng bên ngoài.</p>
+    <p>Đội ngũ đánh giá lựa chọn này qua thời gian cần để tìm đúng quy trình, tỷ lệ phải hỏi đồng nghiệp và chi phí cho mỗi tác vụ đạt yêu cầu. Nếu vấn đề chính là tài liệu mâu thuẫn, phải sửa nguồn trước khi tối ưu model.</p>
   </section>
 
   <section id="s2">
     <span class="num">05.2</span>
-    <h2>AI Product Manager và AI Engineer</h2>
-    <p class="gist">Hai vai trò khác nhau ở mục tiêu, việc hằng ngày, kỹ năng và cách đo thành công.</p>
-<table class="tbl">
-      <tr><th></th><th>AI Product Manager</th><th>AI Engineer</th></tr>
-      <tr><td>Mục tiêu</td><td>Giải bài toán người dùng, nghiên cứu thị trường, đặt chỉ số thành công, cân chi phí và chất lượng</td><td>Xây và giữ hệ thống AI chạy, viết code, nối API/RAG, giảm latency, giữ uptime</td></tr>
-      <tr><td>Việc hằng ngày</td><td>Nghiên cứu người dùng, thu yêu cầu, ưu tiên, roadmap, đặt tiêu chuẩn đánh giá model, phối hợp các phòng ban</td><td>Lập trình, tích hợp model, cải thiện truy xuất dữ liệu, viết test tự động, theo dõi chỉ số kỹ thuật, sửa lỗi</td></tr>
-      <tr><td>Kỹ năng</td><td>Tư duy sản phẩm, giao tiếp, phân tích dữ liệu, hiểu AI/ML ở mức tổng quan, chiến lược kinh doanh, quản trị rủi ro</td><td>Python, API, xử lý dữ liệu, kiến trúc LLM/RAG, system design, cloud</td></tr>
-      <tr><td>Đo thành công</td><td>Adoption, CSAT, doanh thu, chi phí mỗi giao dịch</td><td>Độ chính xác, latency, uptime, chi phí hạ tầng</td></tr>
-    </table>
-    <details class="deep"><summary><span><small>Đọc sâu</small>Mức lương AI PM trong báo cáo nguồn</span></summary><div>
-      <p>Báo cáo nguồn dẫn số liệu ZipRecruiter: lương trung bình AI Product Manager ở Mỹ khoảng 159.405 USD/năm, và tổng thu nhập ở một số công ty lớn từ khoảng 170.000 tới hơn 900.000 USD/năm tùy cấp. Các con số này chưa được kiểm chứng độc lập, đổi theo thời điểm và thị trường; chỉ nên đọc như tín hiệu về mức nhu cầu với vai trò này. Chương 12 có bảng chi tiết hơn.</p>
-    </div></details>
-    <div class="take"><small>Ghi nhớ</small>Hai cột đo thành công khác nhau. Một sản phẩm tốt cần cả hai cột cùng đạt.</div>
+    <h2>PM và kỹ sư cùng chịu trách nhiệm kết quả</h2>
+    <p class="gist">PM và kỹ sư có trọng tâm công việc khác nhau, nhưng cần phối hợp trong nghiên cứu vấn đề, đánh giá AI và đo lường kết quả sản phẩm.</p>
+<table class="tbl"><tr><th>Việc</th><th>Phối hợp thế nào</th></tr><tr><td>Chọn vấn đề và tiêu chí thành công</td><td>PM thường dẫn dắt; kỹ sư, thiết kế và người dùng cùng kiểm chứng giả định</td></tr><tr><td>Kiến trúc và vận hành</td><td>Kỹ sư thường dẫn dắt; PM cùng quyết định ngân sách, phạm vi và mức rủi ro</td></tr><tr><td>Eval và phát hành</td><td>Cùng thống nhất tiêu chí chấm, quyền quyết định và điều kiện dừng; mời chuyên gia nghiệp vụ/bảo mật khi cần</td></tr><tr><td>Đo kết quả</td><td>Cùng theo dõi tỷ lệ tác vụ thành công, CSAT, thời gian, độ trễ và chi phí; phân công người xử lý từng chỉ số</td></tr></table>
+    <p>Kỹ sư cần hiểu vì sao người dùng vẫn không dùng sản phẩm dù latency tốt; PM cần hiểu vì sao ngân sách hoặc dữ liệu không cho phép cam kết một mức chất lượng. “What/why” và “how” là cách nhấn trọng tâm, không phải ranh giới cấm tham gia.</p><div class="take"><small>Ghi nhớ</small>Phân công rõ người chịu trách nhiệm cho từng quyết định, đồng thời cùng theo dõi kết quả sản phẩm thay vì giới hạn mối quan tâm theo chức danh.</div>
   </section>
 
   <section id="s3">
     <span class="num">05.3</span>
-    <h2>Value proposition</h2>
-    <p class="gist">Khách hàng chỉ trả tiền khi sản phẩm giải dứt điểm một bài toán cụ thể và tốt hơn phần mềm quy tắc thông thường.</p>
-<p>Value proposition của sản phẩm AI gắn với mức sẵn lòng trả tiền: khách chỉ chi khi sản phẩm giải triệt để một bài toán cụ thể, giúp tiết kiệm thời gian, giảm chi phí vận hành, hoặc tăng năng suất rõ rệt so với phần mềm quy tắc. “Có AI” tự nó không phải là giá trị. Câu value proposition tốt nói được người dùng làm gì nhanh hơn, rẻ hơn hoặc trước đây không làm được.</p>
-    <div class="take"><small>Ghi nhớ</small>Viết value proposition mà không dùng chữ “AI”. Nếu không viết được, giá trị chưa rõ.</div>
+    <h2>Value proposition và positioning</h2>
+    <p class="gist">Nêu lợi ích cụ thể và lý do khách hàng chọn sản phẩm trong các phương án thay thế.</p>
+<p><b>Value proposition</b> trả lời: ai được lợi, trong công việc nào, lợi ích là gì. Không cần giải triệt để mọi vấn đề mới có giá trị; một cải thiện đủ lớn và đáng tin cũng có thể khiến khách hàng trả tiền.</p>
+    <p><b>Positioning</b> đặt sản phẩm trong bối cảnh cạnh tranh. Trợ lý CSKH không chỉ cạnh tranh với chatbot khác: còn có tìm kiếm từ khóa, wiki được tổ chức tốt và hỏi đồng nghiệp. Có thể thử định vị sản phẩm như sau: “Công cụ dành cho nhân viên CSKH cần tra quy trình khi xử lý ticket, cung cấp câu trả lời kèm phiên bản tài liệu đã được phê duyệt ngay trong màn hình làm việc. So với kho tài liệu chung, công cụ sử dụng ngữ cảnh của ticket và giới hạn nguồn theo quyền truy cập”. Cách định vị này vẫn cần được kiểm chứng với người dùng.</p>
+    <p>Trong thử nghiệm, hãy so sánh với cách làm hiện tại trên cùng nhóm tác vụ, dựa vào các chỉ số: thời gian cần để tìm được đúng quy trình, tỷ lệ chọn nhầm và công sức duyệt lại. Chỉ đưa con số vào cam kết khi đã có bằng chứng, kèm điều kiện đo.</p><div class="take"><small>Ghi nhớ</small>Đánh giá lợi ích của sản phẩm so với cách người dùng đang làm việc, kể cả những cách không dùng AI.</div>
   </section>
 
   <section id="s4">
     <span class="num">05.4</span>
     <h2>Chất lượng, chi phí và latency</h2>
-    <p class="gist">Ba đỉnh của một tam giác: kéo một đỉnh lên thường làm hai đỉnh kia xấu đi.</p>
-<p>Mọi quyết định chọn model đều đánh đổi giữa ba thứ. <b>Chất lượng</b>: độ chính xác, đầy đủ, hữu ích của câu trả lời; chất lượng cao thường cần model lớn và suy luận nhiều bước. <b>Inference cost</b>: tiền gọi model theo token hoặc hạ tầng tính toán, tăng theo kích thước model và số lượng truy vấn, ăn thẳng vào biên lợi nhuận. <b>Latency</b>: tốc độ phản hồi; chậm là hỏng trải nghiệm.</p>
+    <p class="gist">Đo đồng thời chất lượng, chi phí và độ trễ; cải thiện một mặt có thể ảnh hưởng bất lợi đến các yếu tố còn lại.</p>
+<p>Khi lựa chọn mô hình, cần đánh giá đồng thời ba yếu tố. <b>Chất lượng</b>: độ chính xác, đầy đủ, hữu ích của câu trả lời; chất lượng cao thường cần mô hình lớn và suy luận nhiều bước. <b>Inference cost</b>: tiền gọi mô hình theo token hoặc hạ tầng tính toán, tăng theo kích thước model và số lượng truy vấn, ảnh hưởng trực tiếp đến biên lợi nhuận. <b>Latency</b>: tốc độ phản hồi; phản hồi chậm có thể làm gián đoạn công việc của người dùng.</p>
     <figure>
       <div class="fig">
         <div class="figbar"><span>Ước tính chi phí theo token (giá là giả định, hãy điền giá hiện tại của nhà cung cấp)</span></div>
@@ -76,14 +69,14 @@
       </div>
       <figcaption><b>Hình 1</b>Chi phí = request × (input × giá input + output × giá output) / 1.000.000. Giá trên nút chỉ là ví dụ, không phải bảng giá hiện hành.</figcaption>
     </figure>
-    <p>Báo cáo nguồn đưa ra nguyên tắc: với tác vụ phân loại, tóm tắt đơn giản hoặc truy vấn tần suất cao, ưu tiên model nhỏ, rẻ, nhanh. Với model nhỏ hoặc đã fine-tune, chất lượng trên tác vụ hẹp có thể đạt khoảng 90–95% so với model lớn. Chỉ chuyển sang model lớn cho phân tích phức tạp, tư vấn pháp lý, hoặc dữ liệu nhạy cảm cần độ chính xác cao nhất. Muốn biết model nhỏ có đủ tốt không, cách duy nhất là chấm cả hai trên eval set của chính bạn (chương 9).</p>
-    <div class="take"><small>Ghi nhớ</small>Đừng chọn model theo bảng xếp hạng. Chọn model rẻ nhất mà vẫn vượt ngưỡng chất lượng trên eval set của bạn.</div>
+    <p>Thử mô hình nhỏ, mô hình lớn hoặc model chuyên biệt trên cùng eval set và lưu lượng dự kiến. Không có tỷ lệ chất lượng chung như “mô hình nhỏ đạt 90–95% mô hình lớn” cho mọi tác vụ. Chọn phương án đạt yêu cầu chất lượng, bảo mật và vận hành với tổng chi phí hợp lý; độ nhạy cảm của dữ liệu cũng ảnh hưởng nơi triển khai, không chỉ kích thước model.</p>
+    <div class="take"><small>Ghi nhớ</small>Dùng kết quả đánh giá trên tác vụ của bạn để lựa chọn mô hình có chi phí phù hợp và đáp ứng yêu cầu chất lượng; không chỉ dựa vào thứ hạng công khai.</div>
   </section>
 
   <div class="vids" data-videos="05"></div>
   <a class="next-ch" href="/blog/ai-product-handbook/06"><span><small>Chương tiếp theo</small><b>06 · Requirements, Prioritization & Roadmapping</b></span><span>→</span></a>
 
-  <div class="end"><p>Giá token trong Hình 1 là giả định để minh họa phép tính, không phải bảng giá của nhà cung cấp nào. Mức 90–95% chất lượng của model nhỏ lấy từ báo cáo nguồn và tùy rất nhiều vào tác vụ.</p></div>
+  <div class="end"><p>Case CSKH và bảng giá token trong Hình 1 là minh họa, không phải kết quả hay giá hiện hành. Dùng eval và đo trên quy trình của bạn để ra quyết định.</p></div>
 </article>
 
 <script src="figs.js"></script>
@@ -109,25 +102,25 @@ window.CH = {
   {
    "id": "s1",
    "n": "05.1",
-   "t": "Vision, mission và chia việc",
+   "t": "Vision, mission và strategy",
    "sum": [
-    "Vision, mission: mục tiêu dài hạn, giá trị cốt lõi.",
-    "AI PM: cái gì, tại sao, tiêu chuẩn, ngân sách, phạm vi.",
-    "AI Engineer: làm thế nào, kiến trúc, dữ liệu, hạ tầng."
+    "Vision: tương lai mong muốn; mission: mục đích hiện tại.",
+    "Strategy chọn khách hàng, vấn đề, lợi thế và việc chưa làm.",
+    "Roadmap nối các lựa chọn với thứ tự và điều kiện đi tiếp."
    ],
    "terms": [
-    "pm",
-    "aie"
+    "vision",
+    "strategy"
    ]
   },
   {
    "id": "s2",
    "n": "05.2",
-   "t": "AI Product Manager và AI Engineer",
+   "t": "PM và kỹ sư cùng chịu trách nhiệm kết quả",
    "sum": [
-    "PM đo bằng adoption, CSAT, doanh thu, chi phí giao dịch.",
-    "Engineer đo bằng độ chính xác, latency, uptime, chi phí hạ tầng.",
-    "Số liệu lương trong báo cáo chỉ là tín hiệu tham khảo."
+    "PM và kỹ sư có trọng tâm khác nhau nhưng chia sẻ outcome.",
+    "CSAT không chỉ là chỉ số của PM.",
+    "Ghi người dẫn dắt, người tham vấn và quyền quyết định."
    ],
    "terms": [
     "adoption",
@@ -138,13 +131,14 @@ window.CH = {
   {
    "id": "s3",
    "n": "05.3",
-   "t": "Value proposition",
+   "t": "Value proposition và positioning",
    "sum": [
-    "Giá trị gắn với sẵn lòng trả tiền.",
-    "Tiết kiệm thời gian, giảm chi phí, tăng năng suất.",
-    "“Có AI” không phải value proposition."
+    "Value proposition nêu người dùng, công việc và lợi ích.",
+    "Positioning so với lựa chọn thay thế thực tế.",
+    "Cam kết có số liệu phải đi cùng bằng chứng và điều kiện đo."
    ],
    "terms": [
+    "positioning",
     "pmf"
    ]
   },
@@ -153,9 +147,9 @@ window.CH = {
    "n": "05.4",
    "t": "Chất lượng, chi phí và latency",
    "sum": [
-    "Tam giác: chất lượng, chi phí suy luận, latency.",
-    "Model nhỏ cho tác vụ đơn giản, tần suất cao.",
-    "Model lớn cho tác vụ phức tạp, nhạy cảm."
+    "Đo chất lượng, độ trễ và chi phí cùng điều kiện.",
+    "Không suy chất lượng từ kích thước model hoặc tên nhà cung cấp.",
+    "Chọn phương án đạt các ràng buộc với tổng chi phí phù hợp."
    ],
    "terms": [
     "inference",
@@ -168,53 +162,68 @@ window.CH = {
  "terms": {
   "pm": [
    "AI Product Manager",
-   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
-   "Người chọn đích đến và giải thích vì sao đi đường này."
+   "Vai trò thường dẫn dắt xác định vấn đề, giá trị, tiêu chí thành công và ưu tiên, phối hợp với kỹ thuật, thiết kế và các bên liên quan.",
+   "Ví dụ: cùng kỹ sư và CSKH quyết định điều kiện mở thử nghiệm."
   ],
   "aie": [
    "AI Engineer",
-   "Kỹ sư xây và vận hành hệ thống AI: tích hợp model, RAG, prompt, eval tự động, theo dõi latency và chi phí.",
-   "Người lái và bảo dưỡng chiếc xe."
+   "Kỹ sư xây và vận hành hệ thống AI, đồng thời phối hợp discovery, eval và đo tác động sản phẩm. Công nghệ cụ thể tùy hệ thống.",
+   "Ví dụ: cải thiện retrieval vì đo thấy nhân viên vẫn chọn nhầm quy trình."
   ],
   "adoption": [
    "adoption",
    "Mức người dùng mục tiêu thực sự dùng một tính năng trong công việc của họ.",
-   "Bao nhiêu người trong văn phòng thật sự dùng máy pha cà phê mới."
+   "Ví dụ: đo tỷ lệ nhân viên thuộc nhóm mục tiêu thực sự dùng trợ lý trong công việc."
   ],
   "latency": [
    "latency",
    "Thời gian từ lúc gửi yêu cầu đến lúc nhận phản hồi.",
-   "Thời gian chờ món sau khi gọi."
+   "Ví dụ: đo thời gian từ khi nhân viên gửi câu hỏi đến khi nhận phản hồi; cần nói rõ đang đo token đầu tiên hay toàn bộ câu trả lời."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "pmf": [
    "product-market fit",
-   "Trạng thái sản phẩm đáp ứng nhu cầu đủ mạnh của một thị trường đủ lớn để người dùng tự quay lại và chịu trả tiền.",
-   "Quán ăn tới mức khách tự kéo bạn bè đến."
+   "Trạng thái sản phẩm đáp ứng một nhu cầu đủ mạnh trong thị trường mục tiêu, thể hiện qua việc người dùng tiếp tục sử dụng và sẵn sàng trả tiền.",
+   "Ví dụ: nhóm khách hàng mục tiêu nhận thấy giá trị đủ lớn để tiếp tục sử dụng và trả tiền cho sản phẩm."
   ],
   "inference": [
    "inference cost",
-   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
-   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+   "Chi phí mỗi lần gọi mô hình để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Ví dụ: mỗi lần trợ lý xử lý câu hỏi và sinh câu trả lời có thể phát sinh phí token hoặc chi phí tính toán."
   ],
   "token": [
    "token",
-   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
-   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+   "Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.",
+   "Ví dụ: số token cùng một câu tiếng Việt thay đổi theo tokenizer."
   ],
   "finetune": [
    "fine-tuning",
-   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
-   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+   "Huấn luyện thêm mô hình có sẵn để thay đổi trọng số, cải thiện hành vi hoặc tác vụ chuyên biệt. Không tự bảo đảm kiến thức mới, đúng schema hay trích nguồn.",
+   "Ví dụ: cải thiện giọng văn sau khi đã đo hạn chế của prompt và có dữ liệu phù hợp."
   ],
   "evalset": [
    "eval set",
-   "Tập câu hỏi hoặc tình huống đại diện, gồm cả edge case, để chấm chất lượng model và prompt.",
-   "Bộ bài kiểm tra trước khi cho xe lăn bánh."
+   "Tập câu hỏi hoặc tình huống dùng để đánh giá chất lượng mô hình và prompt, có các mẫu đại diện cùng những tình huống ngoại lệ cần kiểm tra.",
+   "Ví dụ: tập câu hỏi tra quy trình với đáp án hoặc tiêu chí chấm được chuyên gia xác nhận."
+  ],
+  "vision": [
+   "vision",
+   "Trạng thái tương lai mà sản phẩm muốn góp phần tạo ra; khác kế hoạch tính năng.",
+   "Ví dụ: nhân viên tìm được quy trình hiện hành ngay khi phục vụ khách."
+  ],
+  "strategy": [
+   "strategy",
+   "Các lựa chọn về khách hàng, vấn đề, lợi thế, phạm vi và đánh đổi để tiến tới mục tiêu.",
+   "Ví dụ: pilot nội bộ trước, chưa tự thực hiện hành động tài chính."
+  ],
+  "positioning": [
+   "positioning",
+   "Đặt sản phẩm trong bối cảnh các lựa chọn thay thế, nêu ai dùng, giá trị và khác biệt có căn cứ.",
+   "Ví dụ: so trợ lý trong ticket với wiki, tìm kiếm từ khóa và hỏi đồng nghiệp."
   ]
  },
  "alias": {
@@ -255,6 +264,15 @@ window.CH = {
   "evalset": [
    "eval set",
    "eval sets"
+  ],
+  "vision": [
+   "vision"
+  ],
+  "strategy": [
+   "strategy"
+  ],
+  "positioning": [
+   "positioning"
   ]
  },
  "rel": {
@@ -279,81 +297,78 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Ai chịu trách nhiệm câu hỏi “tại sao tính năng này quan trọng với mục tiêu kinh doanh”?",
+   "q": "Đâu là lựa chọn chiến lược cho trợ lý CSKH, thay vì chỉ là mục tiêu hay tính năng?",
    "o": [
-    "AI Engineer",
-    "AI Product Manager",
-    "Data Engineer",
-    "Khách hàng"
+    "Đạt p95 latency dưới một ngưỡng",
+    "Giảm thời gian tra cứu",
+    "Tích hợp một mô hình mới",
+    "Giai đoạn đầu phục vụ nhân viên nội bộ, nguồn đã duyệt, chưa tự hoàn tiền"
    ],
-   "a": 1,
-   "ex": "AI PM lo cái gì và tại sao; AI Engineer lo làm thế nào."
+   "a": 3,
+   "ex": "Chiến lược chọn khách hàng, phạm vi và việc chưa làm. Mục tiêu, công nghệ và metric hỗ trợ nhưng riêng lẻ chưa phải strategy."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "multi",
-   "q": "Chỉ số nào thường dùng để đo thành công của AI Engineer?",
+   "q": "PM và kỹ sư nên cùng xem những chỉ số nào khi pilot?",
    "o": [
-    "Latency",
-    "Uptime",
-    "CSAT",
-    "Độ chính xác model"
+    "Chỉ số theo chức danh riêng, tránh cùng quan tâm",
+    "Tỷ lệ tác vụ đạt yêu cầu",
+    "Độ trễ và chi phí",
+    "CSAT và công sức kiểm tra lại của người dùng"
    ],
    "a": [
-    0,
     1,
+    2,
     3
    ],
-   "ex": "CSAT thuộc cột của AI PM.",
-   "why": {
-    "2": "CSAT là chỉ số trải nghiệm khách hàng, thuộc cột AI PM."
-   }
+   "ex": "Outcome và các ràng buộc cần được xem cùng nhau. Có thể phân người phụ trách nhưng không loại CSAT khỏi mối quan tâm của kỹ sư."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 2,
    "type": "one",
-   "q": "Value proposition nào thuyết phục nhất?",
+   "q": "Value proposition nào dễ kiểm chứng nhất?",
    "o": [
-    "Sản phẩm có tích hợp AI mới nhất",
-    "Nhân viên tra quy trình trong dưới 2 giây thay vì 8 phút",
-    "Chúng tôi dẫn đầu về AI",
-    "AI giúp mọi thứ tốt hơn"
+    "Có AI hiện đại và an toàn",
+    "Giúp nhân viên tìm đúng phiên bản quy trình nhanh hơn cách hiện tại, sẽ đo trong pilot",
+    "Dùng mô hình lớn cho câu hỏi khó",
+    "Tích hợp sâu và linh hoạt cho mọi ngành"
    ],
    "a": 1,
-   "ex": "Giá trị cụ thể, đo được, không phụ thuộc chữ “AI”."
+   "ex": "Câu này nêu người dùng, công việc và lợi ích cần đo, chưa biến giả thuyết thành kết quả đã có. Các câu khác nói năng lực hoặc mô tả chung."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 3,
    "type": "one",
-   "q": "Với 1.000.000 request, mỗi request 1.000 input và 500 output token, giá 3 USD và 15 USD cho 1M token, chi phí là bao nhiêu?",
+   "q": "Một triệu request, mỗi request 1.000 input và 500 output token; giá tương ứng 3 và 15 USD/triệu token. Tổng phí token là bao nhiêu?",
    "o": [
-    "4.500 USD",
-    "10.500 USD",
     "18.000 USD",
-    "1.500 USD"
+    "7.500 USD",
+    "4.500 USD",
+    "10.500 USD"
    ],
-   "a": 1,
-   "ex": "Input: 1.000.000 × 1.000 × 3 / 1M = 3.000 USD. Output: 1.000.000 × 500 × 15 / 1M = 7.500 USD. Tổng 10.500 USD."
+   "a": 3,
+   "ex": "Input 3.000 USD, output 7.500 USD, tổng 10.500 USD. Đây chỉ là phí token theo giả định, chưa gồm retrieval hay vận hành."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
-   "q": "Nguyên tắc chọn model theo chương này là gì?",
+   "q": "Model nhỏ đáp ứng tiêu chí đánh giá, bảo mật và latency yêu cầu với TCO thấp hơn. Bước hợp lý là gì?",
    "o": [
-    "Luôn dùng model lớn nhất",
-    "Model nhỏ, rẻ cho tác vụ đơn giản và tần suất cao; model lớn cho tác vụ phức tạp, nhạy cảm",
-    "Luôn dùng model rẻ nhất",
-    "Chọn theo bảng xếp hạng công khai"
+    "Loại vì mô hình nhỏ không dùng cho production",
+    "Lựa chọn mô hình lớn để tránh tất cả các lỗi",
+    "Pilot có giám sát, xác nhận trên lưu lượng thực tế trước khi mở rộng",
+    "Fine-tune ngay để giữ thứ hạng benchmark"
    ],
-   "a": 1,
-   "ex": "Chọn model rẻ nhất vẫn vượt ngưỡng chất lượng trên eval set của bạn."
+   "a": 2,
+   "ex": "Dùng bằng chứng theo tác vụ để chọn và giám sát. Kích thước hay benchmark không bảo đảm kết quả production; chưa có lý do bắt buộc fine-tune."
   }
  ]
 };

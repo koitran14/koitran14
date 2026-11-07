@@ -1,47 +1,36 @@
 ---
 name: aiph-15-advanced-strategy
-description: Học và luyện tập Chương 15 của AI Product Handbook — Chiến lược nâng cao: nền tảng và danh mục (platform strategy với năng lực dùng chung, bản đồ dịch vụ AI trên AWS, công thức điểm ưu tiên danh mục). Dùng khi người dùng muốn học, ôn, làm quiz hoặc luyện bài tập chương 15, hoặc gõ /aiph-15-advanced-strategy.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 15 của AI Product Handbook — Chiến lược nâng cao: nền tảng và danh mục. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-15-advanced-strategy.
 ---
 
 # Chương 15 · Chiến lược nâng cao: nền tảng và danh mục
 
-Nguồn gốc: `content/ai-product-handbook/15.html` (đọc phần văn bản; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, mảng `terms` là thuật ngữ, mảng `F` là điểm mặc định của hai tính năng trong Hình 1). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách". Mức "rút ngắn 70% thời gian ra mắt" và công thức điểm ưu tiên lấy từ báo cáo nguồn, chưa kiểm chứng.
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/15.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Khi nào đầu tư các thành phần và dịch vụ dùng chung, đo giá trị cho đội ứng dụng và kiểm tra chi phí vận hành; dùng điểm ưu tiên như công cụ thảo luận có giới hạn.
 
-- Nêu các năng lực dùng chung (RAG, prompt cache, guardrails, gateway) và ba lợi ích của platform.
-- Nhận ra khi nào làm platform là quá sớm.
-- Trước khi tự xây, tra xem đã có dịch vụ chuyên biệt giải sẵn bài toán chưa.
-- Tính điểm ưu tiên danh mục và biết vì sao không để công thức quyết định thay người.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **15.1 · Platform strategy:** Rút các thành phần và dịch vụ dùng chung từ nhu cầu lặp lại đã có bằng chứng. Đo thời gian tích hợp, adoption nội bộ và chi phí vận hành platform. Gateway giảm một phần phụ thuộc, không loại bỏ lock-in.
+- **15.2 · Bản đồ dịch vụ AI trên AWS:** GenAI: Bedrock, Knowledge Bases, Guardrails, Q. Chuyên biệt: Textract, Lex, Transcribe, Polly, Comprehend, Translate. Hạ tầng: SageMaker AI, Macie, PrivateLink, IAM.
+- **15.3 · Ưu tiên danh mục:** Công thức điểm chỉ là heuristic minh họa. Điểm nhạy với thang và phép nhân; không tự đo lợi nhuận. Thử thay giả định và đối chiếu TCO, rủi ro trước quyết định.
 
-1. **15.1** Platform strategy: dựng shared AI capabilities một lần. Lợi ích: chiết khấu theo khối lượng, tránh vendor lock-in nhờ gateway, ra mắt sản phẩm sau nhanh hơn (báo cáo ước tới 70%). Rút platform từ hai, ba sản phẩm đã chạy, đừng xây platform rồi mới đi tìm sản phẩm.
-2. **15.2** Ba lớp AWS: nền tảng GenAI (Bedrock, Bedrock Knowledge Bases, Bedrock Guardrails, Amazon Q); AI chuyên biệt (Textract cho IDP, Lex chatbot, Transcribe giọng → chữ, Polly chữ → giọng, Comprehend NLP, Translate); hạ tầng, bảo mật (SageMaker AI + Ground Truth, Macie, PrivateLink, IAM). Ý dùng được cho mọi nhà cung cấp: kiểm tra dịch vụ chuyên biệt trước khi tự xây.
-3. **15.3** **Điểm ưu tiên = (Business Value × Adoption) / (Inference Cost × Latency × Technical Complexity)**, chấm 1–5. Mặc định Hình 1: Trợ lý tra quy trình (RAG) 4×4/(3×2×3) ≈ 0,89; Phân loại ticket tự động 3×2/(1×1×2) = 3,00. Công thức rất nhạy với điểm 1 ở mẫu số; chỉ để so sánh tương đối. Điểm số giúp đặt câu hỏi đúng; quyết định vẫn cần người chịu trách nhiệm.
+## Cách hướng dẫn
 
-## Cách chạy skill
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-### Học
-Đi lần lượt 15.1 → 15.3. Mỗi mục: giải thích ý chính trong 3–5 câu, cho một ví dụ đời thường, rồi hỏi **một** câu kiểm tra hiểu (dạng "vì sao", không phải "là gì"). Ở 15.3, cho người học tự tính hai điểm mặc định của Hình 1 trước. Trả lời sai → gợi ý, không đưa đáp án ngay.
+## Bài luyện
 
-### Luyện
-Chọn bài theo mục người học yếu (hoặc lần lượt). Chấm theo rubric, chỉ ra một điểm làm tốt và một điểm cần sửa, cho viết lại một lần.
+Hai đội muốn dựng gateway và trace chung. Nêu điều kiện đáng đầu tư platform và cách đo.
 
-| # | Bài tập | Rubric đạt |
-|---|---|---|
-| L1 | Công ty có 3 đội đang tự làm AI riêng: CSKH (RAG + guardrails), pháp chế (RAG tra hợp đồng), bán hàng (gọi thẳng API một nhà cung cấp). Đề xuất lớp nào nên rút thành platform, lớp nào để mỗi đội tự giữ. | Chọn đúng năng lực dùng chung (RAG, cache, guardrails, gateway); gắn mỗi lớp với một lợi ích của 15.1; giữ riêng phần đặc thù nghiệp vụ. |
-| L2 | Startup có 0 sản phẩm AI chạy thật, CTO muốn dành 6 tháng dựng "AI platform" trước. Viết 5 câu phản hồi. | Dẫn đúng rủi ro "làm platform quá sớm"; đề xuất ra mắt sản phẩm trước rồi rút platform; có tiêu chí khi nào bắt đầu (2–3 sản phẩm đã chạy). |
-| L3 | Ghép 6 bài toán với dịch vụ AWS: đọc hóa đơn scan, chatbot đặt lịch, chuyển ghi âm cuộc gọi thành văn bản, đọc thông báo bằng giọng nói, dịch tài liệu, phát hiện CCCD bị lộ trong S3. | Textract, Lex, Transcribe, Polly, Translate, Macie; nêu được vì sao không cần foundation model cho các bài này. |
-| L4 | Dùng Hình 1: (a) tính lại hai điểm mặc định; (b) đổi Inference cost của trợ lý RAG từ 3 xuống 1 (nhờ cache), tính lại; (c) bình luận vì sao một thay đổi nhỏ đổi thứ hạng nhiều thế. | (a) 0,89 và 3,00; (b) 16/(1×2×3) ≈ 2,67; (c) chỉ ra độ nhạy của mẫu số, kết luận dùng điểm để mở thảo luận. |
-| L5 | Chấm 1–5 cho 3 tính năng AI người học đang nghĩ tới, tính điểm, rồi nêu một câu hỏi mà điểm số làm lộ ra (ví dụ: vì sao adoption chỉ 2?). | Có lý do cho từng điểm chấm; xếp hạng đúng theo công thức; câu hỏi mở thảo luận cụ thể, không coi điểm là quyết định. |
-| L6 | **Sửa bài:** "Phân loại ticket được 3,00 điểm, trợ lý RAG 0,89, vậy ta hủy trợ lý RAG. Công thức đã chứng minh." Viết lại kết luận. | Nói rõ công thức chỉ so sánh tương đối, nhạy với điểm 1; nêu câu hỏi cần trả lời trước khi hủy (giá trị chiến lược, TCO, rủi ro); có người chịu trách nhiệm quyết định. |
+**Tiêu chí đạt:** Có nhu cầu lặp lại, khách hàng nội bộ, chủ sở hữu, SLA/version và chi phí hỗ trợ; công thức điểm chỉ là heuristic, gateway không xóa lock-in.
 
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `15.html` (trường `q`, `o`, `a`, `ex`; câu `type: "multi"` có nhiều đáp án đúng), hỏi từng câu, xáo thứ tự đáp án. Sau đó thêm 2 câu tình huống tự soạn (ví dụ: nhà cung cấp model tăng giá 40%, đội có gateway và đội không có gateway khác nhau thế nào; đội muốn fine-tune model để OCR hóa đơn thì PM hỏi lại gì). Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục, 0 = 15.1).
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-## Kết thúc buổi
+## Kết thúc
 
-Tóm tắt 3 điều người học đã nắm, 1 điều cần ôn, và gợi ý chương tiếp theo: `/aiph-16-pm-glossary` (Product Management Glossary).
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 16 · Product Management Glossary.

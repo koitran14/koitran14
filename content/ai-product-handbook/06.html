@@ -23,12 +23,12 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần II / 06</div>
   <h1>Yêu cầu, ưu tiên <i>và roadmap</i></h1>
-  <p class="dek">PRD cho tính năng AI cần thêm gì, POC khác prototype, MVP và pilot ra sao, cách ưu tiên backlog khi có rủi ro dữ liệu và model, và lộ trình phát hành Alpha → Beta → GA.</p>
+  <p class="dek">Chương này trình bày cách viết PRD cho tính năng AI, phân biệt POC, prototype, MVP và pilot, cùng cách ưu tiên công việc có rủi ro về dữ liệu và mô hình. Phần cuối đề cập đến quá trình phát hành từ Alpha, qua Beta đến GA.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 06 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Ngoài màn hình, PRD của tính năng AI phải ghi rõ ngưỡng chất lượng đo được, luồng xử lý khi AI sai, và mức rủi ro chấp nhận được.</div>
+  <div class="idea"><small>Ý chính của chương</small>PRD của tính năng AI cần nêu rõ vấn đề, phạm vi giải quyết, tiêu chí chất lượng có thể đo lường và cách xử lý khi AI mắc lỗi, phù hợp với mức rủi ro đã chấp nhận.</div>
   <section id="s1">
     <span class="num">06.1</span>
     <h2>PRD cho tính năng AI</h2>
@@ -37,16 +37,16 @@
     <div class="prd">
       <div><b>1. Vấn đề và mục tiêu</b><p>Điểm đau: nhân viên CSKH mất trung bình 8 phút để tự tra quy trình xử lý ticket trong kho tài liệu nội bộ. Mục tiêu: trợ lý AI trích đúng quy trình và bắt đầu trả lời trong 2 giây.</p></div>
       <div><b>2. Guardrails và fallback</b><p>Chỉ dùng dữ liệu trong kho tài liệu nội bộ (RAG), không tự bịa thông tin ngoài nguồn. Câu hỏi về thông tin nhạy cảm (hợp đồng pháp lý, dữ liệu nhân sự) thì từ chối và chuyển sang chuyên viên phụ trách.</p></div>
-      <div><b>3. Acceptance criteria định lượng</b><p>Groundedness trên golden dataset &gt; 85%. TTFT &lt; 2,0 giây. Hallucination rate &lt; 5%.</p></div>
+      <div><b>3. Acceptance criteria định lượng</b><p>Ví dụ giả định: p95 TTFT &lt; 2,0 giây ở mức tải đã nêu; không truy xuất tài liệu trái quyền trong bộ kiểm tra; báo cáo riêng tỷ lệ khẳng định được nguồn hỗ trợ và tỷ lệ câu trả lời hoàn toàn đạt tiêu chí chấm. Ngưỡng chất lượng do đội chốt theo rủi ro và độ bất định, không lấy một tỷ lệ chung làm chuẩn.</p></div>
     </div>
     <p>PRD cũng nên trỏ tới eval set đại diện và ghi mức lỗi chấp nhận được (acceptable error rate). Chương 20 có checklist PRD đầy đủ hơn.</p>
-    <div class="take"><small>Ghi nhớ</small>Nếu acceptance criteria của tính năng AI không có con số, đội sẽ cãi nhau về “đủ tốt chưa” tới tận ngày ra mắt.</div>
+    <div class="take"><small>Ghi nhớ</small>Tiêu chí chấp nhận cần đủ cụ thể và có cách đo rõ ràng để các bên thống nhất khi nào tính năng đáp ứng yêu cầu.</div>
   </section>
 
   <section id="s2">
     <span class="num">06.2</span>
     <h2>POC, prototype, MVP và pilot</h2>
-    <p class="gist">Bốn giai đoạn kiểm hai loại rủi ro khác nhau: làm được không, và có ai cần không.</p>
+    <p class="gist">Bốn hình thức thử nghiệm giúp kiểm tra những giả định khác nhau về khả thi kỹ thuật, trải nghiệm, nhu cầu và khả năng vận hành.</p>
 <figure>
       <div class="fig">
         <div id="stg"></div>
@@ -59,29 +59,29 @@
   <section id="s3">
     <span class="num">06.3</span>
     <h2>Ưu tiên backlog</h2>
-    <p class="gist">Ngoài tác động và độ khó, backlog AI cần thêm một trục: rủi ro dữ liệu và model.</p>
+    <p class="gist">Khi ưu tiên công việc cho sản phẩm AI, cần xét cả tác động, độ phức tạp và rủi ro liên quan đến dữ liệu hoặc mô hình.</p>
 <p>Khi xếp ưu tiên backlog cho sản phẩm AI, cân ba yếu tố. <b>Business impact</b>: tính năng đóng góp bao nhiêu vào doanh thu, giảm chi phí hay trải nghiệm. <b>Technical complexity</b>: khối lượng xử lý dữ liệu, thời gian tính toán, độ phức tạp khi nối RAG/API và tích hợp. <b>Data/model risk</b>: có thiếu dữ liệu không, có rủi ro PII, bịa thông tin hay bias không.</p>
-    <p>Các framework như RICE (Reach × Impact × Confidence / Effort) hay MoSCoW (Must, Should, Could, Won’t) vẫn dùng được. Với AI, trục Confidence trong RICE là chỗ phản ánh rủi ro model: một tính năng chưa chạy thử trên eval set thì không nên chấm Confidence cao. Chương 19 có bảng so sánh các framework.</p>
-    <div class="take"><small>Ghi nhớ</small>Trong RICE, Confidence của một tính năng AI chỉ nên cao khi đã có số đo trên eval set.</div>
+    <p>Các framework như RICE (Reach × Impact × Confidence / Effort) hay MoSCoW (Must, Should, Could, Won’t) vẫn dùng được. Confidence trong RICE là mức độ chắc chắn của các ước tính reach, impact và effort. Eval là bằng chứng về khả thi/chất lượng; vẫn cần nghiên cứu người dùng và dữ liệu vận hành để ước tính nhu cầu, tác động và công sức. Không coi kết quả đánh giá là điểm Confidence của RICE. Chương 19 có bảng so sánh các framework.</p>
+    <div class="take"><small>Ghi nhớ</small>Trong RICE, ghi bằng chứng và mức độ chưa chắc chắn cho từng ước tính, gồm cả nhu cầu, tác động và kỹ thuật.</div>
   </section>
 
   <section id="s4">
     <span class="num">06.4</span>
     <h2>Roadmap và phạm vi phát hành</h2>
-    <p class="gist">Alpha nội bộ, Beta nhóm nhỏ để thu dữ liệu thật, rồi GA kèm giám sát tự động.</p>
+    <p class="gist">Bắt đầu với thử nghiệm nội bộ, sau đó mở cho một nhóm người dùng giới hạn trước khi phát hành rộng rãi, kèm cơ chế giám sát phù hợp.</p>
 <ol>
       <li><b>Internal testing / Alpha.</b> Thử trong đội phát triển để bắt lỗi kỹ thuật cơ bản, chỉnh prompt và dựng guardrails.</li>
-      <li><b>Beta / Pilot.</b> Mở cho một nhóm người dùng mục tiêu. Trọng tâm là thu tương tác thật để xây golden dataset phục vụ đánh giá kỹ hơn.</li>
+      <li><b>Beta / Pilot.</b> Mở cho một nhóm người dùng mục tiêu. Mục tiêu tùy giả thuyết: kiểm tra trải nghiệm, chất lượng, nhu cầu và khả năng vận hành trên nhóm giới hạn. Có thể thu tương tác được phép sử dụng để bổ sung eval; không đưa người dùng vào thử nghiệm khi chưa có kiểm tra rủi ro cơ bản.</li>
       <li><b>General Availability (GA).</b> Mở cho mọi người dùng, kèm giám sát tự động về latency, chi phí token, độ chính xác và tỷ lệ lỗi.</li>
     </ol>
-    <p>Một gợi ý từ báo cáo nguồn: đừng lập AI roadmap chỉ theo mốc ngày cố định. Hãy gắn các mốc với ngưỡng chất lượng (quality threshold), ví dụ “mở Beta khi groundedness trên eval set đạt 85%”. Ngày có thể dự kiến, nhưng điều kiện để đi tiếp là con số.</p>
+    <p>Một gợi ý từ báo cáo nguồn: đừng lập AI roadmap chỉ theo mốc ngày cố định. Hãy gắn các mốc với ngưỡng chất lượng (quality threshold), ví dụ “mở Beta khi đạt tiêu chí chấm chất lượng và kiểm tra quyền truy cập dưới tải pilot đã thống nhất”. Ngày phát hành có thể được dự kiến trước, nhưng việc chuyển sang giai đoạn tiếp theo cần căn cứ vào các điều kiện đã thống nhất.</p>
     <div class="take"><small>Ghi nhớ</small>Mốc roadmap của sản phẩm AI nên là “đạt ngưỡng X”, không chỉ là “đến ngày Y”.</div>
   </section>
 
   <div class="vids" data-videos="06"></div>
   <a class="next-ch" href="/blog/ai-product-handbook/07"><span><small>Chương tiếp theo</small><b>07 · AI & LLM Fundamentals</b></span><span>→</span></a>
 
-  <div class="end"><p>Các ngưỡng 85%, 2 giây, 5% trong mục 06.1 là ví dụ trong báo cáo nguồn; ngưỡng phù hợp tùy bài toán và mức rủi ro của bạn.</p></div>
+  <div class="end"><p>Các tiêu chí trong mục 06.1 là minh họa. Ngưỡng chất lượng, phương pháp chấm, tải đo và độ bất định cần được thống nhất theo bài toán trước phát hành.</p></div>
 </article>
 
 <script src="figs.js"></script>
@@ -108,9 +108,9 @@ window.CH = {
    "n": "06.1",
    "t": "PRD cho tính năng AI",
    "sum": [
-    "PRD AI thêm guardrails, fallback, tiêu chí định lượng.",
-    "Ví dụ: groundedness > 85%, TTFT < 2 s, hallucination < 5%.",
-    "Dẫn tới eval set và mức lỗi chấp nhận được."
+    "PRD nối vấn đề và phạm vi với tiêu chí chấm, eval và điều kiện phát hành.",
+    "Tách chất lượng, quyền truy cập, độ trễ và ngân sách.",
+    "Ngưỡng cần mẫu số, điều kiện đo và mức rủi ro cụ thể."
    ],
    "terms": [
     "prd",
@@ -144,9 +144,9 @@ window.CH = {
    "n": "06.3",
    "t": "Ưu tiên backlog",
    "sum": [
-    "Ba trục: business impact, technical complexity, data/model risk.",
-    "RICE, MoSCoW vẫn dùng được.",
-    "Confidence trong RICE phản ánh rủi ro model."
+    "Cân tác động, công sức và rủi ro dữ liệu/model.",
+    "RICE Confidence phản ánh bằng chứng cho các ước tính ưu tiên.",
+    "Eval không thay bằng chứng về reach và impact."
    ],
    "terms": [
     "rice",
@@ -160,9 +160,9 @@ window.CH = {
    "n": "06.4",
    "t": "Roadmap và phạm vi phát hành",
    "sum": [
-    "Alpha nội bộ → Beta thu dữ liệu thật → GA có giám sát.",
-    "Beta là nơi xây golden dataset.",
-    "Gắn mốc roadmap với ngưỡng chất lượng."
+    "Alpha thử nội bộ; Beta/Pilot thử giới hạn với mục tiêu rõ.",
+    "Kiểm trải nghiệm, chất lượng và vận hành trước khi mở rộng.",
+    "Roadmap có mốc dự kiến và điều kiện đi tiếp."
    ],
    "terms": [
     "roadmap",
@@ -176,92 +176,92 @@ window.CH = {
   "prd": [
    "PRD",
    "Product Requirements Document: tài liệu nêu vấn đề, mục tiêu, phạm vi, luồng và tiêu chí thành công.",
-   "Bản đề bài chung cho cả đội."
+   "Ví dụ: ghi rõ vấn đề, phạm vi pilot, yêu cầu chất lượng, quyền dữ liệu và điều kiện phát hành."
   ],
   "ac": [
    "acceptance criteria",
    "Điều kiện đo được mà một tính năng phải đạt để được coi là xong.",
-   "Vạch đích của một đường chạy."
+   "Ví dụ: tính năng chỉ được chấp nhận khi đáp ứng các yêu cầu chất lượng và quyền truy cập đã thống nhất."
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "fallback": [
    "fallback",
    "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
-   "Kế hoạch B khi kế hoạch A trục trặc."
+   "Ví dụ: khi không tìm được nguồn phù hợp, trợ lý hỏi thêm thông tin hoặc chuyển yêu cầu cho nhân viên."
   ],
   "grounded": [
    "groundedness",
-   "Mức độ câu trả lời dựa hoàn toàn vào ngữ cảnh được cung cấp (ví dụ tài liệu RAG), không lấy thông tin trôi nổi.",
-   "Nói có sách, mách có chứng."
+   "Mức độ các khẳng định trong câu trả lời được ngữ cảnh cung cấp hỗ trợ. Cần quy định cách chấm và mẫu số; chỉ số này có thể chồng lấn với faithfulness.",
+   "Ví dụ: kiểm từng quyền lợi được nêu có căn cứ trong điều khoản hay không."
   ],
   "golden": [
    "golden dataset",
-   "Bộ dữ liệu đánh giá được chuyên gia gán đáp án chuẩn, dùng làm mốc so sánh cố định giữa các phiên bản.",
-   "Bộ đề thi có đáp án mẫu, dùng chấm mọi lứa học sinh."
+   "Bộ dữ liệu tham chiếu có đáp án hoặc tiêu chí chấm được kiểm định và quản lý phiên bản. Cần bổ sung mẫu mới và giữ riêng dữ liệu kiểm tra để tránh chỉ tối ưu hệ thống theo các câu đã biết.",
+   "Ví dụ: duy trì bộ kiểm thử hồi quy theo phiên bản quy trình và thêm các ca mới mỗi kỳ."
   ],
   "ttft": [
    "TTFT",
-   "Time to First Token: thời gian đến khi model trả về token đầu tiên; quyết định cảm giác “nhanh” khi stream.",
-   "Lúc người phục vụ mang ly nước ra, trước khi món chính tới."
+   "Time to First Token: thời gian từ lúc gửi yêu cầu đến khi nhận token đầu tiên. Chỉ số này ảnh hưởng đến cảm nhận phản hồi ban đầu, nhưng không thể hiện thời gian hoàn tất toàn bộ câu trả lời.",
+   "Ví dụ: đo khoảng chờ đến token đầu tiên; chỉ số này không cho biết khi nào toàn bộ câu trả lời hoàn tất."
   ],
   "halluc": [
    "hallucination",
-   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
-   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+   "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+   "Ví dụ: tự thêm một điều khoản không có trong nguồn."
   ],
   "poc": [
    "POC",
    "Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.",
-   "Thử xem đất có đóng cọc được không."
+   "Ví dụ: thử trên một bộ tài liệu nhỏ để kiểm tra khả năng truy xuất và trả lời đúng trước khi xây dựng đầy đủ."
   ],
   "prototype": [
    "prototype",
    "Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.",
-   "Mô hình giấy của căn nhà."
+   "Ví dụ: dựng giao diện tra cứu để kiểm tra người dùng có hiểu câu trả lời, nguồn và cách báo lỗi hay không."
   ],
   "mvp": [
    "MVP",
-   "Minimum Viable Product: bản nhỏ nhất đưa cho người dùng thật để kiểm chứng giá trị.",
-   "Bán thử một món trước khi mở cả thực đơn."
+   "Minimum Viable Product: bản nhỏ nhất đưa cho người dùng thực tế để kiểm chứng giá trị.",
+   "Ví dụ: phát hành một phạm vi tra cứu nhỏ cho người dùng để kiểm chứng giá trị trước khi mở rộng."
   ],
   "pilot": [
    "pilot",
-   "Chạy thật ở quy mô giới hạn với người dùng thật, có giám sát và log đầy đủ.",
-   "Mở một chi nhánh trước khi mở chuỗi."
+   "Vận hành thực tế ở quy mô giới hạn với người dùng thực tế, có giám sát và log đầy đủ.",
+   "Ví dụ: cho một nhóm nhân viên dùng trợ lý trong công việc, theo dõi kết quả và xử lý sự cố trước khi mở rộng."
   ],
   "rice": [
    "RICE",
-   "Reach × Impact × Confidence / Effort: điểm ưu tiên cho một hạng mục trong backlog.",
-   "Chấm điểm việc nào đáng làm trước bằng bốn câu hỏi."
+   "Reach × Impact × Confidence / Effort. Confidence phản ánh mức độ chắc chắn của các ước tính ưu tiên, không chỉ chất lượng mô hình; các hạng mục cần dùng cùng thang và kỳ đo.",
+   "Ví dụ: có kết quả đánh giá tốt vẫn cần bằng chứng về số người dùng và tác động kỳ vọng."
   ],
   "moscow": [
    "MoSCoW",
    "Chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này).",
-   "Bốn ngăn trong vali: bắt buộc mang, nên mang, mang nếu còn chỗ, để ở nhà."
+   "Ví dụ: phân loại yêu cầu nào bắt buộc có trong pilot, yêu cầu nào nên có, có thể bổ sung hoặc chưa làm ở lần này."
   ],
   "pii": [
    "PII",
    "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
-   "Những thứ đủ để người lạ biết đó là bạn."
+   "Ví dụ: thông tin trong ticket có thể giúp nhận diện một cá nhân, riêng lẻ hoặc khi kết hợp với dữ liệu khác."
   ],
   "bias": [
    "bias",
    "Thiên lệch có hệ thống trong dữ liệu hoặc model khiến kết quả bất lợi cho một nhóm.",
-   "Cân bị lệch từ trước khi đặt hàng lên."
+   "Ví dụ: hệ thống xử lý kém hơn một cách có hệ thống đối với câu hỏi của một nhóm người dùng."
   ],
   "roadmap": [
    "roadmap",
    "Lộ trình phát triển theo thời gian hoặc theo mốc năng lực, nói rõ làm gì trước, vì sao.",
-   "Bản đồ chặng đường, không phải lịch trình từng phút."
+   "Ví dụ: nêu vấn đề cần giải quyết trước, lý do ưu tiên và điều kiện để mở rộng pilot."
   ],
   "ga": [
    "GA",
    "General Availability: phát hành cho toàn bộ người dùng.",
-   "Khai trương chính thức."
+   "Ví dụ: mở tính năng cho toàn bộ nhóm khách hàng thuộc phạm vi phát hành, kèm giám sát và hỗ trợ."
   ]
  },
  "alias": {
@@ -356,92 +356,92 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "multi",
-   "q": "PRD cho tính năng AI cần thêm những gì so với PRD thường?",
+   "q": "PRD cho trợ lý AI cần làm rõ những gì?",
    "o": [
-    "Guardrails và fallback",
-    "Acceptance criteria định lượng (groundedness, TTFT, hallucination)",
-    "Màu sắc thương hiệu",
-    "Eval set và mức lỗi chấp nhận được"
+    "Ngân sách, quyền dữ liệu và trách nhiệm vận hành",
+    "Rubric, eval set và ngưỡng phát hành",
+    "Chốt một mô hình vĩnh viễn để khỏi eval lại",
+    "Mục tiêu, phạm vi và điều kiện chuyển ca"
    ],
    "a": [
     0,
     1,
     3
    ],
-   "ex": "Đây là các phần phản ánh hành vi xác suất của model."
+   "ex": "PRD nối nhu cầu với điều kiện đo và vận hành. Lựa chọn mô hình hiện tại không thay yêu cầu và không bảo đảm không cần thay đổi."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 0,
    "type": "one",
-   "q": "TTFT đo điều gì?",
+   "q": "TTFT giảm nhưng người dùng vẫn chờ lâu mới đủ câu trả lời. Nên đo thêm gì?",
    "o": [
-    "Tổng thời gian sinh câu trả lời",
-    "Thời gian tới token đầu tiên",
-    "Số token mỗi giây",
-    "Thời gian huấn luyện"
+    "Thời gian viết PRD",
+    "Tổng thời gian hoàn thành và độ trễ theo phân vị",
+    "Chỉ tổng số token đầu vào",
+    "Chỉ tỷ lệ cache hit"
    ],
    "a": 1,
-   "ex": "Time to First Token quyết định cảm giác “nhanh” khi stream."
+   "ex": "TTFT chỉ đo token đầu tiên. Cần đo cả hoàn thành, độ dài đầu ra và tải; cache hit giúp chẩn đoán nhưng không thay trải nghiệm thời gian toàn luồng."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Giai đoạn nào thử luồng trải nghiệm bằng no-code và dữ liệu giả?",
+   "q": "Đội dựng màn hình với dữ liệu tĩnh để xem nhân viên hiểu nguồn và nút chuyển ca không. Đây gần nhất với gì?",
    "o": [
-    "POC",
-    "Prototype",
-    "MVP",
-    "Pilot"
+    "POC kiểm lõi kỹ thuật",
+    "Prototype kiểm luồng trải nghiệm",
+    "Pilot có vận hành thật",
+    "GA cho toàn bộ người dùng"
    ],
    "a": 1,
-   "ex": "Prototype trả lời câu hỏi trải nghiệm, không phải câu hỏi kỹ thuật."
+   "ex": "Prototype phù hợp câu hỏi trải nghiệm này; không phải mọi prototype đều dùng dữ liệu tĩnh và nó chưa chứng minh vận hành thật."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 1,
    "type": "one",
-   "q": "Một POC thành công chứng minh điều gì?",
+   "q": "POC chứng minh mô hình xử lý được mẫu kỹ thuật. Điều gì chưa được chứng minh?",
    "o": [
-    "Người dùng muốn sản phẩm",
-    "Model giải được bài toán lõi trong điều kiện thí nghiệm",
-    "Sản phẩm có lãi",
-    "Sẵn sàng GA"
-   ],
-   "a": 1,
-   "ex": "POC chỉ kiểm khả thi kỹ thuật."
-  },
-  {
-   "id": "my5",
-   "s": 2,
-   "type": "one",
-   "q": "Trục ưu tiên nào đặc thù cho backlog AI?",
-   "o": [
-    "Business impact",
-    "Technical complexity",
-    "Data/model risk",
-    "Số người trong đội"
+    "Khả thi ở phạm vi đã thử",
+    "Có thể gọi API trong môi trường thử",
+    "Nhu cầu, khả năng vận hành và hiệu quả kinh doanh trên thực tế",
+    "Kết quả mẫu theo tiêu chí POC"
    ],
    "a": 2,
-   "ex": "Rủi ro thiếu dữ liệu, PII, hallucination, bias là đặc thù của AI."
+   "ex": "POC kiểm một giả thuyết khả thi có phạm vi; không suy ra PMF, TCO hay readiness cho mọi người dùng."
   },
   {
-   "id": "my6",
+   "id": "my5-v2",
+   "s": 2,
+   "type": "one",
+   "q": "Eval tốt nhưng chưa có bằng chứng về số người dùng và tác động. Nên chấm RICE Confidence thế nào?",
+   "o": [
+    "Cao vì mô hình đã đúng",
+    "Dùng đúng score groundedness",
+    "Cao nếu effort nhỏ",
+    "Phản ánh cả bất định reach/impact/effort, ghi bằng chứng còn thiếu"
+   ],
+   "a": 3,
+   "ex": "RICE Confidence bao quát mức độ chắc chắn của các ước tính ưu tiên. Eval chỉ cung cấp một phần bằng chứng kỹ thuật, không thay discovery."
+  },
+  {
+   "id": "my6-v2",
    "s": 3,
    "type": "one",
-   "q": "Mục đích chính của giai đoạn Beta theo chương này?",
+   "q": "Pilot nên được mở rộng khi nào?",
    "o": [
-    "Tăng doanh thu",
-    "Thu tương tác thật để xây golden dataset",
-    "Quảng bá sản phẩm",
-    "Thử giao diện"
+    "Đúng ngày dự kiến dù ngưỡng chưa đạt",
+    "Có bằng chứng đạt tiêu chí chất lượng, nhu cầu và vận hành đã thống nhất",
+    "Đã thu đủ một con số golden dataset cố định",
+    "Tỷ lệ người dùng mở trang tăng một ngày"
    ],
    "a": 1,
-   "ex": "Dữ liệu thật từ Beta giúp đánh giá kỹ hơn trước GA."
+   "ex": "Mốc ngày và số lượng mẫu không tự đủ. Cần điều kiện đi tiếp theo giả thuyết, mức rủi ro và độ bất định của dữ liệu."
   }
  ]
 };

@@ -17,24 +17,19 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 12</div>
   <h1>Kinh tế học <i>của sản phẩm AI</i></h1>
-  <p class="dek">Vì sao chi phí biên của AI không về 0, bốn thành phần chi phí cần theo dõi, ba cách tối ưu token, khung Build vs. Buy vs. Partner, và mức thu nhập AI PM trong báo cáo nguồn.</p>
+  <p class="dek">Tách chi phí thành phần khỏi chỉ số tổng hợp; tính chi phí mỗi tác vụ thành công, phân biệt các loại cache, cân nhắc giữa tự xây dựng, mua dịch vụ và hợp tác và thiết kế giá bán.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 12 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>SaaS thường có chi phí biên gần 0. Sản phẩm AI trả tiền cho mỗi lượt dùng, nên một sản phẩm được yêu thích vẫn có thể lỗ nếu không quản lý token và TCO.</div>
+  <div class="idea"><small>Ý chính của chương</small>Sản phẩm có thể được dùng nhiều nhưng chưa có biên đóng góp tốt. Đo doanh thu và tổng chi phí phục vụ trên cùng khách hàng, tác vụ và khoảng thời gian.</div>
   <section id="s1">
     <span class="num">12.1</span>
-    <h2>Chi phí biên không về 0</h2>
-    <p class="gist">Mỗi truy vấn của người dùng là một hóa đơn nhỏ. Tăng trưởng mà không kiểm soát chi phí có thể làm lỗ nặng hơn.</p>
-<p>Bốn thành phần chi phí cần theo dõi:</p>
-    <ul>
-      <li><b>Inference cost</b>: tiền trả cho GPU/TPU hoặc nhà cung cấp API (như Amazon Bedrock) mỗi lần model xử lý và sinh kết quả.</li>
-      <li><b>Cost per successful task</b>: tổng chi phí hạ tầng và dữ liệu chia cho số tác vụ được giải quyết trọn vẹn, đã loại câu sai, câu bịa, lần phải thử lại. Đây là chỉ số tài chính thật.</li>
-      <li><b>Chi phí ngữ cảnh</b>: duy trì context window, tạo embedding, lưu và truy vấn vector DB.</li>
-      <li><b>TCO</b>: tổng chi phí sở hữu, gồm CapEx/OpEx hạ tầng, gán nhãn dữ liệu, tuyển và vận hành đội kỹ sư AI, kiểm định an toàn, bảo hiểm rủi ro pháp lý.</li>
-    </ul>
-    <figure>
+    <h2>Chi phí thành phần và chi phí mỗi tác vụ</h2>
+    <p class="gist">Chi phí thấp cho mỗi lần gọi chưa bảo đảm chi phí thấp cho mỗi tác vụ thành công. Khi tính tổng, cần tránh cộng trùng các khoản.</p>
+<p>Phần mềm không dùng AI cũng có chi phí biên. Với ứng dụng LLM, chi phí xử lý mỗi lượt sử dụng thường thể hiện rõ hơn trên hóa đơn dịch vụ. Chi phí không phải lúc nào cũng tăng tuyến tính vì batching, cache, hợp đồng và công suất cố định. Lập ngân sách theo cơ cấu tác vụ và tải dự kiến.</p>
+    <ul><li><b>Chi chi phí sử dụng mô hình:</b> input/output, lượt thử lại, công cụ và hạ tầng suy luận tùy cách triển khai.</li><li><b>Dữ liệu và ứng dụng:</b> embedding, lưu trữ, retrieval, mạng, backend, log. Kiểm xem khoản nào đã nằm trong hóa đơn dịch vụ.</li><li><b>Con người và vận hành:</b> rà soát, dữ liệu gán nhãn, kỹ sư, bảo mật và hỗ trợ.</li></ul>
+    <p><b>TCO</b> là tổng chi phí sở hữu trong kỳ, không phải một khoản để cộng thêm vào ba nhóm trên. <b>Cost per successful task</b> là tổng chi phí trong phạm vi đã định, kể cả ca thất bại và thử lại, chia số tác vụ đạt tiêu chí. Nêu rõ có phân bổ nhân sự/chi phí cố định hay chỉ tính biến phí.</p><figure>
       <div class="fig">
         <div class="figbar"><span>Chi phí mỗi tác vụ thành công</span></div>
         <div class="calc">
@@ -45,53 +40,39 @@
         <div class="out" id="kO"></div>
       </div>
       <figcaption><b>Hình 1</b>Giá mỗi lần gọi rẻ chưa chắc tác vụ rẻ: tỷ lệ thành công thấp và phải gọi lại nhiều lần đều làm giá thật tăng. Số liệu là giả định.</figcaption>
-    </figure>
-    <div class="take"><small>Ghi nhớ</small>Đo chi phí trên mỗi tác vụ thành công, không phải trên mỗi lần gọi API.</div>
+    </figure><p>Bộ tính minh họa chỉ xét chi phí gọi mô hình: giá trung bình mỗi lần gọi × số lần gọi trung bình cho mọi tác vụ thử × số tác vụ thử / số tác vụ thành công. Tỷ lệ thành công phải được đo ở cấp tác vụ, không dùng tỷ lệ thành công mỗi lần gọi thay thế.</p><div class="take"><small>Ghi nhớ</small>Khi so sánh các phương án, cần dùng cùng kỳ đo, cùng đơn vị và cùng phạm vi chi phí.</div>
   </section>
 
   <section id="s2">
     <span class="num">12.2</span>
-    <h2>Ba cách tối ưu token</h2>
-    <p class="gist">Nén prompt, cache, và định tuyến model theo độ khó.</p>
-<ol>
-      <li><b>Prompt compression.</b> Bỏ chữ thừa, sắp lại cấu trúc prompt để giảm token đầu vào mà không mất ngữ cảnh.</li>
-      <li><b>Embedding và prompt caching.</b> Lưu sẵn phản hồi hoặc embedding của câu hỏi phổ biến, trả từ cache thay vì gọi lại LLM.</li>
-      <li><b>Model routing.</b> Dùng model nhỏ đã fine-tune cho việc đơn giản (như phân loại intent), chỉ chuyển câu hỏi phức tạp lên foundation model lớn.</li>
-    </ol>
-    <p>Ba cách này cộng dồn được. Một hệ thống CSKH điển hình có nhiều câu hỏi lặp lại, nên cache thường cho hiệu quả lớn nhất với ít công sức nhất. Routing cần eval cẩn thận để model nhỏ không làm tụt chất lượng ở những câu khó bị phân loại nhầm là dễ.</p>
+    <h2>Giảm chi phí mà vẫn đạt chất lượng</h2>
+    <p class="gist">Nén ngữ cảnh, chọn đúng loại cache và định tuyến theo bằng chứng.</p>
+<ul><li><b>Prompt/context compression:</b> bỏ nội dung thừa, chọn đoạn liên quan; chạy bộ đánh giá để kiểm tra việc cắt không làm mất điều kiện quan trọng.</li><li><b>Prompt caching:</b> tái sử dụng phần xử lý tiền tố input lặp lại theo điều kiện nhà cung cấp; vẫn sinh câu trả lời mới và có thể vẫn tính phí cache read/write.</li><li><b>Response/semantic caching:</b> trả lại câu trả lời đã lưu nếu câu hỏi/ngữ cảnh phù hợp. Khóa cache phải xét tenant, quyền truy cập, phiên bản nguồn và hạn dùng. Embedding cache chỉ lưu vector đã tính.</li><li><b>Model routing:</b> sử dụng mô hình phù hợp từng nhóm tác vụ sau khi kiểm tra chất lượng; theo dõi cả chi phí định tuyến và lỗi phân loại tác vụ.</li></ul>
+    <p>Với trợ lý tra quy trình, có thể cache tiền tố hướng dẫn cố định nhưng vẫn truy xuất tài liệu theo quyền từng nhân viên. Đo riêng cache hit, phí input/output, tỷ lệ trả lời đạt chuẩn và độ mới của nguồn; không mặc định cache luôn là cách tiết kiệm nhất.</p>
   </section>
 
   <section id="s3">
     <span class="num">12.3</span>
-    <h2>Build, buy hay partner</h2>
-    <p class="gist">Mua API để ra mắt nhanh; tự xây khi cần tùy biến sâu, quy mô lớn hoặc kiểm soát dữ liệu tuyệt đối.</p>
-<p><b>Buy / partner (ví dụ Amazon Bedrock).</b> Dùng ngay các foundation model hàng đầu qua API, không phải quản lý phần cứng. Hợp với giai đoạn validation, POC, hoặc tính năng không phải lợi thế cạnh tranh cốt lõi.</p>
-    <p><b>Build (ví dụ tự triển khai model mã nguồn mở trên Amazon SageMaker AI).</b> Tự quản lý GPU, huấn luyện và triển khai. Đổi lại được kiểm soát dữ liệu, tùy biến trọng số và có thể rẻ hơn khi lưu lượng rất lớn, nhưng tốn CapEx ban đầu và cần đội MLOps giỏi.</p>
-    <p>Một cách nghĩ hay dùng: bắt đầu bằng buy để học nhanh, đo lưu lượng và chi phí thật, rồi mới quyết định có đáng build cho những phần đã ổn định và tốn nhiều tiền nhất hay không.</p>
+    <h2>Build, buy và partner</h2>
+    <p class="gist">Trước khi lựa chọn, cần xác định phần việc muốn tự thực hiện và những ràng buộc đối với dữ liệu.</p>
+<p><b>Buy:</b> dùng API/dịch vụ managed giúp thử nhanh khi chính sách dữ liệu và tính năng cho phép. <b>Build:</b> có thể là tự xây ứng dụng quanh API, tự host model open-weight hoặc huấn luyện mô hình; ba mức này có chi phí rất khác nhau. Thuê GPU trên nền tảng đám mây thường là OpEx, không mặc định CapEx như mua phần cứng.</p>
+    <p><b>Partner:</b> hợp tác để có năng lực triển khai, dữ liệu hoặc kênh phân phối; phải rõ quyền sở hữu, SLA, trách nhiệm và điều kiện chấm dứt hoặc chuyển đổi quan hệ hợp tác. Không gộp partner với buy chỉ vì đều dùng bên ngoài.</p>
+    <p>Với POC CSKH có dữ liệu được phép dùng qua managed API, thời hạn ngắn và đội nhỏ, buy có thể hợp lý. Nếu dữ liệu không được ra ngoài môi trường kiểm soát, cần phương án triển khai khác hoặc dữ liệu đã xử lý phù hợp. So sánh chất lượng, chi phí theo lưu lượng thực tế, thời gian làm quen và trách nhiệm vận hành; lưu quyết định cùng giả định.</p>
   </section>
 
   <section id="s4">
     <span class="num">12.4</span>
-    <h2>Thu nhập AI PM trong báo cáo nguồn</h2>
-    <p class="gist">Báo cáo nguồn dẫn một loạt số liệu lương. Chúng chưa được kiểm chứng và nên đọc như tín hiệu thị trường.</p>
-<table class="tbl">
-      <tr><th>Thị trường / công ty</th><th>Mức trong báo cáo (năm 2026)</th></tr>
-      <tr><td>Mỹ (tổng quan)</td><td>ZipRecruiter: trung bình 159.405 USD; Glassdoor: trung vị 200.000 USD</td></tr>
-      <tr><td>OpenAI</td><td>300.000 – 860.000+ USD</td></tr>
-      <tr><td>Anthropic</td><td>500.000 – 590.000+ USD</td></tr>
-      <tr><td>Meta</td><td>172.000 – 945.000+ USD</td></tr>
-      <tr><td>Google</td><td>200.000 – 700.000+ USD</td></tr>
-      <tr><td>Microsoft</td><td>179.000 – 500.000+ USD</td></tr>
-      <tr><td>Netflix</td><td>300.000 – 650.000 USD</td></tr>
-      <tr><td>Châu Âu / Pháp (Bluecoders)</td><td>Product nói chung: trung vị 60.000 EUR (55.000 – 80.000); Deeptech / AI / Data: trung vị 75.000 EUR</td></tr>
-    </table>
-    <p>Báo cáo tự ghi chú rằng mức trung vị 60.000 EUR của Bluecoders dựa trên mẫu rất hẹp (5 hợp đồng). Báo cáo cũng cho rằng ứng viên kết hợp tư duy sản phẩm với hiểu biết kỹ thuật ở mức model thường thương lượng được mức cao hơn. Thông điệp đáng giữ là thị trường đang trả cao cho người nối được hai phía, chứ không phải con số chính xác.</p>
+    <h2>Giá bán và biên đóng góp</h2>
+    <p class="gist">Chọn cách tính giá mà khách hàng hiểu được, sau đó kiểm tra chi phí khi khách hàng sử dụng nhiều hơn dự kiến.</p>
+<p>Có thể thu theo seat, tác vụ hoặc gói có hạn mức. Giá theo token thuận tiện cho nhà cung cấp model nhưng người mua có thể khó dự báo giá trị. Đơn vị giá nên gắn với công việc người dùng hiểu; quy định rõ thế nào là tác vụ, lần thử lại và trường hợp lỗi.</p>
+    <p><b>Ví dụ giả định:</b> một khách trả 100 USD/tháng, dùng 1.000 tác vụ thành công. Phí model và ứng dụng là 30 USD, chi phí rà soát phát sinh theo mức sử dụng là 20 USD. Biên đóng góp tháng là 100 − 30 − 20 = 50 USD, trước chi phí cố định và CAC. Nếu mức dùng tăng gấp ba với doanh thu không đổi, gói có thể lỗ; cần đo cơ cấu sử dụng và thiết kế hạn mức hoặc giá theo mức dùng.</p>
+    <p>Doanh thu chưa phải lợi nhuận; biên đóng góp chưa phải lợi nhuận toàn công ty. Khi tính LTV, ghi cách dự báo churn/retention, biên đóng góp, thời gian và chiết khấu, rồi so với CAC cùng phạm vi. Khi đánh giá khả năng sinh lời, dùng dữ liệu phục vụ khách hàng và mô hình chi phí thay vì suy từ tín hiệu nghề nghiệp.</p><div class="take"><small>Ghi nhớ</small>Kiểm tra kết quả tính toán thay đổi ra sao khi mức sử dụng, tỷ lệ cần rà soát và giá dịch vụ thay đổi; không chỉ xét trường hợp trung bình.</div>
   </section>
 
   <div class="vids" data-videos="12"></div>
   <a class="next-ch" href="/blog/ai-product-handbook/13"><span><small>Chương tiếp theo</small><b>13 · AI Product Risk & Governance</b></span><span>→</span></a>
 
-  <div class="end"><p>Toàn bộ số liệu lương ở mục 12.4 lấy từ báo cáo nguồn và chưa được kiểm chứng độc lập. Số trong Hình 1 là giả định.</p></div>
+  <div class="end"><p>Tất cả số trong các ví dụ và bộ tính là giả định. Mô hình đơn giản chưa thay thế phân tích TCO, giá thực tế và chi phí nhân sự của đội.</p></div>
 </article>
 
 <script src="figs.js"></script>
@@ -114,11 +95,11 @@ window.CH = {
   {
    "id": "s1",
    "n": "12.1",
-   "t": "Chi phí biên không về 0",
+   "t": "Chi phí thành phần và chi phí mỗi tác vụ",
    "sum": [
-    "Inference cost tăng theo lượt dùng.",
-    "Cost per successful task là chỉ số thật.",
-    "TCO gồm cả dữ liệu, nhân sự, kiểm định, pháp lý."
+    "Tách chi phí sử dụng mô hình, dữ liệu/ứng dụng và con người/vận hành.",
+    "TCO là tổng; cost/task là tỷ số, không cộng như các khoản riêng.",
+    "Tính cả chi phí ca lỗi và thử lại, chỉ chia cho số tác vụ đạt chuẩn."
    ],
    "terms": [
     "inference",
@@ -131,11 +112,11 @@ window.CH = {
   {
    "id": "s2",
    "n": "12.2",
-   "t": "Ba cách tối ưu token",
+   "t": "Giảm chi phí mà vẫn đạt chất lượng",
    "sum": [
-    "Prompt compression giảm token đầu vào.",
-    "Caching tránh gọi lại cho câu phổ biến.",
-    "Model routing: nhỏ cho việc dễ, lớn cho việc khó."
+    "Prompt cache khác response cache và embedding cache.",
+    "Response cache cần phân quyền, version và hạn dùng.",
+    "Compression và routing đều cần eval và đo tổng chi phí."
    ],
    "terms": [
     "cache",
@@ -147,11 +128,11 @@ window.CH = {
   {
    "id": "s3",
    "n": "12.3",
-   "t": "Build, buy hay partner",
+   "t": "Build, buy và partner",
    "sum": [
-    "Buy: nhanh, không lo phần cứng, hợp POC.",
-    "Build: kiểm soát, tùy biến, rẻ ở quy mô lớn, cần MLOps.",
-    "Bắt đầu bằng buy, đo rồi mới cân nhắc build."
+    "Build có nhiều mức: ứng dụng, self-host, huấn luyện.",
+    "Managed API phù hợp khi yêu cầu dữ liệu và tính năng cho phép.",
+    "Partner cần thỏa thuận trách nhiệm, quyền và phương án chuyển đổi hoặc chấm dứt hợp tác."
    ],
    "terms": [
     "buildbuy",
@@ -162,82 +143,100 @@ window.CH = {
   {
    "id": "s4",
    "n": "12.4",
-   "t": "Thu nhập AI PM trong báo cáo nguồn",
+   "t": "Giá bán và biên đóng góp",
    "sum": [
-    "Số liệu lương lấy từ báo cáo, chưa kiểm chứng.",
-    "Mẫu Bluecoders rất hẹp.",
-    "Thị trường trả cao cho người nối được sản phẩm và kỹ thuật."
+    "Giá theo seat, tác vụ hoặc gói cần rõ hạn mức và trường hợp lỗi.",
+    "Biên đóng góp = doanh thu trừ biến phí phục vụ đã định.",
+    "LTV và CAC cần cùng giả định, phạm vi và thời gian."
    ],
    "terms": [
-    "pm"
+    "contribution",
+    "cac",
+    "ltv",
+    "unitecon"
    ]
   }
  ],
  "terms": {
   "inference": [
    "inference cost",
-   "Chi phí mỗi lần gọi model để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
-   "Tiền điện mỗi lần bật máy, khác với tiền mua máy."
+   "Chi phí mỗi lần gọi mô hình để sinh kết quả, thường tính theo token hoặc theo giờ GPU.",
+   "Ví dụ: mỗi lần trợ lý xử lý câu hỏi và sinh câu trả lời có thể phát sinh phí token hoặc chi phí tính toán."
   ],
   "cpst": [
    "cost per successful task",
-   "Tổng chi phí chia cho số tác vụ được giải quyết trọn vẹn (đã trừ câu trả lời sai, phải thử lại).",
-   "Giá mỗi chiếc bánh bán được, đã tính cả những mẻ hỏng."
+   "Tổng chi phí cho toàn bộ các lượt thực hiện, gồm ca lỗi và thử lại, chia số tác vụ đạt tiêu chí thành công trong cùng kỳ. Nêu rõ có tính lao động và chi phí cố định không.",
+   "Ví dụ: 40 USD cho 1.000 lượt, 800 lượt đạt yêu cầu: 0,05 USD mỗi lượt thành công."
   ],
   "tco": [
    "TCO",
    "Total Cost of Ownership: tổng chi phí sở hữu gồm hạ tầng, dữ liệu, gán nhãn, nhân sự, kiểm định, tuân thủ.",
-   "Giá xe cộng xăng, bảo hiểm, bảo dưỡng và chỗ đậu."
+   "Ví dụ: cộng các khoản hạ tầng, dữ liệu, nhân sự và vận hành trong cùng kỳ, tránh tính trùng chi phí."
   ],
   "embedding": [
    "embedding",
-   "Biểu diễn văn bản hoặc dữ liệu thành vector số, sao cho các nội dung gần nghĩa nằm gần nhau.",
-   "Tọa độ trên bản đồ ý nghĩa: hai câu cùng ý thì đứng gần nhau."
+   "Biểu diễn dữ liệu bằng vector; độ gần phản ánh sự liên quan theo cách mô hình được huấn luyện, không bảo đảm nội dung đúng hoặc đầy đủ.",
+   "Ví dụ: tìm các đoạn quy trình liên quan đến câu hỏi của nhân viên."
   ],
   "unitecon": [
    "unit economics",
    "Doanh thu và chi phí tính trên một đơn vị (một người dùng, một khách hàng, một tác vụ) để xem mỗi đơn vị lời hay lỗ.",
-   "Bán một ly cà phê lãi bao nhiêu sau khi trừ hạt, sữa, ly."
+   "Ví dụ: so sánh doanh thu từ một khách hàng với chi phí phục vụ khách hàng đó trong cùng kỳ."
   ],
   "cache": [
    "prompt caching",
-   "Lưu lại phần prompt hoặc kết quả lặp lại để không phải xử lý hay trả tiền lại từ đầu.",
-   "Nấu sẵn nồi nước dùng, khách gọi chỉ việc chần bánh."
+   "Tái sử dụng phần tính toán cho tiền tố prompt trùng nhau, theo điều kiện của dịch vụ. Vẫn gọi mô hình sinh đầu ra; khác response caching và embedding caching.",
+   "Ví dụ: tái sử dụng phần xử lý system prompt cố định, rồi sinh câu trả lời mới."
   ],
   "routing": [
    "model routing",
-   "Định tuyến từng yêu cầu tới model phù hợp: model nhỏ, rẻ cho việc đơn giản; model lớn cho việc khó.",
-   "Phòng khám: cảm cúm gặp bác sĩ đa khoa, ca khó mới lên chuyên gia."
+   "Lựa chọn mô hình theo tiêu chí như loại tác vụ, chất lượng, độ trễ và chi phí. Có thể thực hiện bằng quy tắc cố định, không cần agent.",
+   "Ví dụ: phân loại ticket bằng mô hình nhỏ đã đáp ứng tiêu chí đánh giá, chuyển ca khó sang phương án khác."
   ],
   "token": [
    "token",
-   "Đơn vị nhỏ nhất model xử lý (một từ, một phần từ hoặc ký tự). Chi phí và giới hạn ngữ cảnh tính theo token. Với tiếng Anh, khoảng 1.000 token ≈ 750 từ.",
-   "Đồng xu của thế giới LLM: đọc cũng tốn, viết cũng tốn."
+   "Đơn vị biểu diễn mà mô hình xử lý; có thể là một phần từ, ký tự hoặc đơn vị dữ liệu khác. Phí API văn bản thường tính theo token; cần đo bằng tokenizer của model.",
+   "Ví dụ: số token cùng một câu tiếng Việt thay đổi theo tokenizer."
   ],
   "fm": [
    "foundation model",
-   "Model lớn được huấn luyện trước trên dữ liệu rộng, dùng lại được cho nhiều tác vụ mà không phải huấn luyện từ đầu.",
-   "Phôi sắt đã đúc sẵn, rèn thành dao hay kéo tùy việc."
+   "Mô hình được huấn luyện trên phạm vi dữ liệu rộng và có thể được điều chỉnh hoặc dùng lại cho nhiều tác vụ. Các foundation model hiện đại chủ yếu dựa trên deep learning.",
+   "Ví dụ: dùng một mô hình nền cho nhiều tính năng thay vì huấn luyện từng model từ đầu."
   ],
   "buildbuy": [
    "build vs. buy",
    "Quyết định tự xây (ví dụ tự host model mã nguồn mở) hay mua dịch vụ có sẵn (managed API), hoặc hợp tác.",
-   "Tự nấu hay gọi đồ ăn ngoài."
+   "Ví dụ: so sánh việc tự triển khai mô hình với sử dụng API được quản lý, dựa trên yêu cầu dữ liệu, chi phí và năng lực vận hành."
   ],
   "poc": [
    "POC",
    "Proof of Concept: thử xem về mặt kỹ thuật có làm được không, trên dữ liệu mẫu nhỏ.",
-   "Thử xem đất có đóng cọc được không."
+   "Ví dụ: thử trên một bộ tài liệu nhỏ để kiểm tra khả năng truy xuất và trả lời đúng trước khi xây dựng đầy đủ."
   ],
   "lockin": [
    "vendor lock-in",
    "Phụ thuộc vào một nhà cung cấp tới mức đổi sang bên khác rất tốn kém.",
-   "Mua máy in chỉ nhận mực chính hãng."
+   "Ví dụ: đổi nhà cung cấp đòi hỏi chuyển dữ liệu, chỉnh tích hợp công cụ và đánh giá lại chất lượng."
   ],
   "pm": [
    "AI Product Manager",
-   "Người chịu trách nhiệm “cái gì” và “tại sao”: vấn đề, giá trị, tiêu chí thành công, ưu tiên và rủi ro của sản phẩm AI.",
-   "Người chọn đích đến và giải thích vì sao đi đường này."
+   "Vai trò thường dẫn dắt xác định vấn đề, giá trị, tiêu chí thành công và ưu tiên, phối hợp với kỹ thuật, thiết kế và các bên liên quan.",
+   "Ví dụ: cùng kỹ sư và CSKH quyết định điều kiện mở thử nghiệm."
+  ],
+  "contribution": [
+   "biên đóng góp",
+   "Doanh thu trừ biến phí phục vụ trong cùng kỳ và phạm vi đã xác định; chưa trừ hết chi phí cố định hay CAC.",
+   "Ví dụ: doanh thu 100 USD, biến phí 50 USD, biên đóng góp 50 USD."
+  ],
+  "cac": [
+   "CAC",
+   "Customer Acquisition Cost: chi phí thu hút khách hàng trong phạm vi và kỳ đã định, phân bổ cho số khách mới tương ứng.",
+   "Ví dụ: nêu rõ có tính nhân sự bán hàng và marketing khi so với contribution LTV."
+  ],
+  "ltv": [
+   "LTV",
+   "Giá trị kỳ vọng từ một khách trong vòng đời sử dụng; nói rõ theo doanh thu hay biên đóng góp, thời gian và chiết khấu.",
+   "Ví dụ: so contribution LTV với CAC theo cùng phạm vi."
   ]
  },
  "alias": {
@@ -286,6 +285,15 @@ window.CH = {
   "pm": [
    "AI Product Manager",
    "AI PM"
+  ],
+  "contribution": [
+   "biên đóng góp"
+  ],
+  "cac": [
+   "CAC"
+  ],
+  "ltv": [
+   "LTV"
   ]
  },
  "rel": {
@@ -306,74 +314,74 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Vì sao sản phẩm AI khác SaaS thường về chi phí biên?",
+   "q": "Cách mô tả chi phí nào đúng?",
    "o": [
-    "AI không cần server",
-    "Mỗi lượt dùng tốn inference cost, tăng tuyến tính theo lưu lượng",
-    "SaaS thường đắt hơn",
-    "Không khác gì"
+    "TCO là tổng trong phạm vi/kỳ; cost/task là tổng chi phí chia số tác vụ đạt chuẩn",
+    "Phần mềm không AI không có biến phí",
+    "TCO là khoản cộng thêm sau mọi phí vận hành",
+    "Cost/task là một khoản cộng vào inference cost"
    ],
-   "a": 1,
-   "ex": "Chi phí biên của SaaS gần 0; AI trả tiền theo token hoặc GPU."
+   "a": 0,
+   "ex": "TCO và cost/task là chỉ số tổng hợp, không phải các khoản độc lập để cộng. Cần tránh đếm trùng và nêu phạm vi."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 0,
    "type": "one",
-   "q": "Mỗi lần gọi 0,01 USD, trung bình 2 lần gọi mỗi tác vụ, 50% tác vụ thành công. Chi phí mỗi tác vụ thành công?",
+   "q": "Phí gọi mô hình 0,01 USD; trung bình 2 lần gọi trên mỗi tác vụ thử; 50% tác vụ đạt yêu cầu. Chỉ tính chi phí sử dụng mô hình, cost/success bằng bao nhiêu?",
    "o": [
-    "0,01 USD",
     "0,02 USD",
     "0,04 USD",
-    "0,005 USD"
+    "0,005 USD",
+    "0,01 USD"
    ],
-   "a": 2,
-   "ex": "0,01 × 2 / 0,5 = 0,04 USD."
+   "a": 1,
+   "ex": "0,01 × 2 / 0,5 = 0,04 USD, tính cả phí ca lỗi. Chưa gồm retrieval, người rà soát hoặc chi phí cố định."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Kỹ thuật nào chuyển câu hỏi đơn giản sang model nhỏ?",
+   "q": "Khách đổi quyền tài liệu nhưng response cache vẫn chứa câu trả lời cũ. Cần ưu tiên kiểm gì?",
    "o": [
-    "Prompt compression",
-    "Caching",
-    "Model routing",
-    "Fine-tuning"
+    "Chỉ giảm output token",
+    "Fine-tune để mô hình tự biết quyền mới",
+    "Chỉ tăng cache TTL",
+    "Khóa cache, quyền, phiên bản nguồn và invalidation trước khi trả lại"
    ],
-   "a": 2,
-   "ex": "Model routing định tuyến theo độ khó."
+   "a": 3,
+   "ex": "Cache ở tầng ứng dụng phải tôn trọng quyền và độ mới. Fine-tuning hoặc token budget không giải quyết rò dữ liệu từ cache."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 2,
    "type": "one",
-   "q": "Giai đoạn POC nên ưu tiên phương án nào?",
+   "q": "POC có thời hạn ngắn, dữ liệu được phép dùng managed API và đội ít người. Lựa chọn ban đầu nào có cơ sở?",
    "o": [
-    "Build: tự host model",
-    "Buy: dùng managed API",
-    "Không dùng AI",
-    "Tự huấn luyện từ đầu"
+    "Dùng managed API rồi đo chất lượng, chi phí và yêu cầu vận hành",
+    "Tự huấn luyện mô hình từ đầu cho mọi trường hợp",
+    "Tự mua GPU vì cloud luôn là CapEx",
+    "Chọn partner mà không cần SLA"
    ],
-   "a": 1,
-   "ex": "Managed API giúp thử nhanh, không phải quản lý phần cứng."
+   "a": 0,
+   "ex": "Dữ kiện làm buy đáng thử; không biến thành quy tắc cho mọi POC. Cloud thuê theo dùng thường là OpEx và partner vẫn cần trách nhiệm rõ."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
-   "q": "Nên đọc bảng lương trong báo cáo nguồn thế nào?",
+   "q": "Khách trả 100 USD/tháng; biến chi phí sử dụng mô hình/ứng dụng 30 USD và rà theo mức dùng 20 USD. Biên đóng góp trước chi phí cố định/CAC là bao nhiêu?",
    "o": [
-    "Là số chính xác để đàm phán",
-    "Là tín hiệu thị trường, chưa kiểm chứng, mẫu có khi rất hẹp",
-    "Là số của chính phủ",
-    "Bỏ qua hoàn toàn"
+    "80 USD",
+    "100 USD",
+    "50 USD",
+    "70 USD"
    ],
-   "a": 1,
-   "ex": "Báo cáo tự ghi chú mẫu Bluecoders chỉ có 5 hợp đồng."
+   "a": 2,
+   "ex": "100−30−20=50 USD. Đây chưa phải lợi nhuận toàn công ty; còn chi phí cố định và thu hút khách."
   }
  ]
 };

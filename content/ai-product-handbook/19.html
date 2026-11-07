@@ -17,16 +17,16 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần VI / 19</div>
   <h1>Framework <i>và bảng tra quyết định</i></h1>
-  <p class="dek">JTBD, Opportunity Solution Tree, RICE/ICE/MoSCoW, Business Model Canvas, và ba cặp quyết định hay gặp trong sản phẩm AI: RAG hay fine-tuning, precision hay recall, ai chịu trách nhiệm bảo mật.</p>
+  <p class="dek">JTBD, Opportunity Solution Tree, RICE/ICE/MoSCoW và Business Model Canvas; bảng tra các yếu tố cần cân nhắc trong quyết định AI.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 19 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Framework giúp nghĩ có hệ thống và nói chung một ngôn ngữ. Nhưng framework không quyết định thay bạn.</div>
+  <div class="idea"><small>Ý chính của chương</small>Các khung phân tích giúp tổ chức suy nghĩ và trao đổi về quyết định. Người sử dụng vẫn cần kiểm tra giả định, bằng chứng và mức độ phù hợp với từng tình huống.</div>
   <section id="s1">
     <span class="num">19.1</span>
     <h2>Khám phá và mô hình kinh doanh</h2>
-    <p class="gist">Ba framework cho câu hỏi “làm gì, cho ai, kiếm tiền thế nào”.</p>
+    <p class="gist">Ba khung phân tích giúp xác định công việc của khách hàng, khám phá giải pháp và mô tả cách sản phẩm tạo doanh thu.</p>
 <div class="cmp">
       <div><b>Jobs to Be Done</b>Khách hàng “thuê” sản phẩm để làm một việc có mặt chức năng, cảm xúc, xã hội. Dùng khi phỏng vấn và viết problem statement. Xem chương 02.</div>
       <div><b>Opportunity Solution Tree</b>Cây của Teresa Torres: gốc là một outcome, các nhánh là cơ hội (nhu cầu, điểm đau), lá là giải pháp và thử nghiệm. Dùng để không nhảy thẳng từ mục tiêu tới giải pháp.</div>
@@ -37,7 +37,7 @@
   <section id="s2">
     <span class="num">19.2</span>
     <h2>RICE, ICE và MoSCoW</h2>
-    <p class="gist">Ba cách ưu tiên backlog, từ chấm điểm chi tiết tới chia ngăn nhanh.</p>
+    <p class="gist">Ba cách xác định mức ưu tiên: tính điểm theo các yếu tố hoặc phân nhóm phạm vi cần thực hiện.</p>
 <figure>
       <div class="fig">
         <div class="figbar"><span>Tính điểm RICE và ICE cho một hạng mục</span></div>
@@ -52,17 +52,17 @@
       </div>
       <figcaption><b>Hình 1</b>RICE = Reach × Impact × Confidence / Effort. ICE = Impact × Confidence × Ease (ở đây Impact và Confidence quy về thang 10).</figcaption>
     </figure>
-    <p>MoSCoW chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này). Hợp khi cần chốt phạm vi một bản phát hành với stakeholder, hơn là xếp hạng một backlog dài. Với tính năng AI, giữ Confidence thấp cho tới khi có số đo trên eval set.</p>
+    <p>MoSCoW chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này). Hợp khi cần chốt phạm vi một bản phát hành với stakeholder, hơn là xếp hạng một backlog dài. Confidence phải phản ánh bằng chứng cho reach, impact và effort; kết quả đánh giá tốt chỉ giải đáp một phần về khả thi, chưa chứng minh nhu cầu hay tác động.</p>
   </section>
 
   <section id="s3">
     <span class="num">19.3</span>
     <h2>Ba cặp quyết định trong sản phẩm AI</h2>
-    <p class="gist">Bảng tra nhanh cho những quyết định lặp lại nhiều nhất.</p>
+    <p class="gist">Các yếu tố cần xem cùng nhau; RAG và fine-tuning có thể kết hợp, trách nhiệm bảo mật không phải lựa chọn một bên.</p>
 <table class="tbl">
-      <tr><th>Quyết định</th><th>Chọn bên trái khi</th><th>Chọn bên phải khi</th></tr>
-      <tr><td>RAG / Fine-tuning</td><td>Tri thức thay đổi liên tục, cần trích nguồn, chi phí ban đầu thấp</td><td>Cần cố định định dạng đầu ra (JSON, schema), đổi hẳn văn phong, hoặc giảm token trong prompt</td></tr>
-      <tr><td>Precision / Recall</td><td>False positive gây thiệt hại tài chính hoặc uy tín nghiêm trọng</td><td>False negative đe dọa an toàn, tính mạng hoặc pháp lý</td></tr>
+      <tr><th>Quyết định</th><th>Trọng tâm bên trái</th><th>Trọng tâm bên phải</th></tr>
+      <tr><td>RAG / Fine-tuning</td><td>Bổ sung tri thức thay đổi và nguồn kiểm chứng; cần đo chất lượng retrieval và tổng chi phí</td><td>Cần cải thiện hành vi/văn phong sau khi có dữ liệu và kết quả đánh giá; với JSON schema, thử structured outputs cùng validation trước</td></tr>
+      <tr><td>Precision / Recall</td><td>Ưu tiên precision khi FP đắt, sau khi định nghĩa lớp dương và hành động</td><td>Ưu tiên recall khi FN đắt, trong khả năng xử lý cảnh báo; luôn đo cả hai</td></tr>
       <tr><td>Bảo mật của cloud / trong cloud</td><td>Phần cứng GPU, datacenter, hypervisor: nhà cung cấp cloud lo</td><td>Dữ liệu PII, quyền IAM, mã hóa, guardrails: doanh nghiệp lo</td></tr>
     </table>
     <div class="take"><small>Ghi nhớ</small>Ghi quyết định đã chọn và lý do vào decision log, kể cả khi quyết định có vẻ hiển nhiên.</div>
@@ -97,7 +97,7 @@ window.CH = {
    "t": "Khám phá và mô hình kinh doanh",
    "sum": [
     "JTBD: việc khách hàng cần làm.",
-    "Opportunity Solution Tree: outcome → cơ hội → giải pháp.",
+    "Opportunity Solution Tree liên kết kết quả mong muốn với các cơ hội cần giải quyết, giải pháp và thử nghiệm.",
     "Business Model Canvas: chín ô, nhớ inference cost."
    ],
    "terms": [
@@ -111,9 +111,9 @@ window.CH = {
    "n": "19.2",
    "t": "RICE, ICE và MoSCoW",
    "sum": [
-    "RICE: Reach × Impact × Confidence / Effort.",
-    "ICE: Impact × Confidence × Ease, nhanh hơn.",
-    "MoSCoW: chốt phạm vi một bản phát hành."
+    "RICE so các ước tính theo cùng thang và kỳ.",
+    "ICE dùng impact, confidence và ease; không phải RICE rút gọn.",
+    "MoSCoW chốt nhóm phạm vi một lần phát hành."
    ],
    "terms": [
     "rice",
@@ -126,16 +126,17 @@ window.CH = {
    "n": "19.3",
    "t": "Ba cặp quyết định trong sản phẩm AI",
    "sum": [
-    "RAG khi tri thức đổi; fine-tuning khi cần định dạng, văn phong.",
-    "Precision khi báo nhầm đắt; recall khi bỏ sót đắt.",
-    "Cloud lo hạ tầng; doanh nghiệp lo dữ liệu, quyền, guardrails."
+    "RAG, fine-tuning và schema-constrained output có thể kết hợp theo nhu cầu.",
+    "Precision/recall theo lớp dương, hành động và tổn thất.",
+    "Trách nhiệm cloud cùng tồn tại, không phải chọn giao hết một bên."
    ],
    "terms": [
     "rag",
     "finetune",
     "precision",
     "recall",
-    "shared"
+    "shared",
+    "structured"
    ]
   }
  ],
@@ -143,7 +144,7 @@ window.CH = {
   "jtbd": [
    "Jobs to Be Done",
    "Khung nhìn coi khách hàng “thuê” sản phẩm để hoàn thành một việc; việc đó có mặt chức năng, cảm xúc và xã hội.",
-   "Người ta không cần mũi khoan, người ta cần cái lỗ trên tường."
+   "Ví dụ: nhân viên cần giải quyết yêu cầu của khách đúng quy trình; chatbot chỉ là một cách hỗ trợ công việc đó."
   ],
   "ost": [
    "Opportunity Solution Tree",
@@ -153,47 +154,52 @@ window.CH = {
   "bmc": [
    "Business Model Canvas",
    "Khung chín ô mô tả mô hình kinh doanh: khách hàng, giá trị, kênh, quan hệ, doanh thu, nguồn lực, hoạt động, đối tác, chi phí.",
-   "Bản vẽ một trang của cả cỗ máy kiếm tiền."
+   "Ví dụ: mô tả khách hàng, giá trị, doanh thu và chi phí của trợ lý trong một khung thống nhất."
   ],
   "rice": [
    "RICE",
-   "Reach × Impact × Confidence / Effort: điểm ưu tiên cho một hạng mục trong backlog.",
-   "Chấm điểm việc nào đáng làm trước bằng bốn câu hỏi."
+   "Reach × Impact × Confidence / Effort. Confidence phản ánh mức độ chắc chắn của các ước tính ưu tiên, không chỉ chất lượng mô hình; các hạng mục cần dùng cùng thang và kỳ đo.",
+   "Ví dụ: có kết quả đánh giá tốt vẫn cần bằng chứng về số người dùng và tác động kỳ vọng."
   ],
   "ice": [
    "ICE",
-   "Impact × Confidence × Ease: cách chấm ưu tiên nhanh hơn RICE.",
-   "RICE bản rút gọn, dùng khi cần quyết nhanh."
+   "Impact × Confidence × Ease, một cách chấm ưu tiên theo thang thống nhất; khác RICE về các yếu tố, không chỉ là phiên bản rút gọn.",
+   "Ví dụ: dùng điểm để thảo luận giả định, không thay quyết định bằng một con số."
   ],
   "moscow": [
    "MoSCoW",
    "Chia phạm vi thành Must have, Should have, Could have, Won’t have (lần này).",
-   "Bốn ngăn trong vali: bắt buộc mang, nên mang, mang nếu còn chỗ, để ở nhà."
+   "Ví dụ: phân loại yêu cầu nào bắt buộc có trong pilot, yêu cầu nào nên có, có thể bổ sung hoặc chưa làm ở lần này."
   ],
   "rag": [
    "RAG",
-   "Retrieval-Augmented Generation: tìm tài liệu liên quan rồi đưa vào prompt để model trả lời dựa trên đó, có thể trích nguồn.",
-   "Thi được mở sách: tra đúng trang rồi mới viết."
+   "Retrieval-Augmented Generation: truy xuất dữ liệu liên quan rồi cung cấp cho model để sinh câu trả lời. Có thể dẫn nguồn nhưng vẫn cần kiểm tra nguồn hỗ trợ kết luận và quyền truy cập.",
+   "Ví dụ: lấy đúng phiên bản quy trình trước khi trả lời nhân viên CSKH."
   ],
   "finetune": [
    "fine-tuning",
-   "Huấn luyện thêm một model có sẵn trên dữ liệu riêng để đổi trọng số, thường để cố định định dạng hoặc văn phong.",
-   "Gửi nhân viên đi học khóa chuyên sâu, kiến thức nằm luôn trong đầu."
+   "Huấn luyện thêm mô hình có sẵn để thay đổi trọng số, cải thiện hành vi hoặc tác vụ chuyên biệt. Không tự bảo đảm kiến thức mới, đúng schema hay trích nguồn.",
+   "Ví dụ: cải thiện giọng văn sau khi đã đo hạn chế của prompt và có dữ liệu phù hợp."
   ],
   "precision": [
    "precision",
    "Trong các trường hợp model báo là dương tính, bao nhiêu phần trăm đúng thật. Precision = TP / (TP + FP).",
-   "Trong những lần chó nghiệp vụ sủa, bao nhiêu lần có hàng cấm thật."
+   "Ví dụ: trong những giao dịch bị gắn cờ gian lận, xác định tỷ lệ thực sự là gian lận."
   ],
   "recall": [
    "recall",
    "Trong các trường hợp dương tính thật, model bắt được bao nhiêu phần trăm. Recall = TP / (TP + FN).",
-   "Trong số túi có hàng cấm, chó nghiệp vụ phát hiện được bao nhiêu túi."
+   "Ví dụ: trong toàn bộ giao dịch gian lận thực tế, xác định tỷ lệ hệ thống phát hiện được."
   ],
   "shared": [
    "shared responsibility model",
-   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật hạ tầng cloud, khách hàng lo bảo mật những gì họ đặt và cấu hình trên cloud.",
-   "Chủ tòa nhà lo cửa chính và thang máy; khóa cửa căn hộ là việc của bạn."
+   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật hạ tầng đám mây, khách hàng lo bảo mật những gì họ đặt và cấu hình trên nền tảng đám mây.",
+   "Ví dụ: nhà cung cấp bảo vệ hạ tầng dịch vụ, còn doanh nghiệp cấu hình quyền và bảo vệ dữ liệu của ứng dụng."
+  ],
+  "structured": [
+   "structured outputs",
+   "Cơ chế ràng buộc đầu ra theo schema mà mô hình hoặc API hỗ trợ. Ứng dụng vẫn cần kiểm tra tính đúng đắn về nghiệp vụ và xử lý các trường hợp từ chối trả lời, đầu ra bị cắt hoặc schema vượt giới hạn hỗ trợ.",
+   "Ví dụ: buộc đủ trường JSON rồi kiểm số tiền với dữ liệu nguồn."
   ]
  },
  "alias": {
@@ -234,6 +240,11 @@ window.CH = {
   "shared": [
    "shared responsibility model",
    "Shared Responsibility Model"
+  ],
+  "structured": [
+   "structured outputs",
+   "schema-constrained output",
+   "constrained output"
   ]
  },
  "rel": {
@@ -256,58 +267,60 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Opportunity Solution Tree giúp tránh điều gì?",
+   "q": "Opportunity Solution Tree nối những gì?",
    "o": [
-    "Viết code sai",
-    "Nhảy thẳng từ mục tiêu tới giải pháp mà bỏ qua cơ hội",
-    "Tốn chi phí cloud",
-    "Lỗi bảo mật"
+    "Các sprint theo người được giao",
+    "Lộ trình pháp lý theo ngày",
+    "Outcome mong muốn, cơ hội, giải pháp và thử nghiệm",
+    "Danh sách model theo giá"
    ],
-   "a": 1,
-   "ex": "Cây buộc đi qua tầng cơ hội trước khi chọn giải pháp."
+   "a": 2,
+   "ex": "Cây giúp tránh nhảy từ mục tiêu thẳng tới giải pháp. Nó không tự chọn giải pháp thay bằng chứng."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 1,
    "type": "one",
    "q": "Reach 1.000, Impact 2, Confidence 50%, Effort 2. RICE bằng bao nhiêu?",
    "o": [
-    "500",
-    "1.000",
     "2.000",
-    "250"
+    "250",
+    "500",
+    "1.000"
    ],
-   "a": 0,
-   "ex": "1.000 × 2 × 0,5 / 2 = 500."
+   "a": 2,
+   "ex": "1.000 × 2 × 0,5 / 2 = 500. Cần giữ cùng kỳ reach và thang effort khi so hạng mục."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "MoSCoW hợp nhất với việc gì?",
+   "q": "MoSCoW phù hợp nhất với quyết định nào?",
    "o": [
-    "Xếp hạng backlog 200 mục",
-    "Chốt phạm vi một bản phát hành với stakeholder",
-    "Tính chi phí token",
-    "Đo retention"
+    "Chốt Must/Should/Could/Won’t cho phạm vi một lần phát hành",
+    "Dự báo SOM theo giá hợp đồng",
+    "Ước tính chi phí mỗi token",
+    "Đo factuality từng câu trả lời"
    ],
-   "a": 1,
-   "ex": "Chia ngăn Must/Should/Could/Won’t giúp chốt phạm vi nhanh."
+   "a": 0,
+   "ex": "MoSCoW phân nhóm phạm vi, không tự xếp hạng chi tiết mọi hạng mục hoặc đo kinh tế/kỹ thuật."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 2,
    "type": "one",
-   "q": "Cần model luôn trả JSON đúng schema nội bộ. Nên nghiêng về?",
+   "q": "Cần dữ liệu mới có trích nguồn và đầu ra JSON đúng schema. Thiết kế nào hợp lý để thử?",
    "o": [
-    "RAG",
-    "Fine-tuning"
+    "Chỉ tăng context mà không retrieval",
+    "Chỉ response cache không có quản lý phiên bản",
+    "Chỉ fine-tuning trên dữ liệu cũ",
+    "RAG với quyền/nguồn tốt, kết hợp structured outputs và validation"
    ],
-   "a": 1,
-   "ex": "Cố định định dạng đầu ra là điểm mạnh của fine-tuning."
+   "a": 3,
+   "ex": "Các nhu cầu không loại trừ nhau: retrieval bổ sung dữ liệu, schema-constrained output xử lý định dạng; vẫn cần eval và kiểm nội dung."
   }
  ]
 };

@@ -25,7 +25,7 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần II / 04</div>
   <h1>Product Design <i>và UX cho sản phẩm AI</i></h1>
-  <p class="dek">Thiết kế cho một hệ thống không lúc nào cũng đúng: kiến trúc thông tin theo xác suất, user flow có fallback, design thinking để lọc bài toán, human-in-the-loop và trust calibration.</p>
+  <p class="dek">Thiết kế quyền kiểm soát, nguồn dễ kiểm tra và luồng phục hồi khi AI sai; dùng tín hiệu đã kiểm định để điều phối, giúp người dùng tin ở mức phù hợp.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 04 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
@@ -33,26 +33,20 @@ input[type=range]{width:100%;accent-color:var(--acc)}
   <div class="idea"><small>Ý chính của chương</small>UX của sản phẩm AI chủ yếu là quản lý sự không chắc chắn: đặt đúng kỳ vọng, cho người dùng sửa và từ chối, và xử lý an toàn lúc AI sai.</div>
   <section id="s1">
     <span class="num">04.1</span>
-    <h2>UX khi đầu ra không cố định</h2>
-    <p class="gist">Phần mềm thường được kiểm thử đúng/sai. Tính năng AI được đo bằng tỷ lệ câu trả lời chấp nhận được trên một tập mẫu.</p>
-<table class="tbl">
-      <tr><th></th><th>Tính năng truyền thống</th><th>Tính năng AI</th></tr>
-      <tr><td>Cách chạy</td><td>Deterministic: chạy theo logic viết sẵn, phản hồi nhất quán</td><td>Probabilistic: dự đoán hoặc sinh nội dung từ dữ liệu, đầu ra có độ biến thiên</td></tr>
-      <tr><td>Hành vi</td><td>Cùng thao tác luôn ra cùng kết quả</td><td>Phản hồi khác nhau theo ngữ cảnh, có thể đổi khi model được cập nhật</td></tr>
-      <tr><td>Kiểm thử</td><td>Pass/fail</td><td>Tỷ lệ câu trả lời đúng hoặc chấp nhận được trên một tập mẫu</td></tr>
-    </table>
-    <p>Khác biệt này ảnh hưởng trực tiếp tới information architecture và interaction design. Information architecture không thể giả định một luồng dữ liệu tuyến tính, mà phải hiển thị kết quả dự đoán theo lớp, kèm tín hiệu về độ tin cậy. Thiết kế tương tác phải cho người dùng đánh giá, sửa, duyệt hoặc từ chối kết quả, thay vì buộc họ chấp nhận nguyên văn những gì máy đưa ra.</p>
-    <div class="take"><small>Ghi nhớ</small>Mỗi đầu ra AI trên màn hình nên đi kèm một cách để người dùng sửa hoặc bỏ nó.</div>
+    <h2>UX khi đầu ra có thể sai</h2>
+    <p class="gist">Thiết kế quyền kiểm soát và cách phục hồi, bên cạnh việc đo chất lượng trên tập mẫu.</p>
+<p>Với trợ lý sinh câu trả lời, một câu có thể đúng một phần, thiếu nguồn hoặc bỏ sót điều kiện. Cần tiêu chí chấm chấm đúng, đủ, hữu ích trên tập mẫu, đồng thời có kiểm thử pass/fail cho schema, quyền truy cập và hành động của công cụ. Các hệ thống không AI cũng cần đo trải nghiệm và tác động sản phẩm.</p>
+    <p>Kiến trúc thông tin giúp người dùng tìm và hiểu nội dung: câu trả lời chính, tài liệu làm căn cứ, phiên bản và ngày cập nhật nên dễ phân biệt. Thiết kế tương tác cho phép sửa, duyệt, từ chối hoặc báo lỗi. Một câu trả lời trôi chảy không phải tín hiệu đủ để người dùng tin nó đúng.</p><div class="take"><small>Ghi nhớ</small>Cho người dùng cách kiểm tra và xử lý kết quả chưa đạt yêu cầu.</div>
   </section>
 
   <section id="s2">
     <span class="num">04.2</span>
     <h2>User flow, wireframe và prototype</h2>
-    <p class="gist">User flow của tính năng AI phải vẽ sẵn nhánh “AI sai” và nhánh “AI không chắc”.</p>
+    <p class="gist">Luồng tương tác cần xác định cách xử lý khi AI trả lời sai hoặc khi hệ thống chưa có đủ căn cứ để trả lời.</p>
 <p>Một user flow cho tính năng AI có ba phần đặc thù:</p>
     <ol>
       <li><b>Điểm nhập và đầu vào.</b> Giao diện thu thập yêu cầu: prompt gợi ý, bộ lọc ngữ cảnh, các trường dữ liệu rõ ràng để model dễ xử lý.</li>
-      <li><b>Nhánh fallback.</b> Khi confidence của model xuống dưới ngưỡng an toàn, hệ thống chuyển sang câu trả lời dự phòng, hỏi thêm thông tin, hoặc chuyển sang xử lý thủ công, thay vì đưa ra thông tin bịa.</li>
+      <li><b>Nhánh fallback.</b> Khi tín hiệu kiểm tra cho thấy câu trả lời chưa đạt yêu cầu, hệ thống chuyển sang câu trả lời dự phòng, hỏi thêm thông tin, hoặc chuyển sang xử lý thủ công, thay vì đưa ra thông tin bịa.</li>
       <li><b>Điểm duyệt cho dữ liệu nhạy cảm.</b> Với giao dịch tài chính, dữ liệu y tế, thông tin cá nhân, đặt một review checkpoint rõ ràng để người kiểm tra trước khi hệ thống hành động.</li>
     </ol>
     <figure>
@@ -62,27 +56,27 @@ input[type=range]{width:100%;accent-color:var(--acc)}
         <div class="lanes" id="cfL"></div>
         <div class="panel" id="cfP"></div>
       </div>
-      <figcaption><b>Hình 1</b>Một luồng có ngưỡng: trên 75% hiển thị kèm nguồn, 50–75% hỏi lại người dùng, dưới 50% chuyển cho người. Các ngưỡng chỉ là ví dụ.</figcaption>
+      <figcaption><b>Hình 1</b>Minh họa điều phối theo một điểm đã được hiệu chỉnh: từ 75% hiển thị kèm nguồn, từ 50% đến dưới 75% hỏi lại, dưới 50% chuyển cho người. Đây không phải điểm tự đánh giá của LLM hay chuẩn áp dụng chung.</figcaption>
     </figure>
     <p>Ở giai đoạn đầu, dựng prototype sớm bằng công cụ no-code hoặc gọi thẳng API của nhà cung cấp model. AI PM và designer tự tay thử, thấy được tính khả thi, phát hiện edge case và giới hạn của model trước khi bỏ nhiều nguồn lực để làm thật.</p>
-    <div class="take"><small>Ghi nhớ</small>Vẽ nhánh lỗi trước nhánh thành công. Nhánh lỗi mới quyết định người dùng có tin sản phẩm không.</div>
+    <div class="take"><small>Ghi nhớ</small>Khi thiết kế luồng tương tác, hãy xác định cả cách xử lý lỗi và cách người dùng quay lại công việc; đây là những yếu tố ảnh hưởng đến niềm tin vào sản phẩm.</div>
   </section>
 
   <section id="s3">
     <span class="num">04.3</span>
     <h2>Design thinking như một bộ lọc</h2>
-    <p class="gist">Dùng design thinking để loại những chỗ AI không tạo thêm giá trị so với quy tắc cố định.</p>
-<p>Trong sản phẩm AI, design thinking giúp chặn việc gắn AI tràn lan. Có hai bộ lọc. Thứ nhất, phân biệt bài toán thật sự cần machine learning hay sinh nội dung với bài toán chỉ cần rule-based: nếu IF-THEN giải được với chi phí thấp và đúng 100%, AI là thừa. Thứ hai, thấu cảm bằng dữ liệu thật: đọc support ticket, phỏng vấn sâu để tìm tác vụ lặp lại. Báo cáo nguồn lấy ví dụ đặt lại mật khẩu hay tải hóa đơn: phổ biến, lặp lại nhiều, hợp để tự động hóa bằng AI.</p>
+    <p class="gist">Dùng design thinking để xác định khi nào AI tạo thêm giá trị và khi nào quy tắc cố định đã đáp ứng nhu cầu.</p>
+<p>Trong sản phẩm AI, design thinking giúp chặn việc gắn AI tràn lan. Có hai bộ lọc. Thứ nhất, phân biệt bài toán thật sự cần machine learning hay sinh nội dung với bài toán chỉ cần rule-based: nếu quy tắc đã đạt yêu cầu với chi phí và rủi ro thấp hơn, ưu tiên quy tắc. Thứ hai, thấu cảm bằng dữ liệu thực tế: đọc support ticket, phỏng vấn sâu để tìm tác vụ lặp lại. Đặt lại mật khẩu hay tải hóa đơn có thể tự động hóa bằng quy tắc/API sau khi xác thực và kiểm tra quyền. AI có thể giúp hiểu yêu cầu tự nhiên; không thay thế bước phân quyền hoặc quy tắc thực thi.</p>
   </section>
 
   <section id="s4">
     <span class="num">04.4</span>
     <h2>Human-in-the-loop và trust calibration</h2>
-    <p class="gist">Thiết kế để người dùng tin AI vừa đủ: không quá tin mà chủ quan, không quá nghi mà bỏ dùng.</p>
-<p>Trust calibration là căn chỉnh niềm tin. Quá tin, người dùng bỏ qua lỗi; quá nghi, họ thôi dùng. Hai công cụ chính:</p>
+    <p class="gist">Giúp người dùng hiểu đúng năng lực và giới hạn của AI để biết khi nào nên sử dụng kết quả và khi nào cần kiểm tra thêm.</p>
+<p>Trust calibration là căn chỉnh niềm tin. Nếu tin tưởng quá mức, người dùng có thể bỏ qua lỗi; nếu quá hoài nghi, họ có thể ngừng sử dụng dù công cụ vẫn hữu ích. Hai công cụ chính:</p>
     <p><b>Human-in-the-loop.</b> Với kịch bản rủi ro cao hoặc dữ liệu nhạy cảm, không trao toàn quyền tự động cho AI. Ví dụ với yêu cầu hoàn tiền hay phê duyệt truy cập dữ liệu cá nhân, AI phân tích, tổng hợp và đề xuất; quyết định cuối cùng là của người.</p>
-    <p><b>Minh bạch và cảnh báo.</b> Nói rõ người dùng đang làm việc với AI. Với phản hồi mang tính dự đoán, hiển thị mức confidence hoặc nhắc người dùng kiểm tra lại thông tin quan trọng trước khi dùng. Bộ People + AI Guidebook của Google PAIR có thêm nhiều mẫu thiết kế cho phần này.</p>
-    <div class="take"><small>Ghi nhớ</small>AI đề xuất, người quyết định, ở mọi chỗ mà một lần sai là quá đắt.</div>
+    <p><b>Minh bạch và cảnh báo.</b> Nói rõ người dùng đang làm việc với AI. Chỉ hiển thị confidence như xác suất đúng nếu điểm đó đã được hiệu chỉnh và kiểm tra trên dữ liệu có nhãn. LLM tự nói “chắc 90%” hay điểm tương đồng retrieval không tự mang ý nghĩa đó. Nếu chưa có điểm đáng tin, hiển thị nguồn, giới hạn và bước kiểm tra tiếp theo thay vì một tỷ lệ phần trăm. Bộ People + AI Guidebook của Google PAIR có thêm nhiều mẫu thiết kế cho phần này.</p>
+    <div class="take"><small>Ghi nhớ</small>Với quyết định có hậu quả nghiêm trọng khi sai, cần xác định rõ phần AI được đề xuất và bước con người phải phê duyệt.</div>
   </section>
 
   <div class="vids" data-videos="04"></div>
@@ -94,9 +88,9 @@ input[type=range]{width:100%;accent-color:var(--acc)}
 <script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
-const LANE = [['≥ 75%', 'Hiển thị câu trả lời', 'Kèm trích nguồn để người dùng tự kiểm.'], ['50–75%', 'Hỏi lại người dùng', 'Đề nghị làm rõ câu hỏi hoặc chọn một trong vài cách hiểu.'], ['< 50%', 'Chuyển cho người', 'Tóm tắt ngữ cảnh, handoff cho nhân viên, không đoán.']];
+const LANE = [['≥ 75%', 'Hiển thị câu trả lời', 'Kèm trích nguồn để người dùng tự kiểm.'], ['50–<75%', 'Hỏi lại người dùng', 'Đề nghị làm rõ câu hỏi hoặc chọn một trong vài cách hiểu.'], ['< 50%', 'Chuyển cho người', 'Tóm tắt ngữ cảnh, handoff cho nhân viên, không đoán.']];
 cfL.innerHTML = LANE.map(l => `<div><b>${l[0]}</b>${l[1]}</div>`).join('');
-function cfu() {const v = +cf.value, k = v >= 75 ? 0 : v >= 50 ? 1 : 2; cfV.textContent = 'confidence ' + v + '%';
+function cfu() {const v = +cf.value, k = v >= 75 ? 0 : v >= 50 ? 1 : 2; cfV.textContent = 'điểm minh họa đã hiệu chỉnh: ' + v + '%';
  [...cfL.children].forEach((d, i) => d.classList.toggle('on', i === k)); cfP.innerHTML = `<h5>${LANE[k][1]}</h5>${LANE[k][2]}`}
 cf.oninput = cfu; cfu();
 
@@ -113,11 +107,11 @@ window.CH = {
   {
    "id": "s1",
    "n": "04.1",
-   "t": "UX khi đầu ra không cố định",
+   "t": "UX khi đầu ra có thể sai",
    "sum": [
-    "Tính năng AI đo bằng tỷ lệ chấp nhận được, không phải pass/fail.",
-    "Hiển thị kết quả kèm tín hiệu độ tin cậy.",
-    "Cho người dùng đánh giá, sửa, duyệt, từ chối."
+    "Đánh giá chất lượng trên tập mẫu cùng kiểm thử các ràng buộc phần mềm.",
+    "Phân biệt câu trả lời, nguồn và phiên bản tài liệu.",
+    "Cho phép sửa, từ chối và báo lỗi."
    ],
    "terms": [
     "deterministic",
@@ -129,9 +123,9 @@ window.CH = {
    "n": "04.2",
    "t": "User flow, wireframe và prototype",
    "sum": [
-    "Ba phần đặc thù: đầu vào, fallback, điểm duyệt.",
-    "Dưới ngưỡng confidence thì hỏi thêm hoặc chuyển cho người.",
-    "Prototype sớm bằng no-code hoặc API để tìm edge case."
+    "Vẽ đầu vào, nhánh lỗi và đường duyệt/chuyển ca.",
+    "Điều phối theo kiểm tra hoặc điểm đã kiểm định, không dùng confidence tự khai.",
+    "Prototype giúp học luồng, chưa chứng minh production readiness."
    ],
    "terms": [
     "fallback",
@@ -147,7 +141,7 @@ window.CH = {
    "t": "Design thinking như một bộ lọc",
    "sum": [
     "Lọc 1: cần AI hay quy tắc là đủ.",
-    "Lọc 2: dữ liệu thật từ ticket và phỏng vấn.",
+    "Lọc 2: dữ liệu thực tế từ ticket và phỏng vấn.",
     "Tác vụ lặp lại, rủi ro thấp là ứng viên tốt."
    ],
    "terms": []
@@ -157,9 +151,9 @@ window.CH = {
    "n": "04.4",
    "t": "Human-in-the-loop và trust calibration",
    "sum": [
-    "Trust calibration: tin vừa đủ.",
-    "Human-in-the-loop cho quyết định rủi ro cao.",
-    "Nói rõ là AI, hiển thị confidence, nhắc kiểm tra lại."
+    "Trust calibration là niềm tin phù hợp năng lực và giới hạn.",
+    "Người có thẩm quyền duyệt hành động vượt phạm vi tự động.",
+    "Cho kiểm tra nguồn; chỉ hiển thị xác suất khi có ý nghĩa đã kiểm định."
    ],
    "terms": [
     "trust",
@@ -171,48 +165,48 @@ window.CH = {
  "terms": {
   "deterministic": [
    "deterministic",
-   "Hệ thống chạy theo quy tắc cố định: cùng một đầu vào luôn cho cùng một đầu ra.",
-   "Máy bán nước: bấm nút số 3 lần nào cũng ra đúng lon số 3."
+   "Với cùng đầu vào, trạng thái và cấu hình liên quan, một phép tính xác định cho cùng kết quả. Mô hình ML cũng có thể được chạy theo cách này.",
+   "Ví dụ: tính số tiền theo công thức đã kiểm thử."
   ],
   "probabilistic": [
    "probabilistic",
-   "Hệ thống đưa ra dự đoán hoặc sinh nội dung theo xác suất; cùng một đầu vào có thể cho những đầu ra khác nhau.",
-   "Hỏi một người bạn cùng một câu hai lần, ý giống nhau nhưng câu chữ mỗi lần một khác."
+   "Mô hình hóa bằng xác suất; ở tác vụ sinh nội dung có lấy mẫu, cùng prompt có thể cho câu trả lời khác nhau. Không có nghĩa mọi mô hình AI đều ngẫu nhiên khi chạy.",
+   "Ví dụ: lấy mẫu token có thể tạo hai cách diễn đạt khác nhau."
   ],
   "fallback": [
    "fallback",
    "Phương án dự phòng khi AI không chắc hoặc lỗi: hỏi thêm, trả lời theo quy tắc, chuyển cho người.",
-   "Kế hoạch B khi kế hoạch A trục trặc."
+   "Ví dụ: khi không tìm được nguồn phù hợp, trợ lý hỏi thêm thông tin hoặc chuyển yêu cầu cho nhân viên."
   ],
   "confidence": [
    "confidence score",
-   "Mức tự tin model gán cho một dự đoán; dùng để quyết định hiển thị, hỏi thêm hay chuyển cho người.",
-   "Câu “chắc 90%” của một người bạn."
+   "Điểm thể hiện mức chắc chắn theo một phương pháp cụ thể; chỉ hiểu như xác suất đúng khi đã được hiệu chỉnh và kiểm tra. Điểm LLM tự khai không đủ làm căn cứ.",
+   "Ví dụ: kiểm trên dữ liệu có nhãn xem nhóm điểm 0,8 có đúng khoảng 80% hay không."
   ],
   "prototype": [
    "prototype",
    "Bản dựng nhanh để thử luồng trải nghiệm và giả định, thường bằng no-code hoặc gọi API trực tiếp.",
-   "Mô hình giấy của căn nhà."
+   "Ví dụ: dựng giao diện tra cứu để kiểm tra người dùng có hiểu câu trả lời, nguồn và cách báo lỗi hay không."
   ],
   "edge": [
    "edge case",
-   "Tình huống hiếm, nằm ở rìa của đầu vào, dễ làm hệ thống hỏng.",
-   "Khách gọi món không có trong thực đơn."
+   "Tình huống khác với các trường hợp thông thường, có thể làm lộ hạn chế hoặc gây lỗi cho hệ thống; thường cần được kiểm tra riêng.",
+   "Ví dụ: câu hỏi không đủ thông tin hoặc tài liệu chứa hai phiên bản quy trình mâu thuẫn."
   ],
   "halluc": [
    "hallucination",
-   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
-   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+   "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+   "Ví dụ: tự thêm một điều khoản không có trong nguồn."
   ],
   "trust": [
    "trust calibration",
-   "Thiết kế để người dùng tin AI đúng mức: không tin mù quáng, cũng không bỏ hẳn.",
-   "Biết khi nào nên nghe GPS, khi nào nên nhìn biển báo."
+   "Thiết kế trải nghiệm giúp người dùng hiểu đúng năng lực và giới hạn của AI, từ đó biết khi nào nên sử dụng kết quả và khi nào cần kiểm tra thêm.",
+   "Ví dụ: giúp nhân viên biết khi nào có thể dùng câu trả lời và khi nào cần đối chiếu nguồn hoặc hỏi người có trách nhiệm."
   ],
   "hitl": [
    "human-in-the-loop",
    "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
-   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+   "Ví dụ: hệ thống soạn đề xuất, người có thẩm quyền xem và duyệt trước khi thực thi."
   ]
  },
  "alias": {
@@ -270,88 +264,88 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "one",
-   "q": "Chất lượng tính năng AI được đo thế nào?",
+   "q": "Bộ kiểm tra nào phù hợp với trợ lý tra quy trình?",
    "o": [
-    "Pass/fail như phần mềm thường",
-    "Tỷ lệ câu trả lời đúng hoặc chấp nhận được trên một tập mẫu",
-    "Số dòng code",
-    "Số lần demo thành công"
+    "Chỉ xem CSAT của người đã dùng thành công",
+    "Chỉ exact match toàn bộ câu trả lời",
+    "Chỉ chấm mức trôi chảy của model",
+    "Rubric tính đúng đắn và đầy đủ trên mẫu cùng test schema, quyền và công cụ"
    ],
-   "a": 1,
-   "ex": "Vì đầu ra biến thiên, cần đo theo tỷ lệ trên tập mẫu."
+   "a": 3,
+   "ex": "Chất lượng mở cần tiêu chí chấm; quyền và schema vẫn có kiểm thử pass/fail. CSAT hoặc độ trôi chảy không thay tính đúng."
   },
   {
-   "id": "my2",
+   "id": "my2-v2",
    "s": 0,
    "type": "one",
-   "q": "Interaction design cho nội dung AI sinh ra nên làm gì?",
+   "q": "UI hiển thị câu trả lời kèm nguồn. Quyền kiểm soát nào nên bổ sung?",
    "o": [
-    "Buộc người dùng chấp nhận nguyên văn",
-    "Cho người dùng đánh giá, sửa, duyệt hoặc từ chối",
-    "Ẩn hoàn toàn việc có AI",
-    "Chỉ hiển thị khi đúng 100%"
+    "Coi bấm mở nguồn là xác nhận câu đúng",
+    "Cho sửa, từ chối hoặc báo lỗi kết quả",
+    "Chỉ cho sao chép toàn bộ câu",
+    "Ẩn nguồn khi mô hình tự tin cao"
    ],
    "a": 1,
-   "ex": "Người dùng cần quyền kiểm soát đầu ra của máy."
+   "ex": "Người dùng cần kiểm soát kết quả. Nguồn không bảo đảm kết luận đúng và hành vi mở nguồn chưa phải nhãn chuẩn."
   },
   {
-   "id": "my3",
+   "id": "my3-v2",
    "s": 1,
    "type": "one",
-   "q": "Khi confidence xuống dưới ngưỡng an toàn, hệ thống nên làm gì?",
+   "q": "Model tự ghi “tôi chắc 90%”. Cách sử dụng điểm này hợp lý nhất là gì?",
    "o": [
-    "Vẫn trả lời cho nhanh",
-    "Trả lời dự phòng, hỏi thêm, hoặc chuyển sang xử lý thủ công",
-    "Tắt tính năng",
-    "Tăng temperature"
+    "Dùng làm nhãn cho bộ đánh giá",
+    "Không coi là xác suất; kiểm định cơ chế điểm hoặc dùng kiểm tra khác",
+    "Tự động duyệt vì vượt ngưỡng 75%",
+    "Hiển thị như xác suất đúng"
    ],
    "a": 1,
-   "ex": "Đây là nhánh fallback, tránh đưa thông tin bịa."
+   "ex": "Điểm tự khai chưa được hiệu chỉnh. Cần đánh giá trên dữ liệu có nhãn và kiểm tra nguồn/ràng buộc; không dùng điểm làm đáp án chuẩn."
   },
   {
-   "id": "my4",
+   "id": "my4-v2",
    "s": 1,
    "type": "one",
-   "q": "Vì sao nên dựng prototype sớm bằng no-code hoặc API?",
+   "q": "Prototype sớm giúp trả lời câu hỏi nào tốt nhất?",
    "o": [
-    "Để khỏi phải viết code production",
-    "Để thấy tính khả thi, edge case và giới hạn model trước khi đầu tư lớn",
-    "Để thay thế user research",
-    "Để demo cho nhà đầu tư"
+    "Mọi điều kiện production đã đạt chưa?",
+    "Người dùng hiểu luồng, tìm nguồn và phục hồi khi sai thế nào?",
+    "Doanh thu năm sau là bao nhiêu?",
+    "Model không thể mắc loại lỗi mới nào?"
    ],
    "a": 1,
-   "ex": "Prototype sớm giảm rủi ro trước khi bỏ nguồn lực làm thật."
+   "ex": "Prototype giúp học về luồng và giả định trải nghiệm. Nó không chứng minh chịu tải, lợi nhuận hay không còn lỗi mới."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
    "q": "Trust calibration nhắm tới điều gì?",
    "o": [
-    "Người dùng tin AI tuyệt đối",
-    "Người dùng tin AI đúng mức, không chủ quan cũng không bỏ dùng",
-    "Giấu lỗi của AI",
-    "Luôn hiển thị cảnh báo đỏ"
+    "Người dùng tin và kiểm tra phù hợp với năng lực/giới hạn thực tế",
+    "Tăng tỷ lệ chấp nhận mọi đề xuất",
+    "Hiển thị thật nhiều cảnh báo để tránh trách nhiệm",
+    "Luôn hiển thị một số confidence cho dễ so"
    ],
-   "a": 1,
-   "ex": "Quá tin thì bỏ qua lỗi, quá nghi thì thôi dùng."
+   "a": 0,
+   "ex": "Niềm tin cần phù hợp thực tế. Chấp nhận mọi đề xuất, cảnh báo dày hoặc số phần trăm chưa kiểm định có thể làm lệch niềm tin."
   },
   {
-   "id": "my6",
+   "id": "my6-v2",
    "s": 3,
    "type": "one",
-   "q": "Với yêu cầu hoàn tiền, vai trò hợp lý của AI là gì?",
+   "q": "Một yêu cầu hoàn tiền vượt hạn mức mà AI được phép tự xử lý. Thiết kế nào phù hợp?",
    "o": [
-    "Tự quyết và chuyển tiền",
-    "Phân tích, tổng hợp, đề xuất; người duyệt cuối",
-    "Không được tham gia",
-    "Chỉ gửi email xin lỗi"
+    "Để mô hình tự quyết nếu nguồn có vẻ rõ",
+    "AI tổng hợp, người có thẩm quyền duyệt; ứng dụng kiểm tra quyền truy cập trước thực thi",
+    "Chỉ tăng temperature để suy luận thêm",
+    "Chuyển sang mô hình lớn rồi bỏ bước duyệt"
    ],
    "a": 1,
-   "ex": "Rủi ro cao thì dùng human-in-the-loop."
+   "ex": "Ranh giới hành động đến từ chính sách và quyền, không từ độ lớn model hay cảm giác chắc chắn. Khoản khác có thể được xử lý theo quy tắc riêng."
   }
  ]
 };

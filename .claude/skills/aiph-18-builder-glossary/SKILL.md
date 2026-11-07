@@ -1,56 +1,35 @@
 ---
 name: aiph-18-builder-glossary
-description: Học và luyện tập Chương 18 của AI Product Handbook — AI Product Builder và Forward Deployed Engineer (hai vai trò, vòng sáu bước customer discovery → solution validation → prototyping → production readiness → system integration → outcome measurement). Dùng khi người dùng muốn học, ôn, luyện flashcard, làm quiz chương 18, hoặc gõ /aiph-18-builder-glossary.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 18 của AI Product Handbook — AI Product Builder và Forward Deployed Engineer. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-18-builder-glossary.
 ---
 
 # Chương 18 · AI Product Builder và Forward Deployed Engineer
 
-Nguồn gốc: `content/ai-product-handbook/18.html` (đọc bảng thuật ngữ, danh sách vòng sáu bước và hộp "Ghi nhớ"; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, object `terms` chứa định nghĩa kèm ví dụ đời thường). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách".
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/18.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Hai vai trò đang được nhắc nhiều, và sáu thuật ngữ mô tả cách họ làm việc: từ customer discovery tới outcome measurement.
 
-- Phân biệt AI Product Builder với Forward Deployed Engineer: làm ở đâu, bắt đầu từ đâu, mang gì về cho đội.
-- Kể lại đúng thứ tự sáu bước của vòng làm việc và nêu đầu ra của từng bước.
-- Tự đánh giá mình mạnh, yếu ở bước nào và chọn bước cần tập.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **18.1 · Hai vai trò:** Builder: từ vấn đề tới sản phẩm chạy được. FDE: tích hợp sản phẩm vào hệ thống khách hàng. Cả hai cần kỹ năng kỹ sư và tư duy sản phẩm.
+- **18.2 · Sáu thuật ngữ trong vòng làm việc:** Discovery, validation và prototyping kiểm các giả định. Readiness, integration và outcome measurement cần bằng chứng thực tế. Tự đánh giá kỹ năng, không suy năng lực chỉ từ chức danh.
 
-1. **Chung** Builder và FDE gần với người đã quen viết phần mềm nhất: họ code, nhưng thước đo là vấn đề của khách hàng có được giải không.
-2. **18.1** Builder làm từ con số 0: tự tìm vấn đề, dựng prototype, đưa người dùng thử, đo kết quả. FDE làm ở phía khách hàng: hiểu quy trình và dữ liệu, tích hợp, tùy biến, rồi mang bài học về.
-3. **18.2** Vòng sáu bước lặp lại: outcome measurement chỉ ra chỗ cần discovery tiếp.
-4. **18.2** Người xuất thân Software Engineer đã giỏi bước 4 và 5. Đầu tư vào bước 1, 2 và 6.
+## Cách hướng dẫn
 
-## Nhóm thuật ngữ
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-| Nhóm | Thuật ngữ |
-|---|---|
-| 18.1 Hai vai trò | AI Product Builder ("thợ cả vừa vẽ bản vẽ vừa dựng nhà mẫu"), Forward Deployed Engineer ("kỹ sư công trường") |
-| 18.2 Vòng làm việc | 1 Customer discovery, 2 Solution validation, 3 Prototyping, 4 Production readiness, 5 System integration, 6 Outcome measurement |
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-Thuật ngữ phụ trong `terms`: prototype ("mô hình giấy của căn nhà"), latency ("thời gian chờ món sau khi gọi").
+## Bài luyện
 
-## Cách chạy skill
+Chọn một dự án nhỏ cho Builder hoặc FDE; tự đánh giá sáu năng lực của chương.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, giữ nguyên thuật ngữ tiếng Anh, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+**Tiêu chí đạt:** Có công việc khách hàng, hệ thống thực tế và outcome; không suy mọi kỹ sư đã giỏi production readiness.
 
-### Học
-Mở đầu bằng hai vai trò: định nghĩa, ví dụ đời thường trong `terms`, rồi yêu cầu người học **giải thích lại bằng lời của mình** khác biệt giữa hai vai trò. Sau đó đi qua sáu bước theo thứ tự, mỗi lượt 2 bước: định nghĩa, ví dụ một việc cụ thể ở bước đó (ví dụ bước 2: thử prompt trên 20 hồ sơ thật xem có trích đúng không), và hỏi người học đầu ra của bước là gì, bước sau dùng nó thế nào. Kết thúc phần Học bằng câu hỏi tự đánh giá: "Bạn mạnh nhất ở bước nào, yếu nhất ở bước nào, vì sao?" và đối chiếu với Ghi nhớ.
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-### Luyện
-Chạy một phiên flashcard 8–12 thẻ (chương ít thuật ngữ nên lặp nhiều dạng), trộn bốn dạng:
+## Kết thúc
 
-| Dạng | Cách hỏi | Đạt khi |
-|---|---|---|
-| Định nghĩa → thuật ngữ | Mô tả một bước hoặc vai trò, người học gọi tên. | Đúng tên. |
-| Thuật ngữ → định nghĩa | Đưa tên, người học nêu nghĩa và số thứ tự trong vòng. | Đúng ý và đúng vị trí. |
-| Xếp bước | Đưa một hoạt động thật (đo latency dưới tải, phỏng vấn 5 kế toán, đo số giờ tiết kiệm sau 1 tháng, nối API vào ERP của khách…), người học xếp vào bước nào. | Đúng bước, giải thích được vì sao không phải bước kề bên. |
-| Dùng trong câu | Đưa tình huống (viết bản tự giới thiệu khi ứng tuyển FDE, báo cáo cho sếp sau pilot), người học viết một câu dùng thuật ngữ đúng. | Đúng nghĩa và ngữ cảnh; không nhầm solution validation với production readiness. |
-
-Lặp lại có giãn cách trong buổi: ghi thẻ sai vào danh sách "ôn lại", hỏi lại sau 2–3 thẻ khác, đổi dạng hỏi; thẻ chỉ ra khỏi danh sách khi đúng 2 lần liên tiếp. Cuối phiên báo số thẻ đúng lần đầu và các thẻ còn lại.
-
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `18.html` (trường `q`, `o`, `a`, `ex`), hỏi từng câu, xáo thứ tự đáp án. Sau đó thêm 2 câu tình huống tự soạn, ví dụ: "Một kỹ sư ngồi tại văn phòng ngân hàng khách hàng ba tháng để nối trợ lý AI vào core banking và gửi về đội sản phẩm danh sách yêu cầu lặp lại — đó là vai trò nào, đang ở bước nào?" và "Bản prototype chạy tốt với 10 người nhưng chưa ai đo đội khách hàng tiết kiệm được bao nhiêu giờ — vòng đang thiếu bước nào, hậu quả là gì?". Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục).
-
-## Kết thúc buổi
-
-Tóm tắt 3 điều người học đã nắm, bước yếu nhất của họ, và gợi ý chương tiếp theo: `/aiph-19-frameworks` (Framework và bảng tra quyết định). Để tập các bước yếu: bước 1–2 → `/aiph-02-problem-discovery`, bước 3 → `/aiph-04-product-design`, bước 4–5 → `/aiph-08-system-architecture`, bước 6 → `/aiph-10-product-analytics`.
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 19 · Product Frameworks & Decision-Making Cheat Sheet.

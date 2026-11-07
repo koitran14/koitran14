@@ -25,68 +25,67 @@
 <article>
   <div class="crumb"><a href="/blog/ai-product-handbook"><b>Learning</b> / AI Product Handbook</a> / Phần V / 13</div>
   <h1>Rủi ro <i>và quản trị sản phẩm AI</i></h1>
-  <p class="dek">Các loại rủi ro mới của AI, lộ trình EU AI Act theo báo cáo nguồn, shared responsibility model trên AWS, và các lớp bảo vệ dữ liệu: PII redaction, Macie, PrivateLink, mã hóa, IAM, Bedrock Guardrails.</p>
+  <p class="dek">Quản lý rủi ro, phân loại nghĩa vụ EU AI Act theo mục đích sử dụng, hiểu trách nhiệm cloud và kết hợp kiểm tra quyền truy cập, dữ liệu, công cụ, giám sát.</p>
   <div class="metarow"><div class="meta"><span>Trần Ngọc Đăng Khôi</span><span>Chương 13 / 21</span><span>6 phút đọc</span></div>
     <div class="tools"><button data-tool="kw"></button></div></div>
   <details class="toc-inline"><summary>Mục lục chương</summary><ul class="toc-list" data-toc></ul></details>
 
-  <div class="idea"><small>Ý chính của chương</small>Governance giống hệ thống phanh tốt: có phanh mới dám chạy nhanh mà không lao xuống vực.</div>
+  <div class="idea"><small>Ý chính của chương</small>Quản trị AI là xác định trách nhiệm, bằng chứng, giới hạn và cách xử lý sự cố trong toàn bộ vòng đời sản phẩm.</div>
   <section id="s1">
     <span class="num">13.1</span>
     <h2>Các loại rủi ro mới</h2>
-    <p class="gist">Hallucination, bias, lộ PII và vi phạm khung pháp lý: những rủi ro phần mềm thường ít gặp.</p>
+    <p class="gist">Hallucination, bias, lộ PII và vi phạm khung pháp lý: các rủi ro cần xét theo tác động cụ thể, không phải tất cả đều mới xuất hiện cùng AI.</p>
 <p>AI PM phải bảo vệ doanh nghiệp trước một nhóm rủi ro mới: model bịa thông tin (hallucination), thiên lệch thuật toán (bias), rò rỉ dữ liệu cá nhân (PII leakage), và vi phạm các khung pháp lý đang siết chặt trên toàn cầu. Mỗi rủi ro cần một người phụ trách, một cách đo, và một biện pháp giảm thiểu được ghi vào roadmap, không để tới lúc audit mới làm.</p>
   </section>
 
   <section id="s2">
     <span class="num">13.2</span>
-    <h2>Lộ trình EU AI Act</h2>
-    <p class="gist">Có hiệu lực từ 01/08/2024, áp dụng dần theo mức rủi ro.</p>
-<figure>
+    <h2>Lộ trình và phạm vi EU AI Act</h2>
+    <p class="gist">Các nhóm hệ thống và nghĩa vụ khác nhau có thể có thời điểm áp dụng khác nhau.</p>
+<p><b>EU AI Act.</b> Theo nguồn chính thức được đối chiếu ngày 07/11/2026: đạo luật có hiệu lực 01/08/2024; sau sửa đổi AI Omnibus có hiệu lực 27/07/2026, nghĩa vụ cho hệ thống rủi ro cao theo Điều 6(2)/Annex III áp dụng từ 02/12/2027, còn Điều 6(1)/Annex I từ 02/08/2028. Các nghĩa vụ khác có lịch riêng; minh bạch tương tác theo Điều 50 nhìn chung áp dụng từ 02/08/2026. Xác định nghĩa vụ theo mục đích sử dụng, vai trò và phạm vi áp dụng, không chỉ tên ngành.</p><figure>
       <div class="fig"><div id="tl"></div></div>
-      <figcaption><b>Hình 1</b>Các mốc theo báo cáo nguồn. Đi qua từng mốc để xem chi tiết.</figcaption>
-    </figure>
-    <p>Báo cáo nguồn nhắc tới một khung bổ trợ gọi là “AI Omnibus” (có hiệu lực từ tháng 07/2026) làm thay đổi lộ trình tuân thủ cho hệ thống rủi ro cao. Phần này chưa được đối chiếu với văn bản chính thức; hãy kiểm tra trên EUR-Lex trước khi dùng cho kế hoạch thật. Với hệ thống rủi ro cao, các yêu cầu được nhắc tới gồm hồ sơ kiểm toán dữ liệu, minh bạch thuật toán và cơ chế giám sát của con người.</p>
-    <div class="take"><small>Ghi nhớ</small>Phân loại mức rủi ro theo EU AI Act ngay từ lúc thẩm định cơ hội, nếu sản phẩm có thể có người dùng ở châu Âu.</div>
+      <figcaption><b>Hình 1</b>Các mốc được đối chiếu nguồn EU ngày 07/11/2026. Chọn mốc để xem nhóm nghĩa vụ liên quan.</figcaption>
+    </figure><p>“Dùng trong bảo hiểm” chưa đủ để xếp hệ thống vào high-risk. Ví dụ đánh giá rủi ro và định giá bảo hiểm sức khỏe/nhân thọ cho cá nhân có thể thuộc Annex III; trợ lý trả lời thủ tục thông thường cần được xét theo mục đích cụ thể. Yêu cầu minh bạch khi tương tác AI có thể áp dụng dù hệ thống không thuộc high-risk.</p>
+    <p>Đội sản phẩm cần ghi intended use, những người chịu ảnh hưởng, thị trường sử dụng, vai trò provider/deployer và điều khoản được đối chiếu. Nhờ người phụ trách pháp lý kiểm tra cách phân loại và các nghĩa vụ tương ứng trước khi dựa vào mốc để lập kế hoạch.</p>
   </section>
 
   <section id="s3">
     <span class="num">13.3</span>
     <h2>Shared responsibility model</h2>
-    <p class="gist">AWS lo bảo mật hạ tầng cloud; khách hàng lo bảo mật những gì họ đặt và cấu hình trên cloud.</p>
+    <p class="gist">AWS chịu trách nhiệm bảo mật hạ tầng đám mây; khách hàng chịu trách nhiệm bảo vệ dữ liệu, ứng dụng và các cấu hình thuộc phạm vi quản lý của mình.</p>
 <div class="srm">
       <div><b>Khách hàng · Security IN the cloud</b><ul><li>Dữ liệu khách hàng và PII redaction</li><li>Quản lý truy cập IAM, cấu hình model</li><li>Tường lửa, mã hóa (KMS), Bedrock Guardrails</li></ul></div>
       <div><b>AWS · Security OF the cloud</b><ul><li>Hạ tầng điện toán, GPU/TPU vật lý</li><li>Bảo mật trung tâm dữ liệu, lớp ảo hóa (hypervisor)</li><li>An toàn của các dịch vụ managed (Bedrock, SageMaker)</li></ul></div>
     </div>
-    <p>Ranh giới này có trên mọi cloud lớn, chỉ khác tên dịch vụ. Hiểu sai ranh giới là nguồn gốc của nhiều sự cố: dữ liệu bị lộ không phải vì cloud yếu, mà vì bucket cấu hình sai hoặc guardrails chưa bật.</p>
+    <p>Ranh giới này có trên mọi cloud lớn, chỉ khác tên dịch vụ. Hiểu sai ranh giới là nguồn gốc của nhiều sự cố: cấu hình bucket, quyền truy cập và chính sách lưu dữ liệu đều có thể gây lộ thông tin; guardrails không thay thế các kiểm soát đó.</p>
   </section>
 
   <section id="s4">
     <span class="num">13.4</span>
     <h2>Các lớp bảo vệ dữ liệu</h2>
-    <p class="gist">Gắn thẳng vào kiến trúc, không để thành tài liệu chính sách nằm trong ngăn kéo.</p>
+    <p class="gist">Chuyển các chính sách bảo vệ dữ liệu thành những biện pháp được thực hiện trong kiến trúc và quy trình vận hành.</p>
 <ul class="chk-plain">
       <li><b>PII redaction</b>: tự phát hiện và che CCCD, số thẻ, email, số điện thoại trước khi dữ liệu vào tập huấn luyện hay kho vector.</li>
-      <li><b>Amazon Macie</b>: dùng machine learning quét S3 bucket để phát hiện PII hoặc dữ liệu nhạy cảm bị lộ.</li>
+      <li><b>Amazon Macie</b>: phát hiện dữ liệu nhạy cảm trong S3 theo các identifier hỗ trợ hoặc tùy chỉnh. Kết quả phát hiện không tự là bước che dữ liệu trong một pipeline đồng bộ; phải thiết kế quy trình xử lý và kiểm tra riêng.</li>
       <li><b>AWS PrivateLink</b>: truy vấn giữa ứng dụng và dịch vụ AI (như Bedrock) đi trong mạng nội bộ AWS, không qua internet công cộng.</li>
       <li><b>Mã hóa và phân quyền</b>: mã hóa dữ liệu lúc lưu (AWS KMS) và lúc truyền (TLS 1.3), phân quyền tối thiểu qua AWS IAM.</li>
-      <li><b>Bedrock Guardrails</b>: lớp rào chắn ngay trên model, phát hiện hallucination, chặn prompt injection, lọc nội dung độc hại và thiên lệch.</li>
+      <li><b>Bedrock Guardrails</b>: các bộ kiểm tra/lọc theo chính sách đã cấu hình, có giới hạn và có thể sai. Kết hợp kiểm tra quyền truy cập, kiểm tra tham số công cụ, kiểm định nguồn và quy trình xử lý sự cố; không hứa chặn mọi hallucination, injection hay bias.</li>
     </ul>
   </section>
 
   <div class="vids" data-videos="13"></div>
   <a class="next-ch" href="/blog/ai-product-handbook/14"><span><small>Chương tiếp theo</small><b>14 · Stakeholder Management & Communication</b></span><span>→</span></a>
 
-  <div class="end"><p>Các mốc sau 01/08/2024 và phần “AI Omnibus” lấy theo báo cáo nguồn, chưa đối chiếu văn bản chính thức. Đây là thông tin chung, không phải tư vấn pháp lý.</p></div>
+  <div class="end"><p>Mốc pháp lý đã đối chiếu nguồn EU ngày 07/11/2026. Trách nhiệm bảo mật và nghĩa vụ cụ thể phụ thuộc dịch vụ, vai trò và mục đích sử dụng; xem các nguồn trực tiếp cuối chương.</p></div>
 </article>
 
 <script src="figs.js"></script>
 <script>
 // ---- chapter figures ----
-const TL = [['01/08/2024', 'Có hiệu lực', 'EU AI Act (Regulation (EU) 2024/1689) chính thức có hiệu lực, quản lý theo mức rủi ro.'],
- ['02/08/2026', 'Thực thi xử phạt', 'Theo báo cáo nguồn, Văn phòng AI (AI Office) và cơ quan quốc gia bắt đầu thực thi quyền xử phạt tài chính.'],
- ['02/12/2027', 'Hệ thống rủi ro cao', 'Theo báo cáo nguồn, áp dụng đầy đủ nghĩa vụ cho AI rủi ro cao: tuyển dụng và quản trị nhân sự, nhận diện và phân loại sinh trắc học, hạ tầng thiết yếu, đánh giá giáo dục. Yêu cầu hồ sơ kiểm toán dữ liệu, minh bạch thuật toán, giám sát của con người.'],
- ['02/08/2028', 'AI trong sản phẩm quy chuẩn', 'Theo báo cáo nguồn, áp dụng cho AI gắn như thành phần an toàn trong các sản phẩm thuộc diện luật chuyên ngành của EU.']];
+const TL = [['01/08/2024', 'Có hiệu lực', 'EU AI Act có hiệu lực; nghĩa vụ áp dụng theo các mốc riêng.'],
+ ['02/08/2026', 'Minh bạch tương tác', 'Điều 50 nhìn chung áp dụng từ mốc này; không chỉ dành cho high-risk.'],
+ ['02/12/2027', 'High-risk Annex III', 'Nghĩa vụ cho hệ thống thuộc Điều 6(2)/Annex III theo lịch sau sửa đổi.'],
+ ['02/08/2028', 'High-risk Annex I', 'Nghĩa vụ cho hệ thống thuộc Điều 6(1)/Annex I theo lịch sau sửa đổi.']];
 stepper(document.getElementById('tl'), TL.map(([d, t, x]) => [`${t} · ${d}`, `<p>${x}</p>`]));
 
 // ---- chapter data for kit.js ----
@@ -118,11 +117,11 @@ window.CH = {
   {
    "id": "s2",
    "n": "13.2",
-   "t": "Lộ trình EU AI Act",
+   "t": "Lộ trình và phạm vi EU AI Act",
    "sum": [
-    "01/08/2024: có hiệu lực.",
-    "02/08/2026: bắt đầu thực thi xử phạt.",
-    "Theo báo cáo: 02/12/2027 rủi ro cao; 02/08/2028 sản phẩm có luật chuyên ngành."
+    "Có hiệu lực 01/08/2024; sửa đổi Omnibus có hiệu lực 27/07/2026.",
+    "Annex III: 02/12/2027; Annex I: 02/08/2028; nghĩa vụ khác có lịch riêng.",
+    "Phân loại theo intended use, vai trò và phạm vi áp dụng."
    ],
    "terms": [
     "euaiact",
@@ -134,9 +133,9 @@ window.CH = {
    "n": "13.3",
    "t": "Shared responsibility model",
    "sum": [
-    "AWS: hạ tầng, datacenter, hypervisor, dịch vụ managed.",
-    "Khách hàng: dữ liệu, IAM, cấu hình, mã hóa, guardrails.",
-    "Sự cố thường do cấu hình phía khách hàng."
+    "Ranh giới cloud tùy dịch vụ và hợp đồng.",
+    "Khách hàng kiểm soát dữ liệu, IAM, cấu hình và ứng dụng.",
+    "Không dùng guardrails thay kiểm tra quyền truy cập hoặc chính sách dữ liệu."
    ],
    "terms": [
     "shared",
@@ -149,9 +148,9 @@ window.CH = {
    "n": "13.4",
    "t": "Các lớp bảo vệ dữ liệu",
    "sum": [
-    "PII redaction trước khi vào model, log, vector DB.",
-    "Macie quét S3; PrivateLink tránh internet công cộng.",
-    "KMS, TLS 1.3, IAM; Bedrock Guardrails trên model."
+    "Phát hiện PII khác che dữ liệu và phê duyệt bản đưa vào index.",
+    "PrivateLink bảo vệ đường mạng, không thay IAM hay redaction.",
+    "Guardrails giảm một số rủi ro theo cấu hình và có giới hạn."
    ],
    "terms": [
     "redaction",
@@ -163,58 +162,58 @@ window.CH = {
  "terms": {
   "halluc": [
    "hallucination",
-   "Model sinh ra nội dung sai hoặc không có căn cứ nhưng trình bày rất tự tin.",
-   "Kể trôi chảy về một chuyện chưa từng xảy ra."
+   "Nội dung mô hình sinh ra sai hoặc thiếu căn cứ trong bối cảnh đánh giá; cần tiêu chí chấm cụ thể. Không nhất thiết chỉ xuất hiện khi model thể hiện tự tin.",
+   "Ví dụ: tự thêm một điều khoản không có trong nguồn."
   ],
   "bias": [
    "bias",
    "Thiên lệch có hệ thống trong dữ liệu hoặc model khiến kết quả bất lợi cho một nhóm.",
-   "Cân bị lệch từ trước khi đặt hàng lên."
+   "Ví dụ: hệ thống xử lý kém hơn một cách có hệ thống đối với câu hỏi của một nhóm người dùng."
   ],
   "pii": [
    "PII",
    "Personally Identifiable Information: thông tin định danh cá nhân như số CCCD, số thẻ, email, số điện thoại.",
-   "Những thứ đủ để người lạ biết đó là bạn."
+   "Ví dụ: thông tin trong ticket có thể giúp nhận diện một cá nhân, riêng lẻ hoặc khi kết hợp với dữ liệu khác."
   ],
   "governance": [
    "AI governance",
    "Chính sách, quy trình và vai trò để quản lý rủi ro, trách nhiệm và tuân thủ khi dùng AI.",
-   "Nội quy và người trực ban của một xưởng máy."
+   "Ví dụ: xác định ai phê duyệt nguồn dữ liệu, ai theo dõi rủi ro và ai xử lý sự cố."
   ],
   "euaiact": [
    "EU AI Act",
    "Đạo luật AI của Liên minh châu Âu (Regulation (EU) 2024/1689), có hiệu lực từ 01/08/2024, quản lý theo mức rủi ro.",
-   "Luật giao thông cho AI ở châu Âu: xe càng nặng, luật càng chặt."
+   "Ví dụ: phân loại nghĩa vụ theo mục đích sử dụng, không chỉ theo tên ngành."
   ],
   "hitl": [
    "human-in-the-loop",
    "Thiết kế để con người xem, sửa hoặc duyệt kết quả của AI trước khi hệ thống hành động.",
-   "Thực tập sinh soạn sẵn, trưởng nhóm ký rồi mới gửi."
+   "Ví dụ: hệ thống soạn đề xuất, người có thẩm quyền xem và duyệt trước khi thực thi."
   ],
   "shared": [
    "shared responsibility model",
-   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật hạ tầng cloud, khách hàng lo bảo mật những gì họ đặt và cấu hình trên cloud.",
-   "Chủ tòa nhà lo cửa chính và thang máy; khóa cửa căn hộ là việc của bạn."
+   "Mô hình chia trách nhiệm bảo mật: nhà cung cấp cloud lo bảo mật hạ tầng đám mây, khách hàng lo bảo mật những gì họ đặt và cấu hình trên nền tảng đám mây.",
+   "Ví dụ: nhà cung cấp bảo vệ hạ tầng dịch vụ, còn doanh nghiệp cấu hình quyền và bảo vệ dữ liệu của ứng dụng."
   ],
   "redaction": [
    "PII redaction",
    "Tự động phát hiện và che hoặc xóa PII trước khi dữ liệu vào model, log hay kho vector.",
-   "Bôi đen thông tin cá nhân trước khi photo hồ sơ."
+   "Ví dụ: che thông tin cá nhân không cần thiết trước khi ghi log hoặc đưa tài liệu vào kho truy xuất."
   ],
   "guardrails": [
    "guardrails",
-   "Các lớp chặn và lọc quanh model: giới hạn phạm vi, lọc nội dung độc hại, che PII, chặn prompt injection.",
-   "Lan can trên cầu: không lái xe hộ, nhưng giữ xe không lao ra ngoài."
+   "Các lớp kiểm soát giảm rủi ro: giới hạn phạm vi và quyền, kiểm tra công cụ, lọc nội dung hoặc dữ liệu nhạy cảm. Không bảo đảm chặn mọi lỗi hay prompt injection.",
+   "Ví dụ: từ chối công cụ hoàn tiền vượt hạn mức dù mô hình đề xuất gọi."
   ],
   "injection": [
    "prompt injection",
    "Kỹ thuật chèn chỉ dẫn độc hại vào đầu vào (trực tiếp hoặc qua tài liệu) để bẻ hướng model.",
-   "Lá thư giả mạo kẹp trong xấp hồ sơ, ghi “hãy chuyển tiền cho người cầm thư”."
+   "Ví dụ: một tài liệu được truy xuất chứa chỉ dẫn yêu cầu trợ lý bỏ qua quy tắc và tiết lộ dữ liệu."
   ],
   "ml": [
    "machine learning",
-   "Nhánh của AI để máy tự học quy luật từ dữ liệu thay vì lập trình quy tắc bằng tay; gồm supervised, unsupervised, reinforcement learning.",
-   "Học nấu ăn bằng cách nếm nhiều món, không phải đọc từng công thức."
+   "Phương pháp học các mẫu từ dữ liệu; gồm nhiều cách như supervised, unsupervised, self-supervised và reinforcement learning.",
+   "Ví dụ: học phân loại ticket từ các ticket đã gán nhãn."
   ]
  },
  "alias": {
@@ -277,82 +276,82 @@ window.CH = {
  },
  "quiz": [
   {
-   "id": "my1",
+   "id": "my1-v2",
    "s": 0,
    "type": "multi",
-   "q": "Rủi ro nào là “thế hệ mới” với sản phẩm AI?",
+   "q": "Một kế hoạch quản trị rủi ro cần có gì?",
    "o": [
-    "Hallucination",
-    "Bias thuật toán",
-    "Rò rỉ PII qua model",
-    "Lỗi chính tả trong UI"
-   ],
-   "a": [
-    0,
-    1,
-    2
-   ],
-   "ex": "Lỗi chính tả là rủi ro phần mềm thông thường."
-  },
-  {
-   "id": "my2",
-   "s": 1,
-   "type": "one",
-   "q": "Theo báo cáo nguồn, từ ngày nào áp dụng nghĩa vụ cho hệ thống AI rủi ro cao?",
-   "o": [
-    "01/08/2024",
-    "02/08/2026",
-    "02/12/2027",
-    "02/08/2028"
-   ],
-   "a": 2,
-   "ex": "Mốc này cần đối chiếu văn bản chính thức."
-  },
-  {
-   "id": "my3",
-   "s": 1,
-   "type": "multi",
-   "q": "Lĩnh vực nào được nêu là rủi ro cao?",
-   "o": [
-    "Tuyển dụng, nhân sự",
-    "Sinh trắc học",
-    "Gợi ý bài hát",
-    "Giáo dục"
+    "Cách đo và bằng chứng kiểm tra",
+    "Người phụ trách từng rủi ro",
+    "Chỉ một câu thông báo AI có thể sai",
+    "Biện pháp giảm thiểu và quy trình xử lý sự cố"
    ],
    "a": [
     0,
     1,
     3
    ],
-   "ex": "Gợi ý bài hát không nằm trong danh sách."
+   "ex": "Thông báo hữu ích khi áp dụng nhưng không thay trách nhiệm, kiểm soát và ứng phó sự cố."
   },
   {
-   "id": "my4",
+   "id": "my2-v2",
+   "s": 1,
+   "type": "one",
+   "q": "Theo lịch EU đã đối chiếu 07/11/2026, mốc nghĩa vụ high-risk theo Điều 6(2)/Annex III là ngày nào?",
+   "o": [
+    "02/08/2026",
+    "02/12/2027",
+    "02/08/2028",
+    "01/08/2024"
+   ],
+   "a": 1,
+   "ex": "Annex III: 02/12/2027; Annex I: 02/08/2028 sau sửa đổi. 01/08/2024 là ngày có hiệu lực chung, không phải mọi nghĩa vụ cùng áp dụng."
+  },
+  {
+   "id": "my3-v2",
+   "s": 1,
+   "type": "multi",
+   "q": "Khi phân loại một sản phẩm theo AI Act, cần kiểm những gì?",
+   "o": [
+    "Vai trò provider/deployer và phạm vi áp dụng",
+    "Chỉ tên ngành là đủ",
+    "Điều khoản/Annex liên quan",
+    "Mục đích sử dụng cụ thể"
+   ],
+   "a": [
+    0,
+    2,
+    3
+   ],
+   "ex": "Các lĩnh vực nhạy cảm có những use case cụ thể. Không mặc định mọi ứng dụng trong ngành đó đều high-risk."
+  },
+  {
+   "id": "my4-v2",
    "s": 2,
    "type": "one",
-   "q": "Theo shared responsibility model, ai chịu trách nhiệm cấu hình IAM?",
+   "q": "Trong dịch vụ cloud managed, cấu hình quyền IAM của ứng dụng thường thuộc trách nhiệm ai?",
    "o": [
-    "AWS",
-    "Khách hàng",
-    "Nhà cung cấp model",
-    "Không ai"
+    "Khách hàng sử dụng dịch vụ theo mô hình chia trách nhiệm",
+    "Nhà cung cấp model ngôn ngữ tự cấu hình thay",
+    "Người dùng cuối chọn mỗi request",
+    "Không cần cấu hình nếu dùng PrivateLink"
    ],
-   "a": 1,
-   "ex": "IAM thuộc phần khách hàng tự lo."
+   "a": 0,
+   "ex": "Khách hàng chịu trách nhiệm quyền/cấu hình của mình. PrivateLink không thay xác thực, phân quyền hay đánh giá dữ liệu."
   },
   {
-   "id": "my5",
+   "id": "my5-v2",
    "s": 3,
    "type": "one",
-   "q": "AWS PrivateLink giải quyết vấn đề gì?",
+   "q": "PrivateLink chủ yếu giúp gì trong ví dụ?",
    "o": [
-    "Che PII",
-    "Giữ lưu lượng tới dịch vụ AI trong mạng nội bộ AWS",
-    "Giảm chi phí token",
-    "Chấm điểm model"
+    "Bảo đảm đầu ra không hallucinate",
+    "Giảm số output token",
+    "Kết nối riêng tới dịch vụ hỗ trợ, tránh đường internet công cộng",
+    "Che PII trong prompt"
    ],
-   "a": 1,
-   "ex": "Dữ liệu không đi qua internet công cộng."
+   "a": 2,
+   "ex": "Kết nối riêng là kiểm soát mạng; không thay redaction, IAM hay eval. Phải kiểm dịch vụ/endpoint và cấu hình cụ thể."
   }
  ]
 };

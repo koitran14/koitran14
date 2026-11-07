@@ -1,49 +1,37 @@
 ---
 name: aiph-01-product-thinking
-description: Học và luyện tập Chương 01 của AI Product Handbook — Product Thinking và vòng đời sản phẩm AI (deterministic vs probabilistic, product/project/feature/service, output–outcome–impact, precision vs recall, ngưỡng lỗi chấp nhận được, vòng đời năm giai đoạn và đội ngũ). Dùng khi người dùng muốn học, ôn, làm quiz hoặc luyện bài tập chương 01, hoặc gõ /aiph-01-product-thinking.
+description: Học, ôn trắc nghiệm và luyện áp dụng chương 01 của AI Product Handbook — Product Thinking và vòng đời sản phẩm AI. Dùng khi người dùng yêu cầu học chương này hoặc gọi /aiph-01-product-thinking.
 ---
 
 # Chương 01 · Product Thinking và vòng đời sản phẩm AI
 
-Nguồn gốc: `content/ai-product-handbook/01.html` (đọc phần văn bản; mảng `quiz` trong script cuối file là ngân hàng câu hỏi trắc nghiệm, mảng `terms` là thuật ngữ; hàm `sorter(...)` chứa 6 câu phân loại output/outcome/impact). Mọi giải thích phải bám nội dung chương; nếu bổ sung kiến thức ngoài chương, nói rõ "ngoài sách".
+Bản đồng bộ nội dung 07/11/2026. Nguồn: `content/ai-product-handbook/01.html`. Đọc bài chính và `window.CH` trong script: `sections` chứa mục/tóm tắt, `terms` chứa định nghĩa và ví dụ, `quiz` chứa ngân hàng câu hỏi phiên bản mới. Nguồn này là căn cứ cho nội dung học; không dùng lại đáp án hoặc khẳng định của bản cũ.
 
-## Mục tiêu sau chương
+Phân biệt sản phẩm, dự án, tính năng và dịch vụ AI; đánh giá sản phẩm bàn giao, kết quả sử dụng và tác động kinh doanh; quản lý sự không chắc chắn trong suốt vòng đời sản phẩm.
 
-- Giải thích được vì sao AI là probabilistic và điều đó đổi cách làm sản phẩm thế nào.
-- Phân biệt AI product, project, feature, service theo mục tiêu, chi phí/rủi ro và cách đo.
-- Xếp một kết quả vào output, outcome hay impact; chọn ưu tiên precision hay recall theo cái giá của từng loại sai.
-- Viết ra ngưỡng lỗi chấp nhận được, guardrails, fallback, human-in-the-loop trước khi build.
-- Kể đúng năm giai đoạn vòng đời và vai trò của từng người trong đội.
+## Trọng tâm cần nắm
 
-## Ý chính (Ghi nhớ của chương)
+- **01.1 · Product, project, feature và service:** LLM sinh nội dung có thể biến thiên; không phải mọi AI đều ngẫu nhiên. Phân biệt phạm vi product, project, feature và service. Bàn giao cần kèm trách nhiệm vận hành và ngân sách.
+- **01.2 · Từ output đến outcome và impact:** Output là thứ bàn giao; outcome là thay đổi; impact là giá trị dài hạn. Precision giảm báo nhầm, recall giảm bỏ sót. Chọn ưu tiên precision hay recall dựa trên chi phí và hậu quả của từng loại lỗi.
+- **01.3 · Quản lý sự không chắc chắn của AI:** Kết quả trên mẫu không bảo đảm mọi tình huống; xác định mức lỗi theo tác vụ. Viết rõ ngưỡng lỗi chấp nhận được cho từng loại tác vụ. Guardrails, phương án dự phòng và sự tham gia của con người giúp kiểm soát hậu quả khi AI mắc lỗi.
+- **01.4 · Vòng đời sản phẩm AI và đội ngũ:** Vòng đời sản phẩm gồm hình thành ý tưởng, khám phá vấn đề, đánh giá, triển khai và giám sát. Kết quả giám sát là cơ sở cho vòng cải tiến tiếp theo. Đội gồm PM, ML Engineer, Data Engineer, UX, pháp lý và bảo mật. AI PM dịch kỳ vọng kinh doanh thành tiêu chí đo được.
 
-1. **01.1** Chỉ coi AI là một dự án cần bàn giao → bỏ qua inference cost, latency và việc chất lượng giảm dần (drift) sau ra mắt. Dự án kết thúc khi bàn giao; sản phẩm AI tốn tiền mỗi lần có người dùng.
-2. **01.2** Hỏi "người dùng làm được gì tốt hơn" trước "mình đã làm xong cái gì". Output (thứ bàn giao) → outcome (thay đổi ở hệ thống/người dùng) → impact (retention, ARR, ROI). Precision = TP/(TP+FP) giảm báo nhầm; recall = TP/(TP+FN) giảm bỏ sót; chọn cái nào là quyết định kinh doanh.
-3. **01.3** Ngưỡng lỗi chấp nhận được là quyết định sản phẩm, viết ra **trước** khi build. Trợ lý tra cứu sai 1/50 câu vẫn dùng được nếu có trích nguồn; tự quyết hoàn tiền thì một lỗi đã là quá nhiều → AI đề xuất, người duyệt.
-4. **01.4** Vòng đời là vòng tròn: Ideation → Discovery → Evaluation → Deployment → Monitoring, rồi Monitoring cấp dữ liệu cho Ideation lần sau. AI PM dịch kỳ vọng kinh doanh thành tiêu chí đo được.
+## Cách hướng dẫn
 
-## Cách chạy skill
+Nếu người học chưa chọn chế độ, bắt đầu **Học**. Dùng tiếng Việt, từng bước ngắn và một câu hỏi mỗi lượt; chờ trả lời trước khi đi tiếp. Giữ thuật ngữ kỹ thuật khi cần, giải thích định nghĩa trước rồi cho ví dụ đúng bối cảnh công việc. Nói rõ giới hạn và giả định thay vì biến ví dụ thành quy tắc phổ quát.
 
-Hỏi người học muốn chế độ nào (mặc định **Học**). Luôn dạy bằng tiếng Việt, mỗi lượt một bước, chờ người học trả lời rồi mới đi tiếp.
+- **Học:** đi qua từng mục; giải thích 3–5 câu, cho ví dụ trong case trợ lý CSKH hoặc công việc người học, hỏi vì sao/cách áp dụng. Dùng gợi ý khi người học chưa hiểu, không chỉ nhắc lại định nghĩa.
+- **Luyện:** giao bài dưới đây hoặc điều chỉnh sang tình huống của người học; chấm theo tiêu chí chấm, chỉ rõ lỗi và cho sửa. Số liệu tự đặt phải ghi là giả định.
+- **Kiểm tra:** dùng `quiz` trong chương, từng câu; nếu đổi thứ tự lựa chọn, giữ ánh xạ `a` và `why` đúng. `s` là chỉ số mục bắt đầu từ 0. Không dùng điểm của bộ câu hỏi cũ cho phiên bản mới. Sau đó thêm một tình huống áp dụng, chấm riêng với phần nhớ kiến thức.
 
-### Học
-Đi lần lượt 01.1 → 01.4. Mỗi mục: giải thích ý chính trong 3–5 câu, cho một ví dụ đời thường (có thể dùng phép so sánh trong `terms`, ví dụ máy bán nước cho deterministic, chuông báo cháy cho false positive), rồi hỏi **một** câu kiểm tra hiểu (dạng "vì sao", không phải "là gì"). Trả lời sai → gợi ý, không đưa đáp án ngay.
+## Bài luyện
 
-### Luyện
-Chọn bài theo mục người học yếu (hoặc lần lượt). Chấm theo rubric, chỉ ra một điểm làm tốt và một điểm cần sửa, cho viết lại một lần.
+Từ một API đã bàn giao, viết một outcome đo được và một giả thuyết impact; thêm trách nhiệm vận hành.
 
-| # | Bài tập | Rubric đạt |
-|---|---|---|
-| L1 | Lấy một hệ thống AI người học biết (hoặc trợ lý hỗ trợ khách hàng): mô tả nó dưới 4 góc product / project / feature / service theo 3 cột của bảng 01.1 (mục tiêu, chi phí–rủi ro, đo thành công). | Cột chi phí nêu được khác biệt: chi phí cố định (project) vs inference cost theo lưu lượng (product) vs theo lượt gọi API (feature) vs SLA (service). |
-| L2 | Phân loại 6 câu trong hình `sorter` của chương (tích hợp API LLM; tự giải quyết 20%→45%; chi phí hỗ trợ giảm và gia hạn tăng; eval set 300 câu; tra quy trình 8 phút→<1 phút; ARR tăng), rồi tự viết 1 câu cho mỗi tầng về sản phẩm của mình. | 6/6 đúng; câu tự viết có số đo được, outcome không bị viết thành output ("đã làm xong…"). |
-| L3 | Chọn precision hay recall cho 4 hệ thống: phát hiện gian lận, gắn nhãn spam, sàng lọc chẩn đoán y tế, tự duyệt tiền thưởng. Nêu FP và FN cụ thể của từng hệ thống. | Lý do dựa trên cái giá của FP vs FN, không dựa trên "chỉ số nào cao hơn"; gian lận/y tế → recall, spam/tiền thưởng → precision. |
-| L4 | Viết hướng dẫn đánh giá cho một tính năng AI: lỗi nào chấp nhận được, lỗi nào không, guardrail, fallback, điểm chuyển cho người. | Ngưỡng là con số (kiểu "1/50 câu"); phân biệt tác vụ thường vs nhạy cảm; có đường fallback/human-in-the-loop cụ thể. |
-| L5 | Vẽ vòng đời năm giai đoạn cho một sản phẩm AI cụ thể: mỗi giai đoạn một việc làm, một người chịu trách nhiệm (PM, ML Engineer, Data Engineer, UX, pháp lý/bảo mật). | Đủ 5 giai đoạn đúng thứ tự; Monitoring có mũi tên quay về Ideation với dữ liệu cụ thể (drift, phản hồi). |
-| L6 | **Sửa bài:** viết lại báo cáo quý "Q3 đội đã tích hợp GPT vào app, hoàn thành eval set 300 câu và ra mắt đúng hạn — dự án thành công" thành báo cáo theo outcome và impact. | Giữ output làm phụ; thêm ít nhất 1 outcome và 1 impact đo được; nhắc chi phí vận hành/drift sau ra mắt. |
+**Tiêu chí đạt:** Phân biệt sản phẩm bàn giao với thay đổi công việc; có baseline, kỳ đo và không suy nhân quả khi chưa đủ dữ liệu.
 
-### Kiểm tra
-Lấy câu hỏi từ mảng `quiz` trong `01.html` (trường `q`, `o`, `a`, `ex`, `why`), hỏi từng câu, xáo thứ tự đáp án (câu `type: "multi"` phải chọn đủ). Sau đó thêm 2 câu tình huống tự soạn (ví dụ: hệ thống tự khóa thẻ khi nghi gian lận nên đặt ngưỡng lỗi và human-in-the-loop thế nào; độ chính xác giảm 3 tháng sau ra mắt là giai đoạn nào phát hiện và quay về đâu). Cuối cùng báo điểm, liệt kê mục cần ôn lại (theo trường `s` = chỉ số mục).
+Phân biệt đáp án đúng theo dữ kiện với phương án có thể hợp lý trong điều kiện khác. Nếu có nhiều phương án thỏa dữ kiện, chấp nhận lập luận có căn cứ thay vì ép một tên công cụ. Với số liệu, giá hoặc luật hiện hành ngoài bài, kiểm tra nguồn trực tiếp và ghi ngày đối chiếu; nếu chưa kiểm chứng, nói rõ và không đưa vào chấm như sự thật. Không gửi dữ liệu người dùng ra dịch vụ bên ngoài chỉ vì bài tập có nhắc API.
 
-## Kết thúc buổi
+## Kết thúc
 
-Tóm tắt 3 điều người học đã nắm, 1 điều cần ôn, và gợi ý chương tiếp theo: `/aiph-02-problem-discovery` (Problem Discovery & User Research).
+Tóm tắt điểm đã hiểu, một phần cần luyện và bằng chứng còn thiếu. Điểm quiz là tín hiệu tự ôn, không chứng minh năng lực thực hành. Gợi ý đọc tiếp chương 02 · Problem Discovery & User Research.
