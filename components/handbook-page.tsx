@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { usePathname } from "next/navigation";
 import type { HandbookPage as Page } from "@/lib/handbook";
 import { useViews } from "@/components/view-count";
@@ -12,6 +12,7 @@ const HUB = "/learn/cube-handbook/hub.js";
 // Renders a handbook page inside the site layout, then runs its scripts in order:
 // the book's shared data first, the page's own script, then the chapter engine (or the hub engine on a book's index).
 export function HandbookPage({ book, page, engine }: { book: string; page: Page; engine: boolean }) {
+  const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const ctl = new AbortController();
     (window as any).__hbSignal = ctl.signal;
@@ -37,7 +38,7 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
 
   // Fade and lift each block in as it scrolls into view, like the rest of the site; blocks entering together stagger.
   useEffect(() => {
-    const art = document.querySelector(".hb article");
+    const art = root.current?.querySelector("article");
     if (!art || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const blocks = Array.from(art.querySelectorAll<HTMLElement>(":scope > :not(section), :scope > section > *"));
     const io = new IntersectionObserver(
@@ -53,8 +54,21 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
       },
       { rootMargin: "0px 0px -8% 0px" },
     );
-    blocks.forEach((el) => { el.classList.add("rv"); io.observe(el); });
-    return () => io.disconnect();
+    // Content already painted in the viewport must never disappear on hydration
+    // or when browser history restores a position partway through the article.
+    blocks.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) return;
+      el.classList.add("rv");
+      io.observe(el);
+    });
+    return () => {
+      io.disconnect();
+      blocks.forEach((el) => {
+        el.classList.remove("rv", "in");
+        el.style.transitionDelay = "";
+      });
+    };
   }, [page]);
 
   // "/blog/cube-handbook/01" -> "cube-handbook/01"; the hub page ("cube-handbook") gets the book's total instead
@@ -76,7 +90,7 @@ export function HandbookPage({ book, page, engine }: { book: string; page: Page;
     () => (
       <>
         <style dangerouslySetInnerHTML={{ __html: page.css }} />
-        <div className="hb" dangerouslySetInnerHTML={{ __html: page.body }} />
+        <div ref={root} className="hb" dangerouslySetInnerHTML={{ __html: page.body }} />
       </>
     ),
     [page],

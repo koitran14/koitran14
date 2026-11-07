@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import type { PostType, SERIES } from "@/lib/blog";
 import { Reveal } from "@/components/reveal";
 import { togglePublished } from "./actions";
+import styles from "./blog-motion.module.css";
 
 /** Notes tabs, in display order. "workbook" is only used by SERIES. */
 const TYPES = { article: "Bài viết", note: "Ghi chú", workbook: "Workbook", doc: "Tài liệu" } as const;
@@ -133,7 +135,7 @@ export function ReadingNotice() {
         role="note"
         hidden={!open}
         // pt-2 bridges the gap so the pointer can move from the chip into the panel
-        className="absolute left-0 top-full z-20 w-[min(23rem,calc(100vw-4rem))] pt-2"
+        className={`${styles.notice} absolute left-0 top-full z-20 w-[min(23rem,calc(100vw-4rem))] pt-2`}
       >
         <div className="rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 p-4 text-[13.5px] leading-relaxed text-zinc-700 dark:text-zinc-400 shadow-[0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none">
           <p className="font-medium text-zinc-900 dark:text-zinc-100">Lưu ý về tài liệu</p>
@@ -176,7 +178,7 @@ function Workbook({ s, views }: { s: Series; views: number | null }) {
   const cta = done === 0 ? "Bắt đầu đọc" : next === -1 ? "Đọc lại" : `Đọc tiếp chương ${s.chapters[next].n}`;
 
   return (
-    <div className="mt-7 grid grid-cols-[minmax(0,1fr)_22px] sm:grid-cols-[minmax(0,1fr)_30px]">
+    <div className={`${styles.workbook} mt-7 grid grid-cols-[minmax(0,1fr)_22px] sm:grid-cols-[minmax(0,1fr)_30px]`}>
       <div className="relative z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-[#131315] shadow-[0_1px_2px_rgba(24,24,27,0.06),0_16px_36px_-14px_rgba(24,24,27,0.28)] dark:shadow-none px-5 py-5 sm:px-6">
         <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
           <span className={TINT.workbook.text}>WORKBOOK</span> · {s.chapters.length} CHƯƠNG{viewsLabel(views)}
@@ -193,7 +195,7 @@ function Workbook({ s, views }: { s: Series; views: number | null }) {
         <div className="mt-4 flex flex-wrap gap-2">
           <Link
             href={next === -1 || done === 0 ? s.chapters[0].href : s.chapters[next].href}
-            className="inline-flex items-center gap-1.5 rounded-full bg-zinc-900 dark:bg-zinc-100 px-4 py-2 text-sm font-medium text-white dark:text-zinc-900 hover:opacity-90 transition-opacity"
+            className={`${styles.cta} inline-flex items-center gap-1.5 rounded-full bg-zinc-900 dark:bg-zinc-100 px-4 py-2 text-sm font-medium text-white dark:text-zinc-900 hover:opacity-90 transition-opacity`}
           >
             {cta} <span aria-hidden>→</span>
           </Link>
@@ -250,6 +252,8 @@ export function Notes({
   admin: boolean;
 }) {
   const [tab, setTab] = useState<Tab>("all");
+  const indicatorId = useId();
+  const reduceMotion = useReducedMotion();
   const count = (t: Tab) => (t === "all" ? entries.length + series.length : t === "workbook" ? series.length : entries.filter((e) => e.type === t).length);
   // only tabs that have something in them
   const tabs = (["all", ...Object.keys(TYPES)] as Tab[]).filter((t) => count(t) > 0);
@@ -273,9 +277,9 @@ export function Notes({
               role="tab"
               aria-selected={tab === t}
               onClick={() => setTab(t)}
-              className={`shrink-0 border-b pb-2.5 text-sm transition-colors ${
+              className={`${styles.tab} shrink-0 border-b border-transparent pb-2.5 text-sm transition-colors ${
                 tab === t
-                  ? "border-zinc-900 dark:border-zinc-100 text-zinc-900 dark:text-zinc-100"
+                  ? "text-zinc-900 dark:text-zinc-100"
                   : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
               }`}
             >
@@ -284,74 +288,84 @@ export function Notes({
               <span className="text-xs text-zinc-500" style={mono}>
                 {String(count(t)).padStart(2, "0")}
               </span>
+              {tab === t && (
+                <motion.span
+                  aria-hidden="true"
+                  className={styles.tabIndicator}
+                  layoutId={indicatorId}
+                  transition={{ duration: reduceMotion ? 0 : 0.22, ease: "easeOut" }}
+                />
+              )}
             </button>
           ))}
         </div>
       </Reveal>
 
-      {blocks.map((b) =>
-        Array.isArray(b) ? (
-          <ul key={b[0].slug} className="mt-9 border-b border-zinc-300 dark:border-zinc-800">
-            {b.map((e, i) => (
-              // stagger only the first few rows; later ones reveal as they scroll in
-              <Reveal
-                as="li"
-                key={e.slug}
-                delay={Math.min(i, 5) * 0.06}
-                className="grid grid-cols-[56px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)] border-t border-zinc-300 dark:border-zinc-800"
-              >
-                {/* margin column: entry number and date, ruled off in red like a notebook */}
-                <div className="border-r border-red-400 dark:border-red-900/80 py-5 pr-3 text-right text-xs leading-5" style={mono}>
-                  <div className="text-zinc-700 dark:text-zinc-400">N° {String(e.n).padStart(2, "0")}</div>
-                  <time dateTime={e.createdAt} className="text-zinc-500">
-                    {e.date}
-                  </time>
-                </div>
-                <div className="py-5 pl-4 sm:pl-5">
-                  <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
-                    <span className={TINT[e.type].text}>{TYPES[e.type].toUpperCase()}</span>
-                    {e.type !== "note" && ` · ${e.minutes} PHÚT`}
-                    {e.published ? viewsLabel(views && (views[e.slug] ?? 0)) : <span className="text-amber-600 dark:text-amber-400"> · NHÁP</span>}
-                    <NewBadge at={e.createdAt} />
-                    {admin && (
-                      <form action={togglePublished.bind(null, e.slug)} className="inline">
-                        {" · "}
-                        <button className="underline underline-offset-2 hover:text-zinc-900 dark:hover:text-zinc-100">
-                          {e.published ? "Unpublish" : "Publish"}
-                        </button>
-                      </form>
-                    )}
+      <div key={tab} className={styles.feed}>
+        {blocks.map((b) =>
+          Array.isArray(b) ? (
+            <ul key={b[0].slug} className="mt-9 border-b border-zinc-300 dark:border-zinc-800">
+              {b.map((e, i) => (
+                // stagger only the first few rows; later ones reveal as they scroll in
+                <Reveal
+                  as="li"
+                  key={e.slug}
+                  delay={Math.min(i, 5) * 0.06}
+                  className={`${styles.entry} grid grid-cols-[56px_minmax(0,1fr)] sm:grid-cols-[72px_minmax(0,1fr)] border-t border-zinc-300 dark:border-zinc-800`}
+                >
+                  {/* margin column: entry number and date, ruled off in red like a notebook */}
+                  <div className="border-r border-red-400 dark:border-red-900/80 py-5 pr-3 text-right text-xs leading-5" style={mono}>
+                    <div className="text-zinc-700 dark:text-zinc-400">N° {String(e.n).padStart(2, "0")}</div>
+                    <time dateTime={e.createdAt} className="text-zinc-500">
+                      {e.date}
+                    </time>
                   </div>
-                  <Link href={`/blog/${e.slug}`} className="group block mt-1.5">
-                    {e.type === "note" ? (
-                      <p
-                        className="text-lg italic leading-relaxed text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-                        style={serif}
-                      >
-                        “{e.excerpt}”
-                      </p>
-                    ) : (
-                      <>
-                        <span
-                          className="block text-xl leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
+                  <div className="py-5 pl-4 sm:pl-5">
+                    <div className="text-xs text-zinc-600 dark:text-zinc-500" style={mono}>
+                      <span className={TINT[e.type].text}>{TYPES[e.type].toUpperCase()}</span>
+                      {e.type !== "note" && ` · ${e.minutes} PHÚT`}
+                      {e.published ? viewsLabel(views && (views[e.slug] ?? 0)) : <span className="text-amber-600 dark:text-amber-400"> · NHÁP</span>}
+                      <NewBadge at={e.createdAt} />
+                      {admin && (
+                        <form action={togglePublished.bind(null, e.slug)} className="inline">
+                          {" · "}
+                          <button className="underline underline-offset-2 hover:text-zinc-900 dark:hover:text-zinc-100">
+                            {e.published ? "Unpublish" : "Publish"}
+                          </button>
+                        </form>
+                      )}
+                    </div>
+                    <Link href={`/blog/${e.slug}`} className="group block mt-1.5">
+                      {e.type === "note" ? (
+                        <p
+                          className={`${styles.title} text-lg italic leading-relaxed text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400`}
                           style={serif}
                         >
-                          {e.title}
-                        </span>
-                        <span className="mt-1.5 block text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-400">{e.excerpt}</span>
-                      </>
-                    )}
-                  </Link>
-                </div>
-              </Reveal>
-            ))}
-          </ul>
-        ) : (
-          <Reveal key={b.slug} delay={0.2}>
-            <Workbook s={b} views={views && (views[b.slug] ?? 0)} />
-          </Reveal>
-        ),
-      )}
+                          “{e.excerpt}”
+                        </p>
+                      ) : (
+                        <>
+                          <span
+                            className={`${styles.title} block text-xl leading-snug text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400`}
+                            style={serif}
+                          >
+                            {e.title}
+                          </span>
+                          <span className="mt-1.5 block text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-400">{e.excerpt}</span>
+                        </>
+                      )}
+                    </Link>
+                  </div>
+                </Reveal>
+              ))}
+            </ul>
+          ) : (
+            <Reveal key={b.slug} delay={0.2}>
+              <Workbook s={b} views={views && (views[b.slug] ?? 0)} />
+            </Reveal>
+          ),
+        )}
+      </div>
     </>
   );
 }

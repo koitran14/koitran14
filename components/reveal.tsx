@@ -27,11 +27,12 @@ export const Reveal = ({
   const reduce = useReducedMotion();
   if (reduce) {
     const Tag = as;
-    return <Tag {...rest}>{children}</Tag>;
+    return <Tag data-reveal {...rest}>{children}</Tag>;
   }
   const M = tags[as];
   return (
     <M
+      data-reveal
       {...rest}
       initial={{ opacity: 0, y: 28, scale: zoom ? 0.96 : 1 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
