@@ -113,6 +113,14 @@ export const SERIES = [
 // Listed in Notes as articles alongside the posts; not editable from admin.
 export const ESSAY_CATALOG = [
   {
+    slug: "mascot-streak-va-ly-do-chung-ta-quay-lai",
+    published: true,
+    title: "Một chú cú xanh, một chuỗi ngày và lý do chúng ta quay lại",
+    excerpt: "Mascot và streak ảnh hưởng đến cách chúng ta sử dụng sản phẩm như thế nào? Ghi chép về gamification, thói quen và giá trị người dùng, cùng nghiên cứu và thử nghiệm từ Duolingo.",
+    minutes: 13,
+    createdAt: "2026-11-08T00:00:00.000Z",
+  },
+  {
     slug: "ai-co-thay-the-ky-su-phan-mem",
     published: true,
     title: "AI có thay thế kỹ sư? Giá trị của engineering sẽ đi về đâu?",

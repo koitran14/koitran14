@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Một chú cú xanh, một chuỗi ngày và lý do chúng ta quay lại · Notes</title>
+<link rel="stylesheet" href="../cube-handbook/style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="progress" id="prog"></div>
+<div class="kpop" id="kpop" role="dialog" aria-label="Giải thích thuật ngữ" hidden></div>
+<aside class="card" id="card" aria-live="polite"></aside>
+<aside class="toc-side"><span class="label">Bài viết · Mục lục</span><ul class="toc-list" data-toc></ul><div class="stat" data-stat></div></aside>
+<article class="essay-article">
+  <header class="essay-hero">
+    <div class="crumb"><a href="/blog"><b>Notes</b> / Bài viết</a> / Product &amp; hành vi người dùng</div>
+    <h1>Một chú cú xanh, một chuỗi ngày và <i>lý do chúng ta quay lại</i></h1>
+    <p class="dek">Ghi chép về mascot, streak và câu hỏi: sản phẩm đang giúp người dùng tiến bộ, hay chỉ khiến họ khó rời đi?</p>
+    <div class="metarow"><div class="meta"><span>koitran14 · Trần Ngọc Đăng Khôi</span><time datetime="2026-11-08">08.11.2026</time><span>13 phút đọc</span></div><div class="tools"><button data-tool="kw" aria-label="Bật hoặc tắt đánh dấu thuật ngữ"></button></div></div>
+  </header>
+  <details class="toc-inline"><summary>Trong bài viết này</summary><ul class="toc-list" data-toc></ul></details>
+  <p class="lead">Bạn mở TikTok để gửi cho một người bạn một tin nhắn. Có thể chẳng có chuyện gì mới để kể, nhưng chuỗi trò chuyện vẫn cần được giữ.</p>
+  <p>Bạn nhìn biểu đồ đóng góp trên GitHub. Giữa những ô xanh là một ngày bỏ trống. Công việc hôm nay có khi đã xong, vậy mà ô trống ấy vẫn khiến bạn thấy hơi thiếu thiếu.</p>
+  <p>Những chi tiết này làm mình tò mò. Ban đầu, chúng ta dùng một sản phẩm để giải quyết một nhu cầu: học ngoại ngữ, trò chuyện, viết code. Nhưng sau một thời gian, lý do quay lại có thể có thêm những thứ rất nhỏ: một con số đang tăng, một thành tích chưa muốn mất, một nhân vật quen thuộc xuất hiện trên màn hình.</p>
+  <p>Từ góc nhìn của người đang tìm hiểu cách xây dựng sản phẩm, mình muốn biết những chi tiết đó làm được gì. Và khi nào chúng bắt đầu kéo người dùng ra xa mục tiêu ban đầu của chính họ?</p>
+
+  <section id="s1"><span class="num">01</span><h2>Khi sản phẩm có một gương mặt</h2>
+    <p>Một ứng dụng có thể giao tiếp bằng những dòng thông báo thuần túy: hoàn thành, thất bại, thử lại. Nhưng khi có mascot — linh vật đại diện — những thông báo ấy có thể mang tính cách.</p>
+    <p>Hãy hình dung một ứng dụng học tập. Sau khi bạn hoàn thành bài học, màn hình hiển thị: “Bạn đã hoàn thành 7 bài học liên tiếp.” Cũng thông tin đó, một nhân vật quen thuộc có thể nói: “Bảy ngày rồi đó! Tụi mình đã đi được một đoạn khá xa. Mai gặp lại nhé!”</p>
+    <p>Đây là ví dụ giả định, nhưng nó cho thấy một khác biệt trong cách giao tiếp. Người dùng vừa nhận được thông tin về tiến độ, vừa có thể cảm thấy nỗ lực của mình được ghi nhận.</p>
+    <p>Mình nghĩ sức hấp dẫn của mascot nằm ở chỗ đó. Một giao diện có thêm giọng nói, biểu cảm và cách phản ứng mà người dùng dần nhận ra. Nhân vật có thể hướng dẫn người mới, giải thích một thao tác hoặc chào đón người quay lại sau thời gian vắng mặt.</p>
+    <p>Việc gán những đặc điểm giống con người cho thương hiệu có liên quan đến nhân cách hóa, hay anthropomorphism. Một phân tích tổng hợp 47 bài nghiên cứu cho thấy ảnh hưởng của cách thể hiện này lên đánh giá sản phẩm phụ thuộc vào bối cảnh, trong đó có loại sản phẩm và mức độ né tránh sự bất định. Nguồn này giúp hiểu cơ chế, nhưng chưa trực tiếp chứng minh mascot làm tăng retention. <a href="https://www.sciencedirect.com/science/article/pii/S0148296320307700">[1]</a></p>
+    <p>Thêm một nhân vật dễ thương chưa đủ để làm trải nghiệm tốt hơn. Nếu người dùng đang xử lý một giao dịch lỗi hoặc một sự cố hệ thống, điều họ cần trước tiên là biết chuyện gì xảy ra và phải làm gì tiếp theo. Một câu đùa sai lúc có thể khiến họ khó chịu hơn.</p>
+    <p>Vì vậy, trước khi hỏi mascot nên trông như thế nào, mình muốn biết nó có vai trò gì trong sản phẩm. Nó giúp người dùng hiểu, làm hoặc cảm nhận điều gì rõ hơn?</p>
+  </section>
+
+  <section id="s2"><span class="num">02</span><h2>Khi một con số trở thành thành quả</h2>
+    <p>Streak là một cách khá trực tiếp để làm tiến độ trở nên hữu hình: ghi nhận chuỗi hoạt động liên tiếp. Duolingo dùng streak để theo dõi số ngày người dùng hoàn thành bài học liên tục và mô tả cơ chế này như một phần trong cách khuyến khích luyện tập. <a href="https://blog.duolingo.com/how-duolingo-streak-builds-habit/">[2]</a></p>
+    <p>Một ngày có thể chưa đáng kể. Nhưng sau ba mươi hay một trăm ngày, con số ấy dễ mang thêm ý nghĩa. Nó trở thành bằng chứng rằng mình đã kiên trì với một việc. Lúc đó, bỏ lỡ một ngày có thể gây tiếc nuối dù những gì đã học vẫn còn nguyên.</p>
+    <p>Mình liên hệ cảm giác này với loss aversion, hay tâm lý né tránh mất mát: trong khuôn khổ lý thuyết triển vọng của Kahneman và Tversky, tổn thất có thể mang sức nặng lớn hơn lợi ích tương đương. Đây là một góc nhìn để suy nghĩ về streak, chưa phải bằng chứng rằng mọi người giữ chuỗi vì cùng một động lực. <a href="https://www.dmi-ida.org/download-pdf/pdf/Kahneman-ProspectTheoryAnalysis-1979.pdf">[3]</a></p>
+    <p>Có một nghiên cứu sát hơn với câu hỏi này. Trong <i>On or Off Track: How (Broken) Streaks Affect Consumer Decisions</i>, Jackie Silverman và Alixandra Barasch thực hiện bảy nghiên cứu. Họ nhận thấy làm nổi bật một chuỗi còn nguyên có thể thúc đẩy việc tiếp tục hành vi hơn so với làm nổi bật một chuỗi đã đứt. Tác động phụ thuộc vào cách lịch sử hành vi được trình bày, ngay cả khi hành vi trước đó được giữ tương đương. <a href="https://academic.oup.com/jcr/article/49/6/1095/6623414">[4]</a></p>
+    <blockquote>Giữ chuỗi có thể trở thành một mục tiêu riêng. Ngoài chuyện học hay luyện tập, người dùng còn muốn duy trì điều mà giao diện đang ghi nhận.</blockquote>
+    <p>Biểu đồ GitHub gợi cho mình cảm giác gần với điều đó, dù đây là bản ghi trực quan về đóng góp, không phải bộ đếm streak với quy tắc giữ chuỗi. Một ô trống cũng không đủ để kết luận hôm ấy ai đó có làm việc hay không. <a href="https://docs.github.com/en/account-and-profile/concepts/contributions-on-your-profile">[5]</a></p>
+    <p>Khi quá trình được nhìn thấy, nó có thể trở thành một lý do để tiếp tục. Nhưng cũng từ đây xuất hiện câu hỏi khó: hôm nay mình muốn làm việc đó, hay chỉ không muốn con số trở về đầu?</p>
+  </section>
+
+  <section id="s3"><span class="num">03</span><h2>Khi tiến độ có thêm người đồng hành</h2>
+    <p>Mascot và streak có thể bổ sung cho nhau: một bên tạo sự quen thuộc, một bên ghi nhận quá trình.</p>
+    <p>TikTok có một ví dụ đáng quan sát với Streak Pet. Theo tài liệu hỗ trợ, người dùng đủ điều kiện có thể cùng duy trì một nhân vật ảo trong cuộc trò chuyện đang có streak, hoàn thành nhiệm vụ để nhân vật nhận điểm phát triển. Tính năng này chưa có với tất cả người dùng. <a href="https://support.tiktok.com/en/using-tiktok/messaging-and-notifications/streaks">[6]</a></p>
+    <p>Từ thiết kế này, mình thấy tiến độ có thể được thể hiện theo cách giàu cảm xúc hơn. Người dùng có thêm một nhân vật gắn với những lần tương tác đã tích lũy. Nhưng không phải ai cũng gắn bó với một thú cưng ảo, và ví dụ TikTok chưa chứng minh sự kết hợp này làm tăng retention.</p>
+    <p>Nếu áp dụng vào một ứng dụng học lập trình, mình hình dung nhân vật có thể xuất hiện sau bài học đầu tiên, nhận thêm phụ kiện khi người học hoàn thành một dự án, rồi ghi nhận những cột mốc tiếp theo. Đây là ý tưởng thiết kế mình muốn thử, chưa phải một công thức đã được xác nhận.</p>
+    <p>Điều mình muốn cân nhắc kỹ nhất lại là lúc người dùng vắng mặt. Khi họ quay lại, nhân vật sẽ nói: “Lâu rồi không gặp. Mình tiếp tục từ chỗ đang dở nhé?” Hay: “Bạn đã bỏ rơi mình suốt ba ngày. Chuỗi của chúng ta mất rồi!”</p>
+    <p>Hai lời nhắn giả định thể hiện hai lựa chọn thiết kế rất khác nhau. Với mình, một nhân vật đồng hành nên giúp việc bắt đầu lại nhẹ nhàng hơn. Người dùng không cần mang thêm cảm giác có lỗi vì đã dành thời gian cho những việc khác.</p>
+  </section>
+
+  <section id="s4"><span class="num">04</span><h2>Lượt quay lại chưa nói hết giá trị</h2>
+    <p>Khi nhìn từ phía xây dựng sản phẩm, mình muốn tách ba chuyện thường được đặt gần nhau. Engagement cho biết người dùng tương tác như thế nào. Retention cho biết họ có tiếp tục quay lại theo thời gian hay không. Còn giá trị nhận được nằm ở việc nhu cầu ban đầu của họ có được giải quyết hay không.</p>
+    <p>Một người có thể mở ứng dụng mỗi ngày để nhận thưởng. Nhưng với ứng dụng học tập, mình vẫn muốn biết họ có hiểu bài, ghi nhớ hoặc vận dụng được điều gì.</p>
+    <p>Phân tích tổng hợp của Sailer và Homner ghi nhận tác động tích cực trung bình của gamification lên kết quả nhận thức, động lực và hành vi học tập. Tuy nhiên, kết quả về động lực và hành vi kém ổn định hơn khi chỉ xét nhóm nghiên cứu có phương pháp chặt chẽ. Vì vậy, lượt mở ứng dụng hay số ngày giữ chuỗi chưa đủ để kết luận về hiệu quả học. <a href="https://link.springer.com/article/10.1007/s10648-019-09498-w">[7]</a></p>
+    <p>Mình sẽ xem mascot và streak là những giả thuyết cần kiểm chứng trong từng sản phẩm. Chẳng hạn: ghi nhận chuỗi hoàn thành bài học, kết hợp phản hồi từ mascot, có thể giúp người dùng duy trì việc học tốt hơn.</p>
+    <table class="tbl"><caption>Những điều mình muốn đo khi thử gamification</caption><thead><tr><th scope="col">Điều cần quan sát</th><th scope="col">Câu hỏi muốn trả lời</th></tr></thead><tbody>
+      <tr><td>Retention ngày 7, ngày 30</td><td>Người dùng có quay lại không?</td></tr>
+      <tr><td>Hoàn thành hoạt động cốt lõi</td><td>Họ có thực hiện việc giúp đạt mục tiêu không?</td></tr>
+      <tr><td>Mức sử dụng tính năng</td><td>Họ có chủ động dùng mascot và streak không?</td></tr>
+      <tr><td>Sự hài lòng</td><td>Trải nghiệm mang lại động lực hay áp lực?</td></tr>
+      <tr><td>Kết quả dài hạn</td><td>Việc sử dụng có tiếp tục đem lại giá trị sau giai đoạn mới lạ không?</td></tr>
+    </tbody></table>
+    <p>Cũng cần cẩn thận với cách đọc dữ liệu. Những người vốn có động lực học cao có thể vừa giữ streak dài, vừa quay lại thường xuyên. Quan sát đó chưa đủ để kết luận streak tạo ra retention cao.</p>
+    <p>Nếu muốn hiểu tác động của từng thành phần, một thử nghiệm có phân nhóm ngẫu nhiên có thể so sánh trải nghiệm thông thường, trải nghiệm có streak, có mascot và có cả hai. Cách này giúp đặt câu hỏi cụ thể hơn: yếu tố nào hữu ích, hữu ích với ai, và có đánh đổi điều gì không?</p>
+  </section>
+
+  <section id="s5"><span class="num">05</span><h2>Duolingo đã thử điều gì?</h2>
+    <p>Duolingo có một ví dụ cụ thể về kiểm chứng thiết kế streak. Trước đây, giữ chuỗi gắn với việc hoàn thành mục tiêu điểm kinh nghiệm hằng ngày. Sau đó, họ thử tách hai cơ chế: người học chỉ cần hoàn thành một bài để nối dài streak, còn mục tiêu hằng ngày được theo dõi riêng.</p>
+    <p>Theo kết quả A/B test do Duolingo công bố, thay đổi này giúp retention ngày 14 tăng <b>3,3%</b>. Mình giữ nguyên mức tăng theo phần trăm trong nguồn, không diễn giải thành 3,3 điểm phần trăm. Kết quả này nói về việc quay lại trong thử nghiệm đó, chưa đủ để kết luận người dùng học tốt hơn hay mọi sản phẩm sẽ có kết quả tương tự. <a href="https://blog.duolingo.com/improving-the-streak/">[8]</a></p>
+    <p>Một chi tiết khác khiến mình chú ý là tạo khoảng nghỉ chưa chắc làm người dùng kém kiên trì hơn. Duolingo cho biết khi cho phép trang bị tối đa hai Streak Freeze, số người học hoạt động hằng ngày tăng tương đối <b>0,38%</b>. Đây là kết quả do chính doanh nghiệp công bố trong bối cảnh sản phẩm của họ. <a href="https://blog.duolingo.com/how-duolingo-streak-builds-habit/">[2]</a></p>
+    <p>Điều mình rút ra là thiết kế hỗ trợ thói quen có thể chừa chỗ cho những ngày gián đoạn. Muốn hiểu vì sao một thay đổi hiệu quả, cần xem cụ thể người dùng được yêu cầu làm gì, rào cản nào được giảm và kết quả nào đã được đo.</p>
+    <p>Trong cuộc trò chuyện với Lenny, Jackson Shuttleworth chia sẻ bài học từ hơn 600 thử nghiệm liên quan đến streak. Đây là nguồn thực hành sát với góc nhìn Product của bài: một tính năng nhìn rất đơn giản vẫn cần được thử, đo và sửa nhiều lần. <a href="https://www.lennysnewsletter.com/p/behind-the-product-duolingo-streaks">[9]</a></p>
+  </section>
+
+  <section id="s6"><span class="num">06</span><h2>Có những sản phẩm càng ít được mở càng tốt</h2>
+    <p>Mình không nghĩ streak phù hợp với mọi sản phẩm. Một ứng dụng học ngoại ngữ có lý do để khuyến khích luyện tập thường xuyên. Nhưng một công cụ tự động hóa deployment có thể hoàn thành nhiệm vụ rất tốt khi người dùng ít phải truy cập.</p>
+    <p>Nếu hệ thống đang chạy ổn, không có thao tác nào cần thực hiện, việc thưởng cho đăng nhập hằng ngày sẽ khuyến khích hành vi gì?</p>
+    <p>Câu hỏi đó khiến mình muốn bắt đầu từ nhịp sử dụng thực tế. Với công việc theo tuần, có thể ghi nhận mục tiêu tuần. Với quy trình kiểm tra định kỳ, có thể hiển thị những đợt đã hoàn thành đúng lịch. Với một dự án dài, các cột mốc có lẽ hữu ích hơn bộ đếm ngày. Và có những sản phẩm chỉ cần giúp người dùng hoàn thành việc rồi rời đi.</p>
+    <p>Mình cũng muốn giữ riêng tính liên tục và thành quả tích lũy. Bỏ lỡ một ngày có thể làm gián đoạn chuỗi, nhưng những bài đã học, dự án đã hoàn thành hay kỹ năng đã luyện không vì thế mà biến mất. Giao diện nên giúp người dùng thấy được cả hai.</p>
+    <p>Nếu thiết kế một hệ thống như vậy, mình sẽ muốn người dùng có thể tắt nhắc nhở, bỏ qua phần trò chơi hóa và quay lại mà vẫn nhìn thấy những gì mình đã làm được. Đặc biệt với trẻ em hoặc người dễ chịu áp lực từ các cơ chế này, cách nhân vật nhắc nhở và phản ứng cần được cân nhắc kỹ.</p>
+    <p>Mình hiểu vì sao đội ngũ sản phẩm quan tâm đến engagement và retention. Một sản phẩm cần người sử dụng để tồn tại, và một thói quen có ích đôi khi cũng cần những lời nhắc đúng lúc. Nhưng khi nhìn một chuỗi ngày rất dài, mình vẫn muốn hỏi thêm: người dùng đã nhận được gì trong khoảng thời gian đó?</p>
+    <p>Nếu họ học được điều muốn học, giải quyết được công việc hoặc giữ được một kết nối có ý nghĩa, mascot và streak có thể đã làm tốt vai trò hỗ trợ của mình. Còn nếu họ quay lại chỉ để tránh cảm giác mất mát, mình nghĩ thiết kế ấy cần được xem xét lại.</p>
+    <p class="essay-closing">Một chú cú xanh hay một bộ đếm ngày có thể khiến sản phẩm dễ nhớ hơn. Điều mình muốn học cách xây dựng là một trải nghiệm mà sau khi đóng ứng dụng, người dùng vẫn thấy thời gian vừa dành cho nó là xứng đáng.</p>
+  </section>
+
+  <section id="s7"><span class="num">07</span><h2>Xem thêm: từ ý tưởng đến thử nghiệm</h2>
+    <p>Hai video dưới đây bổ sung góc nhìn từ người xây dựng Duolingo. Mình dùng chúng để hiểu quyết định sản phẩm; các kết quả nghiên cứu và thử nghiệm cụ thể được dẫn riêng trong bài.</p>
+    <div class="vids"><div class="vgrid">
+      <figure class="vcard"><div class="vthumb"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/P6FORpg0KVo" title="How to Make Learning as Addictive as Social Media — Luis von Ahn, TED" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div><figcaption class="vcap"><b>How to Make Learning as Addictive as Social Media</b><span>Luis von Ahn · TED</span><small>Nhà đồng sáng lập Duolingo giải thích cách vận dụng kỹ thuật thu hút người dùng từ mạng xã hội và trò chơi vào giáo dục.</small><a href="https://www.youtube.com/watch?v=P6FORpg0KVo">Xem trên YouTube ↗</a></figcaption></figure>
+      <figure class="vcard"><div class="vthumb"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/_CCwoQZH5hI" title="Behind the Product: Duolingo Streaks — Jackson Shuttleworth, Lenny’s Podcast" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div><figcaption class="vcap"><b>Behind the Product: Duolingo Streaks</b><span>Jackson Shuttleworth · Lenny’s Podcast</span><small>Bài học từ đội retention về thử nghiệm, cách giữ chuỗi, khoảng nghỉ và những sản phẩm phù hợp với streak.</small><a href="https://www.youtube.com/watch?v=_CCwoQZH5hI">Xem trên YouTube ↗</a></figcaption></figure>
+    </div><p class="note">Video tiếng Anh. Có thể bật phụ đề và dịch tự động sang tiếng Việt nếu tùy chọn này khả dụng. Video thuộc các tác giả và được nhúng từ YouTube.</p></div>
+    <p>Ở tập phỏng vấn Jackson, có thể bắt đầu từ <a href="https://www.youtube.com/watch?v=_CCwoQZH5hI&amp;t=890s">14:50 — thử nghiệm và bài học</a>, <a href="https://www.youtube.com/watch?v=_CCwoQZH5hI&amp;t=1478s">24:38 — tâm lý người dùng</a>, <a href="https://www.youtube.com/watch?v=_CCwoQZH5hI&amp;t=2819s">46:59 — Streak Freeze</a> hoặc <a href="https://www.youtube.com/watch?v=_CCwoQZH5hI&amp;t=4737s">01:18:57 — sản phẩm nào phù hợp với streak</a>.</p>
+  </section>
+
+  <footer class="article-outro">
+    <div class="discussion-prompt"><span class="outro-label">Một câu hỏi để nghĩ tiếp</span><p>Bạn từng quay lại một ứng dụng chỉ để giữ chuỗi chưa? Lúc đó, chuỗi ngày giúp bạn tiến gần mục tiêu hơn, hay đã trở thành một việc phải làm thêm?</p></div>
+    <a class="next-essay" href="/blog/ai-product-handbook/10"><span class="outro-label">Đọc tiếp · AI Product Handbook</span><b>Product Analytics</b><span class="next-essay-action">Tìm hiểu cách đo kết quả sản phẩm →</span></a>
+  </footer>
+  <div class="end"><b>Nguồn tham khảo</b><ol class="src">
+    <li><a href="https://www.sciencedirect.com/science/article/pii/S0148296320307700">Velasco, Yang &amp; Janakiraman (2021) — A meta-analytic investigation of consumer response to anthropomorphic appeals.</a> Phân tích tổng hợp 47 bài; kết quả về đánh giá sản phẩm, không trực tiếp đo retention của mascot.</li>
+    <li><a href="https://blog.duolingo.com/how-duolingo-streak-builds-habit/">Duolingo — How the streak builds a habit.</a> Giải thích thiết kế và kết quả thay đổi Streak Freeze do doanh nghiệp công bố.</li>
+    <li><a href="https://www.dmi-ida.org/download-pdf/pdf/Kahneman-ProspectTheoryAnalysis-1979.pdf">Kahneman &amp; Tversky (1979) — Prospect Theory: An Analysis of Decision under Risk.</a> Nền tảng lý thuyết; liên hệ sang streak là diễn giải trong bài.</li>
+    <li><a href="https://academic.oup.com/jcr/article/49/6/1095/6623414">Silverman &amp; Barasch (2023) — On or Off Track: How (Broken) Streaks Affect Consumer Decisions.</a> Công bố online năm 2022, trong số tạp chí tháng 4/2023; bảy nghiên cứu về cách hiển thị chuỗi và hành vi tiếp theo.</li>
+    <li><a href="https://docs.github.com/en/account-and-profile/concepts/contributions-on-your-profile">GitHub Docs — Contributions on your profile.</a> Phạm vi và cách hoạt động của biểu đồ đóng góp.</li>
+    <li><a href="https://support.tiktok.com/en/using-tiktok/messaging-and-notifications/streaks">TikTok Help Center — Streaks.</a> Mô tả Streak và Streak Pet; không phải dữ liệu thử nghiệm retention.</li>
+    <li><a href="https://link.springer.com/article/10.1007/s10648-019-09498-w">Sailer &amp; Homner (2020) — The Gamification of Learning: A Meta-analysis.</a> Kết quả và giới hạn của gamification trong học tập.</li>
+    <li><a href="https://blog.duolingo.com/improving-the-streak/">Duolingo — Improving the streak.</a> Thử nghiệm tách mục tiêu hằng ngày khỏi điều kiện giữ chuỗi; retention ngày 14 tăng 3,3% theo báo cáo.</li>
+    <li><a href="https://www.lennysnewsletter.com/p/behind-the-product-duolingo-streaks">Lenny’s Podcast (15.12.2024) — Behind the Product: Duolingo Streaks.</a> Phỏng vấn Jackson Shuttleworth, kèm mốc thời gian.</li>
+    <li><a href="https://www.youtube.com/watch?v=P6FORpg0KVo">TED (2023) — How to Make Learning as Addictive as Social Media.</a> Góc nhìn từ nhà đồng sáng lập Duolingo.</li>
+  </ol><p>Bài viết là ghi chép tự học của koitran14. Các tình huống thiết kế giả định được nêu để thảo luận; kết quả trong từng nghiên cứu hoặc thử nghiệm không mặc nhiên áp dụng cho mọi sản phẩm. Nguồn được đối chiếu khi biên soạn ngày 08.11.2026.</p></div>
+</article>
+<script>
+window.CH = {
+  key: "mascot-streak", essay: true, minutes: 13,
+  sections: [
+    {id: "s1", n: "01", t: "Khi sản phẩm có một gương mặt", sum: ["Mascot tạo tính cách cho cách sản phẩm giao tiếp.", "Vai trò của nhân vật cần phù hợp với nhu cầu và bối cảnh sử dụng."], terms: ["mascot"]},
+    {id: "s2", n: "02", t: "Khi một con số trở thành thành quả", sum: ["Cách hiển thị chuỗi có thể ảnh hưởng đến quyết định tiếp tục.", "Giữ chuỗi có thể trở thành một mục tiêu riêng."], terms: ["streak"]},
+    {id: "s3", n: "03", t: "Khi tiến độ có thêm người đồng hành", sum: ["Mascot kết hợp streak là một giả thuyết thiết kế cần kiểm chứng.", "Cách chào đón khi quay lại nên giảm áp lực bắt đầu lại."], terms: ["mascot", "streak"]},
+    {id: "s4", n: "04", t: "Lượt quay lại chưa nói hết giá trị", sum: ["Engagement, retention và giá trị nhận được là các kết quả khác nhau.", "Cần đo hoạt động cốt lõi, sự hài lòng và kết quả dài hạn."], terms: ["engagement", "retention", "gamification"]},
+    {id: "s5", n: "05", t: "Duolingo đã thử điều gì?", sum: ["Duolingo báo cáo retention ngày 14 tăng 3,3% khi đổi điều kiện giữ chuỗi.", "Kết quả trong một sản phẩm chưa tự động áp dụng cho sản phẩm khác."], terms: ["streak", "retention"]},
+    {id: "s6", n: "06", t: "Có những sản phẩm càng ít được mở càng tốt", sum: ["Nhịp ghi nhận tiến độ cần phù hợp với hoạt động tạo ra giá trị.", "Gián đoạn chuỗi không xóa thành quả đã tích lũy."], terms: ["gamification", "streak"]},
+    {id: "s7", n: "07", t: "Xem thêm: từ ý tưởng đến thử nghiệm", sum: ["Video bổ sung góc nhìn từ người xây dựng Duolingo.", "Nghiên cứu và thử nghiệm cụ thể được dẫn riêng trong bài."], terms: ["retention"]}
+  ],
+  terms: {
+    mascot: ["Mascot", "Linh vật đại diện cho thương hiệu hoặc sản phẩm; có thể tham gia hướng dẫn và phản hồi trong trải nghiệm sử dụng.", "Một nhân vật quen thuộc giúp sản phẩm có giọng nói và tính cách."],
+    streak: ["Streak", "Chuỗi hoạt động liên tiếp được sản phẩm ghi nhận theo một quy tắc nhất định.", "Bộ đếm ghi nhận những lần bạn tiếp tục một hoạt động đúng nhịp."],
+    retention: ["Retention", "Khả năng người dùng tiếp tục quay lại theo thời gian; cần xác định nhóm người dùng, hoạt động và khoảng thời gian đo.", "Sau một tuần hoặc một tháng, bao nhiêu người vẫn quay lại?"],
+    engagement: ["Engagement", "Mức độ và cách người dùng tương tác với sản phẩm; bản thân chỉ số này chưa chứng minh giá trị nhận được.", "Người dùng làm gì, thường xuyên đến đâu và tương tác như thế nào?"],
+    gamification: ["Gamification", "Ứng dụng các yếu tố thiết kế trò chơi vào hoạt động ngoài trò chơi, chẳng hạn điểm, huy hiệu hoặc cột mốc.", "Dùng cách ghi nhận và phản hồi của trò chơi để hỗ trợ một hoạt động khác."]
+  },
+  alias: {mascot: ["mascot"], streak: ["streak"], retention: ["retention"], engagement: ["engagement"], gamification: ["gamification"]},
+  rel: {mascot: ["gamification"], streak: ["retention", "gamification"], retention: ["engagement"], engagement: ["retention"], gamification: ["mascot", "streak"]},
+  quiz: []
+};
+</script>
+</body>
+</html>
