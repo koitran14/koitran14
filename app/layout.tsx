@@ -24,10 +24,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  // Handbooks and this long-form essay lay out their own reading column and side rails.
+  // Handbooks and long-form essays lay out their own reading column and side rails.
   const wide = /^\/blog\/[^/]+-handbook(\/|$)/.test(pathname)
     || pathname === "/blog/ai-co-thay-the-ky-su-phan-mem"
-    || pathname === "/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product";
+    || pathname === "/blog/khi-ky-su-duoc-ky-vong-co-tu-duy-product"
+    || pathname === "/blog/mascot-streak-va-ly-do-chung-ta-quay-lai";
   // the floating contact toolbar would sit over the article and the audio player while reading
   const reading = pathname.startsWith("/blog");
 
