@@ -4,13 +4,15 @@ import { Component, Suspense, useCallback, useEffect, useRef, useState, type Rea
 import { createPortal } from "react-dom";
 import { Canvas, useThree } from "@react-three/fiber";
 import type { OrthographicCamera } from "three";
-import { X } from "lucide-react";
+import { Home } from "lucide-react";
 import { CAMERA, fitOrtho } from "@/lib/farm/layout";
 import { daylight, seasonOf, skyColor, type Season } from "@/lib/farm/time";
 import CalendarHud from "./calendar-hud";
 import { useReducedMotion } from "./use-reduced-motion";
 import Island from "./island";
 import Chickens from "./chickens";
+import { Board, gameFont, GameButton } from "./game-ui";
+import RotateHint from "./rotate-hint";
 import Khoi from "./khoi";
 import Particles from "./particles";
 import Sky from "./sky";
@@ -50,7 +52,11 @@ function Ready({ onReady }: { onReady: () => void }) {
 }
 
 function Notice({ children }: { children: ReactNode }) {
-  return <p role="status" className="absolute inset-0 flex items-center justify-center text-sm text-zinc-700 pointer-events-none">{children}</p>;
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6">
+      <Board className={`${gameFont.className} px-5 py-3 text-[17px] font-bold`}><p role="alert">{children}</p></Board>
+    </div>
+  );
 }
 
 export default function FarmMode({ onClose }: { onClose: () => void }) {
@@ -108,14 +114,10 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
       {status === "loading" && <Notice>Loading the farm…</Notice>}
       {status === "error" && <Notice>Couldn&apos;t load the farm. Try again later.</Notice>}
       <CalendarHud now={now} />
-      <button
-        type="button"
-        onClick={close}
-        autoFocus
-        className="absolute top-3 right-3 inline-flex h-11 items-center gap-2 rounded-full bg-white/90 px-4 text-sm text-zinc-800 shadow-sm hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
-      >
-        <X className="h-4 w-4" aria-hidden /> Back to homepage
-      </button>
+      <GameButton onClick={close} autoFocus aria-label="Back to homepage" className="absolute right-3 top-3">
+        <Home className="h-5 w-5" strokeWidth={2.5} aria-hidden /> Home
+      </GameButton>
+      <RotateHint />
     </div>,
     document.body,
   );
