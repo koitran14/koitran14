@@ -10,7 +10,9 @@ import { daylight, seasonOf, skyColor, type Season } from "@/lib/farm/time";
 import CalendarHud from "./calendar-hud";
 import { useReducedMotion } from "./use-reduced-motion";
 import Island from "./island";
+import Chickens from "./chickens";
 import Khoi from "./khoi";
+import Particles from "./particles";
 import Sky from "./sky";
 import { useClock } from "./use-clock";
 
@@ -97,6 +99,8 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
           <Suspense fallback={null}>
             <Island season={season} lampsOn={lampsOn} />
             <Khoi season={season} reducedMotion={reducedMotion} />
+            <Chickens lampsOn={lampsOn} reducedMotion={reducedMotion} />
+            <Particles season={season} reducedMotion={reducedMotion} />
             <Ready onReady={onReady} />
           </Suspense>
         </SceneBoundary>
