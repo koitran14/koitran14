@@ -11,7 +11,7 @@ import CalendarHud from "./calendar-hud";
 import { useReducedMotion } from "./use-reduced-motion";
 import Island from "./island";
 import Chickens from "./chickens";
-import { Board, gameFont, GameButton } from "./game-ui";
+import { Card, Chip, gameFont, GameButton } from "./game-ui";
 import RotateHint from "./rotate-hint";
 import Khoi from "./khoi";
 import Particles from "./particles";
@@ -54,7 +54,7 @@ function Ready({ onReady }: { onReady: () => void }) {
 function Notice({ children }: { children: ReactNode }) {
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-6">
-      <Board className={`${gameFont.className} px-5 py-3 text-[17px] font-bold`}><p role="alert">{children}</p></Board>
+      <Card className={`${gameFont.className} px-5 py-3 text-[17px] font-bold`}><p role="alert">{children}</p></Card>
     </div>
   );
 }
@@ -115,7 +115,10 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
       {status === "error" && <Notice>Couldn&apos;t load the farm. Try again later.</Notice>}
       <CalendarHud now={now} />
       <GameButton onClick={close} autoFocus aria-label="Back to homepage" className="absolute right-3 top-3">
-        <Home className="h-5 w-5" strokeWidth={2.5} aria-hidden /> Home
+        <Chip tone={{ top: "#FFFFFF", bottom: "#E9F9E2", lip: "#3C8F3A", ink: "#2F7D32" }} size={34}>
+          <Home className="h-[18px] w-[18px]" strokeWidth={2.75} aria-hidden />
+        </Chip>
+        Home
       </GameButton>
       <RotateHint />
     </div>,
