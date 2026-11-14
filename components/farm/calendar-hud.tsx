@@ -1,4 +1,7 @@
-import { Flower2, Leaf, Snowflake, Sun } from "lucide-react";
+"use client";
+
+import { useState, useSyncExternalStore } from "react";
+import { ChevronDown, ChevronUp, Flower2, Leaf, Snowflake, Sun } from "lucide-react";
 import { FLOCK } from "@/lib/farm/chickens";
 import { calendarLines, dayProgress, daylight, nextSeason, seasonOf, SEASON_NAME, type Season } from "@/lib/farm/time";
 import { Tile } from "./ui";
@@ -34,10 +37,43 @@ export default function CalendarHud({ now }: { now: Date }) {
   const night = daylight(hour).lampsOn;
   const next = nextSeason(now);
   const NextIcon = SEASON[next.season].icon;
+  const [expanded, setExpanded] = useExpanded();
+  const clock = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const toggle = (
+    <button
+      type="button"
+      onClick={() => setExpanded(!expanded)}
+      aria-expanded={expanded}
+      aria-label={expanded ? "Show less" : "Show farm details"}
+      className="grid h-11 w-11 place-items-center rounded-2xl bg-white text-zinc-600 transition-colors hover:text-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+      style={{ boxShadow: "0 6px 18px rgba(30,40,60,.12)" }}
+    >
+      {expanded ? <ChevronUp className="h-5 w-5" strokeWidth={2.25} aria-hidden /> : <ChevronDown className="h-5 w-5" strokeWidth={2.25} aria-hidden />}
+    </button>
+  );
+
   return (
     <div className="absolute left-3 top-3 select-none font-sans">
       {/* read on demand, not announced: it changes every minute */}
       <div className="sr-only">{calendarLines(now).join(", ")}</div>
+      {!expanded ? (
+        // compact: one 44 px row so the scene stays clear on small screens
+        <div className="flex items-stretch gap-1.5">
+          <div aria-hidden className="contents">
+            <Tile className="flex h-11 items-center gap-1.5 px-3 text-[13px] font-bold">
+              <span className="text-zinc-500">{DAYS[now.getDay()]}</span> {now.getDate()} {MONTHS[now.getMonth()]}
+            </Tile>
+            <Tile className="grid h-11 w-11 place-items-center" style={{ background: bg, color: fg }}>
+              <SeasonIcon className="h-5 w-5" strokeWidth={2.25} />
+            </Tile>
+            <div className="grid h-11 place-items-center rounded-2xl bg-zinc-900 px-3 text-[13px] font-semibold tabular-nums text-white" style={{ boxShadow: "0 6px 18px rgba(30,40,60,.12)" }}>
+              {clock}
+            </div>
+          </div>
+          {toggle}
+        </div>
+      ) : (
+      <div className="flex items-start gap-1.5">
       <div aria-hidden className="grid grid-cols-[72px_48px_76px] grid-rows-[48px_32px_64px] gap-1.5">
         <Tile className="row-span-2 px-2.5 py-2 leading-none">
           <div className="text-[11px] font-semibold text-zinc-500">{DAYS[now.getDay()]}</div>
@@ -69,6 +105,33 @@ export default function CalendarHud({ now }: { now: Date }) {
           <div className="text-[10px] font-semibold text-zinc-500">in {next.days} {next.days === 1 ? "day" : "days"}</div>
         </Tile>
       </div>
+      {toggle}
+      </div>
+      )}
     </div>
   );
+}
+
+// Small screens (portrait phones, short landscape phones) start compact; a visitor's own choice is remembered.
+const SMALL = "(max-width: 640px), (max-height: 520px)";
+const KEY = "farm-hud-expanded";
+
+function useExpanded(): [boolean, (v: boolean) => void] {
+  const small = useSyncExternalStore(
+    (onChange) => {
+      const mq = window.matchMedia(SMALL);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(SMALL).matches,
+    () => true,
+  );
+  const [choice, setChoice] = useState<boolean | null>(() => {
+    try { const v = localStorage.getItem(KEY); return v === null ? null : v === "1"; } catch { return null; }
+  });
+  const set = (v: boolean) => {
+    setChoice(v);
+    try { localStorage.setItem(KEY, v ? "1" : "0"); } catch { /* storage blocked: the choice lasts this visit */ }
+  };
+  return [choice ?? !small, set];
 }
