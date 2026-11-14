@@ -60,7 +60,8 @@ export default function Home() {
   const [farmOpen, setFarmOpen] = useState(false);
   const closeFarm = useCallback(() => {
     setFarmOpen(false);
-    farmButtonRef.current?.focus();
+    // the page is inert until the farm unmounts, so focus the opener on the next frame
+    requestAnimationFrame(() => farmButtonRef.current?.focus());
   }, []);
 
   return (
@@ -89,10 +90,13 @@ export default function Home() {
           </div>
           <div className="order-1 md:order-2 relative h-[440px] -mt-12">
             {/* wider and taller than the column so a dragged card isn't clipped */}
-            <PersonalCard
-              eventSource={heroRef}
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[100vw] pointer-events-none z-10"
-            />
+            {/* unmounted under the farm so its WebGL context and physics loop don't compete with it */}
+            {!farmOpen && (
+              <PersonalCard
+                eventSource={heroRef}
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[100vw] pointer-events-none z-10"
+              />
+            )}
             <p className="absolute bottom-0 inset-x-0 text-center text-xs text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
               drag me
             </p>

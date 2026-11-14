@@ -36,7 +36,8 @@ export default function CalendarHud({ now }: { now: Date }) {
   const NextIcon = SEASON[next.season].icon;
   return (
     <div className="absolute left-3 top-3 select-none font-sans">
-      <div role="status" aria-live="polite" className="sr-only">{calendarLines(now).join(", ")}</div>
+      {/* read on demand, not announced: it changes every minute */}
+      <div className="sr-only">{calendarLines(now).join(", ")}</div>
       <div aria-hidden className="grid grid-cols-[72px_48px_76px] grid-rows-[48px_32px_64px] gap-1.5">
         <Tile className="row-span-2 px-2.5 py-2 leading-none">
           <div className="text-[11px] font-semibold text-zinc-500">{DAYS[now.getDay()]}</div>

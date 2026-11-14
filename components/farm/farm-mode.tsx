@@ -17,6 +17,7 @@ import Khoi from "./khoi";
 import Particles from "./particles";
 import Sky from "./sky";
 import { useClock } from "./use-clock";
+import { clearFarmModels } from "./use-farm-model";
 
 /** Sky behind the island per season (matches the Blender renders in tools/voxel/farm_build.py). */
 export const WORLD_BG: Record<Season, string> = { xuan: "#FBE9F0", ha: "#E3F4FF", thu: "#FBEBD6", dong: "#DDE7F4" };
@@ -67,7 +68,8 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
   const reducedMotion = useReducedMotion();
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const onReady = useCallback(() => setStatus("ready"), []);
-  const onError = useCallback(() => setStatus("error"), []);
+  // A failed load is cached by the loader; drop it so closing and reopening really retries.
+  const onError = useCallback(() => { clearFarmModels(); setStatus("error"); }, []);
 
   // Back button closes the farm: push one history entry on open and leave through it.
   // Tracked in a ref, not history.state: Next's router copies state between entries.
@@ -86,10 +88,15 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // Keep keyboard and screen-reader focus inside the farm: everything else on the page goes inert.
+    const dialog = document.querySelector<HTMLElement>("[data-farm-dialog]");
+    const muted = Array.from(document.body.children).filter((el) => el !== dialog && !el.hasAttribute("inert"));
+    muted.forEach((el) => el.setAttribute("inert", ""));
     window.addEventListener("popstate", onPop);
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = overflow;
+      muted.forEach((el) => el.removeAttribute("inert"));
       window.removeEventListener("popstate", onPop);
       window.removeEventListener("keydown", onKey);
     };
@@ -97,7 +104,9 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
 
   // Portal to <body>: the homepage Section is transformed (framer-motion), which would trap position:fixed.
   return createPortal(
-    <div role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: skyColor(WORLD_BG[season], hour) }}>
+    <div data-farm-dialog role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: skyColor(WORLD_BG[season], hour) }}>
+      {/* outer boundary: no WebGL (or a lighting/camera error) must not take the homepage down */}
+      <SceneBoundary onError={onError}>
       <Canvas orthographic flat shadows dpr={[1, 2]}>
         <CameraRig />
         <Sky hour={hour} />
@@ -111,8 +120,9 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
           </Suspense>
         </SceneBoundary>
       </Canvas>
+      </SceneBoundary>
       {status === "loading" && <Notice>Loading the farm…</Notice>}
-      {status === "error" && <Notice>Couldn&apos;t load the farm. Try again later.</Notice>}
+      {status === "error" && <Notice>Couldn&apos;t load the farm. Close it and try again.</Notice>}
       <CalendarHud now={now} />
       <IconTile label="Back to homepage" onClick={close} autoFocus className="absolute right-3 top-3">
         <Home className="h-5 w-5" strokeWidth={2.25} aria-hidden />
