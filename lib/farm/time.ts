@@ -15,9 +15,22 @@ export function seasonOf(d: Date): Season {
 
 /** day: 0..1 sun strength; dusk: 0..1 orange tint around 6:00 and 18:00; lamps on 18:00–6:00. */
 export function daylight(hour: number): { day: number; dusk: number; lampsOn: boolean } {
-  const day = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI));
+  // full daylight from mid-morning to mid-afternoon; a plain sine left 8:00 looking like evening
+  const day = Math.min(1, 1.8 * Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI)));
   const dusk = Math.max(0, 1 - Math.abs(hour - 18) / 1.5, 1 - Math.abs(hour - 6) / 1.5);
   return { day: hour >= 6 && hour <= 18 ? day : 0, dusk, lampsOn: hour >= 18 || hour < 6 };
+}
+
+const mix = (a: string, b: string, t: number) => {
+  const ch = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+  return "#" + [0, 1, 2].map((i) => Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t).toString(16).padStart(2, "0")).join("");
+};
+
+/** Background behind the island: the season's sky, warmed at dusk, navy at night. */
+export function skyColor(base: string, hour: number): string {
+  const { day, dusk } = daylight(hour);
+  // darken toward night first, then lay the dusk glow on top so sunset reads warm, not grey
+  return mix(mix(base, "#26304F", 1 - Math.min(1, day + dusk / 2)), "#F7B98A", dusk * 0.5);
 }
 
 // Fixed names rather than toLocaleString, which formats differently across browsers.

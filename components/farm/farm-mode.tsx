@@ -1,12 +1,16 @@
 "use client";
 
 import { Component, Suspense, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Canvas, useThree } from "@react-three/fiber";
 import type { OrthographicCamera } from "three";
 import { X } from "lucide-react";
 import { CAMERA, fitOrtho } from "@/lib/farm/layout";
-import { seasonOf, type Season } from "@/lib/farm/time";
+import { daylight, seasonOf, skyColor, type Season } from "@/lib/farm/time";
+import CalendarHud from "./calendar-hud";
 import Island from "./island";
+import Sky from "./sky";
+import { useClock } from "./use-clock";
 
 /** Sky behind the island per season (matches the Blender renders in tools/voxel/farm_build.py). */
 export const WORLD_BG: Record<Season, string> = { xuan: "#FBE9F0", ha: "#E3F4FF", thu: "#FBEBD6", dong: "#DDE7F4" };
@@ -47,7 +51,10 @@ function Notice({ children }: { children: ReactNode }) {
 }
 
 export default function FarmMode({ onClose }: { onClose: () => void }) {
-  const season = seasonOf(new Date());
+  const now = useClock();
+  const season = seasonOf(now);
+  const hour = now.getHours() + now.getMinutes() / 60;
+  const { lampsOn } = daylight(hour);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const onReady = useCallback(() => setStatus("ready"), []);
   const onError = useCallback(() => setStatus("error"), []);
@@ -78,22 +85,22 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
     };
   }, [onClose, close]);
 
-  return (
-    <div role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: WORLD_BG[season] }}>
+  // Portal to <body>: the homepage Section is transformed (framer-motion), which would trap position:fixed.
+  return createPortal(
+    <div role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: skyColor(WORLD_BG[season], hour) }}>
       <Canvas orthographic flat shadows dpr={[1, 2]}>
         <CameraRig />
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[2, 12, 9]} intensity={1.6} castShadow shadow-mapSize={[2048, 2048]}
-          shadow-camera-left={-8} shadow-camera-right={8} shadow-camera-top={8} shadow-camera-bottom={-8} />
+        <Sky hour={hour} />
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>
-            <Island season={season} />
+            <Island season={season} lampsOn={lampsOn} />
             <Ready onReady={onReady} />
           </Suspense>
         </SceneBoundary>
       </Canvas>
       {status === "loading" && <Notice>Loading the farm…</Notice>}
       {status === "error" && <Notice>Couldn&apos;t load the farm. Try again later.</Notice>}
+      <CalendarHud now={now} />
       <button
         type="button"
         onClick={close}
@@ -102,6 +109,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
       >
         <X className="h-4 w-4" aria-hidden /> Back to homepage
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }
