@@ -31,6 +31,11 @@ const SEG = WALK.map((a, i) => {
 });
 const TOTAL = SEG.reduce((s, g) => s + g.len, 0);
 
+/** Fraction of the loop at which waypoint i is reached. */
+export function waypointT(i: number): number {
+  return SEG.slice(0, i).reduce((s, g) => s + g.len, 0) / TOTAL;
+}
+
 /** Position (world units) and y-heading (radians) at fraction t of the loop; t wraps. */
 export function walkAt(t: number): { pos: V3; heading: number } {
   let d = (((t % 1) + 1) % 1) * TOTAL;

@@ -8,7 +8,9 @@ import { X } from "lucide-react";
 import { CAMERA, fitOrtho } from "@/lib/farm/layout";
 import { daylight, seasonOf, skyColor, type Season } from "@/lib/farm/time";
 import CalendarHud from "./calendar-hud";
+import { useReducedMotion } from "./use-reduced-motion";
 import Island from "./island";
+import Khoi from "./khoi";
 import Sky from "./sky";
 import { useClock } from "./use-clock";
 
@@ -18,8 +20,7 @@ export const WORLD_BG: Record<Season, string> = { xuan: "#FBE9F0", ha: "#E3F4FF"
 /** Orthographic camera fitted to the island's 16:9 frame; refits on every resize. */
 function CameraRig() {
   const camera = useThree((s) => s.camera) as OrthographicCamera;
-  const size = useThree((s) => s.size);
-  useEffect(() => {
+  const size = useThree((s) => s.size);  useEffect(() => {
     const { halfW, halfH } = fitOrtho(size.width / size.height);
     const yaw = (CAMERA.yawDeg * Math.PI) / 180, pitch = (CAMERA.pitchDeg * Math.PI) / 180;
     const [tx, ty, tz] = CAMERA.target;
@@ -55,6 +56,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
   const season = seasonOf(now);
   const hour = now.getHours() + now.getMinutes() / 60;
   const { lampsOn } = daylight(hour);
+  const reducedMotion = useReducedMotion();
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const onReady = useCallback(() => setStatus("ready"), []);
   const onError = useCallback(() => setStatus("error"), []);
@@ -94,6 +96,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>
             <Island season={season} lampsOn={lampsOn} />
+            <Khoi season={season} reducedMotion={reducedMotion} />
             <Ready onReady={onReady} />
           </Suspense>
         </SceneBoundary>
