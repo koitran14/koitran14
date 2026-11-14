@@ -35,3 +35,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# voxel authoring outputs (regenerate with the tools/voxel scripts)
+tools/voxel/*.json
+tools/voxel/*.png
+tools/voxel/*.blend
+tools/voxel/*.blend1
+tools/voxel/*.glb
+
+# superpowers plan workspaces
+.superpowers/
