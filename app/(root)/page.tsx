@@ -3,10 +3,10 @@
 import { Heading, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import Section from "@/components/section";
-import { ArrowUpRight, Box, Github, Linkedin, Mail } from "lucide-react";
+import { ArrowUpRight, Box, Github, Linkedin, Mail, Sprout } from "lucide-react";
 import { BioDesc, BioSection, BioYear } from "@/components/bio";
 import dynamic from "next/dynamic";
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import useContactHook from "@/hooks/useContactHook";
 import { experiences } from "@/data/experience";
 import { Highlight } from "@/components/highlight";
@@ -19,6 +19,9 @@ const PersonalCard = dynamic(
   () => import("@/components/personal-card").then((m) => ({ default: m.PersonalCard })),
   { ssr: false }
 );
+
+// The 3D farm and its models load only after the visitor opens it.
+const FarmMode = dynamic(() => import("@/components/farm/farm-mode"), { ssr: false });
 
 const skills = [
   ["AI / LLM", "Claude API, MCP, Claude Code plugins, AWS Bedrock, OpenAI API, agent design"],
@@ -53,6 +56,12 @@ export default function Home() {
   const { onOpen } = useContactHook();
   // The card canvas ignores pointer events (it overlaps the text); the hero forwards them.
   const heroRef = useRef<HTMLElement>(null!);
+  const farmButtonRef = useRef<HTMLButtonElement>(null);
+  const [farmOpen, setFarmOpen] = useState(false);
+  const closeFarm = useCallback(() => {
+    setFarmOpen(false);
+    farmButtonRef.current?.focus();
+  }, []);
 
   return (
     <Section delay={0}>
@@ -69,6 +78,14 @@ export default function Home() {
               I build AI agent platforms and production automation — from LLM integration
               (Claude, AWS Bedrock, MCP) to backend services, data pipelines and real-time frontends.
             </p>
+            <button
+              ref={farmButtonRef}
+              type="button"
+              onClick={() => setFarmOpen(true)}
+              className="mt-5 inline-flex h-11 items-center gap-2 rounded-full border border-zinc-300 dark:border-zinc-700 px-4 text-sm text-zinc-800 dark:text-zinc-200 hover:border-blue-500/60 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+            >
+              <Sprout className="h-4 w-4" aria-hidden /> Visit my farm
+            </button>
           </div>
           <div className="order-1 md:order-2 relative h-[440px] -mt-12">
             {/* wider and taller than the column so a dragged card isn't clipped */}
@@ -81,6 +98,7 @@ export default function Home() {
             </p>
           </div>
         </header>
+        {farmOpen && <FarmMode onClose={closeFarm} />}
 
         <Reveal as="section">
           <Heading as="h2" variant="section-title">Experience</Heading>

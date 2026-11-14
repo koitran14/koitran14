@@ -24,7 +24,8 @@ PAL = {
 }
 ROOF = "#B4473C"
 
-def build(season, rng):
+def build(season, rng, preview=True):
+    """preview=True bakes chickens and air particles in for still renders; the live scene animates its own."""
     P = PAL[season]; V = {}; snow = P["snow"]
     def put(x, y, z, c): V[(x, y, z)] = c
     def box(x0, x1, y0, y1, z0, z1, c):
@@ -140,16 +141,11 @@ def build(season, rng):
     # watering can by the gate
     if not snow: box(70, 73, 0, 3, 112, 114, "#7FB5E0"); box(74, 75, 2, 2, 113, 113, "#7FB5E0")
 
-    # ---- right side: chicken yard, well, hay, mailbox ----
-    for x in range(132, 190, 4):
-        for z in (66, 96): box(x, x, 0, 5, z, z, WOOD)
-    for z in range(66, 97, 4): box(132, 132, 0, 5, z, z, WOOD); box(188, 188, 0, 5, z, z, WOOD)
-    for z in (66, 96): box(132, 188, 3, 3, z, z, WOOD)
-    box(132, 132, 3, 3, 66, 96, WOOD); box(188, 188, 3, 3, 66, 96, WOOD)
+    # ---- right side: coop (chickens roam free, no pen by default), well, hay, mailbox ----
     box(146, 170, 0, 12, 70, 84, "#E7B98A"); box(156, 160, 0, 6, 84, 84, "#5C3B28")
     for k in range(6): box(144, 172, 13 + k, 13 + k, 69 + k, 85 - k, SNOWC if snow and k > 0 else ROOF)
-    for (x, z) in ((140, 88), (150, 90), (172, 88), (180, 78), (138, 76)):
-        box(x, x + 3, 0, 3, z, z + 4, "#FFFFFF"); put(x + 1, 4, z + 4, "#E2564B"); put(x + 1, 3, z + 5, "#F2B04A")
+    if preview:  # in the live scene the chickens are separate, animated models
+        for (x, z) in ((140, 88), (150, 90), (172, 88), (180, 78), (138, 76)): chicken(put, box, x, z)
     box(176, 184, 0, 2, 70, 73, WOODD); box(177, 183, 2, 2, 71, 72, "#E9C46A")
     rbox(110, 121, 0, 6, 112, 123, 3, STONE); box(113, 118, 6, 6, 115, 120, P["water"])
     for x in (110, 120): box(x, x + 1, 6, 16, 117, 118, WOODD)
@@ -186,9 +182,29 @@ def build(season, rng):
             cx = (-14 if side < 0 else IW + 14) + side * crng.randint(-4, 14)
             cy, cz = crng.randint(-12, 20), crng.randint(0, ID)
             rbox(cx - r, cx + r, cy - r // 2 - 2, cy + r // 2 + 2, cz - r, cz + r, max(3, r // 2), "#FFFFFF" if crng.random() < 0.7 else "#F3F1F7")
-    if P["air"]:
+    if P["air"] and preview:  # the live scene animates its own particles
         for _ in range(70): put(rng.randint(-20, IW + 20), rng.randint(10, 70), rng.randint(-10, ID + 10), P["air"])
     return [[x, y, z, c] for (x, y, z), c in V.items()]
+
+def chicken(put, box, x, z):
+    box(x, x + 3, 0, 3, z, z + 4, "#FFFFFF"); put(x + 1, 4, z + 4, "#E2564B"); put(x + 1, 3, z + 5, "#F2B04A")
+
+def export_glb(name, voxels):
+    """Bevelled merged-face mesh of the voxels, written to public/models/farm/<name>.glb."""
+    bpy.ops.wm.read_factory_settings(use_empty=True); bb.MATS.clear()
+    ob = bb.build_figure({"name": name, "voxels": voxels})
+    bpy.ops.object.select_all(action='DESELECT'); ob.select_set(True)
+    os.makedirs(bb.MODELS, exist_ok=True)
+    bpy.ops.export_scene.gltf(filepath=os.path.join(bb.MODELS, f"{name}.glb"), export_format='GLB', use_selection=True, export_apply=True, **bb.DRACO)
+
+def export_all():
+    for season in PAL:
+        export_glb(f"island-{season}", build(season, random.Random(3), preview=False))
+    V = {}
+    chicken(lambda x, y, z, c: V.__setitem__((x, y, z), c),
+            lambda x0, x1, y0, y1, z0, z1, c: [V.__setitem__((x, y, z), c) for x in range(x0, x1 + 1) for y in range(y0, y1 + 1) for z in range(z0, z1 + 1)],
+            -2, -2)  # origin at the feet, centred
+    export_glb("chicken", [[x, y, z, c] for (x, y, z), c in V.items()])
 
 def render(season, fig):
     bpy.ops.wm.read_factory_settings(use_empty=True); bb.MATS.clear()
@@ -216,6 +232,9 @@ def render(season, fig):
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, f"farm-{season}.blend"))
     bpy.ops.render.render(write_still=True)
 
-figs = {f["name"]: f for f in json.load(open(os.path.join(OUT, "figures.json")))}
-for season in (ARGS or ["dong", "xuan"]):
-    render(season, figs[season])
+if "--export" in ARGS:
+    export_all()
+else:
+    figs = {f["name"]: f for f in json.load(open(os.path.join(OUT, "figures.json")))}
+    for season in (ARGS or ["dong", "xuan"]):
+        render(season, figs[season])

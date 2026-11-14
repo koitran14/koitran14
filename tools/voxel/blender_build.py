@@ -53,11 +53,15 @@ def build_figure(fig):
     me.from_pydata(verts, [], faces)
     for c in slots: me.materials.append(color_mat(c))
     me.polygons.foreach_set("material_index", fmat)
+    # merge coplanar same-colour voxel faces into large polygons: the same look, a fraction of the geometry
+    bm = bmesh.new(); bm.from_mesh(me)
+    bmesh.ops.dissolve_limit(bm, angle_limit=0.001, verts=bm.verts[:], edges=bm.edges[:], delimit={'MATERIAL'})
+    bm.to_mesh(me); bm.free()
     ob = bpy.data.objects.new(fig["name"], me)
     bpy.context.collection.objects.link(ob)
     # round only the real corners; coplanar faces of one colour stay one clean surface
     bev = ob.modifiers.new("bevel", 'BEVEL')
-    bev.width = S * 0.14; bev.segments = 2; bev.limit_method = 'ANGLE'; bev.angle_limit = 0.5; bev.use_clamp_overlap = True
+    bev.width = S * 0.14; bev.segments = 1;  # 2 segments tripled the .glb size for no visible gain at this scale bev.limit_method = 'ANGLE'; bev.angle_limit = 0.5; bev.use_clamp_overlap = True
     return ob
 
 def outlines():
@@ -154,6 +158,9 @@ def main():
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT, "khoi-seasons.blend"))
     bpy.ops.render.render(write_still=True)
 
+# Draco-compressed geometry for the shipped .glb files; the page decodes it with three's bundled decoder (public/draco/).
+DRACO = dict(export_draco_mesh_compression_enable=True, export_draco_mesh_compression_level=7, export_draco_position_quantization=14)
+
 # Joint pivots in voxel coordinates (post-stretch), see partOf() in figures.mjs.
 PIVOTS = {"body": (0, 0, 0), "head": (0, 16, 0), "legL": (-3, 8, 0), "legR": (3, 8, 0), "armL": (-7, 14.5, 0), "armR": (7, 14.5, 0)}
 
@@ -171,7 +178,7 @@ def export_parts(fig, path, puff=0):
     bpy.ops.object.select_all(action='DESELECT')
     root.select_set(True)
     for c in root.children: c.select_set(True)
-    bpy.ops.export_scene.gltf(filepath=path, export_format='GLB', use_selection=True, export_apply=True)
+    bpy.ops.export_scene.gltf(filepath=path, export_format='GLB', use_selection=True, export_apply=True, **DRACO)
     return root
 
 if __name__ == "__main__":

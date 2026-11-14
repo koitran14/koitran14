@@ -45,3 +45,4 @@ tools/voxel/*.glb
 
 # superpowers plan workspaces
 .superpowers/
+tools/voxel/__pycache__/
