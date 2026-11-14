@@ -3,11 +3,11 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
-import { COOP_DOOR, nextTarget, stepToward } from "@/lib/farm/chickens";
+import { COOP_DOOR, FLOCK, nextTarget, stepToward } from "@/lib/farm/chickens";
 import { S } from "@/lib/farm/layout";
 import { useFarmModel } from "./use-farm-model";
 
-const START: [number, number][] = [[140, 100], [150, 104], [172, 96], [180, 92], [128, 96]];
+const START = ([[140, 100], [150, 104], [172, 96], [180, 92], [128, 96]] as [number, number][]).slice(0, FLOCK);
 const SPEED = 6; // voxels per second
 
 type Hen = { at: [number, number]; to: [number, number]; wait: number };

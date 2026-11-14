@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const loadTs = require('./load-ts.cjs');
-const { seasonOf, daylight, calendarLines, skyColor } = loadTs('../lib/farm/time.ts');
+const { seasonOf, daylight, calendarLines, skyColor, nextSeason, dayProgress } = loadTs('../lib/farm/time.ts');
 
 test('season boundaries', () => {
   assert.equal(seasonOf(new Date(2026, 0, 31)), 'dong');
@@ -36,6 +36,21 @@ test('sky colour: season colour at noon, night navy at midnight, warmer at dusk'
   assert.equal(skyColor('#DDE7F4', 0), '#26304f');
   const dusk = skyColor('#DDE7F4', 17.5);
   assert.ok(parseInt(dusk.slice(1, 3), 16) > parseInt(dusk.slice(5, 7), 16), `dusk ${dusk} should lean red`);
+});
+
+test('next season and days until it starts', () => {
+  assert.deepEqual(nextSeason(new Date(2026, 10, 14, 7, 57)), { season: 'xuan', days: 79 }); // 14 Nov → 1 Feb
+  assert.deepEqual(nextSeason(new Date(2026, 0, 31, 23, 0)), { season: 'xuan', days: 1 });
+  assert.deepEqual(nextSeason(new Date(2026, 1, 1, 0, 0)), { season: 'ha', days: 89 });   // 1 Feb → 1 May
+  assert.deepEqual(nextSeason(new Date(2026, 6, 31, 12, 0)), { season: 'thu', days: 1 });
+});
+
+test('day progress runs 0 at 6:00 to 1 at 18:00 and clamps outside', () => {
+  assert.equal(dayProgress(6), 0);
+  assert.equal(dayProgress(12), 0.5);
+  assert.equal(dayProgress(18), 1);
+  assert.equal(dayProgress(3), 0);
+  assert.equal(dayProgress(22), 1);
 });
 
 test('calendar lines', () => {

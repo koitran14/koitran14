@@ -21,6 +21,26 @@ export function daylight(hour: number): { day: number; dusk: number; lampsOn: bo
   return { day: hour >= 6 && hour <= 18 ? day : 0, dusk, lampsOn: hour >= 18 || hour < 6 };
 }
 
+// Each season starts on the 1st of its first month (see seasonOf).
+const STARTS: [month: number, season: Season][] = [[1, "xuan"], [4, "ha"], [7, "thu"], [10, "dong"]];
+
+/** The coming season and how many calendar days until its first day (local dates, DST-safe). */
+export function nextSeason(d: Date): { season: Season; days: number } {
+  const today = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  for (const year of [d.getFullYear(), d.getFullYear() + 1]) {
+    for (const [month, season] of STARTS) {
+      const start = new Date(year, month, 1);
+      if (start > today) return { season, days: Math.round((start.getTime() - today.getTime()) / 86_400_000) };
+    }
+  }
+  throw new Error("unreachable");
+}
+
+/** How far the sun is across the sky: 0 at 6:00, 1 at 18:00, clamped outside daytime. */
+export function dayProgress(hour: number): number {
+  return Math.min(1, Math.max(0, (hour - 6) / 12));
+}
+
 const mix = (a: string, b: string, t: number) => {
   const ch = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
   return "#" + [0, 1, 2].map((i) => Math.round(ch(a, i) + (ch(b, i) - ch(a, i)) * t).toString(16).padStart(2, "0")).join("");

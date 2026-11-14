@@ -1,6 +1,9 @@
 // Free-range chickens on the lower-right lawn (voxel x/z; see tools/voxel/farm_build.py).
 // They keep off the stream and the field (spec 4.4c) and out of the coop, well and hay.
 
+/** How many hens roam the island in phase 1. */
+export const FLOCK = 5;
+
 type Box = [x0: number, x1: number, z0: number, z1: number];
 const LAWN: Box = [106, 186, 70, 126];
 const BLOCKED: Box[] = [
