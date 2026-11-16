@@ -7,6 +7,10 @@ const FRAME_H = (FRAME_W * 9) / 16;
 
 /** Island centre (32 × 24 cells of 6 voxels) and the fixed isometric-ish view. */
 export const CAMERA = { yawDeg: 25, pitchDeg: 33, target: [4.8, 0.3, 3.6] as [number, number, number] };
+/** Where the camera looks for each island of the strip: the main one, and the two unlockable ones beside it
+ *  (cozy_farm.py LEFT/RIGHT centres, voxels (-135, 14, 40) and (327, 14, 50)). */
+export const VIEWS: Record<"left" | "main" | "right", [number, number, number]> = { left: [-6.75, 0.7, 2.0], main: CAMERA.target, right: [16.35, 0.7, 2.5] };
+export type View = keyof typeof VIEWS;
 
 /** Fit the 16:9 frame: wider screens keep its height, narrower ones (phones) keep its full width. */
 export function fitOrtho(aspect: number): { halfW: number; halfH: number } {

@@ -6,7 +6,7 @@ import Section from "@/components/section";
 import { ArrowUpRight, Box, Github, Linkedin, Mail, Sprout } from "lucide-react";
 import { BioDesc, BioSection, BioYear } from "@/components/bio";
 import dynamic from "next/dynamic";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import useContactHook from "@/hooks/useContactHook";
 import { experiences } from "@/data/experience";
 import { Highlight } from "@/components/highlight";
@@ -58,6 +58,8 @@ export default function Home() {
   const heroRef = useRef<HTMLElement>(null!);
   const farmButtonRef = useRef<HTMLButtonElement>(null);
   const [farmOpen, setFarmOpen] = useState(false);
+  // the sign-in button in a farm email lands here with ?farm_token=…: open the farm straight away to finish signing in
+  useEffect(() => { if (new URLSearchParams(window.location.search).has("farm_token")) setFarmOpen(true); }, []);
   const closeFarm = useCallback(() => {
     setFarmOpen(false);
     // the page is inert until the farm unmounts, so focus the opener on the next frame
