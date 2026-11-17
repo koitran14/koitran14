@@ -63,7 +63,7 @@ export default function Chickens({ lampsOn, reducedMotion, feedUntil = 0 }: { la
           <primitive object={m} />
           {/* a soft contact shadow: white hens on snow (and pale grass) need it to read at all */}
           <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]} renderOrder={1}>
-            <circleGeometry args={[0.075, 20]} />
+            <circleGeometry args={[0.06, 20]} />
             <meshBasicMaterial color="#2A2420" transparent opacity={0.32} depthWrite={false} />
           </mesh>
         </group>
