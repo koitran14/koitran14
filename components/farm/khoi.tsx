@@ -135,7 +135,8 @@ export default function Khoi({ season, reducedMotion, order, onWave }: { season:
     if (s.mode === "idle" && !reducedMotion && now - s.lastOrder > RESUME_AFTER) {   // back to his stroll from the barn door
       s.resuming = true; if (!goTo([WALK[0][0], WALK[0][2]])) { s.mode = "auto"; s.clock = 0; s.resuming = false; }
     }
-    s.heading = s.mode === "path" || s.mode === "key" ? turn(s.heading, heading, dt * 12) : heading;
+    // ease every turn: the stroll used to snap up to 90° in one frame at its corners and when stopping for chores
+    s.heading = reducedMotion || s.mode === "task" ? heading : turn(s.heading, heading, dt * 12);
 
     // pose
     const p: Pose | null = s.mode === "task" && s.job && s.job.t >= 0 ? pose(s.job.task, s.job.t) : null;

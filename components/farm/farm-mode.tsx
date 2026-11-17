@@ -58,6 +58,22 @@ function CameraRig({ view, reducedMotion }: { view: View; reducedMotion: boolean
   return null;
 }
 
+/** Frames that run slow (a weak GPU, a 2× screen) lower the resolution a step at a time, down to 1×: a softer image
+ *  beats a jerky one. Pixel density is capped at 1.5 for the same reason (the GPU cost grows with the square of it). */
+function AdaptiveDpr() {
+  const setDpr = useThree((s) => s.setDpr);
+  const acc = useRef({ t: 0, n: 0, dpr: Math.min(1.5, window.devicePixelRatio || 1) });
+  useFrame((_, delta) => {
+    const a = acc.current;
+    if (delta > 0.25) return;   // back from a hidden tab: not a slow frame
+    a.t += delta; a.n++;
+    if (a.t < 2) return;
+    const ms = (a.t / a.n) * 1000; a.t = 0; a.n = 0;
+    if (ms > 22 && a.dpr > 1) setDpr((a.dpr = Math.max(1, a.dpr - 0.25)));
+  });
+  return null;
+}
+
 // Models load inside the Canvas's own React root, where outer Suspense / error boundaries can't see them;
 // this boundary lives inside the scene and reports a failure out to the HTML overlay.
 class SceneBoundary extends Component<{ children: ReactNode; onError: () => void }, { failed: boolean }> {
@@ -168,8 +184,9 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
     <div data-farm-dialog role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: skyColor(WORLD_BG[season], hour) }}>
       {/* outer boundary: no WebGL (or a lighting/camera error) must not take the homepage down */}
       <SceneBoundary onError={onError}>
-      <Canvas orthographic shadows dpr={[1, 2]} gl={{ toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>   {/* filmic, not flat: closest to the Blender renders' AgX Punchy (three's AgX came out washed out) */}
+      <Canvas orthographic shadows dpr={[1, 1.5]} gl={{ toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>   {/* filmic, not flat: closest to the Blender renders' AgX Punchy (three's AgX came out washed out) */}
         <CameraRig view={view} reducedMotion={reducedMotion} />
+        <AdaptiveDpr />
         <Sky hour={hour} season={season} focus={VIEWS[view]} />
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>

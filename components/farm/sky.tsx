@@ -62,7 +62,8 @@ export default function Sky({ hour, season, focus = CAMERA.target }: { hour: num
   const sunColor = `rgb(255, ${Math.round(255 * (0.93 - 0.28 * warm))}, ${Math.round(255 * (0.84 - 0.4 * warm))})`;
   return (
     <>
-      <hemisphereLight args={["#FFF6EE", "#8A7A6A"]} intensity={0.35 + 0.6 * day} />
+      {/* less sky and fill than before: the scene was flat next to Blender, where the sun side and the shade differ clearly */}
+      <hemisphereLight args={["#FFF6EE", "#8A7A6A"]} intensity={0.3 + 0.45 * day} />
       <directionalLight
         ref={light}
         position={[tx + sun.x * 20, ty + sun.y * 20, tz + sun.z * 20]}
@@ -76,7 +77,7 @@ export default function Sky({ hour, season, focus = CAMERA.target }: { hour: num
       {/* bounce: Cycles lit the faces turned to the camera with light thrown back off the warm ground and sky; with the sun
           behind the island they went near black here (cliffs, crown cores, roofs). A soft shadowless fill from the viewer's
           side stands in for it. Shadow casters sort first, so the sun stays directionalLights[0] for the foliage shader. */}
-      <directionalLight position={FILL} color="#FFE6CC" intensity={0.15 + 0.95 * day} />
+      <directionalLight position={FILL} color="#FFE6CC" intensity={0.15 + 0.55 * day} />
     </>
   );
 }

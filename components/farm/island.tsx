@@ -172,9 +172,10 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
       if (top.startsWith("water-surface") || /^(pond|paddy-water)#/.test(mat0)) {
         mesh.material = new MeshPhysicalMaterial({
           // see-through by blending, not transmission: transmission re-renders the whole scene every frame (21 ms → 5 ms a frame)
-          // mostly opaque, sharper ripples and a brighter sky: keeps the sunlit glints the transmitted version had
-          color: new Color(WATER[season]), roughness: 0.03, transparent: true, opacity: 0.9, depthWrite: false,
-          normalMap: ripples, normalScale: new Vector2(0.7, 0.7), envMapIntensity: 1.8,
+          // Blender's stream reads as sunlit sheen, not blue paint: a darker body that mostly reflects, rough enough that
+          // the rippled normals spread the sky and sun into a broad white glare (matched side by side, autumn 15:00)
+          color: new Color(WATER[season]).multiplyScalar(0.58), roughness: 0.3, transparent: true, opacity: 0.85, depthWrite: false,
+          normalMap: ripples, normalScale: new Vector2(1.2, 1.2), envMapIntensity: 3.6,
         });
         mesh.castShadow = false; return;
       }
@@ -194,7 +195,7 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
         if (top.startsWith("grass")) grassShader(m, time);
         else if (LEAVES.includes(m.name.split("#")[0])) leafShader(m, time);
         else if (m.name.startsWith("core-")) m.color.multiplyScalar(1.7);   // the dark crown cores showed through the thinned leaf cards
-        else if (/^(tile-)?roof#/.test(m.name)) Object.assign(m, { map: shingles(m.name.startsWith("tile") ? "#6E4A40" : "#9A5040"), roughness: 0.78 }).color.set("#FFFFFF");
+        else if (/^(tile-)?roof#/.test(m.name)) Object.assign(m, { map: shingles(m.name.startsWith("tile") ? "#8A5A4E" : "#BE5E4A"), roughness: 0.78 }).color.set("#FFFFFF");
         else if (/^strata#/.test(m.name)) m.color.setScalar(2.3);       // baked swatch is the unlit albedo; Cycles' bounce made these cliffs warm and light
         else if (m.name === "terrain#side") m.color.setScalar(1.5);
         else if (m.name === "terrain#top") m.color.setScalar(0.78);   // the ground between blades sits in their shade
