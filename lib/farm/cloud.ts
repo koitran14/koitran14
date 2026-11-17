@@ -73,8 +73,9 @@ export async function verifyLink(hash: string): Promise<Player | { error: string
   return error || !p ? { error: "That sign-in link has expired or was already used. Ask for a new code." } : p;
 }
 
+/** Sign out of this browser only: Supabase's default ends every session of the account, on every device. */
 export async function signOut(): Promise<void> {
-  await sb()?.auth.signOut().catch(() => undefined);
+  await sb()?.auth.signOut({ scope: "local" }).catch(() => undefined);
 }
 
 /** Usage log (table farm_events): one row per thing a signed-in player does. Fire-and-forget; a lost row never matters. */

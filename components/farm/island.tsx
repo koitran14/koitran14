@@ -5,8 +5,9 @@ import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import { S } from "@/lib/farm/layout";
 import {
   CanvasTexture, Color, DoubleSide, Euler, Matrix4, MeshPhysicalMaterial, Quaternion, RepeatWrapping, SRGBColorSpace, Vector2, Vector3,
-  InstancedMesh, type Material, type Mesh, type MeshStandardMaterial, type Object3D, type WebGLProgramParametersWithUniforms,
+  InstancedMesh, Mesh, type BufferGeometry, type Material, type MeshStandardMaterial, type Object3D, type WebGLProgramParametersWithUniforms,
 } from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { blenderFrame, blenderToThree, compileDriver } from "@/lib/farm/drivers";
 import type { Season } from "@/lib/farm/time";
 import { useFarmModel } from "./use-farm-model";
@@ -170,13 +171,15 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
       const mat0 = ([] as Material[]).concat(mesh.material)[0]?.name ?? "";
       if (top.startsWith("water-surface") || /^(pond|paddy-water)#/.test(mat0)) {
         mesh.material = new MeshPhysicalMaterial({
-          color: new Color(WATER[season]), roughness: 0.04, transmission: 0.75, thickness: 0.15, ior: 1.333, transparent: true,
-          normalMap: ripples, normalScale: new Vector2(0.45, 0.45), envMapIntensity: 1.3,
+          // see-through by blending, not transmission: transmission re-renders the whole scene every frame (21 ms → 5 ms a frame)
+          // mostly opaque, sharper ripples and a brighter sky: keeps the sunlit glints the transmitted version had
+          color: new Color(WATER[season]), roughness: 0.03, transparent: true, opacity: 0.9, depthWrite: false,
+          normalMap: ripples, normalScale: new Vector2(0.7, 0.7), envMapIntensity: 1.8,
         });
         mesh.castShadow = false; return;
       }
       if (/^glasshouse#/.test(mat0)) {
-        mesh.material = new MeshPhysicalMaterial({ color: "#EAF6F2", roughness: 0.08, transmission: 0.9, thickness: 0.02, transparent: true, envMapIntensity: 1.4 });
+        mesh.material = new MeshPhysicalMaterial({ color: "#EAF6F2", roughness: 0.08, transparent: true, opacity: 0.28, depthWrite: false, envMapIntensity: 1.4 });   // blended glass, as the water
         mesh.castShadow = false; return;
       }
       if (top.startsWith("fall-")) {
@@ -209,7 +212,36 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
       inst.receiveShadow = true; inst.castShadow = false; inst.frustumCulled = false;
       g.parent!.add(inst); g.parent!.remove(g);
     }
-  return { driven: readDriven(root), glowing, falls };
+  const driven = readDriven(root);
+  mergeRigid(driven.map((d) => d.node));
+  return { driven, glowing, falls };
+}
+
+/** Each moving group (a swaying crown, a turning sail) arrives as many small meshes that only ever move together: a bare
+ *  winter tree alone was ~190 branch meshes, ~3,700 draw calls a frame with shadows. Merge them per material under the
+ *  node that moves them, so each group draws once per material. Meshes under a nested moving node stay apart. */
+function mergeRigid(hosts: Object3D[]) {
+  const moving = new Set(hosts);
+  for (const host of hosts) {
+    host.updateWorldMatrix(true, true);
+    const toHost = host.matrixWorld.clone().invert(), groups = new Map<string, Mesh[]>();
+    host.traverse((o) => {
+      const m = o as Mesh;
+      if (!m.isMesh || (m as InstancedMesh).isInstancedMesh || Array.isArray(m.material)) return;
+      for (let p = m.parent; p && p !== host; p = p.parent) if (moving.has(p)) return;
+      const key = `${m.material.uuid}|${Object.keys(m.geometry.attributes).sort().join()}|${!!m.geometry.index}`;   // mergeable only alike
+      groups.set(key, [...(groups.get(key) ?? []), m]);
+    });
+    for (const list of Array.from(groups.values())) {
+      if (list.length < 2) continue;
+      const merged = mergeGeometries(list.map((m): BufferGeometry => m.geometry.clone().applyMatrix4(toHost.clone().multiply(m.matrixWorld))));
+      if (!merged) continue;
+      const one = new Mesh(merged, list[0].material);
+      Object.assign(one, { name: list[0].name, castShadow: list[0].castShadow, receiveShadow: true });
+      list.forEach((m) => m.removeFromParent());
+      host.add(one);
+    }
+  }
 }
 
 /** Lamps glow at night; drivers, falls and ripples move. */
