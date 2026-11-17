@@ -78,3 +78,13 @@ test('every season has the Blender stream render, its world-to-image map, and th
     for (const n of ['bank0', 'bank1', 'water-surface0', 'water-surface1', 'fall-front', 'fall-upper']) assert.ok(names.includes(n), `${s} has no ${n}`);
   }
 });
+
+test('both water islands have their Blender water render and map in every season, naming parts their model has', () => {
+  for (const id of ['terraces', 'lotus'])
+    for (const s of SEASONS) {
+      assert.ok(fs.statSync(path.join(MODELS, `stream-${id}-${s}.jpg`)).size < 1024 * 1024, `${id} ${s} image over 1 MB`);
+      const map = JSON.parse(fs.readFileSync(path.join(MODELS, `stream-${id}-${s}.json`), 'utf8'));
+      const names = glbJson(`unlock-${id}-${s}.glb`).nodes.map((n) => n.name);
+      for (const p of Object.keys(map.parts)) assert.ok(names.some((n) => n.startsWith(p)), `${id} ${s} has no ${p}`);
+    }
+});

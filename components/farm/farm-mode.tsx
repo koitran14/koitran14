@@ -13,16 +13,17 @@ import Island from "./island";
 import Chickens from "./chickens";
 import { IconTile, Tile } from "./ui";
 import RotateHint from "./rotate-hint";
-import Khoi, { type Order } from "./khoi";
+import Khoi, { type Order, type Zone } from "./khoi";
 import Work from "./work";
 import { useFarm } from "./use-farm";
 import { buy, finish, jobFor, UNLOCKS, type Job, type Target } from "@/lib/farm/farmwork";
 import { AccountPanel, EmailGate, ShopPanel } from "./panels";
 import { logEvent } from "@/lib/farm/cloud";
-import { nearestWalkable } from "@/lib/farm/nav";
+import { findPath, nearestWalkable, setOpenIslands } from "@/lib/farm/nav";
 import type { TaskKind, WorkTarget } from "@/lib/farm/tasks";
 import Particles from "./particles";
 import Sky from "./sky";
+import Sunlight from "./sunlight";
 import { useClock } from "./use-clock";
 import { clearFarmModels } from "./use-farm-model";
 
@@ -34,6 +35,9 @@ const REASON: Record<string, string> = {
 
 /** Sky behind the island per season (matches the Blender renders in tools/voxel/farm_build.py). */
 export const WORLD_BG: Record<Season, string> = { xuan: "#FBE9F0", ha: "#E3F4FF", thu: "#FBEBD6", dong: "#DDE7F4" };
+
+// Dev only: ?unlocks=all shows every unlockable, to check them by eye without touching anyone's saved farm.
+const QC_UNLOCKS = process.env.NODE_ENV !== "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("unlocks") === "all" ? UNLOCKS.map((u) => u.id) : null;
 
 const YAW = (CAMERA.yawDeg * Math.PI) / 180, PITCH = (CAMERA.pitchDeg * Math.PI) / 180;
 const BACK = new Vector3(Math.sin(YAW) * Math.cos(PITCH), Math.sin(PITCH), Math.cos(YAW) * Math.cos(PITCH)).multiplyScalar(30);
@@ -117,6 +121,15 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
   const views: View[] = [...(farm.unlocked.includes("terraces") ? ["left" as const] : []), "main", ...(farm.unlocked.includes("lotus") ? ["right" as const] : [])];
   const [view, setView] = useState<View>("main");
   const vi = views.indexOf(view);
+  // the islands bought are walkable; build the walking grid while the browser is idle, not on the first click
+  const opened = QC_UNLOCKS ?? farm.unlocked;
+  useEffect(() => {
+    setOpenIslands(opened);
+    const ric = window.requestIdleCallback ?? ((f: () => void) => window.setTimeout(f, 200));
+    ric(() => { findPath([24, 44], [24, 46]); });
+  }, [opened]);
+  // the camera follows Khôi onto an island and back (the arrows still let you look without walking)
+  const onZone = useCallback((z: Zone) => setView(z), []);
   const go = (v: View) => { setView(v); logEvent("view_island", { view: v }); };
   // nobody plays before confirming an email; signing out closes everything and goes back to the door
   const inside = account.gate === "in";
@@ -192,11 +205,12 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
         <Sky hour={hour} season={season} focus={VIEWS[view]} />
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>
-            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={farm.unlocked} day={daylight(hour).day} />
+            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={QC_UNLOCKS ?? farm.unlocked} day={daylight(hour).day} />
             <Work season={season} farm={farm} onTarget={onTarget} />
-            <Khoi season={season} reducedMotion={reducedMotion} order={order} onWave={onWave} />
+            <Khoi season={season} reducedMotion={reducedMotion} order={order} onWave={onWave} onZone={onZone} />
             <Chickens lampsOn={lampsOn} reducedMotion={reducedMotion} feedUntil={feedUntil} />
             <Particles season={season} reducedMotion={reducedMotion} />
+            <Sunlight hour={hour} season={season} reducedMotion={reducedMotion} />
             <Ready onReady={onReady} />
           </Suspense>
         </SceneBoundary>

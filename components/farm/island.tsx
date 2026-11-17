@@ -12,6 +12,9 @@ import { FileLoader, MeshBasicMaterial, TextureLoader, Vector4, type Texture } f
 import { blenderFrame, blenderToThree, compileDriver } from "@/lib/farm/drivers";
 import type { Season } from "@/lib/farm/time";
 import { useFarmModel } from "./use-farm-model";
+import { heightAt } from "@/lib/farm/nav";
+import { DAY, fallMaterial, footOf, Spray, type Foot } from "./falls";
+import { sunRim } from "./sunlight";
 
 /** The wind every moving thing shares (Blender WIND, world x/y), in three's axes. */
 const WIND = new Vector3(...blenderToThree([0.94, 0.34, 0])).normalize();
@@ -161,7 +164,8 @@ function streakTexture() {
 /** The stream as Blender renders it (3d-farming-asset scripts/bake_stream.py): an image from the game's own camera
  *  angle and the affine map from world position to that image. The camera never rotates, so painting the water, banks
  *  and falls with it shows exactly the Blender look (refraction, depth, glare, spray) that real time can't compute. */
-type Stream = { tex: Texture; u: number[]; v: number[]; day: { value: number } };
+type Kind = "water" | "fall" | "bank";
+type Stream = { tex: Texture; u: number[]; v: number[]; day: { value: number }; parts?: Record<string, Kind> };
 const TO_CAMERA = (() => { const y = (CAMERA.yawDeg * Math.PI) / 180, p = (CAMERA.pitchDeg * Math.PI) / 180; return new Vector3(Math.sin(y) * Math.cos(p), Math.sin(p), Math.cos(y) * Math.cos(p)); })();
 const NIGHT_TINT = "vec3(0.16, 0.2, 0.32)";
 
@@ -200,7 +204,7 @@ function paintStream(m: Material, s: Stream, kind: "water" | "fall" | "bank", ti
 /** Turn a Blender export into the live look: water, falls, wind in grass and leaves, roof tiles, lifted cliffs.
  *  Shared by the island and every unlock model, so an unlocked item matches the ground it stands on. */
 function dress(root: Object3D, season: Season, time: { value: number }, ripples: CanvasTexture, stream?: Stream) {
-  const glowing: MeshStandardMaterial[] = [], falls: CanvasTexture[] = [];
+  const glowing: MeshStandardMaterial[] = [], falls: CanvasTexture[] = [], feet: Foot[] = [];
   const seen = new Set<Material>();
   root.traverse((o) => {
       const mesh = o as Mesh;
@@ -209,8 +213,19 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
       // the named part right under the file root (or under an unlock-<id> group)
       const top = (() => { let n: Object3D = mesh; while (n.parent && n.parent !== root && !n.parent.name.startsWith("unlock-")) n = n.parent; return n.name; })();
       const mat0 = ([] as Material[]).concat(mesh.material)[0]?.name ?? "";
-      if (stream && /^(water-surface\d|fall-(front|upper)|bank)/.test(top)) {   // the main stream: painted with its Blender render
-        const kind = top.startsWith("water") ? "water" : top.startsWith("fall") ? "fall" : "bank";
+      if (top.startsWith("fall-")) {   // every waterfall: the animated sheet (a still render can't fall), spray where it lands
+        mesh.material = fallMaterial(time); mesh.castShadow = false;
+        // the main upper fall hangs just behind the bank's drop face at the lip: 4 cm toward the camera, along its line
+        // of sight, draws it in front without moving it on screen
+        mesh.position.addScaledVector(TO_CAMERA, 0.04);
+        const f = footOf(mesh);
+        if (Math.abs(heightAt(f.at.x / S, f.at.z / S) * S - f.at.y) < 0.15) feet.push(f);   // not for a fall pouring off the edge into the air
+        return;
+      }
+      // water painted with its Blender render: the parts each bake lists (the main stream's first bake lists none)
+      const kind = !stream ? undefined : stream.parts ? Object.entries(stream.parts).find(([p]) => top.startsWith(p))?.[1]
+        : /^(water-surface\d|fall-(front|upper)|bank)/.test(top) ? (top.startsWith("water") ? "water" : top.startsWith("fall") ? "fall" : "bank") : undefined;
+      if (stream && kind) {
         const mats = ([] as Material[]).concat(mesh.material).map((m) => {
           if (kind === "bank") { const c = m.clone(); paintStream(c, stream, kind, time, ripples); return c; }   // own copy: banks share the lawn's materials
           const tex = kind === "fall" ? streakTexture().map : null; if (tex) falls.push(tex);
@@ -266,9 +281,10 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
       inst.receiveShadow = true; inst.castShadow = false; inst.frustumCulled = false;
       g.parent!.add(inst); g.parent!.remove(g);
     }
+  root.traverse((o) => { const m = o as Mesh; if (m.isMesh) ([] as Material[]).concat(m.material).forEach(sunRim); });   // sunlight catching every lit surface
   const driven = readDriven(root);
   mergeRigid(driven.map((d) => d.node));
-  return { driven, glowing, falls };
+  return { driven, glowing, falls, feet };
 }
 
 /** Each moving group (a swaying crown, a turning sail) arrives as many small meshes that only ever move together: a bare
@@ -312,8 +328,18 @@ function useAlive(d: ReturnType<typeof dress>, lampsOn: boolean, reducedMotion: 
   });
 }
 
-/** The walkable levels as [z from, z to, height] in voxels: the upper terrace behind its wall, the field in front. */
-const GROUND: [number, number, number][] = [[0, 60, 12], [60, 144, 0]];
+/** Where a click meets the ground: walk the ray down through the height map (main island, bridges, islands) in
+ *  half-voxel steps, from above everything to below the islands. Exact on paddies, bridge decks and stairs alike. */
+function groundHit(e: ThreeEvent<MouseEvent>): [number, number] | null {
+  const o = e.ray.origin, d = e.ray.direction;   // d is unit length: one unit of t is one voxel once o is in voxels
+  const ox = o.x / S, oy = o.y / S, oz = o.z / S;
+  if (d.y >= 0) return null;
+  for (let t = Math.max(0, (60 - oy) / d.y), end = (-40 - oy) / d.y; t < end; t += 0.5) {
+    const x = ox + d.x * t, y = oy + d.y * t, z = oz + d.z * t;
+    if (y <= heightAt(x, z)) return [x, z];
+  }
+  return null;
+}
 
 /** What hides once something is unlocked: the wooden front fence under the flower fence, the fog over each new island. */
 const HIDDEN_BY: Record<string, string> = { "fence-front": "flowerfence", "fog-left": "terraces", "fog-right": "lotus" };
@@ -331,6 +357,7 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
     return dress(gltf.scene, season, time.current, ripples, stream);
   }, [gltf, season, ripples, stream]);
   useAlive(dressed, lampsOn, reducedMotion, time.current, ripples);
+  DAY.value = day;
   useEffect(() => {
     for (const [name, id] of Object.entries(HIDDEN_BY)) { const n = gltf.scene.getObjectByName(name); if (n) n.visible = !unlocked.includes(id); }
   }, [gltf, unlocked]);
@@ -338,28 +365,30 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
   return (
     <>
       <primitive object={gltf.scene} />
-      {/* Ground clicks hit two flat invisible planes (upper terrace, lower field), not the island model: R3F hit-tests
-          every interactive object on every mouse move, and the model's grass, water and terrain cost ~5 ms a move, enough
-          to make Khôi's walk stutter while the mouse moved. */}
-      {onGround && GROUND.map(([z0, z1, y]) => (
+      {dressed.feet.map((f, i) => <Spray key={i} foot={f} time={time.current} />)}
+      {/* Ground clicks: one flat invisible plane under the whole strip catches them, and the ray is traced through the
+          height map. Not the island models: R3F hit-tests every interactive object on every mouse move, and the models'
+          grass, water and terrain cost ~5 ms a move, enough to make Khôi's walk stutter while the mouse moved. */}
+      {onGround && (
         <mesh
-          key={y}
-          position={[96 * S, y * S, ((z0 + z1) / 2) * S]}
+          position={[96 * S, -40 * S, 70 * S]}
           rotation={[-Math.PI / 2, 0, 0]}
           onClick={(e: ThreeEvent<MouseEvent>) => {
             if (e.intersections.some((h) => h.object.userData.clickable)) return;   // a bed, the well, an egg or Khôi takes it
-            e.stopPropagation(); onGround(e.point.x / S, e.point.z / S);
+            e.stopPropagation(); const p = groundHit(e); if (p) onGround(p[0], p[1]);
           }}
         >
-          <planeGeometry args={[192 * S, (z1 - z0) * S]} />
+          <planeGeometry args={[720 * S, 300 * S]} />
           <meshBasicMaterial visible={false} />
         </mesh>
-      ))}
+      )}
       {/* warm spill from the barn windows at night */}
       {lampsOn && <pointLight position={[1.2, 1.5, 2.3]} color="#FFC870" intensity={3} distance={5} decay={1.5} />}
       {unlocked.map((id) => (
         <Suspense key={id} fallback={null}>{/* each model streams in on its own; the island never waits for one */}
-          <Unlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} />
+          {WATERY.includes(id)
+            ? <WateryUnlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} day={stream.day} />
+            : <Unlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} />}
         </Suspense>
       ))}
     </>
@@ -367,10 +396,26 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
 }
 
 /** One unlocked item, exported in place by cozy_farm.py (web/<season>/unlock-<id>.glb). */
-function Unlock({ id, season, lampsOn, reducedMotion, ripples }: { id: string; season: Season; lampsOn: boolean; reducedMotion: boolean; ripples: CanvasTexture }) {
+type UnlockProps = { id: string; season: Season; lampsOn: boolean; reducedMotion: boolean; ripples: CanvasTexture };
+
+function Unlock({ id, season, lampsOn, reducedMotion, ripples, stream }: UnlockProps & { stream?: Stream }) {
   const gltf = useFarmModel(`unlock-${id}-${season}`);
   const time = useRef({ value: 0 });
-  const dressed = useMemo(() => dress(gltf.scene, season, time.current, ripples), [gltf, season, ripples]);
+  const dressed = useMemo(() => dress(gltf.scene, season, time.current, ripples, stream), [gltf, season, ripples, stream]);
   useAlive(dressed, lampsOn, reducedMotion, time.current);
-  return <primitive object={gltf.scene} />;
+  return (
+    <>
+      <primitive object={gltf.scene} />
+      {dressed.feet.map((f, i) => <Spray key={i} foot={f} time={time.current} />)}
+    </>
+  );
+}
+
+/** The islands with water: their pond, paddies, streams and falls painted from their own Blender render, as the main stream. */
+const WATERY = ["terraces", "lotus"];
+function WateryUnlock({ day, ...p }: UnlockProps & { day: { value: number } }) {
+  const tex = useLoader(TextureLoader, `/models/farm/stream-${p.id}-${p.season}.jpg`);
+  const map = useLoader(FileLoader, `/models/farm/stream-${p.id}-${p.season}.json`) as string;
+  const stream = useMemo<Stream>(() => { const j = JSON.parse(map); return { tex, u: j.u, v: j.v, day, parts: j.parts }; }, [tex, map, day]);
+  return <Unlock {...p} stream={stream} />;
 }

@@ -62,3 +62,32 @@ test('a click on something solid sends Khôi to the nearest spot he can stand on
   assert.deepEqual(nearestWalkable(140, 100), [140, 100]);   // already free: unchanged
   assert.equal(nearestWalkable(-60, 300), null);              // nowhere near the island
 });
+
+test('the side islands are closed until bought: no path over the bridges', () => {
+  const nav = loadTs('../lib/farm/nav.ts');
+  nav.setOpenIslands([]);
+  assert.equal(nav.walkable(-100, 40), false);
+  assert.equal(nav.walkable(-35, 45), false);   // the bridge itself
+  assert.equal(nav.findPath([30, 47], [-125, 45]), null);
+});
+
+test('rice terraces: over the sagging rope bridge and up the terraces to the summit', () => {
+  const nav = loadTs('../lib/farm/nav.ts');
+  nav.setOpenIslands(['terraces']);
+  assert.ok(Math.abs(nav.heightAt(-35, 45) - 8.2) < 0.3, `bridge mid ${nav.heightAt(-35, 45)}`);   // deck dips 5 voxels mid-span
+  assert.ok(Math.abs(nav.heightAt(-125, 45) - 39.2) < 0.01, `summit ${nav.heightAt(-125, 45)}`);
+  const p = nav.findPath([30, 47], [-125, 45]);
+  assert.ok(p, 'no path to the summit');
+  assert.deepEqual(p[p.length - 1], [-125, 45]);
+  assert.equal(nav.walkable(-138, 38), false);   // the stilt house stands on the summit
+});
+
+test('lotus pond: not on the water; the zigzag bridge to the pavilion and the jetty are walkable', () => {
+  const nav = loadTs('../lib/farm/nav.ts');
+  nav.setOpenIslands(['lotus']);
+  assert.equal(nav.walkable(345, 75), false);   // open water (the zigzag bridge crosses the middle)
+  assert.ok(nav.walkable(346, 50), 'pavilion deck');
+  assert.ok(nav.findPath([170, 52], [346, 50]), 'no path to the pavilion');
+  assert.ok(nav.findPath([170, 52], [316, 80]), 'no path to the end of the jetty');
+  assert.equal(nav.walkable(286, 22), false);   // the banyan's trunk
+});

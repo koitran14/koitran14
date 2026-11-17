@@ -2,13 +2,14 @@
 
 import { useEffect, useMemo, useRef, type MutableRefObject } from "react";
 import { useFrame } from "@react-three/fiber";
-import { MeshStandardMaterial, Vector3, type Group, type Object3D } from "three";
+import { MeshStandardMaterial, Vector3, type Group, type Material, type Mesh, type Object3D } from "three";
 import { khoiAt } from "@/lib/farm/khoi";
 import { S, WALK, walkAt } from "@/lib/farm/layout";
 import { findPath, heightAt, slide } from "@/lib/farm/nav";
 import { TASKS, pose, standSpot, type Pose, type TaskKind, type WorkTarget } from "@/lib/farm/tasks";
 import type { Season } from "@/lib/farm/time";
 import { useFarmModel } from "./use-farm-model";
+import { sunRim } from "./sunlight";
 
 /** What the player asked for: walk somewhere, wave, or walk to a job and do it. `seq` changes with every new order. */
 export type Order = { seq: number } & ({ kind: "go"; x: number; z: number } | { kind: "wave" } | { kind: "work"; target: WorkTarget; task: TaskKind; onDone: () => void });
@@ -26,19 +27,23 @@ const X_AXIS = new Vector3(1, 0, 0);
 
 type Mode = "auto" | "path" | "task" | "idle" | "key";
 
-export default function Khoi({ season, reducedMotion, order, onWave }: { season: Season; reducedMotion: boolean; order: Order | null; onWave: () => void }) {
+export type Zone = "left" | "main" | "right";
+/** Which island he stands on (or is crossing to): the camera follows him there. */
+const zoneOf = (x: number): Zone => (x < -1 ? "left" : x > 193 ? "right" : "main");
+
+export default function Khoi({ season, reducedMotion, order, onWave, onZone }: { season: Season; reducedMotion: boolean; order: Order | null; onWave: () => void; onZone?: (z: Zone) => void }) {
   const gltf = useFarmModel(`khoi-${season}`);
   const toolsGltf = useFarmModel("khoi-tools");
   const root = useRef<Group>(null!);
   const keys = useRef(new Set<string>());
   const fx = useRef<Pose["fx"] | null>(null), fxT = useRef(0);
   const st = useRef({
-    mode: "auto" as Mode, clock: 0, x: 24, z: 44, heading: 0, path: [] as [number, number][], leg: 0,
+    mode: "auto" as Mode, clock: 0, x: 24, z: 44, y: NaN, zone: "main" as Zone, heading: 0, path: [] as [number, number][], leg: 0,
     job: null as null | { task: TaskKind; t: number; onDone?: () => void; heading: number }, lastOrder: 0, seenSeq: -1, resuming: false,
   });
 
   const rig = useMemo(() => {
-    gltf.scene.traverse((o) => { o.castShadow = true; });
+    gltf.scene.traverse((o) => { o.castShadow = true; const m = o as Mesh; if (m.isMesh) ([] as Material[]).concat(m.material).forEach(sunRim); });   // the sun rims him too
     const parts = Object.fromEntries(PARTS.map((n) => [n, gltf.scene.getObjectByName(n)!])) as Parts;
     const rest = Object.fromEntries(PARTS.map((n) => [n, parts[n].position.clone()])) as Record<keyof Parts, Vector3>;
     const held: Object3D[] = []; gltf.scene.traverse((o) => { if (o.name.startsWith("held")) held.push(o); });
@@ -132,7 +137,9 @@ export default function Khoi({ season, reducedMotion, order, onWave }: { season:
       s.job.t += dt;
       if (s.job.t >= TASKS[s.job.task].seconds) { const done = s.job.onDone; s.job = null; s.mode = "idle"; s.lastOrder = now; done?.(); }
     }
-    if (s.mode === "idle" && !reducedMotion && now - s.lastOrder > RESUME_AFTER) {   // back to his stroll from the barn door
+    // back to his stroll from the barn door; not from an island, where he waits for the player (walking home on his own
+    // dragged the camera away from the island you were looking at)
+    if (s.mode === "idle" && !reducedMotion && now - s.lastOrder > RESUME_AFTER && zoneOf(s.x) === "main") {
       s.resuming = true; if (!goTo([WALK[0][0], WALK[0][2]])) { s.mode = "auto"; s.clock = 0; s.resuming = false; }
     }
     // ease every turn: the stroll used to snap up to 90° in one frame at its corners and when stopping for chores
@@ -141,7 +148,12 @@ export default function Khoi({ season, reducedMotion, order, onWave }: { season:
     // pose
     const p: Pose | null = s.mode === "task" && s.job && s.job.t >= 0 ? pose(s.job.task, s.job.t) : null;
     const swing = walking ? Math.sin(now * 9) : 0;
-    root.current.position.set(s.x * S, heightAt(s.x, s.z) * S + (walking ? Math.abs(swing) * 0.015 : 0) - (p?.drop ?? 0), s.z * S);
+    // ease the height: on the rice terraces he steps up and down a paddy at a time (a 21 cm wall), which would pop
+    const gy = heightAt(s.x, s.z);
+    s.y = Number.isNaN(s.y) || Math.abs(gy - s.y) > 6 ? gy : s.y + (gy - s.y) * Math.min(1, dt * 14);
+    root.current.position.set(s.x * S, s.y * S + (walking ? Math.abs(swing) * 0.015 : 0) - (p?.drop ?? 0), s.z * S);
+    const zone = zoneOf(s.x);
+    if (zone !== s.zone) { s.zone = zone; onZone?.(zone); }
     root.current.rotation.y = s.heading;
     const { parts, rest, held, hands, hip } = rig;
     const hug = season === "thu" && !p?.hideHeld;   // autumn: arms round the pumpkin unless working
