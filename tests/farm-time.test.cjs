@@ -31,6 +31,28 @@ test('dusk peaks at 6 and 18 and is gone by noon', () => {
   assert.equal(daylight(12).dusk, 0);
 });
 
+test('the low sun still shines gold just before sunset and sunrise, and is gone once it has set', () => {
+  assert.ok(daylight(17.97).glow > 0.8, `glow at 17:58 is ${daylight(17.97).glow}`);   // was near-black: day ≈ 0.01
+  assert.ok(daylight(6.05).glow > 0.8, `glow at 6:03 is ${daylight(6.05).glow}`);
+  assert.equal(daylight(18.5).glow, 0);
+  assert.equal(daylight(5.5).glow, 0);
+  assert.equal(daylight(12).glow, 0);
+});
+
+test('the welcome names the real moment on the farm', () => {
+  const { farmMoment } = loadTs('../lib/farm/time.ts');
+  assert.equal(farmMoment('dong', 15), 'a snowy winter afternoon');
+  assert.equal(farmMoment('thu', 18.5), 'an autumn evening');
+  assert.equal(farmMoment('xuan', 7), 'a spring morning');
+  assert.equal(farmMoment('ha', 23), 'a summer night');
+});
+
+test('night sky reads as dark, day sky as light (loading text picks its colour from it)', () => {
+  const { skyIsDark, WORLD_BG } = loadTs('../lib/farm/time.ts');
+  assert.equal(skyIsDark(skyColor(WORLD_BG.dong, 0)), true);
+  assert.equal(skyIsDark(skyColor(WORLD_BG.thu, 12)), false);
+});
+
 test('sky colour: season colour at noon, night navy at midnight, warmer at dusk', () => {
   assert.equal(skyColor('#DDE7F4', 12), '#dde7f4');
   assert.equal(skyColor('#DDE7F4', 0), '#26304f');

@@ -49,12 +49,12 @@ float noise(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * 
  *  viewer; dust drifting in the light over the islands. One full-screen additive pass and a few hundred points.
  *  (World-space beams were tried first: with the sun behind the island they stood up like spotlights.) */
 export default function Sunlight({ hour, season, reducedMotion }: { hour: number; season: Season; reducedMotion: boolean }) {
-  const { day } = daylight(hour);
+  const { day, glow } = daylight(hour);
   const sun = useMemo(() => sunDirection(hour, season), [hour, season]);
   const el = Math.asin(sun.y) * (180 / Math.PI);
   const golden = 1 - Math.min(1, Math.max(0, (el - 8) / 40));      // low sun: long warm rays
   const facing = Math.min(1, Math.max(0, 0.4 - sun.dot(TO_CAMERA)) / 0.6);   // rays only with the sun ahead of the viewer
-  const strength = day * (0.4 + 0.6 * golden) * (season === "dong" ? 0.75 : 1);
+  const strength = Math.max(day * (0.4 + 0.6 * golden), 0.9 * glow) * (season === "dong" ? 0.75 : 1);   // and the gold at sunset
   const u = useRef({ uTime: { value: 0 }, uStr: { value: strength }, uRays: { value: facing }, uSun: { value: new Vector2(0, 1.4) }, uAspect: { value: 1 } }).current;
   u.uStr.value = strength; u.uRays.value = facing;
   SUNLIT.value = strength;

@@ -26,14 +26,15 @@ export function sunDirection(hour: number, season: Season): Vector3 {
 
 /** A small sky for reflections: zenith-to-horizon gradient, darker ground, and a bright sun disc — water, glass and
  *  glossy paint need something to mirror, or they read as flat colour. */
-function skyTexture(sun: Vector3, day: number, dusk: number) {
+function skyTexture(sun: Vector3, day: number, dusk: number, glow: number) {
   const W = 256, H = 128, c = document.createElement("canvas"); c.width = W; c.height = H;
   const g = c.getContext("2d")!;
-  const zen = day > 0.2 ? (dusk > 0.3 ? "#8C9BC4" : "#7FAEDF") : "#1C2442", hor = day > 0.2 ? (dusk > 0.3 ? "#F4C79A" : "#E6F1F8") : "#3A4366";
+  const lit = day > 0.2 || glow > 0.3;   // the sun is up, even if only just
+  const zen = lit ? (dusk > 0.3 ? "#8C9BC4" : "#7FAEDF") : "#1C2442", hor = lit ? (dusk > 0.3 ? "#F4C79A" : "#E6F1F8") : "#3A4366";
   const grad = g.createLinearGradient(0, 0, 0, H);
   grad.addColorStop(0, zen); grad.addColorStop(0.48, hor); grad.addColorStop(0.52, "#8C8A72"); grad.addColorStop(1, "#4A4A3A");
   g.fillStyle = grad; g.fillRect(0, 0, W, H);
-  if (day > 0.05) {   // the sun: three's equirect lookup is u = atan(z, x) / 2π + 0.5, v = asin(y) / π + 0.5
+  if (day > 0.05 || glow > 0.05) {   // the sun: three's equirect lookup is u = atan(z, x) / 2π + 0.5, v = asin(y) / π + 0.5
     const u = Math.atan2(sun.z, sun.x) / (2 * Math.PI) + 0.5, v = Math.asin(sun.y) / Math.PI + 0.5;
     const x = u * W, y = (1 - v) * H, r = g.createRadialGradient(x, y, 0, x, y, 14);
     r.addColorStop(0, "rgba(255,250,235,1)"); r.addColorStop(0.25, "rgba(255,240,210,0.9)"); r.addColorStop(1, "rgba(255,230,190,0)");
@@ -44,14 +45,14 @@ function skyTexture(sun: Vector3, day: number, dusk: number) {
 
 /** Sun and sky light for the visitor's hour and season. */
 export default function Sky({ hour, season, focus = CAMERA.target }: { hour: number; season: Season; focus?: [number, number, number] }) {
-  const { day, dusk } = daylight(hour);
+  const { day, dusk, glow } = daylight(hour);
   const scene = useThree((s) => s.scene);
   const sun = useMemo(() => sunDirection(hour, season), [hour, season]);
-  const env = useMemo(() => skyTexture(sun, day, dusk), [sun, day, dusk]);
+  const env = useMemo(() => skyTexture(sun, day, dusk, glow), [sun, day, dusk, glow]);
   useEffect(() => {
-    scene.environment = env; scene.environmentIntensity = 0.35 + 0.45 * day;
+    scene.environment = env; scene.environmentIntensity = 0.35 + 0.45 * day + 0.3 * dusk;
     return () => { scene.environment = null; env.dispose(); };
-  }, [scene, env, day]);
+  }, [scene, env, day, dusk]);
   const [tx, ty, tz] = focus;   // the island in view, so its shadows fall inside the sun's shadow box
   const light = useRef<DirectionalLight>(null!);
   useEffect(() => {   // aim at the island's centre, not the world origin: off-centre, the sun came in ~15° wrong and the stream never caught it
@@ -63,12 +64,13 @@ export default function Sky({ hour, season, focus = CAMERA.target }: { hour: num
   return (
     <>
       {/* less sky and fill than before: the scene was flat next to Blender, where the sun side and the shade differ clearly */}
-      <hemisphereLight args={["#FFF6EE", "#8A7A6A"]} intensity={0.3 + 0.45 * day} />
+      {/* twilight: around sunset the sky itself still lights the island, warm and soft (it went near black at 17:58) */}
+      <hemisphereLight args={["#FFF6EE", "#8A7A6A"]} intensity={0.3 + 0.45 * day + 0.35 * dusk} />
       <directionalLight
         ref={light}
         position={[tx + sun.x * 20, ty + sun.y * 20, tz + sun.z * 20]}
-        color={day > 0.05 ? sunColor : "#9FB2E0"}
-        intensity={0.2 + 3.0 * day}
+        color={day > 0.05 || glow > 0.05 ? sunColor : "#9FB2E0"}
+        intensity={0.2 + 3.0 * day + 1.8 * glow}   // the low sun rakes in gold just before it sets
         castShadow
         shadow-mapSize={[2048, 2048]}
         shadow-camera-left={-11} shadow-camera-right={11} shadow-camera-top={11} shadow-camera-bottom={-11} shadow-camera-far={60}
@@ -77,7 +79,7 @@ export default function Sky({ hour, season, focus = CAMERA.target }: { hour: num
       {/* bounce: Cycles lit the faces turned to the camera with light thrown back off the warm ground and sky; with the sun
           behind the island they went near black here (cliffs, crown cores, roofs). A soft shadowless fill from the viewer's
           side stands in for it. Shadow casters sort first, so the sun stays directionalLights[0] for the foliage shader. */}
-      <directionalLight position={FILL} color="#FFE6CC" intensity={0.15 + 0.55 * day} />
+      <directionalLight position={FILL} color="#FFE6CC" intensity={0.15 + 0.55 * day + 0.3 * dusk} />
     </>
   );
 }

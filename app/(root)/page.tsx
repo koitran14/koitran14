@@ -6,6 +6,7 @@ import Section from "@/components/section";
 import { ArrowUpRight, Box, Github, Linkedin, Mail, Sprout } from "lucide-react";
 import { BioDesc, BioSection, BioYear } from "@/components/bio";
 import dynamic from "next/dynamic";
+import FarmLoadingScreen from "@/components/farm/farm-loading";
 import { useCallback, useRef, useState, useEffect } from "react";
 import useContactHook from "@/hooks/useContactHook";
 import { experiences } from "@/data/experience";
@@ -21,7 +22,8 @@ const PersonalCard = dynamic(
 );
 
 // The 3D farm and its models load only after the visitor opens it.
-const FarmMode = dynamic(() => import("@/components/farm/farm-mode"), { ssr: false });
+// the seedling shows from the click, while the farm's own code is still on its way
+const FarmMode = dynamic(() => import("@/components/farm/farm-mode"), { ssr: false, loading: () => <FarmLoadingScreen /> });
 
 const skills = [
   ["AI / LLM", "Claude API, MCP, Claude Code plugins, AWS Bedrock, OpenAI API, agent design"],

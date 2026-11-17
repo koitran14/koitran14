@@ -6,7 +6,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ACESFilmicToneMapping, Vector3, type OrthographicCamera } from "three";
 import { ChevronLeft, ChevronRight, Droplets, Egg, Home, Sprout, Store, User } from "lucide-react";
 import { CAMERA, VIEWS, fitOrtho, type View } from "@/lib/farm/layout";
-import { daylight, seasonOf, skyColor, type Season } from "@/lib/farm/time";
+import { daylight, seasonOf, skyColor, WORLD_BG } from "@/lib/farm/time";
 import CalendarHud from "./calendar-hud";
 import { useReducedMotion } from "./use-reduced-motion";
 import Island from "./island";
@@ -25,7 +25,8 @@ import Particles from "./particles";
 import Sky from "./sky";
 import Sunlight from "./sunlight";
 import { useClock } from "./use-clock";
-import { clearFarmModels } from "./use-farm-model";
+import { clearFarmModels, farmLoadProgress } from "./use-farm-model";
+import { FarmLoader, useEasedProgress } from "./farm-loading";
 
 const TASK: Record<Job, TaskKind> = { plant: "plant", water: "water", harvest: "harvest", well: "well", feed: "feed", egg: "egg" };
 const REASON: Record<string, string> = {
@@ -33,11 +34,10 @@ const REASON: Record<string, string> = {
   "can-full": "The can is already full", night: "The hens are asleep",
 };
 
-/** Sky behind the island per season (matches the Blender renders in tools/voxel/farm_build.py). */
-export const WORLD_BG: Record<Season, string> = { xuan: "#FBE9F0", ha: "#E3F4FF", thu: "#FBEBD6", dong: "#DDE7F4" };
-
 // Dev only: ?unlocks=all shows every unlockable, to check them by eye without touching anyone's saved farm.
 const QC_UNLOCKS = process.env.NODE_ENV !== "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("unlocks") === "all" ? UNLOCKS.map((u) => u.id) : null;
+// Dev only: ?gate=1 shows the welcome over a signed-in farm, to look at it without signing anyone out.
+const QC_GATE = process.env.NODE_ENV !== "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("gate") === "1";
 
 const YAW = (CAMERA.yawDeg * Math.PI) / 180, PITCH = (CAMERA.pitchDeg * Math.PI) / 180;
 const BACK = new Vector3(Math.sin(YAW) * Math.cos(PITCH), Math.sin(PITCH), Math.cos(YAW) * Math.cos(PITCH)).multiplyScalar(30);
@@ -113,6 +113,8 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
   const onReady = useCallback(() => setStatus("ready"), []);
   // A failed load is cached by the loader; drop it so closing and reopening really retries.
   const onError = useCallback(() => { clearFarmModels(); setStatus("error"); }, []);
+  const progress = useEasedProgress(farmLoadProgress, status === "ready");
+  const sky = skyColor(WORLD_BG[season], hour);
 
   // Phase 2 play: click the ground to walk, click a bed/well/trough/egg to work it, WASD to walk on a keyboard.
   const { farm, setFarm, account } = useFarm(lampsOn);
@@ -196,7 +198,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
 
   // Portal to <body>: the homepage Section is transformed (framer-motion), which would trap position:fixed.
   return createPortal(
-    <div data-farm-dialog role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: skyColor(WORLD_BG[season], hour) }}>
+    <div data-farm-dialog role="dialog" aria-modal="true" aria-label="Khôi's farm" className="fixed inset-0 z-[100]" style={{ background: sky }}>
       {/* outer boundary: no WebGL (or a lighting/camera error) must not take the homepage down */}
       <SceneBoundary onError={onError}>
       <Canvas orthographic shadows dpr={[1, 1.5]} gl={{ toneMapping: ACESFilmicToneMapping, toneMappingExposure: 1.0 }}>   {/* filmic, not flat: closest to the Blender renders' AgX Punchy (three's AgX came out washed out) */}
@@ -205,7 +207,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
         <Sky hour={hour} season={season} focus={VIEWS[view]} />
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>
-            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={QC_UNLOCKS ?? farm.unlocked} day={daylight(hour).day} />
+            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={QC_UNLOCKS ?? farm.unlocked} day={Math.max(daylight(hour).day, 0.8 * daylight(hour).dusk)} />
             <Work season={season} farm={farm} onTarget={onTarget} />
             <Khoi season={season} reducedMotion={reducedMotion} order={order} onWave={onWave} onZone={onZone} />
             <Chickens lampsOn={lampsOn} reducedMotion={reducedMotion} feedUntil={feedUntil} />
@@ -216,7 +218,9 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
         </SceneBoundary>
       </Canvas>
       </SceneBoundary>
-      {status === "loading" && <Notice>Loading the farm…</Notice>}
+      {status !== "error" && progress < 0.999 && (   // fades out over the last moment once the scene is up
+        <div className="transition-opacity duration-500" style={{ opacity: status === "ready" ? 0 : 1 }}><FarmLoader progress={progress} background={sky} /></div>
+      )}
       {status === "error" && <Notice>Couldn&apos;t load the farm. Close it and try again.</Notice>}
       <CalendarHud now={now} />
       {status === "ready" && inside && (
@@ -241,7 +245,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
       </IconTile>
       {inside && panel === "shop" && <ShopPanel farm={farm} onBuy={onBuy} onClose={() => setPanel(null)} />}
       {inside && panel === "account" && <AccountPanel account={account} onClose={() => setPanel(null)} />}
-      {status !== "error" && !inside && <EmailGate account={account} checking={account.gate === "checking"} />}
+      {status !== "error" && (!inside || QC_GATE) && <EmailGate account={account} checking={account.gate === "checking"} season={season} hour={hour} />}
       {status === "ready" && inside && vi > 0 && (
         <IconTile label={views[vi - 1] === "main" ? "Back to the farm" : "Look at the rice terraces"} onClick={() => go(views[vi - 1])} className="absolute left-3 top-1/2 -translate-y-1/2">
           <ChevronLeft className="h-6 w-6" strokeWidth={2.5} aria-hidden />

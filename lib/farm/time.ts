@@ -13,12 +13,17 @@ export function seasonOf(d: Date): Season {
   return "dong";
 }
 
-/** day: 0..1 sun strength; dusk: 0..1 orange tint around 6:00 and 18:00; lamps on 18:00–6:00. */
-export function daylight(hour: number): { day: number; dusk: number; lampsOn: boolean } {
+const ramp = (v: number) => { const t = Math.min(1, Math.max(0, v)); return t * t * (3 - 2 * t); };
+
+/** day: 0..1 sun strength; dusk: 0..1 orange tint around 6:00 and 18:00; glow: 0..1 the low golden sun itself in the
+ *  last and first hour it is up (day alone falls to ~0 there, which left the island near black under a bright dusk
+ *  sky), fading out a few minutes after it sets; lamps on 18:00–6:00. */
+export function daylight(hour: number): { day: number; dusk: number; glow: number; lampsOn: boolean } {
   // full daylight from mid-morning to mid-afternoon; a plain sine left 8:00 looking like evening
   const day = Math.min(1, 1.8 * Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI)));
   const dusk = Math.max(0, 1 - Math.abs(hour - 18) / 1.5, 1 - Math.abs(hour - 6) / 1.5);
-  return { day: hour >= 6 && hour <= 18 ? day : 0, dusk, lampsOn: hour >= 18 || hour < 6 };
+  const up = hour < 12 ? ramp((hour - 5.75) / 0.35) : ramp((18.25 - hour) / 0.35);
+  return { day: hour >= 6 && hour <= 18 ? day : 0, dusk, glow: dusk * up, lampsOn: hour >= 18 || hour < 6 };
 }
 
 // Each season starts on the 1st of its first month (see seasonOf).
@@ -51,6 +56,24 @@ export function skyColor(base: string, hour: number): string {
   const { day, dusk } = daylight(hour);
   // darken toward night first, then lay the dusk glow on top so sunset reads warm, not grey
   return mix(mix(base, "#26304F", 1 - Math.min(1, day + dusk / 2)), "#F7B98A", dusk * 0.5);
+}
+
+/** Sky behind the island per season (matches the Blender renders). */
+export const WORLD_BG: Record<Season, string> = { xuan: "#FBE9F0", ha: "#E3F4FF", thu: "#FBEBD6", dong: "#DDE7F4" };
+
+/** True when a sky colour is dark enough that text on it must be light (night, late dusk). */
+export function skyIsDark(hex: string): boolean {
+  const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2] < 0.45;
+}
+
+const SEASON_WORD: Record<Season, string> = { xuan: "spring", ha: "summer", thu: "autumn", dong: "snowy winter" };
+
+/** The moment on the farm in a few words, for the welcome: "a snowy winter afternoon". */
+export function farmMoment(season: Season, hour: number): string {
+  const part = hour < 5 || hour >= 21 ? "night" : hour < 11 ? "morning" : hour < 17 ? "afternoon" : "evening";
+  const words = `${SEASON_WORD[season]} ${part}`;
+  return `${/^[aeiou]/.test(words) ? "an" : "a"} ${words}`;
 }
 
 // Fixed names rather than toLocaleString, which formats differently across browsers.

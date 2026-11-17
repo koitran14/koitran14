@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, type FormEvent, type ReactNode } from "react";
-import { Check, Clipboard, Cloud, CloudOff, Lock, X } from "lucide-react";
+import { Check, Clipboard, Cloud, CloudOff, Flower2, Leaf, Lock, Snowflake, Sun, X } from "lucide-react";
 import { UNLOCKS, wealth, type Farm } from "@/lib/farm/farmwork";
 import type { Sync } from "./use-farm";
 import type { Player } from "@/lib/farm/cloud";
 import { Tile } from "./ui";
+import { farmMoment, type Season } from "@/lib/farm/time";
 
 function Panel({ title, onClose, children }: { title: string; onClose: () => void; children: ReactNode }) {
   return (
@@ -63,12 +64,14 @@ type Account = {
   signOut: () => Promise<void>;
 };
 
+const SEASON_ICON: Record<Season, typeof Sun> = { xuan: Flower2, ha: Sun, thu: Leaf, dong: Snowflake };
+const SEASON_TINT: Record<Season, string> = { xuan: "#FBE0EA", ha: "#FFF0C2", thu: "#FBE1C4", dong: "#DCE8F7" };
 const SYNC_TEXT: Record<Sync, string> = { saving: "Saving…", saved: "Saved online", offline: "Couldn't reach the server: saved in this browser for now" };
 const INPUT = "min-h-[44px] w-full rounded-xl border border-zinc-300 bg-white px-3 text-[14px] text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-blue-500";
 const BUTTON = "min-h-[44px] w-full rounded-xl bg-green-600 px-3 text-[14px] font-bold text-white disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500";
 
 /** The door to the farm: an email, then the code it receives (or the email's button). A first visit starts an empty farm. */
-export function EmailGate({ account, checking }: { account: Account; checking: boolean }) {
+export function EmailGate({ account, checking, season, hour }: { account: Account; checking: boolean; season: Season; hour: number }) {
   const [email, setEmail] = useState(""), [code, setCode] = useState("");
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false), [error, setError] = useState<string | null>(null);
@@ -91,20 +94,29 @@ export function EmailGate({ account, checking }: { account: Account; checking: b
   };
   const paste = async () => { try { onCode(await navigator.clipboard.readText()); } catch { setError("Couldn't read the clipboard: type the code instead."); } };
 
+  const Icon = SEASON_ICON[season];
   return (
-    <div className="absolute inset-0 z-10 grid place-items-center bg-black/25 p-4" style={{ colorScheme: "light" }}>
-      <Tile className="w-[min(380px,100%)] p-6 font-sans">
-        <h2 className="mb-1 text-[20px] font-bold">Welcome to Khôi&rsquo;s farm</h2>
+    // the farm stays in view behind the welcome: a sign at its edge, not a wall in front of it. The scene underneath
+    // takes no clicks until the email is confirmed; a light shade at the bottom keeps the card's edge readable.
+    <div className="absolute inset-0 z-10 flex items-end justify-center sm:justify-start sm:p-6" style={{ colorScheme: "light", background: "linear-gradient(to top, rgba(24,22,30,.32), rgba(24,22,30,0) 55%)" }}>
+      <div className="w-full rounded-t-[28px] bg-white px-6 pb-7 pt-6 font-sans text-zinc-900 sm:w-[400px] sm:rounded-[28px]" style={{ boxShadow: "0 18px 50px rgba(30,40,60,.22)" }}>
+        <div className="mb-4 flex items-center gap-3">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl" style={{ background: SEASON_TINT[season] }}><Icon className="h-5 w-5 text-zinc-800" aria-hidden /></span>
+          <div>
+            <h2 className="text-[21px] font-bold leading-tight">Welcome to Khôi&rsquo;s farm</h2>
+            <p className="text-[13px] text-zinc-600">It&rsquo;s {farmMoment(season, hour)} there right now.</p>
+          </div>
+        </div>
         {checking ? <p className="text-[14px] text-zinc-600" role="status">Opening your farm…</p> : !sent ? (
           <form onSubmit={send} className="flex flex-col gap-2">
-            <p className="mb-2 text-[14px] text-zinc-600">Enter your email to open your farm. We&rsquo;ll send you a code, no password needed. First time here? A new farm starts for you, and it&rsquo;s saved on every device you use.</p>
-            <label className="sr-only" htmlFor="farm-email">Email</label>
+            <label className="text-[13px] font-semibold text-zinc-700" htmlFor="farm-email">Your email</label>
             <input id="farm-email" type="email" required autoFocus autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className={INPUT} />
             <button type="submit" className={BUTTON} disabled={busy}>{busy ? "Sending…" : "Send me a code"}</button>
+            <p className="mt-1 text-[12.5px] leading-relaxed text-zinc-500">No password: we email you a code. Your first visit starts a new farm, and it&rsquo;s there on every device you sign in on.</p>
           </form>
         ) : (
           <form onSubmit={(e) => { e.preventDefault(); confirm(code); }} className="flex flex-col gap-2">
-            <p className="mb-2 text-[14px] text-zinc-600">We sent a code to <b className="text-zinc-900">{email}</b>. Type it here, or press the button in the email.</p>
+            <p className="mb-1 text-[14px] text-zinc-600">We sent a code to <b className="text-zinc-900">{email}</b>. Type it here, or press the button in the email.</p>
             <label className="sr-only" htmlFor="farm-code">Code</label>
             <div className="flex gap-2">
               <input id="farm-code" autoFocus inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" maxLength={10} required placeholder="Code" value={code} onChange={(e) => onCode(e.target.value)} className={`${INPUT} text-center font-mono text-[20px] tracking-[0.4em]`} />
@@ -117,7 +129,7 @@ export function EmailGate({ account, checking }: { account: Account; checking: b
           </form>
         )}
         {(error ?? account.notice) && <p className="mt-2 text-[13px] text-red-600" role="alert">{error ?? account.notice}</p>}
-      </Tile>
+      </div>
     </div>
   );
 }
