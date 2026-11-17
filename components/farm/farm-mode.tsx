@@ -46,7 +46,9 @@ function CameraRig({ view, reducedMotion }: { view: View; reducedMotion: boolean
   const at = useRef(new Vector3(...VIEWS[view]));
   useEffect(() => {
     const { halfW, halfH } = fitOrtho(size.width / size.height);
-    Object.assign(camera, { left: -halfW, right: halfW, top: halfH, bottom: -halfH, near: 0.1, far: 200, zoom: 1 });
+    // manual: R3F re-fits a non-manual orthographic camera to pixel units whenever the size or pixel density changes;
+    // a resolution drop (AdaptiveDpr) then shrank the island to a speck, since this effect only re-runs on size
+    Object.assign(camera, { manual: true, left: -halfW, right: halfW, top: halfH, bottom: -halfH, near: 0.1, far: 200, zoom: 1 });
     camera.updateProjectionMatrix();
   }, [camera, size]);
   useFrame((_, delta) => {
