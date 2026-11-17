@@ -259,6 +259,9 @@ function useAlive(d: ReturnType<typeof dress>, lampsOn: boolean, reducedMotion: 
   });
 }
 
+/** The walkable levels as [z from, z to, height] in voxels: the upper terrace behind its wall, the field in front. */
+const GROUND: [number, number, number][] = [[0, 60, 12], [60, 144, 0]];
+
 /** What hides once something is unlocked: the wooden front fence under the flower fence, the fog over each new island. */
 const HIDDEN_BY: Record<string, string> = { "fence-front": "flowerfence", "fog-left": "terraces", "fog-right": "lotus" };
 
@@ -277,14 +280,24 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
 
   return (
     <>
-      <primitive
-        object={gltf.scene}
-        onClick={onGround && ((e: ThreeEvent<MouseEvent>) => {
-          // a roof or tree in front of something clickable (well, bed, egg, Khôi) must not swallow the click
-          if (e.intersections.some((h) => h.object.userData.clickable)) return;
-          e.stopPropagation(); onGround(e.point.x / S, e.point.z / S);
-        })}
-      />
+      <primitive object={gltf.scene} />
+      {/* Ground clicks hit two flat invisible planes (upper terrace, lower field), not the island model: R3F hit-tests
+          every interactive object on every mouse move, and the model's grass, water and terrain cost ~5 ms a move, enough
+          to make Khôi's walk stutter while the mouse moved. */}
+      {onGround && GROUND.map(([z0, z1, y]) => (
+        <mesh
+          key={y}
+          position={[96 * S, y * S, ((z0 + z1) / 2) * S]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          onClick={(e: ThreeEvent<MouseEvent>) => {
+            if (e.intersections.some((h) => h.object.userData.clickable)) return;   // a bed, the well, an egg or Khôi takes it
+            e.stopPropagation(); onGround(e.point.x / S, e.point.z / S);
+          }}
+        >
+          <planeGeometry args={[192 * S, (z1 - z0) * S]} />
+          <meshBasicMaterial visible={false} />
+        </mesh>
+      ))}
       {/* warm spill from the barn windows at night */}
       {lampsOn && <pointLight position={[1.2, 1.5, 2.3]} color="#FFC870" intensity={3} distance={5} decay={1.5} />}
       {unlocked.map((id) => (
