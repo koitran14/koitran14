@@ -15,6 +15,7 @@ import { useFarmModel } from "./use-farm-model";
 import { heightAt } from "@/lib/farm/nav";
 import { DAY, fallMaterial, footOf, Spray, type Foot } from "./falls";
 import { sunRim } from "./sunlight";
+import { Appear } from "./appear";
 
 /** The wind every moving thing shares (Blender WIND, world x/y), in three's axes. */
 const WIND = new Vector3(...blenderToThree([0.94, 0.34, 0])).normalize();
@@ -165,16 +166,17 @@ function streakTexture() {
  *  angle and the affine map from world position to that image. The camera never rotates, so painting the water, banks
  *  and falls with it shows exactly the Blender look (refraction, depth, glare, spray) that real time can't compute. */
 type Kind = "water" | "fall" | "bank";
-type Stream = { tex: Texture; u: number[]; v: number[]; day: { value: number }; parts?: Record<string, Kind> };
+type Stream = { tex: Texture; u: number[]; v: number[]; day: { value: number }; parts?: Record<string, Kind>; root?: { value: Matrix4 } };
 const TO_CAMERA = (() => { const y = (CAMERA.yawDeg * Math.PI) / 180, p = (CAMERA.pitchDeg * Math.PI) / 180; return new Vector3(Math.sin(y) * Math.cos(p), Math.sin(p), Math.cos(y) * Math.cos(p)); })();
 const NIGHT_TINT = "vec3(0.16, 0.2, 0.32)";
 
 function paintStream(m: Material, s: Stream, kind: "water" | "fall" | "bank", time: { value: number }, ripples: Texture) {
   m.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, { uProj: { value: s.tex }, uPU: { value: new Vector4(...s.u) }, uPV: { value: new Vector4(...s.v) }, uDay: s.day, uTime: time, uRip: { value: ripples } });
+    Object.assign(sh.uniforms, { uProj: { value: s.tex }, uPU: { value: new Vector4(...s.u) }, uPV: { value: new Vector4(...s.v) }, uDay: s.day, uTime: time, uRip: { value: ripples }, uRoot: s.root ?? { value: new Matrix4() } });
+    // uRoot: back to where the model rests, so the painting stays put while an island rises into place
     sh.vertexShader = sh.vertexShader
-      .replace("#include <common>", "#include <common>\nvarying vec3 vWorldP; varying vec2 vRawUv;")
-      .replace("#include <project_vertex>", `#include <project_vertex>\nvWorldP = (modelMatrix * vec4(transformed, 1.0)).xyz; ${kind === "fall" ? "vRawUv = uv;" : ""}`);   // falls have a map, so uv is declared
+      .replace("#include <common>", "#include <common>\nuniform mat4 uRoot; varying vec3 vWorldP; varying vec2 vRawUv;")
+      .replace("#include <project_vertex>", `#include <project_vertex>\nvWorldP = (uRoot * modelMatrix * vec4(transformed, 1.0)).xyz; ${kind === "fall" ? "vRawUv = uv;" : ""}`);   // falls have a map, so uv is declared
     // The render is a still; the motion comes from here, as Blender's flow noise moves its water and falls.
     // water: two ripple layers flowing downstream (+z) bend the image, and glints dance where the sun glare is
     // falls: smooth froth noise, stretched down the sheet and scrolling with it, wobbles and brightens the image
@@ -341,10 +343,15 @@ function groundHit(e: ThreeEvent<MouseEvent>): [number, number] | null {
   return null;
 }
 
+/** Give a node's meshes their own materials, so fading it leaves anything sharing them (the other fog, clouds) alone. */
+function ownMaterials(n: Object3D) {
+  n.traverse((o) => { const m = o as Mesh; if (m.isMesh) m.material = Array.isArray(m.material) ? m.material.map((x) => x.clone()) : m.material.clone(); });
+}
+
 /** What hides once something is unlocked: the wooden front fence under the flower fence, the fog over each new island. */
 const HIDDEN_BY: Record<string, string> = { "fence-front": "flowerfence", "fog-left": "terraces", "fog-right": "lotus" };
 
-export default function Island({ season, lampsOn, reducedMotion = false, onGround, unlocked = [], day = 1 }: { season: Season; lampsOn: boolean; reducedMotion?: boolean; onGround?: (x: number, z: number) => void; unlocked?: string[]; day?: number }) {
+export default function Island({ season, lampsOn, reducedMotion = false, onGround, unlocked = [], day = 1, fresh = null }: { season: Season; lampsOn: boolean; reducedMotion?: boolean; onGround?: (x: number, z: number) => void; unlocked?: string[]; day?: number; fresh?: string | null }) {
   const gltf = useFarmModel(`island-${season}`);
   const time = useRef({ value: 0 });
   const ripples = useMemo(rippleTexture, []);
@@ -358,9 +365,23 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
   }, [gltf, season, ripples, stream]);
   useAlive(dressed, lampsOn, reducedMotion, time.current, ripples);
   DAY.value = day;
+  // what an unlock hides goes at once, except the fog over an island just bought: it thins and drifts apart
+  const fading = useRef<{ node: Object3D; t0: number } | null>(null);
   useEffect(() => {
-    for (const [name, id] of Object.entries(HIDDEN_BY)) { const n = gltf.scene.getObjectByName(name); if (n) n.visible = !unlocked.includes(id); }
-  }, [gltf, unlocked]);
+    for (const [name, id] of Object.entries(HIDDEN_BY)) {
+      const n = gltf.scene.getObjectByName(name); if (!n) continue;
+      const fade = id === fresh && unlocked.includes(id) && !reducedMotion && n.visible && name.startsWith("fog");
+      if (fade) { fading.current = { node: n, t0: -1 }; ownMaterials(n); } else n.visible = !unlocked.includes(id);
+    }
+  }, [gltf, unlocked, fresh, reducedMotion]);
+  useFrame(({ clock }) => {
+    const f = fading.current; if (!f) return;
+    if (f.t0 < 0) f.t0 = clock.elapsedTime;
+    const k = Math.min(1, (clock.elapsedTime - f.t0) / 1.2);
+    f.node.scale.setScalar(1 + 0.35 * k);
+    f.node.traverse((o) => { const m = (o as Mesh).material as Material | undefined; if (m) { m.transparent = true; m.opacity = 1 - k; } });
+    if (k >= 1) { f.node.visible = false; fading.current = null; }
+  });
 
   return (
     <>
@@ -387,8 +408,8 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
       {unlocked.map((id) => (
         <Suspense key={id} fallback={null}>{/* each model streams in on its own; the island never waits for one */}
           {WATERY.includes(id)
-            ? <WateryUnlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} day={stream.day} />
-            : <Unlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} />}
+            ? <WateryUnlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} day={stream.day} fresh={id === fresh} />
+            : <Unlock id={id} season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} ripples={ripples} fresh={id === fresh} />}
         </Suspense>
       ))}
     </>
@@ -396,18 +417,19 @@ export default function Island({ season, lampsOn, reducedMotion = false, onGroun
 }
 
 /** One unlocked item, exported in place by cozy_farm.py (web/<season>/unlock-<id>.glb). */
-type UnlockProps = { id: string; season: Season; lampsOn: boolean; reducedMotion: boolean; ripples: CanvasTexture };
+type UnlockProps = { id: string; season: Season; lampsOn: boolean; reducedMotion: boolean; ripples: CanvasTexture; fresh?: boolean };
 
-function Unlock({ id, season, lampsOn, reducedMotion, ripples, stream }: UnlockProps & { stream?: Stream }) {
+function Unlock({ id, season, lampsOn, reducedMotion, ripples, stream, fresh = false }: UnlockProps & { stream?: Stream }) {
   const gltf = useFarmModel(`unlock-${id}-${season}`);
   const time = useRef({ value: 0 });
   const dressed = useMemo(() => dress(gltf.scene, season, time.current, ripples, stream), [gltf, season, ripples, stream]);
   useAlive(dressed, lampsOn, reducedMotion, time.current);
+  // just bought: it arrives (an item drops in, an island rises); otherwise it is simply there
   return (
-    <>
+    <Appear object={gltf.scene} kind={WATERY.includes(id) ? "island" : "item"} play={fresh && !reducedMotion} rest={stream?.root}>
       <primitive object={gltf.scene} />
       {dressed.feet.map((f, i) => <Spray key={i} foot={f} time={time.current} />)}
-    </>
+    </Appear>
   );
 }
 
@@ -416,6 +438,6 @@ const WATERY = ["terraces", "lotus"];
 function WateryUnlock({ day, ...p }: UnlockProps & { day: { value: number } }) {
   const tex = useLoader(TextureLoader, `/models/farm/stream-${p.id}-${p.season}.jpg`);
   const map = useLoader(FileLoader, `/models/farm/stream-${p.id}-${p.season}.json`) as string;
-  const stream = useMemo<Stream>(() => { const j = JSON.parse(map); return { tex, u: j.u, v: j.v, day, parts: j.parts }; }, [tex, map, day]);
+  const stream = useMemo<Stream>(() => { const j = JSON.parse(map); return { tex, u: j.u, v: j.v, day, parts: j.parts, root: { value: new Matrix4() } }; }, [tex, map, day]);
   return <Unlock {...p} stream={stream} />;
 }

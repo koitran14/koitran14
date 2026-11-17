@@ -36,6 +36,8 @@ const REASON: Record<string, string> = {
 
 // Dev only: ?unlocks=all shows every unlockable, to check them by eye without touching anyone's saved farm.
 const QC_UNLOCKS = process.env.NODE_ENV !== "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("unlocks") === "all" ? UNLOCKS.map((u) => u.id) : null;
+// Dev only: ?arrive=<id> (with ?unlocks=all) plays that unlock's arrival as the farm opens, without buying anything.
+const QC_ARRIVE = process.env.NODE_ENV !== "production" && typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("arrive") : null;
 // Dev only: ?gate=1 shows the welcome over a signed-in farm, to look at it without signing anyone out.
 const QC_GATE = process.env.NODE_ENV !== "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).get("gate") === "1";
 
@@ -139,7 +141,9 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
   const [order, setOrder] = useState<Order | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [feedUntil, setFeedUntil] = useState(0);
+  const [fresh, setFresh] = useState<string | null>(QC_ARRIVE);   // just bought: plays its arrival once
   const seq = useRef(0);
+  useEffect(() => { if (!fresh) return; const id = setTimeout(() => setFresh(null), 5000); return () => clearTimeout(id); }, [fresh]);   // played; a later season change just shows it
   useEffect(() => { if (!toast) return; const id = setTimeout(() => setToast(null), 2600); return () => clearTimeout(id); }, [toast]);
   const onGround = useCallback((x: number, z: number) => { const p = nearestWalkable(x, z); if (p) setOrder({ seq: ++seq.current, kind: "go", x: p[0], z: p[1] }); }, []);
   const onWave = useCallback(() => setOrder({ seq: ++seq.current, kind: "wave" }), []);
@@ -158,7 +162,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
   const onBuy = useCallback((id: string) => {
     const r = buy(farm, id);
     if (!r.ok) return;
-    setFarm(r.farm);
+    setFarm(r.farm); setFresh(id);
     logEvent("buy", { id, price: UNLOCKS.find((u) => u.id === id)!.price });
     setToast(`${UNLOCKS.find((u) => u.id === id)!.name} added to your farm`);
     if (id === "terraces" || id === "lotus") { go(id === "terraces" ? "left" : "right"); setPanel(null); }   // go and look at it
@@ -207,7 +211,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
         <Sky hour={hour} season={season} focus={VIEWS[view]} />
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>
-            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={QC_UNLOCKS ?? farm.unlocked} day={Math.max(daylight(hour).day, 0.8 * daylight(hour).dusk)} />
+            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={QC_UNLOCKS ?? farm.unlocked} fresh={fresh} day={Math.max(daylight(hour).day, 0.8 * daylight(hour).dusk)} />
             <Work season={season} farm={farm} onTarget={onTarget} />
             <Khoi season={season} reducedMotion={reducedMotion} order={order} onWave={onWave} onZone={onZone} />
             <Chickens lampsOn={lampsOn} reducedMotion={reducedMotion} feedUntil={feedUntil} />
