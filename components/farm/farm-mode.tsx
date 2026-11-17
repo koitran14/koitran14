@@ -192,7 +192,7 @@ export default function FarmMode({ onClose }: { onClose: () => void }) {
         <Sky hour={hour} season={season} focus={VIEWS[view]} />
         <SceneBoundary onError={onError}>
           <Suspense fallback={null}>
-            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={farm.unlocked} />
+            <Island season={season} lampsOn={lampsOn} reducedMotion={reducedMotion} onGround={onGround} unlocked={farm.unlocked} day={daylight(hour).day} />
             <Work season={season} farm={farm} onTarget={onTarget} />
             <Khoi season={season} reducedMotion={reducedMotion} order={order} onWave={onWave} />
             <Chickens lampsOn={lampsOn} reducedMotion={reducedMotion} feedUntil={feedUntil} />

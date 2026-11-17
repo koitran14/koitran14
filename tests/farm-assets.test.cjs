@@ -68,3 +68,13 @@ test('every shop unlock has a model for every season, under 1.5 MB each', () => 
       assert.ok(size < 1.5 * 1024 * 1024, `${id} ${s} is ${size} bytes`);
     }
 });
+
+test('every season has the Blender stream render, its world-to-image map, and the stream parts it paints', () => {
+  for (const s of SEASONS) {
+    assert.ok(fs.statSync(path.join(MODELS, `stream-${s}.jpg`)).size < 1024 * 1024, `${s} stream image over 1 MB`);
+    const map = JSON.parse(fs.readFileSync(path.join(MODELS, `stream-${s}.json`), 'utf8'));
+    assert.equal(map.u.length, 4); assert.equal(map.v.length, 4);
+    const names = glbJson(`island-${s}.glb`).nodes.map((n) => n.name);
+    for (const n of ['bank0', 'bank1', 'water-surface0', 'water-surface1', 'fall-front', 'fall-upper']) assert.ok(names.includes(n), `${s} has no ${n}`);
+  }
+});

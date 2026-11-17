@@ -1,13 +1,14 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef } from "react";
-import { useFrame, type ThreeEvent } from "@react-three/fiber";
-import { S } from "@/lib/farm/layout";
+import { useFrame, useLoader, type ThreeEvent } from "@react-three/fiber";
+import { CAMERA, S } from "@/lib/farm/layout";
 import {
   CanvasTexture, Color, DoubleSide, Euler, Matrix4, MeshPhysicalMaterial, Quaternion, RepeatWrapping, SRGBColorSpace, Vector2, Vector3,
   InstancedMesh, Mesh, type BufferGeometry, type Material, type MeshStandardMaterial, type Object3D, type WebGLProgramParametersWithUniforms,
 } from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { FileLoader, MeshBasicMaterial, TextureLoader, Vector4, type Texture } from "three";
 import { blenderFrame, blenderToThree, compileDriver } from "@/lib/farm/drivers";
 import type { Season } from "@/lib/farm/time";
 import { useFarmModel } from "./use-farm-model";
@@ -157,9 +158,48 @@ function streakTexture() {
   return { map: draw("rgb(176,214,228)", (a) => `rgba(255,255,255,${a})`), alpha: draw("rgb(115,115,115)", (a) => `rgba(255,255,255,${a})`) };   // body ~45% opaque, foam near solid
 }
 
+/** The stream as Blender renders it (3d-farming-asset scripts/bake_stream.py): an image from the game's own camera
+ *  angle and the affine map from world position to that image. The camera never rotates, so painting the water, banks
+ *  and falls with it shows exactly the Blender look (refraction, depth, glare, spray) that real time can't compute. */
+type Stream = { tex: Texture; u: number[]; v: number[]; day: { value: number } };
+const TO_CAMERA = (() => { const y = (CAMERA.yawDeg * Math.PI) / 180, p = (CAMERA.pitchDeg * Math.PI) / 180; return new Vector3(Math.sin(y) * Math.cos(p), Math.sin(p), Math.cos(y) * Math.cos(p)); })();
+const NIGHT_TINT = "vec3(0.16, 0.2, 0.32)";
+
+function paintStream(m: Material, s: Stream, kind: "water" | "fall" | "bank", time: { value: number }, ripples: Texture) {
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, { uProj: { value: s.tex }, uPU: { value: new Vector4(...s.u) }, uPV: { value: new Vector4(...s.v) }, uDay: s.day, uTime: time, uRip: { value: ripples } });
+    sh.vertexShader = sh.vertexShader
+      .replace("#include <common>", "#include <common>\nvarying vec3 vWorldP; varying vec2 vRawUv;")
+      .replace("#include <project_vertex>", `#include <project_vertex>\nvWorldP = (modelMatrix * vec4(transformed, 1.0)).xyz; ${kind === "fall" ? "vRawUv = uv;" : ""}`);   // falls have a map, so uv is declared
+    // The render is a still; the motion comes from here, as Blender's flow noise moves its water and falls.
+    // water: two ripple layers flowing downstream (+z) bend the image, and glints dance where the sun glare is
+    // falls: smooth froth noise, stretched down the sheet and scrolling with it, wobbles and brightens the image
+    const pre = kind === "water" ? `vec2 rr = texture2D(uRip, vWorldP.xz * vec2(1.4, 0.9) - vec2(0.0, uTime * 0.35)).xy - 0.5;
+      rr += 0.6 * (texture2D(uRip, vWorldP.xz * vec2(2.3, 1.6) - vec2(uTime * 0.05, uTime * 0.6)).xy - 0.5);
+      pu += rr * 0.009;`
+      : kind === "fall" ? `vec2 fn = texture2D(uRip, vMapUv * vec2(2.5, 0.35)).xy - 0.5; float sk = fn.x + fn.y;   // smooth noise, long down the sheet, scrolling with its uv
+      pu += vec2(fn.x * 0.003, fn.y * 0.006);` : "";
+    const post = kind === "water" ? `float lum = dot(pc, vec3(0.299, 0.587, 0.114));
+      pc += vec3(1.0, 0.97, 0.9) * smoothstep(0.5, 0.9, rr.x + rr.y) * smoothstep(0.45, 0.85, lum) * 0.55 * uDay;`
+      : kind === "fall" ? `pc = min(pc * (0.96 + 0.3 * max(sk, 0.0)), vec3(1.0));
+      gl_FragColor.a = smoothstep(0.0, 0.12, vRawUv.x) * smoothstep(1.0, 0.88, vRawUv.x) * smoothstep(0.0, 0.2, vRawUv.y + sk * 0.06);` : "";
+    // falls only brighten (the falling water froths, it never stripes dark), and fade at the sides and foot (u across,
+    // v 1 at the lip, 0 at the foot): the sheet's margins showed the render's background as a pale card
+    const w = kind === "bank" ? `smoothstep(${80.2 * S}, ${82.2 * S}, vWorldP.x) * (1.0 - smoothstep(${109.8 * S}, ${111.8 * S}, vWorldP.x))` : "1.0";   // banks fade into the live-lit lawn
+    sh.fragmentShader = "uniform sampler2D uProj, uRip; uniform vec4 uPU, uPV; uniform float uDay, uTime; varying vec3 vWorldP; varying vec2 vRawUv;\n" + sh.fragmentShader.replace("#include <dithering_fragment>", `#include <dithering_fragment>
+      vec2 pu = vec2(dot(uPU.xyz, vWorldP) + uPU.w, dot(uPV.xyz, vWorldP) + uPV.w);
+      ${pre}
+      vec3 pc = texture2D(uProj, pu).rgb * mix(${NIGHT_TINT}, vec3(1.0), uDay);
+      ${post}
+      gl_FragColor.rgb = mix(gl_FragColor.rgb, pc, ${w});`);   // after tone mapping and the sRGB step: the render is already display colour
+  };
+  m.customProgramCacheKey = () => `stream-${kind}`;
+  m.needsUpdate = true;
+}
+
 /** Turn a Blender export into the live look: water, falls, wind in grass and leaves, roof tiles, lifted cliffs.
  *  Shared by the island and every unlock model, so an unlocked item matches the ground it stands on. */
-function dress(root: Object3D, season: Season, time: { value: number }, ripples: CanvasTexture) {
+function dress(root: Object3D, season: Season, time: { value: number }, ripples: CanvasTexture, stream?: Stream) {
   const glowing: MeshStandardMaterial[] = [], falls: CanvasTexture[] = [];
   const seen = new Set<Material>();
   root.traverse((o) => {
@@ -169,6 +209,19 @@ function dress(root: Object3D, season: Season, time: { value: number }, ripples:
       // the named part right under the file root (or under an unlock-<id> group)
       const top = (() => { let n: Object3D = mesh; while (n.parent && n.parent !== root && !n.parent.name.startsWith("unlock-")) n = n.parent; return n.name; })();
       const mat0 = ([] as Material[]).concat(mesh.material)[0]?.name ?? "";
+      if (stream && /^(water-surface\d|fall-(front|upper)|bank)/.test(top)) {   // the main stream: painted with its Blender render
+        const kind = top.startsWith("water") ? "water" : top.startsWith("fall") ? "fall" : "bank";
+        const mats = ([] as Material[]).concat(mesh.material).map((m) => {
+          if (kind === "bank") { const c = m.clone(); paintStream(c, stream, kind, time, ripples); return c; }   // own copy: banks share the lawn's materials
+          const tex = kind === "fall" ? streakTexture().map : null; if (tex) falls.push(tex);
+          const b = new MeshBasicMaterial({ map: tex, side: DoubleSide, transparent: kind === "fall", depthWrite: kind !== "fall" }); paintStream(b, stream, kind, time, ripples); return b;   // the fall sheets face away from the camera
+        });
+        mesh.material = mats.length === 1 ? mats[0] : mats; mesh.castShadow = false;
+        // the upper fall hangs just behind the bank's drop face at the lip, which then showed the still render: bring
+        // each fall 4 cm toward the camera along its line of sight, so it draws in front and its pixels stay put
+        if (kind === "fall") mesh.position.addScaledVector(TO_CAMERA, 0.04);
+        return;
+      }
       if (top.startsWith("water-surface") || /^(pond|paddy-water)#/.test(mat0)) {
         mesh.material = new MeshPhysicalMaterial({
           // see-through by blending, not transmission: transmission re-renders the whole scene every frame (21 ms → 5 ms a frame)
@@ -265,14 +318,18 @@ const GROUND: [number, number, number][] = [[0, 60, 12], [60, 144, 0]];
 /** What hides once something is unlocked: the wooden front fence under the flower fence, the fog over each new island. */
 const HIDDEN_BY: Record<string, string> = { "fence-front": "flowerfence", "fog-left": "terraces", "fog-right": "lotus" };
 
-export default function Island({ season, lampsOn, reducedMotion = false, onGround, unlocked = [] }: { season: Season; lampsOn: boolean; reducedMotion?: boolean; onGround?: (x: number, z: number) => void; unlocked?: string[] }) {
+export default function Island({ season, lampsOn, reducedMotion = false, onGround, unlocked = [], day = 1 }: { season: Season; lampsOn: boolean; reducedMotion?: boolean; onGround?: (x: number, z: number) => void; unlocked?: string[]; day?: number }) {
   const gltf = useFarmModel(`island-${season}`);
   const time = useRef({ value: 0 });
   const ripples = useMemo(rippleTexture, []);
+  const streamTex = useLoader(TextureLoader, `/models/farm/stream-${season}.jpg`);
+  const streamMap = useLoader(FileLoader, `/models/farm/stream-${season}.json`) as string;
+  const dayU = useRef({ value: day }); dayU.current.value = day;
+  const stream = useMemo<Stream>(() => { const j = JSON.parse(streamMap); return { tex: streamTex, u: j.u, v: j.v, day: dayU.current }; }, [streamTex, streamMap]);
   const dressed = useMemo(() => {
     if (process.env.NODE_ENV !== "production") Object.assign(window, { __island: gltf.scene });   // dev-only, for scripted checks
-    return dress(gltf.scene, season, time.current, ripples);
-  }, [gltf, season, ripples]);
+    return dress(gltf.scene, season, time.current, ripples, stream);
+  }, [gltf, season, ripples, stream]);
   useAlive(dressed, lampsOn, reducedMotion, time.current, ripples);
   useEffect(() => {
     for (const [name, id] of Object.entries(HIDDEN_BY)) { const n = gltf.scene.getObjectByName(name); if (n) n.visible = !unlocked.includes(id); }
