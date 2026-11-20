@@ -43,6 +43,12 @@ export function stageOf(f: Farm, bed: number, now: number, season: Season): Stag
   return b.stage;
 }
 
+/** 0..1: how far a watered bed is from ripe (0 for any other stage). */
+export function growthOf(f: Farm, bed: number, now: number, season: Season): number {
+  const b = f.beds[bed], crop = cropFor(bed, season);
+  return b.stage === "growing" && crop ? Math.min(1, (now - b.at) / (CROP_HOURS[crop] * H)) : 0;
+}
+
 /** What clicking a target makes Khôi do now, or why he can't. */
 export function jobFor(f: Farm, t: Target, now: number, season: Season, night: boolean): { job: Job | null; reason?: Why } {
   switch (t.kind) {

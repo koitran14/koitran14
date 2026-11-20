@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { useFrame, type ThreeEvent } from "@react-three/fiber";
-import { Box3, Vector3, type Object3D } from "three";
-import { stageOf, type Farm, type Target } from "@/lib/farm/farmwork";
+import { useEffect, useMemo } from "react";
+import { type ThreeEvent } from "@react-three/fiber";
+import { growthOf, stageOf, type Farm, type Target } from "@/lib/farm/farmwork";
 import { S } from "@/lib/farm/layout";
 import { BEDS, heightAt } from "@/lib/farm/nav";
 import type { Season } from "@/lib/farm/time";
@@ -20,34 +19,28 @@ const pointer = {
 /** Clickable farm work: the beds (their crops grow with the bed's stage), the well, the trough and the eggs. */
 export default function Work({ season, farm, onTarget }: { season: Season; farm: Farm; onTarget: (t: Target) => void }) {
   const island = useFarmModel(`island-${season}`);
-  const crops = useMemo(() => {   // each bed's crop node and the point it grows from
-    return BEDS.map((_, i) => {
-      const node = island.scene.getObjectByName(`crop-b${i}`) as Object3D | undefined;
-      if (!node) return null;
-      const box = new Box3().setFromObject(node), base = new Vector3((box.min.x + box.max.x) / 2, box.min.y, (box.min.z + box.max.z) / 2);
-      return { node, base, rest: node.position.clone() };
-    });
-  }, [island]);
+  const grown = useFarmModel(`crops-${season}`);   // cozy_farm.py growth stages, each bed's in place
+  const crops = useMemo(() => {   // each bed's three looks: seedlings, leafy, ripe (the island's own crop)
+    grown.scene.traverse((o) => { o.castShadow = o.receiveShadow = true; if (o.name.startsWith("crop-b")) o.visible = false; });
+    return BEDS.map((_, i) => ({
+      sprout: grown.scene.getObjectByName(`crop-b${i}-sprout`),
+      young: grown.scene.getObjectByName(`crop-b${i}-young`),
+      ripe: island.scene.getObjectByName(`crop-b${i}`),
+    }));
+  }, [island, grown]);
 
   const now = Date.now();
   const stages = BEDS.map((_, i) => stageOf(farm, i, now, season));
-  const stagesRef = useRef(stages); stagesRef.current = stages;
-  useEffect(() => () => { for (const c of crops) if (c) { c.node.visible = true; c.node.scale.setScalar(1); c.node.position.copy(c.rest); } }, [crops]);
-
-  useFrame((state) => {
-    const t = state.clock.elapsedTime;
-    crops.forEach((c, i) => {
-      if (!c) return;
-      const st = stagesRef.current[i];
-      const s = st === "growing" ? 0.45 : st === "ripe" ? 1 : 0;   // sprouts, then the full crop (no pulsing: it read as plants dancing)
-      c.node.visible = s > 0;
-      c.node.scale.setScalar(Math.max(s, 1e-3));
-      c.node.position.copy(c.rest).add(c.base.clone().multiplyScalar(1 - s));   // grow from the soil, not from the world origin
-    });
+  // growing: seedlings for the first half, then leaves; ripe: the full crop
+  const looks = stages.map((st, i) => st === "ripe" ? "ripe" : st === "growing" ? (growthOf(farm, i, now, season) < 0.5 ? "sprout" : "young") : null);
+  useEffect(() => {
+    crops.forEach((c, i) => { for (const k of ["sprout", "young", "ripe"] as const) if (c[k]) c[k]!.visible = looks[i] === k; });
   });
+  useEffect(() => () => { for (const c of crops) if (c.ripe) c.ripe.visible = true; }, [crops]);   // the island shared with visit mode
 
   return (
     <group>
+      <primitive object={grown.scene} />
       {BEDS.map(([x0, x1, z0, z1], i) => (
         <group key={i}>
           {stages[i] === "seeded" && [0, 1, 2, 3, 4].map((k) => (   // fresh furrow mounds where seed went in

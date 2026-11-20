@@ -88,3 +88,13 @@ test('both water islands have their Blender water render and map in every season
       for (const p of Object.keys(map.parts)) assert.ok(names.some((n) => n.startsWith(p)), `${id} ${s} has no ${p}`);
     }
 });
+
+test('crop stage models hold seedlings and leafy plants for every bed that grows a crop', () => {
+  for (const s of SEASONS) {
+    const names = new Set(glbJson(`crops-${s}.glb`).nodes.map((n) => n.name));
+    for (let b = 0; b < 15; b++) {
+      if (s === 'dong' && Math.floor(b / 3) % 3 !== 1) continue;   // winter: only the spinach rows grow
+      assert.ok(names.has(`crop-b${b}-sprout`) && names.has(`crop-b${b}-young`), `${s} bed ${b}`);
+    }
+  }
+});

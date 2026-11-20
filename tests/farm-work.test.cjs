@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const loadTs = require('./load-ts.cjs');
 const nav = loadTs('../lib/farm/nav.ts');
-const { newFarm, cropFor, stageOf, jobFor, finish, layEggs, saveFarm, loadFarm, CROP_HOURS } = loadTs('../lib/farm/farmwork.ts', { './nav': nav });
+const { newFarm, cropFor, stageOf, growthOf, jobFor, finish, layEggs, saveFarm, loadFarm, CROP_HOURS } = loadTs('../lib/farm/farmwork.ts', { './nav': nav });
 
 const H = 3600e3;
 function rng(seed) { return () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646; }
@@ -128,4 +128,12 @@ test('saved unlocks survive a reload; old saves and unknown ids load safely', ()
   assert.deepEqual(loadFarm(saveFarm(f), 0).unlocked, ['cow']);
   const old = newFarm(0); delete old.unlocked;
   assert.deepEqual(loadFarm(saveFarm(old), 0).unlocked, []);
+});
+
+test('growth runs 0 → 1 from watering to ripe and is 0 for beds not growing', () => {
+  let f = finish(newFarm(0), 'plant', { kind: 'bed', bed: 0 }, 0, 'xuan');
+  assert.equal(growthOf(f, 0, 0, 'xuan'), 0);   // seeded, not yet watered
+  f = finish({ ...f, water: 1 }, 'water', { kind: 'bed', bed: 0 }, 0, 'xuan');
+  assert.equal(growthOf(f, 0, CROP_HOURS.carrot * H / 2, 'xuan'), 0.5);
+  assert.equal(growthOf(f, 0, CROP_HOURS.carrot * H * 3, 'xuan'), 1);
 });
